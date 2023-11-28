@@ -4,6 +4,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
+import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import { CalendarOptions } from "@fullcalendar/common";
 import {
   PreviewComponent,
@@ -20,40 +21,34 @@ import Lucide from "../../base-components/Lucide";
 
 function Main() {
   const [date, setDate] = useState("");
+  const calendarRef = useRef<FullCalendar | null>(null);
   const options: CalendarOptions = {
-    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
+    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
     droppable: true,
     headerToolbar: false,
-    initialDate: "2021-01-12",
+    initialView: 'resourceTimeGridDay',
+    views: {
+        resourceTimeGridTwoDay: {
+            type: 'resourceTimeGrid',
+            duration: { days: 1 },
+        }
+    },
+    eventResourceEditable: true,
+    refetchResourcesOnNavigate: true,
+    allDaySlot: false,
     navLinks: true,
     editable: true,
     dayMaxEvents: true,
-    events: [
-      {
-        title: "Vue Vixens Day",
-        start: "2021-01-05",
-        end: "2021-01-08",
-      },
-      {
-        title: "VueConfUS",
-        start: "2021-01-11",
-        end: "2021-01-15",
-      },
-      {
-        title: "VueJS Amsterdam",
-        start: "2021-01-17",
-        end: "2021-01-21",
-      },
-      {
-        title: "Vue Fes Japan 2019",
-        start: "2021-01-21",
-        end: "2021-01-24",
-      },
-      {
-        title: "Laracon 2021",
-        start: "2021-01-24",
-        end: "2021-01-27",
-      },
+    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+    slotMinTime: '09:00:00',
+    slotMaxTime: '19:00:00',
+    contentHeight: 'auto',
+    selectable: true,
+    resources: [
+      { id: 'a', title: 'Staff 1' },
+      { id: 'b', title: 'Staff 2'},
+      { id: 'c', title: 'Staff 3' },
+      { id: 'd', title: 'Staff 4' }
     ],
     drop: function (info) {
       if (
@@ -73,6 +68,9 @@ function Main() {
     },
   };
 
+  const nextDay = () => {
+
+  }
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}

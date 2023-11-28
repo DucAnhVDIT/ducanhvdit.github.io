@@ -34,7 +34,7 @@ function Main() {
         {/* BEGIN: Side Menu */}
         <nav className="pr-5 pb-16 overflow-x-hidden hidden md:block w-[85px] xl:w-[230px]">
           <Link
-            to="/side-menu/dashboard-overview-1"
+            to="/"
             className="flex items-center pt-4 pl-5 intro-x"
           >
             <img
