@@ -15,9 +15,9 @@ import {
 import { useState, useRef } from "react";
 import { FormLabel, FormSwitch } from "../../base-components/Form";
 import { Menu, Dialog } from "../../base-components/Headless";
-import Litepicker from "../../base-components/Litepicker";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
+import Flatpickr from "react-flatpickr";
 
 function Main() {
   const [date, setDate] = useState("");
@@ -78,26 +78,20 @@ function Main() {
             {({ toggle }) => (
               <>
                 <div className="p-5 bg-transparent">
-                  <Preview>
-                    <div className="relative w-56 mx-auto">
-                      <div className="absolute flex items-center justify-center w-10 h-full border rounded-l bg-slate-100 text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
-                        <Lucide icon="Calendar" className="w-4 h-4" />
-                      </div>
-                      <Litepicker
-                        value={date}
-                        onChange={setDate}
+                <Preview>
+                    <div className="flex items-center justify-center w-72 mx-auto bg-primary rounded-2xl text-white">
+                      <Button className="p-3 bg-transparent border-none shadow-none">
+                        <Lucide icon="ChevronLeft" className="text-white" />
+                      </Button>
+                      <Flatpickr
                         options={{
-                          autoApply: false,
-                          showWeekNumbers: true,
-                          dropdowns: {
-                            minYear: 1990,
-                            maxYear: null,
-                            months: true,
-                            years: true,
-                          },
+                          dateFormat: 'l, j, M Y',
+                          defaultDate: new Date(),
                         }}
-                        className="pl-12"
                       />
+                      <Button className="p-3 bg-transparent border-none shadow-none ml-1">
+                        <Lucide icon="ChevronRight" className="text-white" />
+                      </Button>
                     </div>
                   </Preview>
                   <Source>
