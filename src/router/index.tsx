@@ -5,7 +5,8 @@ import TopMenu from "../layouts/TopMenu";
 import RegularTable from "../pages/RegularTable";
 import Calendar from "../pages/Calendar";
 import PointOfSales from "../pages/PointOfSale"
-
+import Post from "../pages/Post"
+import DashboardOverview2 from "../pages/DashboardOverview2"
 function Router() {
   const routes = [
     {
@@ -20,18 +21,18 @@ function Router() {
           path: "/clients",
           element: <RegularTable />,
         },
-        // {
-        //   path: "/marketing",
-        //   element: <Page1 />,
-        // },
+        {
+          path: "/marketing",
+          element:<Post />,
+        },
         {
           path: "/purchase",
           element: <PointOfSales />,
         },
-        // {
-        //   path: "/manager",
-        //   element: <Page1 />,
-        // },
+        {
+          path: "/manager",
+          element: <DashboardOverview2 />,
+        },
       ],
     },
   ];
