@@ -13,14 +13,12 @@ import {
   Highlight,
 } from "../../base-components/PreviewComponent";
 import { useState, useRef } from "react";
-import { FormLabel, FormSwitch } from "../../base-components/Form";
-import { Menu, Dialog } from "../../base-components/Headless";
+import { DatePicker, ButtonGroupPicker, ButtonOption } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
-import Flatpickr from "react-flatpickr";
 
 function Main() {
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const calendarRef = useRef<FullCalendar | null>(null);
   const options: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
@@ -50,27 +48,34 @@ function Main() {
       { id: 'c', title: 'Staff 3' },
       { id: 'd', title: 'Staff 4' }
     ],
-    drop: function (info) {
-      if (
-        document.querySelectorAll("#checkbox-events").length &&
-        (document.querySelectorAll("#checkbox-events")[0] as HTMLInputElement)
-          ?.checked
-      ) {
-        (info.draggedEl.parentNode as HTMLElement).remove();
-        if (
-          document.querySelectorAll("#calendar-events")[0].children.length == 1
-        ) {
-          document
-            .querySelectorAll("#calendar-no-events")[0]
-            .classList.remove("hidden");
-        }
-      }
-    },
+  }
+
+  const handleDateChange = (selectedDate: Date) => {
+    setDate(selectedDate);
+    // Use calendarRef to access FullCalendar instance and navigate to the selected date
+    if (calendarRef.current) {
+      calendarRef.current.getApi().gotoDate(selectedDate);
+      // setDate(selectedDate)
+    }
   };
 
   const nextDay = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getApi().next();
+      const currentDate = calendarRef.current.getApi().view.currentStart;
+      setDate(currentDate);
+    }
+  };
 
-  }
+
+  const prevDay = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getApi().prev();
+      const currentDate = calendarRef.current.getApi().view.currentStart;
+      setDate(currentDate);
+    }
+  };
+
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}
@@ -79,18 +84,21 @@ function Main() {
               <>
                 <div className="p-5 bg-transparent">
                 <Preview>
-                    <div className="flex items-center justify-center w-72 mx-auto bg-primary rounded-2xl text-white">
-                      <Button className="p-3 bg-transparent border-none shadow-none">
-                        <Lucide icon="ChevronLeft" className="text-white" />
+                    <div className="flex items-center justify-evenly w-fit mx-auto bg-transparent rounded-3x ">
+                      <Button className="p-3 bg-transparent border-none shadow-none" onClick={prevDay}>
+                        <Lucide icon="ChevronLeft" className="text-black" />
                       </Button>
-                      <Flatpickr
-                        options={{
-                          dateFormat: 'l, j, M Y',
-                          defaultDate: new Date(),
-                        }}
+                      <DatePicker
+                          valueAlignment = "center"
+                          placeholder ="Date"
+                          value={date}
+                          id="datePicker-1"
+                          formatStyle="large"
+                          icon={<Lucide icon="Calendar" className="text-black" />}
+                          onChange={handleDateChange}
                       />
-                      <Button className="p-3 bg-transparent border-none shadow-none ml-1">
-                        <Lucide icon="ChevronRight" className="text-white" />
+                      <Button className="p-1 bg-transparent border-none shadow-none ml-1" onClick={nextDay}>
+                        <Lucide icon="ChevronRight" className="text-black" />
                       </Button>
                     </div>
                   </Preview>
@@ -124,7 +132,7 @@ function Main() {
               </>
             )}
           </PreviewComponent>
-      <FullCalendar {...options} />
+      <FullCalendar {...options} ref={calendarRef}/>
     </div>
   );
 }
