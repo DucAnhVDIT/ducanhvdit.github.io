@@ -16,10 +16,25 @@ import { useState, useRef } from "react";
 import { DatePicker, ButtonGroupPicker, ButtonOption } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
+import { Menu, Slideover } from "../../base-components/Headless";
+import TippyContent from "../../base-components/TippyContent";
 
 function Main() {
   const [date, setDate] = useState(new Date());
+  const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
+  const [toolTipVisible, settoolTipVisible] = useState(false)
   const calendarRef = useRef<FullCalendar | null>(null);
+
+  const handleSlotSelect = () => {
+    // Set the state variable to true when the slot is clicked
+    // setSlotSlideoverPreview(true);
+    
+  };
+
+  const handleQuickAction = () => {
+    // Set the state variable to true when the slot is clicked
+    setSlotSlideoverPreview(true);
+  };
   const options: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
     droppable: true,
@@ -31,6 +46,7 @@ function Main() {
             duration: { days: 1 },
         }
     },
+    slotDuration:"00:15",
     eventResourceEditable: true,
     refetchResourcesOnNavigate: true,
     allDaySlot: false,
@@ -48,8 +64,9 @@ function Main() {
       { id: 'c', title: 'Staff 3' },
       { id: 'd', title: 'Staff 4' }
     ],
+    select: handleQuickAction
   }
-
+  
   const handleDateChange = (selectedDate: Date) => {
     setDate(selectedDate);
     // Use calendarRef to access FullCalendar instance and navigate to the selected date
@@ -75,6 +92,10 @@ function Main() {
       setDate(currentDate);
     }
   };
+
+  const closeModal = () => {
+    setSlotSlideoverPreview(false)
+  }
 
   return (
     <div className="full-calendar">
@@ -131,7 +152,28 @@ function Main() {
                 </div>
               </>
             )}
-          </PreviewComponent>
+      </PreviewComponent>
+
+      <Slideover
+        open={slotSlideoverPreview}
+        onClose={() => {
+          setSlotSlideoverPreview(false);
+        }}
+      >
+        <Slideover.Panel>
+          <div className="flex flex-row justify-between p-5">
+              <Slideover.Title className="p-5">
+                <h2 className="mr-auto text-base font-medium">Booking Information</h2>
+              </Slideover.Title>
+              <Button className="p-5 bg-transparent border-none shadow-none" onClick={closeModal}>
+                <Lucide icon="X" className="text-black" />
+              </Button>
+          </div>
+          <Slideover.Description>
+
+          </Slideover.Description>
+        </Slideover.Panel>
+      </Slideover>
       <FullCalendar {...options} ref={calendarRef}/>
     </div>
   );

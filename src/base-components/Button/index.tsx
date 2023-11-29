@@ -65,7 +65,7 @@ const Button: ButtonComponent = forwardRef(
     // General Styles
     const generalStyles = [
       "transition duration-200 border shadow-sm inline-flex items-center justify-center py-2 px-3 rounded-md font-medium cursor-pointer", // Default
-      "focus:ring-4 focus:ring-primary focus:ring-opacity-20", // On focus
+      // "focus:ring-4 focus:ring-primary focus:ring-opacity-20", // On focus
       "focus-visible:outline-none", // On focus visible
       "dark:focus:ring-slate-700 dark:focus:ring-opacity-50", // Dark mode
       "[&:hover:not(:disabled)]:bg-opacity-90 [&:hover:not(:disabled)]:border-opacity-90", // On hover and not disabled
