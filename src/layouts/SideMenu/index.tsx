@@ -37,7 +37,7 @@ function Main() {
             to="/"
             className="flex items-center pt-4 pl-5 intro-x justify-center"
           >
-            <div className=" bg-white p-3 rounded-full w-16 h-16">
+            <div className=" bg-red p-3 rounded-full w-16 h-16">
               <img
                 alt="VDIT Solutions"
                 className="h-10 fill-slate-300"
