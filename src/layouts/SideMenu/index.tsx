@@ -5,7 +5,7 @@ import { selectSideMenu } from "../../stores/sideMenuSlice";
 import { useAppSelector } from "../../stores/hooks";
 import { FormattedMenu, linkTo, nestedMenu, enter, leave } from "./side-menu";
 import Lucide from "../../base-components/Lucide";
-import logoUrl from "../../assets/images/VDIT.png";
+import logoUrl from "../../assets/images/vditheader.png";
 import clsx from "clsx";
 import TopBar from "../../components/TopBar";
 import MobileMenu from "../../components/MobileMenu";
@@ -35,16 +35,15 @@ function Main() {
         <nav className="pr-5 pb-16 overflow-x-hidden hidden md:block w-[85px] xl:w-[230px]">
           <Link
             to="/"
-            className="flex items-center pt-4 pl-5 intro-x"
+            className="flex items-center pt-4 pl-5 intro-x justify-center"
           >
-            <img
-              alt="VDIT Solutions"
-              className="h-10 fill-slate-300"
-              src={logoUrl}
-            />
-            {/* <span className="hidden ml-3 text-lg text-white xl:block">
-              Rubick
-            </span> */}
+            <div className=" bg-white p-3 rounded-full w-16 h-16">
+              <img
+                alt="VDIT Solutions"
+                className="h-10 fill-slate-300"
+                src={logoUrl}
+              />
+            </div>
           </Link>
           <Divider type="div" className="my-6"></Divider>
           <ul>
