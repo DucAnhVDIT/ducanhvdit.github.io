@@ -25,11 +25,11 @@ function Main() {
   const [toolTipVisible, settoolTipVisible] = useState(false)
   const calendarRef = useRef<FullCalendar | null>(null);
 
-  const handleSlotSelect = () => {
-    // Set the state variable to true when the slot is clicked
-    // setSlotSlideoverPreview(true);
+  // const handleSlotSelect = () => {
+  //   // Set the state variable to true when the slot is clicked
+  //   // setSlotSlideoverPreview(true);
     
-  };
+  // };
 
   const handleQuickAction = () => {
     // Set the state variable to true when the slot is clicked
