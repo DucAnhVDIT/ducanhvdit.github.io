@@ -7,6 +7,7 @@ import tippy, {
 
 interface MainProps {
   to: string;
+  onClose?: () => void; // Add onClose to MainProps
   getRef?: (el: HTMLElement | null) => HTMLElement;
   options?: Props;
 }
@@ -51,7 +52,7 @@ function TippyContent(props: TippyContentProps) {
     }
   }, [props.children]);
 
-  const { to, options, getRef, ...computedProps } = props;
+  const { to, options, getRef, onClose, ...computedProps } = props;
   return (
     <div {...computedProps} ref={tippyRef}>
       {props.children}

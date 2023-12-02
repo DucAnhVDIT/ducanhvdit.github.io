@@ -16,25 +16,29 @@ import { useState, useRef } from "react";
 import { DatePicker, ButtonGroupPicker, ButtonOption } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
-import { Menu, Slideover } from "../../base-components/Headless";
-import TippyContent from "../../base-components/TippyContent";
+import { Menu, Slideover, Dialog } from "../../base-components/Headless";
+import {
+  FormLabel,
+  FormSwitch,
+  FormInput,
+  FormSelect,
+} from "../../base-components/Form";
 
 function Main() {
   const [date, setDate] = useState(new Date());
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
-  const [toolTipVisible, settoolTipVisible] = useState(false)
+  const [basicModalPreview, setBasicModalPreview] = useState(false);
   const calendarRef = useRef<FullCalendar | null>(null);
 
-  // const handleSlotSelect = () => {
-  //   // Set the state variable to true when the slot is clicked
-  //   // setSlotSlideoverPreview(true);
-    
-  // };
+  const handleSlotClicked = () => {
+    setBasicModalPreview(true);
+  }
 
-  const handleQuickAction = () => {
-    // Set the state variable to true when the slot is clicked
-    setSlotSlideoverPreview(true);
-  };
+  const handleAddNewAppointment = () => {
+    setBasicModalPreview(false);
+    setSlotSlideoverPreview(true)
+  }
+
   const options: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
     droppable: true,
@@ -64,7 +68,7 @@ function Main() {
       { id: 'c', title: 'Staff 3' },
       { id: 'd', title: 'Staff 4' }
     ],
-    select: handleQuickAction
+    select: handleSlotClicked
   }
   
   const handleDateChange = (selectedDate: Date) => {
@@ -123,32 +127,6 @@ function Main() {
                       </Button>
                     </div>
                   </Preview>
-                  <Source>
-                    <Highlight>
-                      {`
-              <div className="relative w-56 mx-auto">
-                <div className="absolute flex items-center justify-center w-10 h-full border rounded-l bg-slate-100 text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
-                  <Lucide icon="Calendar" className="w-4 h-4" />
-                </div>
-                <Litepicker
-                  value={date}
-                  onChange={setDate}
-                  options={{
-                    autoApply: false,
-                    showWeekNumbers: true,
-                    dropdowns: {
-                      minYear: 1990,
-                      maxYear: null,
-                      months: true,
-                      years: true,
-                    },
-                  }}
-                  className="pl-12"
-                />
-              </div>
-              `}
-                    </Highlight>
-                  </Source>
                 </div>
               </>
             )}
@@ -170,11 +148,55 @@ function Main() {
               </Button>
           </div>
           <Slideover.Description>
-
+            <FormInput
+              id=""
+              type="text"
+              placeholder="First Name"
+              className="mb-3 p-3"
+            />
+            <FormInput
+              id=""
+              type="text"
+              placeholder="Last Name"
+              className="mb-3 p-3"
+            />
+            <FormInput
+              id=""
+              type="Text"
+              placeholder="Mobile"
+              className="mb-3 p-3"
+            />
+            <FormInput
+              id=""
+              type="email"
+              placeholder="Email"
+              className="mb-3 p-3"
+            />
           </Slideover.Description>
         </Slideover.Panel>
       </Slideover>
       <FullCalendar {...options} ref={calendarRef}/>
+      <Dialog
+        open={basicModalPreview}
+        onClose={() => {
+          setBasicModalPreview(false);
+        }}
+        className="flex items-center justify-center"
+      >
+        <Dialog.Panel className="p-10 text-center" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <a
+          onClick={(event: React.MouseEvent) => {
+            event.preventDefault();
+            setBasicModalPreview(false);
+          }}
+          className="absolute top-0 right-0 mt-3 mr-3"
+            href="#"
+          >
+            <Lucide icon="X" className="w-8 h-8 text-slate-400" />
+          </a>
+          <Button onClick={handleAddNewAppointment}>Add New Appointment</Button>
+        </Dialog.Panel>
+      </Dialog>
     </div>
   );
 }
