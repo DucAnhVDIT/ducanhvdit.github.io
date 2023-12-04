@@ -27,6 +27,7 @@ import moment from 'moment';
 import dayjs from "dayjs";
 import RequireLocks from "../../components/RequireLocks";
 import AppointmentStatus from "../../components/Status";
+import FloatingActionButtons from "../../components/FloatingButtons";
 
 
 
@@ -37,26 +38,24 @@ function Main() {
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
   const [counter, setCounter] = useState<number | undefined>(undefined);
+  const [isSlotClicked, setSlotClicked] = useState(false);
   // const [day, setDay] = useState('monday');
 
   // const handleOnChange = (weekDay: SetStateAction<string>) => {
   //   setDay(weekDay);
   // };
 
-
-  const theme = {
-    rainbow: {
-        palette: {
-            brand: '#5c56b6',
-        },
-    },
-  };
   
   const handleSlotClicked = (info: any) => {
     const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
     setDate(info.start);
-    setBasicModalPreview(true);
     setSelectedTime(startTime);
+    setSlotClicked(true);
+    console.log("Slot clicked!")
+  }
+
+  const handleCloseButtons = () => {
+    setSlotClicked(false);
   }
   
   const handleAddNewAppointment = () => {
@@ -89,6 +88,7 @@ function Main() {
     slotMaxTime: '19:00:00',
     contentHeight: 'auto',
     selectable: true,
+    nowIndicator:true,
     resources: [
       { id: 'a', title: 'Staff 1' },
       { id: 'b', title: 'Staff 2'},
@@ -271,7 +271,10 @@ function Main() {
           </Slideover.Description>
         </Slideover.Panel>
       </Slideover>
-      <FullCalendar {...options} ref={calendarRef}/>
+      <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
+      {isSlotClicked && (
+        <FloatingActionButtons onClose={handleCloseButtons} />
+      )}
       <Dialog
         open={basicModalPreview}
         onClose={() => {

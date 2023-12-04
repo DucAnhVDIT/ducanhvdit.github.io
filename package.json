@@ -44,6 +44,7 @@
     "react-rainbow-components": "^1.32.0",
     "react-redux": "^8.0.2",
     "react-router-dom": "6",
+    "react-spring": "^9.7.3",
     "react-transition-group": "^4.4.5",
     "simplebar": "^5.3.9",
     "tabulator-tables": "^5.3.4",
