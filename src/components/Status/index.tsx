@@ -6,7 +6,7 @@ const containerStyles = {
 };
 
 export default function AppointmentStatus() {
-const initialState = { value: null };
+const initialState = { value: 'option 1'  };
   const [statusValue, setStatusValue] = useState(initialState);
 
   return (
@@ -14,22 +14,21 @@ const initialState = { value: null };
       <div className="rainbow-flex rainbow-align_right">
         <Picklist
           id="picklist-3"
-          style={containerStyles}
-          placeholder="Choose Building"
-          onChange={(value) => setStatusValue(value)}
+          // style={containerStyles}
+          // onChange={(value) => setStatusValue(value)}
           value={statusValue}
-          label="Select Building"
           hideLabel
           enableSearch
         >
-          <Option name="option 1" label="All Buildings" />
-          <Option name="option 2" label="New Building" />
-          <Option name="option 3" label="Experimental" />
-          <Option name="option 4" label="Bennet Towers" />
-          <Option name="option 5" label="Empire State" />
-          <Option name="option 6" label="Central Park" />
-          <Option name="option 7" label="Chrysler" />
-          <Option name="option 8" label="Plaza" />
+          <Option name="option 1" label="Confirmed" />
+          <Option name="option 2" label="Not Confirmed" />
+          <Option name="option 3" label="Left Message" />
+          <Option name="option 4" label="No Show" />
+          <Option name="option 5" label="Late" />
+          <Option name="option 6" label="Cancelled" />
+          <Option name="option 7" label="Arrived" />
+          <Option name="option 8" label="Served" />
+          <Option name="option 9" label="Done" />
         </Picklist>
       </div>
     </div>

@@ -13,7 +13,7 @@ import {
   Highlight,
 } from "../../base-components/PreviewComponent";
 import { useState, useRef, SetStateAction } from "react";
-import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle } from 'react-rainbow-components';
+import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle, Application } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import { Menu, Slideover, Dialog } from "../../base-components/Headless";
@@ -26,6 +26,8 @@ import {
 import moment from 'moment';
 import dayjs from "dayjs";
 import RequireLocks from "../../components/RequireLocks";
+import AppointmentStatus from "../../components/Status";
+
 
 
 function Main() {
@@ -42,7 +44,14 @@ function Main() {
   // };
 
 
-
+  const theme = {
+    rainbow: {
+        palette: {
+            brand: '#5c56b6',
+        },
+    },
+  };
+  
   const handleSlotClicked = (info: any) => {
     const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
     setDate(info.start);
@@ -138,15 +147,17 @@ function Main() {
                       <Button className="p-3 bg-transparent border-none shadow-none" onClick={prevDay}>
                         <Lucide icon="ChevronLeft" className="text-black" />
                       </Button>
-                      <DatePicker
-                          valueAlignment = "center"
-                          placeholder ="Date"
-                          value={date}
-                          id="datePicker-1"
-                          formatStyle="large"
-                          icon={<Lucide icon="Calendar" className="text-black" />}
-                          onChange={handleDateChange}
-                      />
+                      {/* <Application theme={theme}> */}
+                        <DatePicker
+                            valueAlignment = "center"
+                            placeholder ="Date"
+                            value={date}
+                            id="main-date-picker"
+                            formatStyle="large"
+                            icon={<Lucide icon="Calendar" className="text-black" />}
+                            onChange={handleDateChange}
+                        />
+                      {/* </Application> */}
                       <Button className="p-1 bg-transparent border-none shadow-none ml-1" onClick={nextDay}>
                         <Lucide icon="ChevronRight" className="text-black" />
                       </Button>
@@ -173,88 +184,90 @@ function Main() {
               </Button>
           </div>
           <Slideover.Description>
-            <Input
-              id="first-name"
-              type="text"
-              placeholder="First Name"
-              className="mb-3"
-            />
-            <Input
-              id="last-name"
-              type="text"
-              placeholder="Last Name"
-              className="mb-3"
-            />
-            <Input
-              id="mobile"
-              type="text"
-              placeholder="Mobile"
-              className="mb-3"
-            />
-            <Input
-              id="email"
-              type="email"
-              placeholder="Email"
-              className="mb-3"
-            />
-            <h1 className=" text-base mb-2">Services</h1>
-            <Picklist
-              id="service"
-              placeholder="Services"
-              className="mb-3"
-            />
-            <CounterInput
-              id="Deposit"
-              placeholder="Deposit"
-              className="mb-3"
-              value={counter}
-              onChange={setCounter}
-            />
+            <form>
 
-            <h1 className=" text-base mb-2">Date Time</h1>
-            <div className="flex flex-row">
-              <DatePicker
-                  valueAlignment = "center"
-                  placeholder ="Date"
-                  value={date}
-                  formatStyle="large"
-                  icon={<Lucide icon="Calendar" className="text-black" />}
-                  onChange={handleDateChange}
-                  className="mb-3 mr-2"
-                />
-                <Input
-                  valueAlignment = "center"
-                  id=""
-                  type="time"
-                  value={selectedTime} 
-                  onChange={(e) => setSelectedTime(e.target.value)} 
-                />
-            </div>
+              <Input
+                id="first-name"
+                type="text"
+                placeholder="First Name"
+                className="mb-3"
+              />
+              <Input
+                id="last-name"
+                type="text"
+                placeholder="Last Name"
+                className="mb-3"
+              />
+              <Input
+                id="mobile"
+                type="text"
+                placeholder="Mobile"
+                className="mb-3"
+              />
+              <Input
+                id="email"
+                type="email"
+                placeholder="Email"
+                className="mb-3"
+              />
+              <h1 className=" text-base mb-2">Services</h1>
+              <Picklist
+                id="service"
+                placeholder="Services"
+                className="mb-3"
+              />
+              <CounterInput
+                id="Deposit"
+                placeholder="Deposit"
+                className="mb-3"
+                value={counter}
+                onChange={setCounter}
+              />
 
-            <Textarea
-                id="guess-note"
-                rows={3}
-                placeholder="Guess Note"
-                className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
-            />
-            <Textarea
-                id="company-note"
-                rows={3}
-                placeholder="Company Note"
-                className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
-            />
-            {/* <Button onClick={handleRecordEvent} className="mt-3 bg-primary text-white">
-              Submit
-            </Button> */}
-            <RequireLocks />
+              <h1 className=" text-base mb-2">Date Time</h1>
+              <div className="flex flex-row">
+                <DatePicker
+                    valueAlignment = "center"
+                    placeholder ="Date"
+                    value={date}
+                    formatStyle="large"
+                    icon={<Lucide icon="Calendar" className="text-black" />}
+                    onChange={handleDateChange}
+                    className="mb-3 mr-2"
+                  />
+                  <Input
+                    valueAlignment = "center"
+                    id=""
+                    type="time"
+                    value={selectedTime} 
+                    onChange={(e) => setSelectedTime(e.target.value)} 
+                  />
+              </div>
 
-            <h1 className=" text-base mb-2">Status</h1>
-            <Picklist
-              id="status"
-              placeholder="Status"
-              className="mb-3"
-            />
+              <Textarea
+                  id="guess-note"
+                  rows={3}
+                  placeholder="Guess Note"
+                  className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+              />
+              <Textarea
+                  id="company-note"
+                  rows={3}
+                  placeholder="Company Note"
+                  className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+              />
+              {/* <Button onClick={handleRecordEvent} className="mt-3 bg-primary text-white">
+                Submit
+              </Button> */}
+              <RequireLocks />
 
+              <h1 className=" text-base mb-2">Status</h1>
+              <AppointmentStatus />
+              <div className="flex justify-center items-center mt-4 mb-7">
+                <Button className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
+                <Button className=" bg-red-500 text-white p-3 m-4 w-24" > Cancel</Button>
+              </div>
+            </form>
           </Slideover.Description>
         </Slideover.Panel>
       </Slideover>
