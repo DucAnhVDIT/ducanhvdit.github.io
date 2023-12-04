@@ -12,8 +12,8 @@ import {
   Source,
   Highlight,
 } from "../../base-components/PreviewComponent";
-import { useState, useRef } from "react";
-import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu } from 'react-rainbow-components';
+import { useState, useRef, SetStateAction } from "react";
+import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import { Menu, Slideover, Dialog } from "../../base-components/Headless";
@@ -25,6 +25,7 @@ import {
 } from "../../base-components/Form";
 import moment from 'moment';
 import dayjs from "dayjs";
+import RequireLocks from "../../components/RequireLocks";
 
 
 function Main() {
@@ -33,8 +34,14 @@ function Main() {
   const [basicModalPreview, setBasicModalPreview] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
+  const [counter, setCounter] = useState<number | undefined>(undefined);
+  // const [day, setDay] = useState('monday');
 
-  const formatDate = dayjs(date).format('DD/MM/YYYY')
+  // const handleOnChange = (weekDay: SetStateAction<string>) => {
+  //   setDay(weekDay);
+  // };
+
+
 
   const handleSlotClicked = (info: any) => {
     const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
@@ -112,11 +119,6 @@ function Main() {
     setSlotSlideoverPreview(false)
   }
 
-  const formatDateToDDMMYYYY = (date: moment.MomentInput) => {
-    return moment(date).format('DD-MM-YYYY');
-  };
-
-
 
   return (
     <div className="full-calendar">
@@ -126,6 +128,12 @@ function Main() {
               <>
                 <div className="p-5 bg-transparent">
                 <Preview>
+                    {/* <WeekDayPicker
+                      id="weekday-picker-1"
+                      value={day}
+                      onChange={handleOnChange}
+                      className=" text-center mb-4"
+                    /> */}
                     <div className="flex items-center justify-evenly w-fit mx-auto bg-transparent rounded-3x ">
                       <Button className="p-3 bg-transparent border-none shadow-none" onClick={prevDay}>
                         <Lucide icon="ChevronLeft" className="text-black" />
@@ -156,7 +164,7 @@ function Main() {
         }}
       >
         <Slideover.Panel>
-          <div className="flex flex-row justify-between p-5">
+          <div className="flex flex-row justify-between">
               <Slideover.Title className="p-5">
                 <h2 className="mr-auto text-base font-medium">Booking Information</h2>
               </Slideover.Title>
@@ -189,6 +197,21 @@ function Main() {
               placeholder="Email"
               className="mb-3"
             />
+            <h1 className=" text-base mb-2">Services</h1>
+            <Picklist
+              id="service"
+              placeholder="Services"
+              className="mb-3"
+            />
+            <CounterInput
+              id="Deposit"
+              placeholder="Deposit"
+              className="mb-3"
+              value={counter}
+              onChange={setCounter}
+            />
+
+            <h1 className=" text-base mb-2">Date Time</h1>
             <div className="flex flex-row">
               <DatePicker
                   valueAlignment = "center"
@@ -207,9 +230,31 @@ function Main() {
                   onChange={(e) => setSelectedTime(e.target.value)} 
                 />
             </div>
+
+            <Textarea
+                id="guess-note"
+                rows={3}
+                placeholder="Guess Note"
+                className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+            />
+            <Textarea
+                id="company-note"
+                rows={3}
+                placeholder="Company Note"
+                className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+            />
             {/* <Button onClick={handleRecordEvent} className="mt-3 bg-primary text-white">
               Submit
             </Button> */}
+            <RequireLocks />
+
+            <h1 className=" text-base mb-2">Status</h1>
+            <Picklist
+              id="status"
+              placeholder="Status"
+              className="mb-3"
+            />
+
           </Slideover.Description>
         </Slideover.Panel>
       </Slideover>
