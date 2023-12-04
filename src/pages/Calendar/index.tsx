@@ -48,6 +48,8 @@ function Main() {
     setSlotSlideoverPreview(true)
   }
 
+  
+
   const options: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
     droppable: true,
@@ -114,6 +116,8 @@ function Main() {
     return moment(date).format('DD-MM-YYYY');
   };
 
+
+
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}
@@ -162,25 +166,25 @@ function Main() {
           </div>
           <Slideover.Description>
             <Input
-              id=""
+              id="first-name"
               type="text"
               placeholder="First Name"
               className="mb-3"
             />
             <Input
-              id=""
+              id="last-name"
               type="text"
               placeholder="Last Name"
               className="mb-3"
             />
             <Input
-              id=""
+              id="mobile"
               type="text"
               placeholder="Mobile"
               className="mb-3"
             />
             <Input
-              id=""
+              id="email"
               type="email"
               placeholder="Email"
               className="mb-3"
@@ -203,6 +207,9 @@ function Main() {
                   onChange={(e) => setSelectedTime(e.target.value)} 
                 />
             </div>
+            {/* <Button onClick={handleRecordEvent} className="mt-3 bg-primary text-white">
+              Submit
+            </Button> */}
           </Slideover.Description>
         </Slideover.Panel>
       </Slideover>
@@ -212,7 +219,7 @@ function Main() {
         onClose={() => {
           setBasicModalPreview(false);
         }}
-        className="flex items-center justify-center"
+        className="flex items-center justify-center w-10"
       >
         <Dialog.Panel className="p-10 text-center w-4" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <a
@@ -225,11 +232,14 @@ function Main() {
           >
             <Lucide icon="X" className="w-8 h-8 text-slate-400" />
           </a>
-          <Button onClick={handleAddNewAppointment}>Add New Appointment</Button>
+          <Button className="bg-primary text-white" onClick={handleAddNewAppointment}>Add New Appointment</Button>
         </Dialog.Panel>
       </Dialog>
     </div>
+    
   );
 }
+
+
 
 export default Main;
