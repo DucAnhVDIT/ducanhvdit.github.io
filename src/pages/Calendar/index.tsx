@@ -13,7 +13,7 @@ import {
   Highlight,
 } from "../../base-components/PreviewComponent";
 import { useState, useRef } from "react";
-import { DatePicker, ButtonGroupPicker, ButtonOption } from 'react-rainbow-components';
+import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import { Menu, Slideover, Dialog } from "../../base-components/Headless";
@@ -23,17 +23,26 @@ import {
   FormInput,
   FormSelect,
 } from "../../base-components/Form";
+import moment from 'moment';
+import dayjs from "dayjs";
+
 
 function Main() {
   const [date, setDate] = useState(new Date());
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
   const [basicModalPreview, setBasicModalPreview] = useState(false);
+  const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
 
-  const handleSlotClicked = () => {
-    setBasicModalPreview(true);
-  }
+  const formatDate = dayjs(date).format('DD/MM/YYYY')
 
+  const handleSlotClicked = (info: any) => {
+    const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
+    setDate(info.start);
+    setBasicModalPreview(true);
+    setSelectedTime(startTime);
+  }
+  
   const handleAddNewAppointment = () => {
     setBasicModalPreview(false);
     setSlotSlideoverPreview(true)
@@ -101,6 +110,10 @@ function Main() {
     setSlotSlideoverPreview(false)
   }
 
+  const formatDateToDDMMYYYY = (date: moment.MomentInput) => {
+    return moment(date).format('DD-MM-YYYY');
+  };
+
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}
@@ -148,30 +161,48 @@ function Main() {
               </Button>
           </div>
           <Slideover.Description>
-            <FormInput
+            <Input
               id=""
               type="text"
               placeholder="First Name"
-              className="mb-3 p-3"
+              className="mb-3"
             />
-            <FormInput
+            <Input
               id=""
               type="text"
               placeholder="Last Name"
-              className="mb-3 p-3"
+              className="mb-3"
             />
-            <FormInput
+            <Input
               id=""
-              type="Text"
+              type="text"
               placeholder="Mobile"
-              className="mb-3 p-3"
+              className="mb-3"
             />
-            <FormInput
+            <Input
               id=""
               type="email"
               placeholder="Email"
-              className="mb-3 p-3"
+              className="mb-3"
             />
+            <div className="flex flex-row">
+              <DatePicker
+                  valueAlignment = "center"
+                  placeholder ="Date"
+                  value={date}
+                  formatStyle="large"
+                  icon={<Lucide icon="Calendar" className="text-black" />}
+                  onChange={handleDateChange}
+                  className="mb-3 mr-2"
+                />
+                <Input
+                  valueAlignment = "center"
+                  id=""
+                  type="time"
+                  value={selectedTime} 
+                  onChange={(e) => setSelectedTime(e.target.value)} 
+                />
+            </div>
           </Slideover.Description>
         </Slideover.Panel>
       </Slideover>
@@ -183,7 +214,7 @@ function Main() {
         }}
         className="flex items-center justify-center"
       >
-        <Dialog.Panel className="p-10 text-center" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+        <Dialog.Panel className="p-10 text-center w-4" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <a
           onClick={(event: React.MouseEvent) => {
             event.preventDefault();
