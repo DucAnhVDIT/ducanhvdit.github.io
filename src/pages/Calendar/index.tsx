@@ -41,16 +41,12 @@ function Main() {
   const [isSlotClicked, setSlotClicked] = useState(false);
   // const [day, setDay] = useState('monday');
 
-  // const handleOnChange = (weekDay: SetStateAction<string>) => {
-  //   setDay(weekDay);
-  // };
 
   
   const handleSlotClicked = (info: any) => {
     const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
     setDate(info.start);
     setSelectedTime(startTime);
-    setSlotClicked(true);
     console.log("Slot clicked!")
   }
 
