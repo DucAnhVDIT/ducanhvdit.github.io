@@ -38,21 +38,24 @@ function Main() {
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
   const [counter, setCounter] = useState<number | undefined>(undefined);
-  const [isSlotClicked, setSlotClicked] = useState(false);
-  // const [day, setDay] = useState('monday');
+  const [isFloatingActionVisible, setFloatingActionVisible] = useState(false);
 
 
   
   const handleSlotClicked = (info: any) => {
     const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
     setDate(info.start);
+    // setBasicModalPreview(true)
+    setFloatingActionVisible(true);
     setSelectedTime(startTime);
+
     console.log("Slot clicked!")
+    
   }
 
-  const handleCloseButtons = () => {
-    setSlotClicked(false);
-  }
+  // const handleCloseButtons = () => {
+  //   setSlotClicked(false);
+  // }
   
   const handleAddNewAppointment = () => {
     setBasicModalPreview(false);
@@ -140,7 +143,7 @@ function Main() {
                       className=" text-center mb-4"
                     /> */}
                     <div className="flex items-center justify-evenly w-fit mx-auto bg-transparent rounded-3x ">
-                      <Button className="p-3 bg-transparent border-none shadow-none" onClick={prevDay}>
+                      <Button className="p-2 bg-transparens border-none shadow-none" onClick={prevDay}>
                         <Lucide icon="ChevronLeft" className="text-black" />
                       </Button>
                       {/* <Application theme={theme}> */}
@@ -152,6 +155,7 @@ function Main() {
                             formatStyle="large"
                             icon={<Lucide icon="Calendar" className="text-black" />}
                             onChange={handleDateChange}
+                            borderRadius="semi-rounded"
                         />
                       {/* </Application> */}
                       <Button className="p-1 bg-transparent border-none shadow-none ml-1" onClick={nextDay}>
@@ -187,30 +191,35 @@ function Main() {
                 type="text"
                 placeholder="First Name"
                 className="mb-3"
+                borderRadius="semi-rounded"
               />
               <Input
                 id="last-name"
                 type="text"
                 placeholder="Last Name"
                 className="mb-3"
+                borderRadius="semi-rounded"
               />
               <Input
                 id="mobile"
                 type="text"
                 placeholder="Mobile"
                 className="mb-3"
+                borderRadius="semi-rounded"
               />
               <Input
                 id="email"
                 type="email"
                 placeholder="Email"
                 className="mb-3"
+                borderRadius="semi-rounded"
               />
               <h1 className=" text-base mb-2">Services</h1>
               <Picklist
                 id="service"
                 placeholder="Services"
                 className="mb-3"
+                borderRadius="semi-rounded"
               />
               <CounterInput
                 id="Deposit"
@@ -218,6 +227,7 @@ function Main() {
                 className="mb-3"
                 value={counter}
                 onChange={setCounter}
+                borderRadius="semi-rounded"
               />
 
               <h1 className=" text-base mb-2">Date Time</h1>
@@ -230,6 +240,7 @@ function Main() {
                     icon={<Lucide icon="Calendar" className="text-black" />}
                     onChange={handleDateChange}
                     className="mb-3 mr-2"
+                    borderRadius="semi-rounded"
                   />
                   <Input
                     valueAlignment = "center"
@@ -237,6 +248,7 @@ function Main() {
                     type="time"
                     value={selectedTime} 
                     onChange={(e) => setSelectedTime(e.target.value)} 
+                    borderRadius="semi-rounded"
                   />
               </div>
 
@@ -245,12 +257,14 @@ function Main() {
                   rows={3}
                   placeholder="Guess Note"
                   className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+                  borderRadius="semi-rounded"
               />
               <Textarea
                   id="company-note"
                   rows={3}
                   placeholder="Company Note"
                   className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+                  borderRadius="semi-rounded"
               />
               {/* <Button onClick={handleRecordEvent} className="mt-3 bg-primary text-white">
                 Submit
@@ -268,9 +282,8 @@ function Main() {
         </Slideover.Panel>
       </Slideover>
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
-      {isSlotClicked && (
-        <FloatingActionButtons onClose={handleCloseButtons} />
-      )}
+      
+      {isFloatingActionVisible && <FloatingActionButtons />}
       <Dialog
         open={basicModalPreview}
         onClose={() => {

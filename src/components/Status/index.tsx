@@ -19,6 +19,7 @@ const initialState = { value: 'option 1'  };
           value={statusValue}
           hideLabel
           enableSearch
+          borderRadius="semi-rounded"
         >
           <Option name="option 1" label="Confirmed" />
           <Option name="option 2" label="Not Confirmed" />
