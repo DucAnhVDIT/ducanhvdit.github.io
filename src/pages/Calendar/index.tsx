@@ -28,6 +28,7 @@ import dayjs from "dayjs";
 import RequireLocks from "../../components/RequireLocks";
 import AppointmentStatus from "../../components/Status";
 import FloatingActionButtons from "../../components/FloatingButtons";
+import TippyContent from "../../base-components/TippyContent";
 
 
 
@@ -43,25 +44,25 @@ function Main() {
 
   
   const handleSlotClicked = (info: any) => {
+  
+    const rect = info.jsEvent.target.getBoundingClientRect();
+    const position = {
+      x: rect.left,
+      y: rect.top,
+    };
+  
     const startTime = moment(info.start).format('HH:mm');
     setDate(info.start);
     setFloatingActionVisible(true);
     setSelectedTime(startTime);
-
-    // Get the position of the clicked slot
-    // const boundingBox = info.jsEvent.target.getBoundingClientRect();
-    // setFloatingActionPosition({
-    //   x: boundingBox.left + window.scrollX,
-    //   y: boundingBox.top + window.scrollY,
-    // });
-
-    console.log("Slot clicked!");
-  }
+    setFloatingActionPosition(position);
+    console.log(position);
+  };
+  
 
 
   const handlePlusClick = () => {
-    console.log("Add button clicked!");
-    setBasicModalPreview(false);
+    setFloatingActionVisible(false);
     setSlotSlideoverPreview(true)
   }
   
@@ -311,6 +312,7 @@ function Main() {
           </a>
         </Dialog.Panel>
       </Dialog> */}
+      
     </div>
     
   );
