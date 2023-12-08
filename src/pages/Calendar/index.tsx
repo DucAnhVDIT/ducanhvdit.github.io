@@ -39,29 +39,31 @@ function Main() {
   const calendarRef = useRef<FullCalendar | null>(null);
   const [counter, setCounter] = useState<number | undefined>(undefined);
   const [isFloatingActionVisible, setFloatingActionVisible] = useState(false);
-
+  const [floatingActionPosition, setFloatingActionPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   
   const handleSlotClicked = (info: any) => {
-    const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
+    const startTime = moment(info.start).format('HH:mm');
     setDate(info.start);
-    // setBasicModalPreview(true)
     setFloatingActionVisible(true);
     setSelectedTime(startTime);
 
-    console.log("Slot clicked!")
-    
+    // Get the position of the clicked slot
+    // const boundingBox = info.jsEvent.target.getBoundingClientRect();
+    // setFloatingActionPosition({
+    //   x: boundingBox.left + window.scrollX,
+    //   y: boundingBox.top + window.scrollY,
+    // });
+
+    console.log("Slot clicked!");
   }
 
-  // const handleCloseButtons = () => {
-  //   setSlotClicked(false);
-  // }
-  
-  const handleAddNewAppointment = () => {
+
+  const handlePlusClick = () => {
+    console.log("Add button clicked!");
     setBasicModalPreview(false);
     setSlotSlideoverPreview(true)
   }
-
   
 
   const options: CalendarOptions = {
@@ -88,6 +90,7 @@ function Main() {
     contentHeight: 'auto',
     selectable: true,
     nowIndicator:true,
+    longPressDelay:1,
     resources: [
       { id: 'a', title: 'Staff 1' },
       { id: 'b', title: 'Staff 2'},
@@ -126,6 +129,8 @@ function Main() {
   const closeModal = () => {
     setSlotSlideoverPreview(false)
   }
+
+
 
 
   return (
@@ -283,8 +288,10 @@ function Main() {
       </Slideover>
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
       
-      {isFloatingActionVisible && <FloatingActionButtons />}
-      <Dialog
+      {isFloatingActionVisible && (
+        <FloatingActionButtons onPlusClick={handlePlusClick} position={floatingActionPosition} />
+      )}
+      {/* <Dialog
         open={basicModalPreview}
         onClose={() => {
           setBasicModalPreview(false);
@@ -302,9 +309,8 @@ function Main() {
           >
             <Lucide icon="X" className="w-8 h-8 text-slate-400" />
           </a>
-          <Button className="bg-primary text-white" onClick={handleAddNewAppointment}>Add New Appointment</Button>
         </Dialog.Panel>
-      </Dialog>
+      </Dialog> */}
     </div>
     
   );
