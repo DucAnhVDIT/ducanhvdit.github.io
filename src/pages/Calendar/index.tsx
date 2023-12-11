@@ -12,7 +12,7 @@ import {
   Source,
   Highlight,
 } from "../../base-components/PreviewComponent";
-import { useState, useRef, SetStateAction } from "react";
+import { useState, useRef, SetStateAction, useEffect } from "react";
 import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle, Application } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
@@ -65,6 +65,61 @@ function Main() {
     setFloatingActionVisible(false);
     setSlotSlideoverPreview(true)
   }
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    mobile: '',
+    email: '',
+    service: '',
+    deposit: 0,
+    date: null,
+    time: '',
+    guessNote: '',
+    companyNote: '',
+    locks: [], // Assuming RequireLocks component manages locks and returns an array
+    status: '', // Assuming AppointmentStatus component manages status and returns a string
+  });
+
+  const handleFormSubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    
+    const startDateTime = date;
+    const endDateTime = new Date(startDateTime);
+    endDateTime.setHours(endDateTime.getHours() + 1);
+    // Create the event object
+    const event = {
+      title: `${formData.firstName} ${formData.lastName}`,
+      start: startDateTime,
+      end: endDateTime,
+      // description: `Service: ${formData.service}\nDeposit: ${formData.deposit}\nGuess Note: ${formData.guessNote}\nCompany Note: ${formData.companyNote}`,
+    };
+
+    // Use the addEvent API to add the event to the calendar
+    if (calendarRef.current) {
+      // Use the addEvent method to add the event to the calendar
+      calendarRef.current.getApi().addEvent(event);
+    }
+    console.log(event)
+
+
+    // Reset the form data after submission (optional)
+    setFormData({
+      firstName: '',
+      lastName: '',
+      mobile: '',
+      email: '',
+      service: '',
+      deposit: 0,
+      date: null,
+      time: '',
+      guessNote: '',
+      companyNote: '',
+      locks: [],
+      status: '',
+    });
+    setSlotSlideoverPreview(false)
+  };
   
 
   const options: CalendarOptions = {
@@ -131,9 +186,6 @@ function Main() {
     setSlotSlideoverPreview(false)
   }
 
-
-
-
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}
@@ -190,22 +242,25 @@ function Main() {
               </Button>
           </div>
           <Slideover.Description>
-            <form>
-
-              <Input
+            <form onSubmit={handleFormSubmit}>
+            <Input
                 id="first-name"
                 type="text"
                 placeholder="First Name"
                 className="mb-3"
                 borderRadius="semi-rounded"
-              />
-              <Input
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            />
+             <Input
                 id="last-name"
                 type="text"
                 placeholder="Last Name"
                 className="mb-3"
                 borderRadius="semi-rounded"
-              />
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            />
               <Input
                 id="mobile"
                 type="text"
@@ -239,21 +294,21 @@ function Main() {
               <h1 className=" text-base mb-2">Date Time</h1>
               <div className="flex flex-row">
                 <DatePicker
-                    valueAlignment = "center"
-                    placeholder ="Date"
-                    value={date}
-                    formatStyle="large"
-                    icon={<Lucide icon="Calendar" className="text-black" />}
-                    onChange={handleDateChange}
-                    className="mb-3 mr-2"
-                    borderRadius="semi-rounded"
-                  />
+                  valueAlignment="center"
+                  placeholder="Date"
+                  value={date}
+                  formatStyle="large"
+                  icon={<Lucide icon="Calendar" className="text-black" />}
+                  onChange={(newDate) => setDate(newDate)}
+                  className="mb-3 mr-2"
+                  borderRadius="semi-rounded"
+                />
                   <Input
-                    valueAlignment = "center"
-                    id=""
+                    valueAlignment="center"
+                    id="time"
                     type="time"
-                    value={selectedTime} 
-                    onChange={(e) => setSelectedTime(e.target.value)} 
+                    value={selectedTime}
+                    onChange={(e) => setSelectedTime(e.target.value)}
                     borderRadius="semi-rounded"
                   />
               </div>
@@ -280,7 +335,7 @@ function Main() {
               <h1 className=" text-base mb-2">Status</h1>
               <AppointmentStatus />
               <div className="flex justify-center items-center mt-4 mb-7">
-                <Button className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
+                <Button type="submit" className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
                 <Button className=" bg-red-500 text-white p-3 m-4 w-24" > Cancel</Button>
               </div>
             </form>
@@ -321,3 +376,4 @@ function Main() {
 
 
 export default Main;
+
