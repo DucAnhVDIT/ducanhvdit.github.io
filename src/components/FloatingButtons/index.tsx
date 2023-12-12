@@ -11,8 +11,8 @@ interface FloatingActionButtonsProps {
 }
 
 const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({ onPlusClick, position }) => {
-    const offsetX = 2;
-    const offsetY = -2;
+    const offsetX = 59;
+    const offsetY = -59;
     
     console.log('Floating button group position:', position);
     const springProps = useSpring({

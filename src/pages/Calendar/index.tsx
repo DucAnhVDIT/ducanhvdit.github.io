@@ -29,13 +29,13 @@ import RequireLocks from "../../components/RequireLocks";
 import AppointmentStatus from "../../components/Status";
 import FloatingActionButtons from "../../components/FloatingButtons";
 import TippyContent from "../../base-components/TippyContent";
+import { FaSleigh } from "react-icons/fa";
 
 
 
 function Main() {
   const [date, setDate] = useState(new Date());
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
-  const [basicModalPreview, setBasicModalPreview] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
   const [counter, setCounter] = useState<number | undefined>(undefined);
@@ -77,8 +77,8 @@ function Main() {
     time: '',
     guessNote: '',
     companyNote: '',
-    locks: [], // Assuming RequireLocks component manages locks and returns an array
-    status: '', // Assuming AppointmentStatus component manages status and returns a string
+    locks: [], 
+    status: '', 
   });
 
   const handleFormSubmit = (e: { preventDefault: () => void; }) => {
@@ -92,6 +92,7 @@ function Main() {
       title: `${formData.firstName} ${formData.lastName}`,
       start: startDateTime,
       end: endDateTime,
+      resourceId: "a",
       // description: `Service: ${formData.service}\nDeposit: ${formData.deposit}\nGuess Note: ${formData.guessNote}\nCompany Note: ${formData.companyNote}`,
     };
 
@@ -120,6 +121,15 @@ function Main() {
     });
     setSlotSlideoverPreview(false)
   };
+
+  const handleCancel = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setSlotSlideoverPreview(false)
+  }
+
+  const handleEventClick  = (info: { event: any; }) => {
+    setSlotSlideoverPreview(true)
+  }
   
 
   const options: CalendarOptions = {
@@ -147,6 +157,7 @@ function Main() {
     selectable: true,
     nowIndicator:true,
     longPressDelay:1,
+    eventClick: handleEventClick,
     resources: [
       { id: 'a', title: 'Staff 1' },
       { id: 'b', title: 'Staff 2'},
@@ -242,7 +253,7 @@ function Main() {
               </Button>
           </div>
           <Slideover.Description>
-            <form onSubmit={handleFormSubmit}>
+            <form >
             <Input
                 id="first-name"
                 type="text"
@@ -299,7 +310,7 @@ function Main() {
                   value={date}
                   formatStyle="large"
                   icon={<Lucide icon="Calendar" className="text-black" />}
-                  onChange={(newDate) => setDate(newDate)}
+                  onChange={handleDateChange}
                   className="mb-3 mr-2"
                   borderRadius="semi-rounded"
                 />
@@ -335,8 +346,8 @@ function Main() {
               <h1 className=" text-base mb-2">Status</h1>
               <AppointmentStatus />
               <div className="flex justify-center items-center mt-4 mb-7">
-                <Button type="submit" className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
-                <Button className=" bg-red-500 text-white p-3 m-4 w-24" > Cancel</Button>
+                <Button onClick={handleFormSubmit} type="submit" className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
+                <Button onClick={handleCancel} className=" bg-red-500 text-white p-3 m-4 w-24" > Cancel</Button>
               </div>
             </form>
           </Slideover.Description>
