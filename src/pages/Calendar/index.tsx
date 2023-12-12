@@ -30,6 +30,9 @@ import AppointmentStatus from "../../components/Status";
 import FloatingActionButtons from "../../components/FloatingButtons";
 import TippyContent from "../../base-components/TippyContent";
 import { FaSleigh } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 
@@ -103,6 +106,10 @@ function Main() {
     }
     console.log(event)
 
+    toast.success('Booking added successfully!', {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 2300,
+    });
 
     // Reset the form data after submission (optional)
     setFormData({
@@ -358,6 +365,7 @@ function Main() {
       {isFloatingActionVisible && (
         <FloatingActionButtons onPlusClick={handlePlusClick} position={floatingActionPosition} />
       )}
+      <ToastContainer />
       {/* <Dialog
         open={basicModalPreview}
         onClose={() => {
