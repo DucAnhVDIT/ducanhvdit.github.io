@@ -89,6 +89,10 @@ function Main() {
     resourceID:''
   });
 
+  // const handleModifyDateOnBooking = (info) => {
+
+  // }
+
   const handleFormSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     
@@ -143,6 +147,35 @@ function Main() {
   const handleEventClick  = (info: { event: any; }) => {
     setSlotSlideoverPreview(true)
   }
+
+  const fetchApiData = async () => {
+      try {
+        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+          },
+          body: JSON.stringify({
+            "business_id": "20160908110055249272",
+            "date": Math.floor(date.getTime() / 1000),
+          }),
+        });
+
+        if (!apiResponse.ok) {
+          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+        }
+
+        const apiData = await apiResponse.json();
+        console.log('API Response:', apiData);
+      } catch (error) {
+        // console.error('Error fetching the API:', error.message);
+      }
+    };
+
+  useEffect(() => {
+    fetchApiData();
+  }, []);
   
 
   const options: CalendarOptions = {
@@ -164,7 +197,7 @@ function Main() {
     editable: true,
     dayMaxEvents: true,
     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-    slotMinTime: '09:00:00',
+    slotMinTime: '9:00:00',
     slotMaxTime: '19:00:00',
     contentHeight: 'auto',
     selectable: true,
@@ -175,7 +208,8 @@ function Main() {
       { id: 'a', title: 'Staff 1' },
       { id: 'b', title: 'Staff 2'},
       { id: 'c', title: 'Staff 3' },
-      { id: 'd', title: 'Staff 4' }
+      { id: 'd', title: 'Staff 4' },
+      { id: 'e', title: 'Staff 5' }
     ],
     select: handleSlotClicked
   }
@@ -194,6 +228,8 @@ function Main() {
       calendarRef.current.getApi().next();
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
+      console.log(currentDate)
+      fetchApiData()
     }
   };
 
