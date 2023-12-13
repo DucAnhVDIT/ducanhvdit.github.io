@@ -1,48 +1,49 @@
 // FloatingActionButtons.jsx
 
-import React, { useState } from 'react';
+import React from 'react';
 import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import { useSpring, animated } from 'react-spring';
-import './styles.css'
+import './styles.css';
 
 interface FloatingActionButtonsProps {
-  onClose: () => void;
+  onPlusClick: () => void;
+  position: { x: number; y: number }; // New prop for position
 }
 
-const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({ onClose }) => {
-  const [isExpanded, setExpanded] = useState(false);
-
-  const toggleExpand = () => {
-    setExpanded(!isExpanded);
-    onClose(); // Call the onClose prop to notify the parent component
-  };
-
-  const floatButtonSpring = useSpring({
-    transform: isExpanded ? 'translateY(-120px)' : 'translateY(0px)',
-  });
-
-  const buttonSpring = useSpring({
-    opacity: isExpanded ? 1 : 0,
-    transform: isExpanded ? 'translateY(0px)' : 'translateY(20px)',
-  });
+const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({ onPlusClick, position }) => {
+    const offsetX = 59;
+    const offsetY = -59;
+    
+    
+    console.log('Floating button group position:', position);
+    const springProps = useSpring({
+        zIndex: 1000,
+        opacity: 1,
+        transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+        from: { opacity: 0, transform: `translate3d(0,0, 0)` },
+      });
+      
+    
+      const containerStyle = {
+        position: 'absolute',
+        left: `${position.x + offsetX}px`,
+        top: `${position.y + offsetY}px`,
+      };
 
   return (
-    <div className="float-button-container">
-      <animated.div style={floatButtonSpring} className="float-button">
-        <animated.button style={buttonSpring} className="action-button add">
+    <animated.div style={{ ...containerStyle, ...springProps }} className="float-button-container">
+      <animated.div className="float-button">
+        <animated.button className="action-button add bg-primary" onClick={onPlusClick}>
           <FaPlus />
         </animated.button>
-        <animated.button style={buttonSpring} className="action-button edit">
+        <animated.button className="action-button bg-primary edit">
           <FaEdit />
         </animated.button>
-        <animated.button style={buttonSpring} className="action-button delete">
+        <animated.button className="action-button bg-primary delete">
           <FaTrash />
         </animated.button>
       </animated.div>
-      {/* <button onClick={toggleExpand} className="time-slot-button">
-        Click to show buttons
-      </button> */}
-    </div>
+    </animated.div>
   );
 };
 

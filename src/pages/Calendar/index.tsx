@@ -12,7 +12,7 @@ import {
   Source,
   Highlight,
 } from "../../base-components/PreviewComponent";
-import { useState, useRef, SetStateAction } from "react";
+import { useState, useRef, SetStateAction, useEffect } from "react";
 import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle, Application } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
@@ -28,37 +28,121 @@ import dayjs from "dayjs";
 import RequireLocks from "../../components/RequireLocks";
 import AppointmentStatus from "../../components/Status";
 import FloatingActionButtons from "../../components/FloatingButtons";
+import TippyContent from "../../base-components/TippyContent";
+import { FaSleigh } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 
 function Main() {
   const [date, setDate] = useState(new Date());
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
-  const [basicModalPreview, setBasicModalPreview] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
   const [counter, setCounter] = useState<number | undefined>(undefined);
-  const [isSlotClicked, setSlotClicked] = useState(false);
-  // const [day, setDay] = useState('monday');
-
-
+  const [isFloatingActionVisible, setFloatingActionVisible] = useState(false);
+  const [floatingActionPosition, setFloatingActionPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [resourceTitle, setResourceTitle] = useState("");
+  const [resourceID, setResourceID] = useState("");
   
   const handleSlotClicked = (info: any) => {
-    const startTime = moment(info.start).format('HH:mm'); // Get the start time of the clicked slot
-    setDate(info.start);
-    setSelectedTime(startTime);
-    console.log("Slot clicked!")
-  }
-
-  const handleCloseButtons = () => {
-    setSlotClicked(false);
-  }
   
-  const handleAddNewAppointment = () => {
-    setBasicModalPreview(false);
+    const rect = info.jsEvent.target.getBoundingClientRect();
+    const position = {
+      x: rect.left,
+      y: rect.top,
+    };
+  
+    const startTime = moment(info.start).format('HH:mm');
+    setDate(info.start);
+    setFloatingActionVisible(true);
+    setSelectedTime(startTime);
+    setFloatingActionPosition(position);
+    console.log(position);
+    const staffTitle = info.resource.title;
+    const staffID = info.resource.id;
+    setResourceTitle(staffTitle)
+    setResourceID(staffID)
+  };
+  
+
+  const handlePlusClick = () => {
+    setFloatingActionVisible(false);
     setSlotSlideoverPreview(true)
   }
 
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    mobile: '',
+    email: '',
+    service: '',
+    deposit: 0,
+    date: null,
+    time: '',
+    guessNote: '',
+    companyNote: '',
+    locks: [], 
+    status: '', 
+    resourceID:''
+  });
+
+  const handleFormSubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    
+    const startDateTime = date;
+    const endDateTime = new Date(startDateTime);
+    endDateTime.setHours(endDateTime.getHours() + 1);
+    // Create the event object
+    const event = {
+      title: `${formData.firstName} ${formData.lastName}`,
+      start: startDateTime,
+      end: endDateTime,
+      resourceId: resourceID,
+      // description: `Service: ${formData.service}\nDeposit: ${formData.deposit}\nGuess Note: ${formData.guessNote}\nCompany Note: ${formData.companyNote}`,
+    };
+
+    // Use the addEvent API to add the event to the calendar
+    if (calendarRef.current) {
+      // Use the addEvent method to add the event to the calendar
+      calendarRef.current.getApi().addEvent(event);
+    }
+    console.log(event)
+
+    toast.success('Booking added successfully!', {
+      position: toast.POSITION.TOP_RIGHT,
+      autoClose: 2400,
+    });
+
+    // Reset the form data after submission (optional)
+    setFormData({
+      firstName: '',
+      lastName: '',
+      mobile: '',
+      email: '',
+      service: '',
+      deposit: 0,
+      date: null,
+      time: '',
+      guessNote: '',
+      companyNote: '',
+      locks: [],
+      status: '',
+      resourceID:''
+    });
+    setSlotSlideoverPreview(false)
+  };
+
+  const handleCancel = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setSlotSlideoverPreview(false)
+  }
+
+  const handleEventClick  = (info: { event: any; }) => {
+    setSlotSlideoverPreview(true)
+  }
   
 
   const options: CalendarOptions = {
@@ -85,6 +169,8 @@ function Main() {
     contentHeight: 'auto',
     selectable: true,
     nowIndicator:true,
+    longPressDelay:1,
+    eventClick: handleEventClick,
     resources: [
       { id: 'a', title: 'Staff 1' },
       { id: 'b', title: 'Staff 2'},
@@ -124,7 +210,6 @@ function Main() {
     setSlotSlideoverPreview(false)
   }
 
-
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}
@@ -140,7 +225,7 @@ function Main() {
                       className=" text-center mb-4"
                     /> */}
                     <div className="flex items-center justify-evenly w-fit mx-auto bg-transparent rounded-3x ">
-                      <Button className="p-3 bg-transparent border-none shadow-none" onClick={prevDay}>
+                      <Button className="p-2 bg-transparens border-none shadow-none" onClick={prevDay}>
                         <Lucide icon="ChevronLeft" className="text-black" />
                       </Button>
                       {/* <Application theme={theme}> */}
@@ -152,6 +237,7 @@ function Main() {
                             formatStyle="large"
                             icon={<Lucide icon="Calendar" className="text-black" />}
                             onChange={handleDateChange}
+                            borderRadius="semi-rounded"
                         />
                       {/* </Application> */}
                       <Button className="p-1 bg-transparent border-none shadow-none ml-1" onClick={nextDay}>
@@ -180,37 +266,54 @@ function Main() {
               </Button>
           </div>
           <Slideover.Description>
-            <form>
-
-              <Input
+            <form >
+            <Input
                 id="first-name"
                 type="text"
                 placeholder="First Name"
                 className="mb-3"
-              />
-              <Input
+                borderRadius="semi-rounded"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            />
+             <Input
                 id="last-name"
                 type="text"
                 placeholder="Last Name"
                 className="mb-3"
-              />
+                borderRadius="semi-rounded"
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            />
               <Input
                 id="mobile"
                 type="text"
                 placeholder="Mobile"
                 className="mb-3"
+                borderRadius="semi-rounded"
               />
               <Input
                 id="email"
                 type="email"
                 placeholder="Email"
                 className="mb-3"
+                borderRadius="semi-rounded"
+              />
+              <Input
+                id="staff"
+                type="text"
+                placeholder="Staff"
+                className="mb-3"
+                borderRadius="semi-rounded"
+                value={resourceTitle}
+                // onChange={(e) => setFormData({ ...formData, resourceID: e.target.value })}
               />
               <h1 className=" text-base mb-2">Services</h1>
               <Picklist
                 id="service"
                 placeholder="Services"
                 className="mb-3"
+                borderRadius="semi-rounded"
               />
               <CounterInput
                 id="Deposit"
@@ -218,25 +321,28 @@ function Main() {
                 className="mb-3"
                 value={counter}
                 onChange={setCounter}
+                borderRadius="semi-rounded"
               />
 
               <h1 className=" text-base mb-2">Date Time</h1>
               <div className="flex flex-row">
                 <DatePicker
-                    valueAlignment = "center"
-                    placeholder ="Date"
-                    value={date}
-                    formatStyle="large"
-                    icon={<Lucide icon="Calendar" className="text-black" />}
-                    onChange={handleDateChange}
-                    className="mb-3 mr-2"
-                  />
+                  valueAlignment="center"
+                  placeholder="Date"
+                  value={date}
+                  formatStyle="large"
+                  icon={<Lucide icon="Calendar" className="text-black" />}
+                  onChange={handleDateChange}
+                  className="mb-3 mr-2"
+                  borderRadius="semi-rounded"
+                />
                   <Input
-                    valueAlignment = "center"
-                    id=""
+                    valueAlignment="center"
+                    id="time"
                     type="time"
-                    value={selectedTime} 
-                    onChange={(e) => setSelectedTime(e.target.value)} 
+                    value={selectedTime}
+                    onChange={(e) => setSelectedTime(e.target.value)}
+                    borderRadius="semi-rounded"
                   />
               </div>
 
@@ -245,33 +351,34 @@ function Main() {
                   rows={3}
                   placeholder="Guess Note"
                   className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+                  borderRadius="semi-rounded"
               />
               <Textarea
                   id="company-note"
                   rows={3}
                   placeholder="Company Note"
                   className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
+                  borderRadius="semi-rounded"
               />
-              {/* <Button onClick={handleRecordEvent} className="mt-3 bg-primary text-white">
-                Submit
-              </Button> */}
               <RequireLocks />
 
               <h1 className=" text-base mb-2">Status</h1>
               <AppointmentStatus />
               <div className="flex justify-center items-center mt-4 mb-7">
-                <Button className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
-                <Button className=" bg-red-500 text-white p-3 m-4 w-24" > Cancel</Button>
+                <Button onClick={handleFormSubmit} type="submit" className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
+                <Button onClick={handleCancel} className=" bg-red-500 text-white p-3 m-4 w-24" > Cancel</Button>
               </div>
             </form>
           </Slideover.Description>
         </Slideover.Panel>
       </Slideover>
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
-      {isSlotClicked && (
-        <FloatingActionButtons onClose={handleCloseButtons} />
+      
+      {isFloatingActionVisible && (
+        <FloatingActionButtons onPlusClick={handlePlusClick} position={floatingActionPosition} />
       )}
-      <Dialog
+      <ToastContainer />
+      {/* <Dialog
         open={basicModalPreview}
         onClose={() => {
           setBasicModalPreview(false);
@@ -289,9 +396,9 @@ function Main() {
           >
             <Lucide icon="X" className="w-8 h-8 text-slate-400" />
           </a>
-          <Button className="bg-primary text-white" onClick={handleAddNewAppointment}>Add New Appointment</Button>
         </Dialog.Panel>
-      </Dialog>
+      </Dialog> */}
+      
     </div>
     
   );
@@ -300,3 +407,4 @@ function Main() {
 
 
 export default Main;
+
