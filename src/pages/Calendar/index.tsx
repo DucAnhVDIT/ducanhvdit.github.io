@@ -44,7 +44,8 @@ function Main() {
   const [counter, setCounter] = useState<number | undefined>(undefined);
   const [isFloatingActionVisible, setFloatingActionVisible] = useState(false);
   const [floatingActionPosition, setFloatingActionPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-
+  const [resourceTitle, setResourceTitle] = useState("");
+  const [resourceID, setResourceID] = useState("");
   
   const handleSlotClicked = (info: any) => {
   
@@ -60,9 +61,12 @@ function Main() {
     setSelectedTime(startTime);
     setFloatingActionPosition(position);
     console.log(position);
+    const staffTitle = info.resource.title;
+    const staffID = info.resource.id;
+    setResourceTitle(staffTitle)
+    setResourceID(staffID)
   };
   
-
 
   const handlePlusClick = () => {
     setFloatingActionVisible(false);
@@ -82,6 +86,7 @@ function Main() {
     companyNote: '',
     locks: [], 
     status: '', 
+    resourceID:''
   });
 
   const handleFormSubmit = (e: { preventDefault: () => void; }) => {
@@ -95,7 +100,7 @@ function Main() {
       title: `${formData.firstName} ${formData.lastName}`,
       start: startDateTime,
       end: endDateTime,
-      resourceId: "a",
+      resourceId: resourceID,
       // description: `Service: ${formData.service}\nDeposit: ${formData.deposit}\nGuess Note: ${formData.guessNote}\nCompany Note: ${formData.companyNote}`,
     };
 
@@ -108,7 +113,7 @@ function Main() {
 
     toast.success('Booking added successfully!', {
       position: toast.POSITION.TOP_RIGHT,
-      autoClose: 2300,
+      autoClose: 2400,
     });
 
     // Reset the form data after submission (optional)
@@ -125,6 +130,7 @@ function Main() {
       companyNote: '',
       locks: [],
       status: '',
+      resourceID:''
     });
     setSlotSlideoverPreview(false)
   };
@@ -293,6 +299,15 @@ function Main() {
                 className="mb-3"
                 borderRadius="semi-rounded"
               />
+              <Input
+                id="staff"
+                type="text"
+                placeholder="Staff"
+                className="mb-3"
+                borderRadius="semi-rounded"
+                value={resourceTitle}
+                // onChange={(e) => setFormData({ ...formData, resourceID: e.target.value })}
+              />
               <h1 className=" text-base mb-2">Services</h1>
               <Picklist
                 id="service"
@@ -345,9 +360,6 @@ function Main() {
                   className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
                   borderRadius="semi-rounded"
               />
-              {/* <Button onClick={handleRecordEvent} className="mt-3 bg-primary text-white">
-                Submit
-              </Button> */}
               <RequireLocks />
 
               <h1 className=" text-base mb-2">Status</h1>
