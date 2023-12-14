@@ -8,6 +8,10 @@
   import Button from "../../base-components/Button";
   import Lucide from "../../base-components/Lucide";
   import { useState } from "react";
+import Tippy from "../../base-components/Tippy";
+import clsx from "clsx";
+import { DatePicker, Input } from "react-rainbow-components";
+import TippyContent from "../../base-components/TippyContent";
 
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
@@ -25,27 +29,19 @@ function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
           >
               {/* BEGIN: Slide Over Header */}
               <Slideover.Panel>
-                  <a
+                  <Button
                       onClick={(event: React.MouseEvent) => {
                           event.preventDefault();
                           onClose()
                       } }
-                      className="absolute top-0 left-0 right-auto mt-4 -ml-12"
-                      href="#"
+                      className="absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
                   >
-                      <Lucide icon="X" className="w-8 h-8 text-slate-400" />
-                  </a>
+                      <Lucide icon="X" className="w-8 h-8 text-black" />
+                  </Button>
                   <Slideover.Title>
-                      <h2 className="mr-auto text-base font-medium">
-                          Broadcast Message
-                      </h2>
-                      <Button
-                          variant="outline-secondary"
-                          className="hidden sm:flex"
-                      >
-                          <Lucide icon="File" className="w-4 h-4 mr-2" />{" "}
-                          Download Docs
-                      </Button>
+                      <h1 className="mr-auto font-bold text-2xl">
+                          New Appoinment
+                      </h1>
                       <Menu className="sm:hidden">
                           <Menu.Button
                               as="a"
@@ -67,56 +63,52 @@ function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-                      <div>
-                          <FormLabel htmlFor="modal-form-1">From</FormLabel>
-                          <FormInput
-                              id="modal-form-1"
-                              type="text"
-                              placeholder="example@gmail.com" />
-                      </div>
-                      <div className="mt-3">
-                          <FormLabel htmlFor="modal-form-2">To</FormLabel>
-                          <FormInput
-                              id="modal-form-2"
-                              type="text"
-                              placeholder="example@gmail.com" />
-                      </div>
-                      <div className="mt-3">
-                          <FormLabel htmlFor="modal-form-3">
-                              Subject
-                          </FormLabel>
-                          <FormInput
-                              id="modal-form-3"
-                              type="text"
-                              placeholder="Important Meeting" />
-                      </div>
-                      <div className="mt-3">
-                          <FormLabel htmlFor="modal-form-4">
-                              Has the Words
-                          </FormLabel>
-                          <FormInput
-                              id="modal-form-4"
-                              type="text"
-                              placeholder="Job, Work, Documentation" />
-                      </div>
-                      <div className="mt-3">
-                          <FormLabel htmlFor="modal-form-5">
-                              Doesn't Have
-                          </FormLabel>
-                          <FormInput
-                              id="modal-form-5"
-                              type="text"
-                              placeholder="Job, Work, Documentation" />
-                      </div>
-                      <div className="mt-3">
-                          <FormLabel htmlFor="modal-form-6">Size</FormLabel>
-                          <FormSelect id="modal-form-6">
-                              <option>10</option>
-                              <option>25</option>
-                              <option>35</option>
-                              <option>50</option>
-                          </FormSelect>
-                      </div>
+                  <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                        <div
+                        className={clsx([
+                            "relative zoom-in",
+                            "before:content-[''] before:w-[90%] before:shadow-[0px_3px_20px_#0000000b] before:bg-red before:h-full before:mt-3 before:absolute before:rounded-md before:mx-auto before:inset-x-0 before:dark:bg-darkmode-400/70",
+                        ])}
+                        >
+                        <div className="p-5 box">
+                            <div className="flex">
+                            <Lucide
+                                icon="User"
+                                className="w-14 h-14 rounded-full p-3 bg-primary text-white"
+                            />
+                            <div className=" mt-1 ml-3">
+                                <h1 className="text-lg">Select a client</h1>
+                                <h2>Leave empty for walkins</h2>
+                            </div>
+                            <div className="ml-auto">
+                                <Button className="border-none shadow-none">
+                                <Lucide
+                                    icon="Plus"
+                                    className="w-10 h-10 rounded-full p-3 bg-primary text-white"
+                                />
+                                </Button>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-row mt-5">
+                        <DatePicker
+                        valueAlignment="center"
+                        placeholder="Date"
+                        formatStyle="large"
+                        icon={<Lucide icon="Calendar" className="text-black" />}
+                        className="mb-3 mr-2"
+                        borderRadius="semi-rounded"
+                        />
+                        <Input
+                            valueAlignment="center"
+                            id="time"
+                            type="time"
+                            borderRadius="semi-rounded"
+                        />
+                    </div>
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}

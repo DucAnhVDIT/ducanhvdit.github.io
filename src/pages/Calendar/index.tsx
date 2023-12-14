@@ -66,6 +66,7 @@ function Main() {
     const staffID = info.resource.id;
     setResourceTitle(staffTitle)
     setResourceID(staffID)
+    setSlotSlideoverPreview(true)
   };
   
 
@@ -433,9 +434,9 @@ function Main() {
       {slotSlideoverPreview && (<SlideOverPanel isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
 
       
-      {isFloatingActionVisible && (
+      {/* {isFloatingActionVisible && (
         <FloatingActionButtons onPlusClick={handlePlusClick} position={floatingActionPosition} />
-      )}
+      )} */}
       <ToastContainer />
       {/* <Dialog
         open={basicModalPreview}
