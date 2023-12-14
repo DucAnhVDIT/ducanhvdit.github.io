@@ -32,6 +32,7 @@ import TippyContent from "../../base-components/TippyContent";
 import { FaSleigh } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SlideOverPanel from "../../components/SlideOver";
 
 
 
@@ -246,6 +247,14 @@ function Main() {
     setSlotSlideoverPreview(false)
   }
 
+  const handleOpen = () => {
+    setSlotSlideoverPreview(true);
+  };
+
+  const handleClose = () => {
+    setSlotSlideoverPreview(false);
+  };
+
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}
@@ -286,12 +295,22 @@ function Main() {
             )}
       </PreviewComponent>
 
-      <Slideover
+      {/* <Slideover
         open={slotSlideoverPreview}
         onClose={() => {
           setSlotSlideoverPreview(false);
         }}
       >
+        <Slideover.Panel>
+          <div className="flex flex-row justify-between">
+              <Slideover.Title className="p-5">
+                <h2 className="mr-auto text-base font-medium">Booking Information</h2>
+              </Slideover.Title>
+              <Button className="p-5 bg-transparent border-none shadow-none" onClick={closeModal}>
+                <Lucide icon="X" className="text-black" />
+              </Button>
+          </div>
+        </Slideover.Panel>
         <Slideover.Panel>
           <div className="flex flex-row justify-between">
               <Slideover.Title className="p-5">
@@ -407,8 +426,12 @@ function Main() {
             </form>
           </Slideover.Description>
         </Slideover.Panel>
-      </Slideover>
+      </Slideover> */}
+
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
+
+      {slotSlideoverPreview && (<SlideOverPanel isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
+
       
       {isFloatingActionVisible && (
         <FloatingActionButtons onPlusClick={handlePlusClick} position={floatingActionPosition} />
@@ -417,7 +440,7 @@ function Main() {
       {/* <Dialog
         open={basicModalPreview}
         onClose={() => {
-          setBasicModalPreview(false);
+          setBasicModalPreview(false);y
         }}
         className="flex items-center justify-center w-10"
       >
