@@ -12,6 +12,7 @@ import Tippy from "../../base-components/Tippy";
 import clsx from "clsx";
 import { DatePicker, Input } from "react-rainbow-components";
 import TippyContent from "../../base-components/TippyContent";
+import DatePickerMUI from "../DatePicker";
 
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
@@ -65,12 +66,9 @@ function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
                   <Slideover.Description>
                   <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                         <div
-                        className={clsx([
-                            "relative zoom-in",
-                            "before:content-[''] before:w-[90%] before:shadow-[0px_3px_20px_#0000000b] before:bg-red before:h-full before:mt-3 before:absolute before:rounded-md before:mx-auto before:inset-x-0 before:dark:bg-darkmode-400/70",
-                        ])}
+                        className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
                         >
-                        <div className="p-5 box">
+                        <div className="p-3">
                             <div className="flex">
                             <Lucide
                                 icon="User"
@@ -81,10 +79,10 @@ function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
                                 <h2>Leave empty for walkins</h2>
                             </div>
                             <div className="ml-auto">
-                                <Button className="border-none shadow-none">
+                                <Button className="border-none shadow-none cursor-pointer ">
                                 <Lucide
                                     icon="Plus"
-                                    className="w-10 h-10 rounded-full p-3 bg-primary text-white"
+                                    className="w-10 h-10 rounded-xl p-3 bg-primary text-white"
                                 />
                                 </Button>
                             </div>
@@ -94,20 +92,7 @@ function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
                     </div>
 
                     <div className="flex flex-row mt-5">
-                        <DatePicker
-                        valueAlignment="center"
-                        placeholder="Date"
-                        formatStyle="large"
-                        icon={<Lucide icon="Calendar" className="text-black" />}
-                        className="mb-3 mr-2"
-                        borderRadius="semi-rounded"
-                        />
-                        <Input
-                            valueAlignment="center"
-                            id="time"
-                            type="time"
-                            borderRadius="semi-rounded"
-                        />
+                        <DatePickerMUI />
                     </div>
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
