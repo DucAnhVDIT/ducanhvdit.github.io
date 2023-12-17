@@ -8,12 +8,10 @@
   import Button from "../../base-components/Button";
   import Lucide from "../../base-components/Lucide";
   import { useState } from "react";
-import Tippy from "../../base-components/Tippy";
-import clsx from "clsx";
-import { DatePicker, Input } from "react-rainbow-components";
-import TippyContent from "../../base-components/TippyContent";
+
 import DatePickerMUI from "../DatePicker";
 import CustomDatePicker from "../DatePicker";
+import { Link } from 'react-router-dom';
 
 
 
@@ -138,13 +136,15 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                                     </div>
                                 </div>
                                 <div className="mt-3">
-                                    <Button className="items-center justify-center text-center border-none shadow-none">
+                                    <Link to="/clients/add">
+                                        <Button className="items-center justify-center text-center border-none shadow-none">
                                             <Lucide
                                                 icon="PlusCircle"
                                                 className="text-primary text-lg round mr-1"
                                             />
-                                        <h1>Add new client</h1>
-                                    </Button>        
+                                            <h1>Add new client</h1>
+                                        </Button>
+                                    </Link> 
                                 </div>
                             </Slideover.Description>
                         </Slideover.Panel>

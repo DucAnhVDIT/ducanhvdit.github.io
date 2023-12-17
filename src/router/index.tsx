@@ -7,6 +7,7 @@ import Calendar from "../pages/Calendar";
 import PointOfSales from "../pages/PointOfSale"
 import Post from "../pages/Post"
 import DashboardOverview2 from "../pages/DashboardOverview2"
+import AddClient from "../components/AddClient";
 function Router() {
   const routes = [
     {
@@ -32,6 +33,10 @@ function Router() {
         {
           path: "/manager",
           element: <DashboardOverview2 />,
+        },
+        {
+          path: "/clients/add",
+          element: <AddClient />,
         },
       ],
     },
