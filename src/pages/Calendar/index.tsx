@@ -281,7 +281,7 @@ function Main() {
                       <Lucide icon="ChevronLeft" className="w-4 h-4 sm:w-6 sm:h-6" />
                     </Button>
                     <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                    <Button className="text-sm bg-primary text-white border-none shadow-none" onClick={todayDate}>
+                    <Button className="text-sm font-normal bg-primary text-white border-none shadow-none" onClick={todayDate}>
                       Today
                     </Button>
                     <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
