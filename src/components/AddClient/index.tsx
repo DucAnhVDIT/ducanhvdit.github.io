@@ -84,7 +84,7 @@ const AddClient = () => {
                                 </FormLabel>
                                 <FormInput
                                     id="validation-form-1"
-                                    type="text"
+                                    type="email"
                                     name="name"
                                     placeholder="Enter Email"
                                     className="w-full"
@@ -99,7 +99,7 @@ const AddClient = () => {
                                 </FormLabel>
                                 <FormInput
                                     id="validation-form-1"
-                                    type="text"
+                                    type="number"
                                     name="name"
                                     placeholder="Enter Phone Number"
                                     className="w-full"
