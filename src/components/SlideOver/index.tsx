@@ -25,7 +25,7 @@ import CustomDatePicker from "../DatePicker";
 function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
-    
+
     const openSearchClient = () => {
         setSecondSlideoverOpen(true)
     }
@@ -136,6 +136,15 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                                             />
                                         )}
                                     </div>
+                                </div>
+                                <div className="mt-3">
+                                    <Button className="items-center justify-center text-center border-none shadow-none">
+                                            <Lucide
+                                                icon="PlusCircle"
+                                                className="text-primary text-lg round mr-1"
+                                            />
+                                        <h1>Add new client</h1>
+                                    </Button>        
                                 </div>
                             </Slideover.Description>
                         </Slideover.Panel>
