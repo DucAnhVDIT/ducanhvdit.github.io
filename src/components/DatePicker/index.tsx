@@ -1,45 +1,28 @@
-import * as React from 'react';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { createTheme } from '@mui/material/styles'
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+// CustomDatePicker.tsx
+import { Calendar } from 'lucide-react';
+import Flatpickr from 'react-flatpickr';
 
-export default function DatePickerMUI() {
-  const newTheme = (theme:any) => createTheme({
-    ...theme,
-    components: {
-      MuiPickersToolbar: {
-        styleOverrides: {
-          root: {
-            color: '#1565c0',
-            borderRadius: 20,
-            borderWidth: 0,
-            borderColor: '#2196f3',
-            border: '0px solid',
-            backgroundColor: '#bbdefb',
-          }
-        }
-      }
-    }
-  })
+interface CustomDatePickerProps {
+  date: Date;
+  goToDate: (date: Date) => void;
+}
+
+const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ date, goToDate }) => {
+  const handleDateChange = (dates: Date[]) => {
+    goToDate(dates[0]);
+  };
+
   return (
-    <div>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DesktopDatePicker
-          sx={{
-            '.MuiPickersToolbar-root': {
-              color: '#1565c0',
-              borderRadius: 20,
-              borderWidth: 0,
-              borderColor: '#2196f3',
-              border: '0px solid',
-              backgroundColor: '#bbdefb',
-            },
-          }}
-        />
-      </LocalizationProvider>
+    <div className="relative">
+      <Flatpickr
+        value={date}
+        onChange={handleDateChange}
+        options={{ dateFormat: 'D, j F Y' }}
+        className="pl-4w-64 border-none bg-primary text-sm rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+      <Calendar className="absolute right-1 top-1/2 transform -translate-y-1/2 text-white w-4 h-4" />
     </div>
   );
-}
+};
+
+export default CustomDatePicker;

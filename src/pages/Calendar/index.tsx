@@ -33,6 +33,8 @@ import { FaSleigh } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "../../components/SlideOver";
+import DatePickerMUI from "../../components/DatePicker";
+import CustomDatePicker from "../../components/DatePicker";
 
 
 
@@ -216,11 +218,11 @@ function Main() {
     select: handleSlotClicked
   }
   
-  const handleDateChange = (selectedDate: Date) => {
-    setDate(selectedDate);
+  const handleDateChange = (date: Date) => {
+    setDate(date);
     // Use calendarRef to access FullCalendar instance and navigate to the selected date
     if (calendarRef.current) {
-      calendarRef.current.getApi().gotoDate(selectedDate);
+      calendarRef.current.getApi().gotoDate(date);
       // setDate(selectedDate)
     }
   };
@@ -244,6 +246,15 @@ function Main() {
     }
   };
 
+  const todayDate = () => {
+    if (calendarRef.current) {
+      calendarRef.current.getApi().today();
+      const currentDate = calendarRef.current.getApi().view.currentStart;
+      setDate(currentDate);
+    }
+  };
+
+
   const closeModal = () => {
     setSlotSlideoverPreview(false)
   }
@@ -256,6 +267,7 @@ function Main() {
     setSlotSlideoverPreview(false);
   };
 
+
   return (
     <div className="full-calendar">
       {/* BEGIN: Input Group */}
@@ -264,200 +276,32 @@ function Main() {
               <>
                 <div className="p-5 bg-transparent">
                 <Preview>
-                    {/* <WeekDayPicker
-                      id="weekday-picker-1"
-                      value={day}
-                      onChange={handleOnChange}
-                      className=" text-center mb-4"
-                    /> */}
-                    <div className="flex items-center justify-evenly w-fit mx-auto bg-transparent rounded-3x ">
-                      <Button className="p-2 bg-transparens border-none shadow-none" onClick={prevDay}>
-                        <Lucide icon="ChevronLeft" className="text-black" />
-                      </Button>
-                      {/* <Application theme={theme}> */}
-                        <DatePicker
-                            valueAlignment = "center"
-                            placeholder ="Date"
-                            value={date}
-                            id="main-date-picker"
-                            formatStyle="large"
-                            icon={<Lucide icon="Calendar" className="text-black" />}
-                            onChange={handleDateChange}
-                            borderRadius="semi-rounded"
-                        />
-                      {/* </Application> */}
-                      <Button className="p-1 bg-transparent border-none shadow-none ml-1" onClick={nextDay}>
-                        <Lucide icon="ChevronRight" className="text-black" />
-                      </Button>
-                    </div>
+                  <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
+                    <Button className="text-sm sm:text-base text-white border-none shadow-none" onClick={prevDay}>
+                      <Lucide icon="ChevronLeft" className="w-4 h-4 sm:w-6 sm:h-6" />
+                    </Button>
+                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                    <Button className="text-sm bg-primary text-white border-none shadow-none" onClick={todayDate}>
+                      Today
+                    </Button>
+                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                    <CustomDatePicker date={date} goToDate={handleDateChange}/>
+                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                    <Button className="text-xs sm:text-base text-white border-none shadow-none" onClick={nextDay}>
+                      <Lucide icon="ChevronRight" className="w-4 h-4 sm:w-6 sm:h-6" />
+                    </Button>
+                  </div>
                   </Preview>
                 </div>
               </>
             )}
       </PreviewComponent>
 
-      {/* <Slideover
-        open={slotSlideoverPreview}
-        onClose={() => {
-          setSlotSlideoverPreview(false);
-        }}
-      >
-        <Slideover.Panel>
-          <div className="flex flex-row justify-between">
-              <Slideover.Title className="p-5">
-                <h2 className="mr-auto text-base font-medium">Booking Information</h2>
-              </Slideover.Title>
-              <Button className="p-5 bg-transparent border-none shadow-none" onClick={closeModal}>
-                <Lucide icon="X" className="text-black" />
-              </Button>
-          </div>
-        </Slideover.Panel>
-        <Slideover.Panel>
-          <div className="flex flex-row justify-between">
-              <Slideover.Title className="p-5">
-                <h2 className="mr-auto text-base font-medium">Booking Information</h2>
-              </Slideover.Title>
-              <Button className="p-5 bg-transparent border-none shadow-none" onClick={closeModal}>
-                <Lucide icon="X" className="text-black" />
-              </Button>
-          </div>
-          <Slideover.Description>
-            <form >
-            <Input
-                id="first-name"
-                type="text"
-                placeholder="First Name"
-                className="mb-3"
-                borderRadius="semi-rounded"
-                value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-            />
-             <Input
-                id="last-name"
-                type="text"
-                placeholder="Last Name"
-                className="mb-3"
-                borderRadius="semi-rounded"
-                value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-            />
-              <Input
-                id="mobile"
-                type="text"
-                placeholder="Mobile"
-                className="mb-3"
-                borderRadius="semi-rounded"
-              />
-              <Input
-                id="email"
-                type="email"
-                placeholder="Email"
-                className="mb-3"
-                borderRadius="semi-rounded"
-              />
-              <Input
-                id="staff"
-                type="text"
-                placeholder="Staff"
-                className="mb-3"
-                borderRadius="semi-rounded"
-                value={resourceTitle}
-                // onChange={(e) => setFormData({ ...formData, resourceID: e.target.value })}
-              />
-              <h1 className=" text-base mb-2">Services</h1>
-              <Picklist
-                id="service"
-                placeholder="Services"
-                className="mb-3"
-                borderRadius="semi-rounded"
-              />
-              <CounterInput
-                id="Deposit"
-                placeholder="Deposit"
-                className="mb-3"
-                value={counter}
-                onChange={setCounter}
-                borderRadius="semi-rounded"
-              />
-
-              <h1 className=" text-base mb-2">Date Time</h1>
-              <div className="flex flex-row">
-                <DatePicker
-                  valueAlignment="center"
-                  placeholder="Date"
-                  value={date}
-                  formatStyle="large"
-                  icon={<Lucide icon="Calendar" className="text-black" />}
-                  onChange={handleDateChange}
-                  className="mb-3 mr-2"
-                  borderRadius="semi-rounded"
-                />
-                  <Input
-                    valueAlignment="center"
-                    id="time"
-                    type="time"
-                    value={selectedTime}
-                    onChange={(e) => setSelectedTime(e.target.value)}
-                    borderRadius="semi-rounded"
-                  />
-              </div>
-
-              <Textarea
-                  id="guess-note"
-                  rows={3}
-                  placeholder="Guess Note"
-                  className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
-                  borderRadius="semi-rounded"
-              />
-              <Textarea
-                  id="company-note"
-                  rows={3}
-                  placeholder="Company Note"
-                  className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto mb-2"
-                  borderRadius="semi-rounded"
-              />
-              <RequireLocks />
-
-              <h1 className=" text-base mb-2">Status</h1>
-              <AppointmentStatus />
-              <div className="flex justify-center items-center mt-4 mb-7">
-                <Button onClick={handleFormSubmit} type="submit" className=" bg-primary text-white p-3 m-4 w-24" > Submit</Button>
-                <Button onClick={handleCancel} className=" bg-red-500 text-white p-3 m-4 w-24" > Cancel</Button>
-              </div>
-            </form>
-          </Slideover.Description>
-        </Slideover.Panel>
-      </Slideover> */}
-
+      
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
-
-      
-      {/* {isFloatingActionVisible && (
-        <FloatingActionButtons onPlusClick={handlePlusClick} position={floatingActionPosition} />
-      )} */}
+      {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
       <ToastContainer />
-      {/* <Dialog
-        open={basicModalPreview}
-        onClose={() => {
-          setBasicModalPreview(false);y
-        }}
-        className="flex items-center justify-center w-10"
-      >
-        <Dialog.Panel className="p-10 text-center w-4" style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <a
-          onClick={(event: React.MouseEvent) => {
-            event.preventDefault();
-            setBasicModalPreview(false);
-          }}
-          className="absolute top-0 right-0 mt-3 mr-3"
-            href="#"
-          >
-            <Lucide icon="X" className="w-8 h-8 text-slate-400" />
-          </a>
-        </Dialog.Panel>
-      </Dialog> */}
       
     </div>
     

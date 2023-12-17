@@ -15,12 +15,13 @@ import TippyContent from "../../base-components/TippyContent";
 import DatePickerMUI from "../DatePicker";
 
 
+
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
     isOpen: boolean;
     onClose: () => void;
   }
-function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
+function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
   return (
     <div>
           <Slideover
@@ -74,15 +75,15 @@ function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
                                 icon="User"
                                 className="w-14 h-14 rounded-full p-3 bg-primary text-white"
                             />
-                            <div className=" mt-1 ml-3">
+                            <div className=" mt-4 ml-3">
                                 <h1 className="text-lg">Select a client</h1>
-                                <h2>Leave empty for walkins</h2>
+                                {/* <h2>Leave empty for walkins</h2> */}
                             </div>
                             <div className="ml-auto">
                                 <Button className="border-none shadow-none cursor-pointer ">
                                 <Lucide
                                     icon="Plus"
-                                    className="w-10 h-10 rounded-xl p-3 bg-primary text-white"
+                                    className="w-12 h-12 p-3 text-primary text-lg"
                                 />
                                 </Button>
                             </div>
@@ -92,7 +93,6 @@ function SlideOverPanel({ isOpen, onClose }: SlideOverPanelProps) {
                     </div>
 
                     <div className="flex flex-row mt-5">
-                        <DatePickerMUI />
                     </div>
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
