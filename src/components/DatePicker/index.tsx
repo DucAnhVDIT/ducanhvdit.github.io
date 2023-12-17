@@ -15,14 +15,14 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ date, goToDate }) =
   };
 
   return (
-    <div className="relative">
+    <div className='flex flex-row'>
       <Flatpickr
         value={date}
         onChange={handleDateChange}
         options={{ dateFormat: 'D j F, Y' }}
-        className="pl-4w-64 border-none bg-primary text-sm rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        className="pl-4 border-none bg-primary text-sm rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
       />
-      <Calendar className="absolute right-1 top-1/2 transform -translate-y-1/2 text-white w-4 h-4" />
+      <Calendar className=" text-white w-4 h-4 mt-2.5 mr-1" />
     </div>
   );
 };

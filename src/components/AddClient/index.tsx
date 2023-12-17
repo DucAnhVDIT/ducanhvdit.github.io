@@ -6,7 +6,8 @@ import { FormInput, FormLabel, FormTextarea } from '../../base-components/Form';
 import Toastify from 'toastify-js';
 import { CheckboxToggle } from 'react-rainbow-components';
 import Flatpickr from 'react-flatpickr';
-import 'flatpickr/dist/themes/material_green.css'; 
+import 'flatpickr/dist/themes/dark.css';
+import Dropzone, { DropzoneElement } from "../../base-components/Dropzone"; 
 
 const AddClient = () => {
     const [firstName, setFirstName] = useState('');
@@ -34,11 +35,11 @@ const AddClient = () => {
                         <Lucide icon={'X'}></Lucide>
                     </Link>
                     <h1 className="text-xl font-bold">Add Client</h1>
-                    <Button className="text-lg font-bold">Save</Button>
+                    <Button className="text-lg font-bold text-white bg-primary">Save</Button>
             </div>
             <div className=' md:flex h-full items-start justify-center bg-white shadow'>
                 {/* Begin Basic Info */}
-                <div className='border-2 md:w-1/3 p-5 pr-10 m-5 rounded-2xl'>
+                <div className='border-2 border-black md:w-1/3 p-5 pr-10 m-5 rounded-2xl'>
                     <h1 className='text-2xl mb-2 font-bold'>Basic Information</h1>
                     <form className="validate-form" >
                         <div className="input-form flex flex-row w-full">
@@ -113,12 +114,13 @@ const AddClient = () => {
                           Birth Date
                         </FormLabel>
                         <Flatpickr
-                            className='w-full rounded-3xl'
+                            className='w-full rounded-xl'
                             options={{
                                 altInput: true,
                                 altFormat: "F j, Y",
                                 dateFormat: "Y-m-d",
                             }}
+                            placeholder="Choose Birth Date"
                         />
                       </div>
                       <div className="mt-3 input-form">
@@ -140,28 +142,53 @@ const AddClient = () => {
                 </div>
                 {/* End Basic Info */}
                 
-                {/* Begin Consent Info */}
-                <div className="md:w-1/5 p-4 flex flex-col border-2 rounded-2xl m-5 ">
-                    <h2 className="text-2xl font-bold mb-3">Consent Info</h2>
-                    <CheckboxToggle
-                        label="Allow SMS"
-                        value={allowSMS}
-                         className='mb-2'
-                        onChange={(event) => setAllowSMS(event.target.checked)}
-                    />
-                    <CheckboxToggle
-                        label="Allow Email"
-                        value={allowEmail}
-                        className='mb-2'
-                        onChange={(event) => setAllowEmail(event.target.checked)}
-                    />
-                    <CheckboxToggle
-                        label="Allow Marketing Notification"
-                        value={allowMarketingNotification}
-                        className='mb-2'
-                        onChange={(event) => setAllowMarketingNotification(event.target.checked)}
-                    />
-                    {/* Other Consent Info fields */}
+                <div className='md:w-1/3'>
+                     {/* Begin Consent Info */}
+                    <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 ">
+                        <h2 className="text-2xl font-bold mb-3">Consent Info</h2>
+                        <CheckboxToggle
+                            label="Allow SMS"
+                            value={allowSMS}
+                            className='mb-2'
+                            onChange={(event) => setAllowSMS(event.target.checked)}
+                        />
+                        <CheckboxToggle
+                            label="Allow Email"
+                            value={allowEmail}
+                            className='mb-2'
+                            onChange={(event) => setAllowEmail(event.target.checked)}
+                        />
+                        <CheckboxToggle
+                            label="Allow Marketing Notification"
+                            value={allowMarketingNotification}
+                            className='mb-2'
+                            onChange={(event) => setAllowMarketingNotification(event.target.checked)}
+                        />
+                    </div>
+                     {/* End Consent Info */}
+
+                      {/* Begin Consent Form */}
+                      <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 ">
+                      <h2 className="text-2xl font-bold mb-3">Consent Form</h2>
+                      <Dropzone
+                        // getRef={(el) => {
+                        //     dropzoneSingleRef.current = el;
+                        // }}
+                        options={{
+                            url: "https://httpbin.org/post",
+                            thumbnailWidth: 150,
+                            maxFilesize: 0.5,
+                            maxFiles: 1,
+                            headers: { "My-Awesome-Header": "header value" },
+                        }}
+                        className="dropzone"
+                        >
+                        <div className="text-lg font-medium">
+                            Drop files here or click to upload.
+                        </div>
+                    </Dropzone>
+                    </div>
+                      {/* End Consent Form */}
                 </div>
             </div>
         </div>
