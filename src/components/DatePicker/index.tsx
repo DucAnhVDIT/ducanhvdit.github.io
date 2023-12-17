@@ -1,6 +1,8 @@
 // CustomDatePicker.tsx
 import { Calendar } from 'lucide-react';
 import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/dark.css';
+// import './customeTheme.css'
 
 interface CustomDatePickerProps {
   date: Date;
