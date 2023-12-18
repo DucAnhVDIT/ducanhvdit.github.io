@@ -118,6 +118,7 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                         </div>
                     </div>
                     </Button>
+
                     {/* End Add Client Button */}
 
                     {/* Begin DatePicker */}
@@ -239,7 +240,19 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                                         )}
                                     </div>
                                 </div>
-
+                            <div className="mt-3">
+                                <Button className="items-center justify-center text-center border-none shadow-none">
+                                            <Link to={'/clients/add'}>
+                                                <Button className="items-center justify-center text-center border-none shadow-none">
+                                                        <Lucide
+                                                            icon="PlusCircle"
+                                                            className="text-primary text-lg round mr-1"
+                                                        />
+                                                    <h1>Add new client</h1>
+                                                </Button>
+                                            </Link>
+                                </Button>
+                            </div>
                             </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
