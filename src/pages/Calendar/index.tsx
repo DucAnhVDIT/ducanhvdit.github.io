@@ -36,6 +36,11 @@ import SlideOverPanel from "../../components/SlideOver";
 import DatePickerMUI from "../../components/DatePicker";
 import CustomDatePicker from "../../components/DatePicker";
 
+interface Staff {
+  StaffID: number;
+  StaffName: string;
+  StaffColour: string | null;
+}
 
 
 
@@ -45,25 +50,23 @@ function Main() {
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
   const [counter, setCounter] = useState<number | undefined>(undefined);
-  const [isFloatingActionVisible, setFloatingActionVisible] = useState(false);
-  const [floatingActionPosition, setFloatingActionPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [resourceTitle, setResourceTitle] = useState("");
   const [resourceID, setResourceID] = useState("");
+  const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
+  const [staffData, setStaffData] = useState([]);
+
+  useEffect(() => {
+    fetchAppoinmentApiData();
+    fetchStaffApiData();
+  }, []);
+
   
   const handleSlotClicked = (info: any) => {
   
-    const rect = info.jsEvent.target.getBoundingClientRect();
-    const position = {
-      x: rect.left,
-      y: rect.top,
-    };
-  
+
     const startTime = moment(info.start).format('HH:mm');
     setDate(info.start);
-    setFloatingActionVisible(true);
     setSelectedTime(startTime);
-    setFloatingActionPosition(position);
-    console.log(position);
     const staffTitle = info.resource.title;
     const staffID = info.resource.id;
     setResourceTitle(staffTitle)
@@ -71,11 +74,6 @@ function Main() {
     setSlotSlideoverPreview(true)
   };
   
-
-  const handlePlusClick = () => {
-    setFloatingActionVisible(false);
-    setSlotSlideoverPreview(true)
-  }
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -152,7 +150,7 @@ function Main() {
     setSlotSlideoverPreview(true)
   }
 
-  const fetchApiData = async () => {
+  const fetchAppoinmentApiData = async () => {
       try {
         const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointments', {
           method: 'POST',
@@ -170,17 +168,46 @@ function Main() {
           throw new Error(`HTTP error! Status: ${apiResponse.status}`);
         }
 
-        const apiData = await apiResponse.json();
-        console.log('API Response:', apiData);
+        const appointmentsData = await apiResponse.json();
+        console.log('API Response:', appointmentsData);
+        return appointmentsData
+
       } catch (error) {
         // console.error('Error fetching the API:', error.message);
       }
     };
 
-  useEffect(() => {
-    fetchApiData();
-  }, []);
+    const fetchStaffApiData = async () => {
+      try {
+        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetStaff', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+          },
+          body: JSON.stringify({
+            "business_id": "20160908110055249272",
+            "date": Math.floor(date.getTime() / 1000),
+          }),
+        });
+
+        if (!apiResponse.ok) {
+          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+        }
+
+        const staffData = await apiResponse.json();
+        console.log('API Response:', staffData);
+        setStaffData(staffData.Staffs);
+      } catch (error) {
+        // console.error('Error fetching the API:', error.message);
+      }
+    };
+
+
   
+
+  
+  // Take all the data from the Api and add it to the calendar
 
   const options: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
@@ -206,15 +233,14 @@ function Main() {
     contentHeight: 'auto',
     selectable: true,
     nowIndicator:true,
+    events: calendarEvents,
     longPressDelay:1,
     eventClick: handleEventClick,
-    resources: [
-      { id: 'a', title: 'Staff 1' },
-      { id: 'b', title: 'Staff 2'},
-      { id: 'c', title: 'Staff 3' },
-      { id: 'd', title: 'Staff 4' },
-      { id: 'e', title: 'Staff 5' }
-    ],
+    resources: staffData.map((staff) => ({
+      id: staffData ? String((staff as { StaffID: number }).StaffID) : '',
+      title: staffData && staffData.length > 0 ? (staff as { StaffName: string }).StaffName : '',
+      staffColor: (staff as { StaffColour: string }).StaffColour, // Use staff color if available
+    })),
     select: handleSlotClicked
   }
   
@@ -233,7 +259,6 @@ function Main() {
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
       console.log(currentDate)
-      fetchApiData()
     }
   };
 
@@ -274,7 +299,7 @@ function Main() {
       <PreviewComponent className="mt-5 intro-y bg-transparent">
             {({ toggle }) => (
               <>
-                <div className="p-5 bg-transparent">
+                <div className="p-5">
                 <Preview>
                   <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
                     <Button className="text-sm sm:text-base text-white border-none shadow-none" onClick={prevDay}>
