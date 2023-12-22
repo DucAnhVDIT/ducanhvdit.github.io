@@ -54,9 +54,24 @@ function Main() {
   const [resourceID, setResourceID] = useState("");
   const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
   const [staffData, setStaffData] = useState([]);
+  const [scheduleData, setScheduleData] = useState([]);
 
   useEffect(() => {
-    fetchAppoinmentApiData();
+    const fetchData = async () => {
+      const appointmentsData = await fetchAppoinmentApiData();
+      setScheduleData(appointmentsData.Appointments);
+    };
+  
+    fetchData();
+  }, []); // Run this effect once when the component mounts
+  
+  // Effect to log scheduleData changes
+  useEffect(() => {
+    console.log("Updated Schedule Data:", scheduleData);
+  }, [scheduleData]);
+  
+  // Effect to fetch staff data
+  useEffect(() => {
     fetchStaffApiData();
   }, []);
 
@@ -169,7 +184,8 @@ function Main() {
         }
 
         const appointmentsData = await apiResponse.json();
-        console.log('API Response:', appointmentsData);
+        console.log('API Response:', appointmentsData.Appointments);
+        setScheduleData(appointmentsData.Appointments);
         return appointmentsData
 
       } catch (error) {
@@ -196,7 +212,7 @@ function Main() {
         }
 
         const staffData = await apiResponse.json();
-        console.log('API Response:', staffData);
+        // console.log('API Response:', staffData);
         setStaffData(staffData.Staffs);
       } catch (error) {
         // console.error('Error fetching the API:', error.message);
@@ -233,7 +249,13 @@ function Main() {
     contentHeight: 'auto',
     selectable: true,
     nowIndicator:true,
-    events: calendarEvents,
+    events: scheduleData.map((appointment) => ({
+      // Add service name to Tittle if available
+      title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
+      start: (appointment as { StartTime: Date }).StartTime, // Start time of the event
+      end: (appointment as { EndTime: Date }).EndTime, // End time of the event
+      resourceId: (appointment as { StaffID: string }).StaffID,
+    })),
     longPressDelay:1,
     eventClick: handleEventClick,
     resources: staffData.map((staff) => ({
@@ -260,6 +282,7 @@ function Main() {
       setDate(currentDate);
       console.log(currentDate)
     }
+    fetchAppoinmentApiData()
   };
 
 
