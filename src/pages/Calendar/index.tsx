@@ -175,7 +175,7 @@ function Main() {
           },
           body: JSON.stringify({
             "business_id": "20160908110055249272",
-            "date": Math.floor(date.getTime() / 1000),
+            "date": date ? Math.floor(date.getTime() / 1000) : null,
           }),
         });
 
@@ -185,11 +185,17 @@ function Main() {
 
         const appointmentsData = await apiResponse.json();
         console.log('API Response:', appointmentsData.Appointments);
-        setScheduleData(appointmentsData.Appointments);
+        const appointmentsArray = appointmentsData.Appointments || [];
+
+        // Update the state only if the array is not empty
+        if (appointmentsArray.length > 0) {
+          setScheduleData(appointmentsArray);
+        }
         return appointmentsData
 
       } catch (error) {
         // console.error('Error fetching the API:', error.message);
+        return null;
       }
     };
 
@@ -255,6 +261,7 @@ function Main() {
       start: (appointment as { StartTime: Date }).StartTime, // Start time of the event
       end: (appointment as { EndTime: Date }).EndTime, // End time of the event
       resourceId: (appointment as { StaffID: string }).StaffID,
+      color: '#1E40AF',
     })),
     longPressDelay:1,
     eventClick: handleEventClick,
@@ -273,6 +280,7 @@ function Main() {
       calendarRef.current.getApi().gotoDate(date);
       // setDate(selectedDate)
     }
+    fetchAppoinmentApiData(date)
   };
 
   const nextDay = () => {
@@ -300,6 +308,7 @@ function Main() {
       calendarRef.current.getApi().today();
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
+      fetchAppoinmentApiData(currentDate)
     }
   };
 
