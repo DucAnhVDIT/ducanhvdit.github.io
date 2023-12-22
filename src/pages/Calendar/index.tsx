@@ -58,7 +58,7 @@ function Main() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const appointmentsData = await fetchAppoinmentApiData();
+      const appointmentsData = await fetchAppoinmentApiData(date);
       setScheduleData(appointmentsData.Appointments);
     };
   
@@ -165,7 +165,7 @@ function Main() {
     setSlotSlideoverPreview(true)
   }
 
-  const fetchAppoinmentApiData = async () => {
+  const fetchAppoinmentApiData = async (date: { getTime: () => number; } | undefined) => {
       try {
         const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointments', {
           method: 'POST',
@@ -276,13 +276,13 @@ function Main() {
   };
 
   const nextDay = () => {
+
     if (calendarRef.current) {
       calendarRef.current.getApi().next();
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
-      console.log(currentDate)
+      fetchAppoinmentApiData(currentDate)
     }
-    fetchAppoinmentApiData()
   };
 
 
@@ -291,6 +291,7 @@ function Main() {
       calendarRef.current.getApi().prev();
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
+      fetchAppoinmentApiData(currentDate)
     }
   };
 
