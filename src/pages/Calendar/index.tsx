@@ -194,7 +194,7 @@ function Main() {
         return appointmentsData
 
       } catch (error) {
-        // console.error('Error fetching the API:', error.message);
+        console.error('Error fetching the API:', (error as Error).message);
         return null;
       }
     };
@@ -255,14 +255,15 @@ function Main() {
     contentHeight: 'auto',
     selectable: true,
     nowIndicator:true,
-    events: scheduleData.map((appointment) => ({
-      // Add service name to Tittle if available
-      title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
-      start: (appointment as { StartTime: Date }).StartTime, // Start time of the event
-      end: (appointment as { EndTime: Date }).EndTime, // End time of the event
-      resourceId: (appointment as { StaffID: string }).StaffID,
-      color: '#1E40AF',
-    })),
+    events: scheduleData
+    ? scheduleData.map((appointment) => ({
+        title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
+        start: (appointment as { StartTime: Date }).StartTime,
+        end: (appointment as { EndTime: Date }).EndTime,
+        resourceId: (appointment as { StaffID: string }).StaffID,
+        color: '#1E40AF',
+      }))
+    : [], 
     longPressDelay:1,
     eventClick: handleEventClick,
     resources: staffData.map((staff) => ({
