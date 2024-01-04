@@ -23,7 +23,7 @@ interface SlideOverPanelProps {
   onClose: () => void;
 }
 
-function existingInformationSlide({ isOpen, onClose}: SlideOverPanelProps) {
+function ExistingInfo({ isOpen, onClose}: SlideOverPanelProps) {
   return (
     <div>
           <Slideover
@@ -36,7 +36,7 @@ function existingInformationSlide({ isOpen, onClose}: SlideOverPanelProps) {
                   <Button
                       onClick={(event: React.MouseEvent) => {
                           event.preventDefault();
-                          // onClose()
+                          onClose()
                       } }
                       className="absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
                   >
@@ -50,10 +50,7 @@ function existingInformationSlide({ isOpen, onClose}: SlideOverPanelProps) {
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-
                     
-                    
-
                     <div className="flex flex-row mt-5">
                        
                     </div>
@@ -71,4 +68,4 @@ function existingInformationSlide({ isOpen, onClose}: SlideOverPanelProps) {
   )
 }
 
-export default existingInformationSlide
+export default ExistingInfo

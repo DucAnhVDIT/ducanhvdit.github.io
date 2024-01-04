@@ -33,9 +33,9 @@ import { FaSleigh } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "../../components/SlideOver";
-import existingInformationSlide from "../../components/SlideOver";
 import DatePickerMUI from "../../components/DatePicker";
 import CustomDatePicker from "../../components/DatePicker";
+import ExistingInfo from "../../components/ExistingInfo";
 
 
 interface Staff {
@@ -166,7 +166,7 @@ function Main() {
   }
 
   const handleEventClick  = (info: { event: any; }) => {
-    setSlotSlideoverPreview(true)
+    setExistingInformationSlide(true)
   }
 
   const fetchAppoinmentApiData = async (date: { getTime: () => number; } | undefined) => {
@@ -368,8 +368,8 @@ function Main() {
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
       {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
-      {/* {existingInformationSlide && (<existingInformationSlide  isOpen={existingInformationSlide} onClose={handleCloseEventSlide}/>)}
-      <ToastContainer /> */}
+      {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide}/>)}
+      <ToastContainer />
       
     </div>
     

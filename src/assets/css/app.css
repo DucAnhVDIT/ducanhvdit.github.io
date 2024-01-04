@@ -76,21 +76,20 @@
 
 
 .full-calendar .fc-theme-standard .fc-scrollgrid, .full-calendar .fc-theme-standard th, .full-calendar .fc-theme-standard td, .full-calendar .fc-theme-standard .fc-list {
-   border-color: rgba(153, 153, 153, 0.3);
+   border-color: rgba(153, 153, 153, 0.5);
    /* border: none !important; */
 }
 .fc-day-today {
    background: #FFF !important;
-   border-color: black !important;
 } 
-
+/* 
 .fc-scrollgrid-sync-inner{
    border-color: black !important;
    border-width: 1px;
-}
+} */
 
 .fc-timegrid-slot .fc-timegrid-slot-label .fc-timegrid-slot-minor{
-   border-color: black !important;
+    border-color: black !important;
    border-width: 1px;
 }
 
