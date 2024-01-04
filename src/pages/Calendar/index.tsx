@@ -33,8 +33,10 @@ import { FaSleigh } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "../../components/SlideOver";
+import existingInformationSlide from "../../components/SlideOver";
 import DatePickerMUI from "../../components/DatePicker";
 import CustomDatePicker from "../../components/DatePicker";
+
 
 interface Staff {
   StaffID: number;
@@ -47,6 +49,7 @@ interface Staff {
 function Main() {
   const [date, setDate] = useState(new Date());
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
+  const [existingInformationSlide, setExistingInformationSlide] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
   const [counter, setCounter] = useState<number | undefined>(undefined);
@@ -68,6 +71,7 @@ function Main() {
   // Effect to log scheduleData changes
   useEffect(() => {
     console.log("Updated Schedule Data:", scheduleData);
+    console.log(staffData)
   }, [scheduleData]);
   
   // Effect to fetch staff data
@@ -174,7 +178,7 @@ function Main() {
             'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
           },
           body: JSON.stringify({
-            "business_id": "20160908110055249272",
+            "business_id": "20231128163756648686",
             "date": date ? Math.floor(date.getTime() / 1000) : null,
           }),
         });
@@ -208,7 +212,7 @@ function Main() {
             'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
           },
           body: JSON.stringify({
-            "business_id": "20160908110055249272",
+            "business_id": "20231128163756648686",
             "date": Math.floor(date.getTime() / 1000),
           }),
         });
@@ -261,7 +265,7 @@ function Main() {
         start: (appointment as { StartTime: Date }).StartTime,
         end: (appointment as { EndTime: Date }).EndTime,
         resourceId: (appointment as { StaffID: string }).StaffID,
-        color: '#1E40AF',
+        color: (appointment as { Colour: string }).Colour,
       }))
     : [], 
     longPressDelay:1,
@@ -326,9 +330,13 @@ function Main() {
     setSlotSlideoverPreview(false);
   };
 
+  const handleCloseEventSlide = () => {
+    setExistingInformationSlide(false);
+  };
+
 
   return (
-    <div className="full-calendar">
+    <div  className="full-calendar">
       {/* BEGIN: Input Group */}
       <PreviewComponent className="mt-5 intro-y bg-transparent">
             {({ toggle }) => (
@@ -360,7 +368,8 @@ function Main() {
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
       {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
-      <ToastContainer />
+      {/* {existingInformationSlide && (<existingInformationSlide  isOpen={existingInformationSlide} onClose={handleCloseEventSlide}/>)}
+      <ToastContainer /> */}
       
     </div>
     
