@@ -246,7 +246,7 @@ function Main() {
             duration: { days: 1 },
         }
     },
-    slotDuration:"00:15",
+    slotDuration:"00:10",
     eventResourceEditable: true,
     refetchResourcesOnNavigate: true,
     allDaySlot: false,
