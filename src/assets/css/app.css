@@ -93,6 +93,10 @@
    border-width: 1px;
 }
 
+.fc .fc-timegrid-slot-minor {
+   border-top-style: dashed;
+}
+
 .fc-direction-ltr .fc-timegrid-now-indicator-arrow {
 
    left: 0;
