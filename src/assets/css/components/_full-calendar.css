@@ -207,6 +207,9 @@
     .fc-day-other {
       background-color: theme("colors.darkmode.700");
     }
+    .fc-day-today {
+      background: theme("colors.darkmode.700") !important;
+   } 
     .fc-button-primary:focus {
       --tw-ring-color: theme("colors.slate.700");
       --tw-ring-opacity: 0.5;

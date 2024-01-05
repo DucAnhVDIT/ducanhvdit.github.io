@@ -29,13 +29,17 @@ import RequireLocks from "../../components/RequireLocks";
 import AppointmentStatus from "../../components/Status";
 import FloatingActionButtons from "../../components/FloatingButtons";
 import TippyContent from "../../base-components/TippyContent";
-import { FaSleigh } from "react-icons/fa";
+import { FaSleigh, FaStar } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "../../components/SlideOver";
 import DatePickerMUI from "../../components/DatePicker";
 import CustomDatePicker from "../../components/DatePicker";
 import ExistingInfo from "../../components/ExistingInfo";
+import "./styles.css"
+import ReactDOM from "react-dom";
+
+
 
 
 interface Staff {
@@ -228,11 +232,6 @@ function Main() {
         // console.error('Error fetching the API:', error.message);
       }
     };
-
-
-  
-
-  
   // Take all the data from the Api and add it to the calendar
 
   const options: CalendarOptions = {
@@ -266,8 +265,27 @@ function Main() {
         end: (appointment as { EndTime: Date }).EndTime,
         resourceId: (appointment as { StaffID: string }).StaffID,
         color: (appointment as { Colour: string }).Colour,
+        extendedProps: {
+          IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
+          IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
+        },
       }))
-    : [], 
+    : [],
+    eventDidMount: ({ el, event }) => {
+      const iconContainer = document.createElement('div');
+      iconContainer.classList.add('event-icon-container');
+  
+      const isFirstBooking = event.extendedProps?.IsFirstBooking;
+  
+      if (isFirstBooking) {
+        const IconComponent = FaStar; // Display star icon for first booking
+        ReactDOM.render(<IconComponent size={18} />, iconContainer);
+      }
+
+
+  
+      el.appendChild(iconContainer);
+    },
     longPressDelay:1,
     eventClick: handleEventClick,
     resources: staffData.map((staff) => ({
