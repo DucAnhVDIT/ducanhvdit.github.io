@@ -13,10 +13,11 @@ import clsx from "clsx";
 function Main() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const {login} = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    console.log('key')
     login(username, password);
     // Redirect to the home page after successful login
     navigate('/');
@@ -85,6 +86,11 @@ function Main() {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => { 
+                      if (e.key === "Enter") { 
+                        {handleLogin}
+                      } 
+                  }} 
                   />
                 </div>
                 <div className="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">

@@ -10,17 +10,18 @@ import PointOfSales from "../pages/PointOfSale";
 import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
 import LoginPage from "../pages/Login"; // Add your login page component
+import { useSelector } from 'react-redux';
 
 function Router() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const isAuthenticated = useSelector((state) => state)
   const routes = [
     {
       path: "/login",
+      element: <LoginPage />,
     },
     {
       path: "/",
-      element: isLoggedIn ? <SideMenu /> : <Navigate to="/login" />,
+      element: isAuthenticated ? <SideMenu /> : <Navigate to="/login" />,
       children: [
         {
           path: "/",
