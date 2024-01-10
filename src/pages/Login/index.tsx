@@ -17,7 +17,7 @@ function Main() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    console.log('key')
+    console.log('click login')
     login(username, password);
     // Redirect to the home page after successful login
     navigate('/');

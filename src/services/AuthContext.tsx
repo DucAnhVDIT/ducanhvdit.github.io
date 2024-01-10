@@ -21,41 +21,30 @@ interface AuthContextType {
   isAuthenticated: () => boolean;
 }
 
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGOUT = 'LOGOUT';
-interface LoginSuccessAction {
-  type: typeof LOGIN_SUCCESS;
-  payload: User;
-}
-
-interface LogoutAction {
-  type: typeof LOGOUT;
-}
-
-export const loginSuccess = (user: User): LoginSuccessAction => ({
-  type: LOGIN_SUCCESS,
-  payload: user,
-});
-
-export const logout = (): LogoutAction => ({
-  type: LOGOUT,
-});
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = (username: string, password: string) => (dispatch: Dispatch) => {
+  const login = (username: string, password: string) => {
     // Replace this with actual API
+    console.log('check this login in auth?')
     const authenticatedUser = userData.find(
       (u:any) => u.username === username && u.password === password
     );
     if (authenticatedUser) {
       setUser(authenticatedUser);
-      dispatch(loginSuccess(authenticatedUser))
+      localStorage.setItem("authSuccess","true")
+    }
+    else {
+      console.log('false')
     }
   };
+  const logout = () => {
+    setUser(null)
+    localStorage.removeItem("authSuccess")
+    
+  }
 
   const isAuthenticated = () => {
     return !!user;

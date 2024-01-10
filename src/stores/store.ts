@@ -1,9 +1,10 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import darkModeReducer from "./darkModeSlice";
-import colorSchemeReducer from "./colorSchemeSlice";
-import sideMenuReducer from "./sideMenuSlice";
-import simpleMenuReducer from "./simpleMenuSlice";
-import topMenuReducer from "./topMenuSlice";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
+import darkModeReducer from './darkModeSlice'
+import colorSchemeReducer from './colorSchemeSlice'
+import sideMenuReducer from './sideMenuSlice'
+import simpleMenuReducer from './simpleMenuSlice'
+import topMenuReducer from './topMenuSlice'
+import authReducer from './userSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,14 +13,10 @@ export const store = configureStore({
     sideMenu: sideMenuReducer,
     simpleMenu: simpleMenuReducer,
     topMenu: topMenuReducer,
+    authState: authReducer,
   },
-});
+})
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>
