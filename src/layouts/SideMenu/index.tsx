@@ -37,13 +37,14 @@ function Main() {
             to="/"
             className="flex items-center pt-4 pl-5 intro-x justify-center"
           >
-            <div className=" bg-white p-3 rounded-full w-16 h-16">
+            <div className="bg-white p-3 rounded-full w-16 h-16 md:w-12 md:h-12 lg:w-16 lg:h-16 xl:w-16 xl:h-16">
               <img
                 alt="VDIT Solutions"
-                className="h-10 fill-slate-300"
+                className="h-10 md:h-8 lg:h-10 xl:h-10 sm:h-4 fill-slate-300"
                 src={logoUrl}
               />
             </div>
+
           </Link>
           <Divider type="div" className="my-6"></Divider>
           <ul>

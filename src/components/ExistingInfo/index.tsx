@@ -18,12 +18,26 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import React from 'react'
+
+
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  appointmentData: any 
 }
 
-function ExistingInfo({ isOpen, onClose}: SlideOverPanelProps) {
+function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps) {
+  console.log('Appointment Data:', appointmentData);
+  if (!appointmentData) {
+    // Handle the case when appointmentData is null
+    return (
+      <Slideover open={isOpen} onClose={onClose}>
+        <Slideover.Panel>
+          <p>No appointment data available.</p>
+        </Slideover.Panel>
+      </Slideover>
+    );
+  }
   return (
     <div>
           <Slideover
@@ -50,10 +64,11 @@ function ExistingInfo({ isOpen, onClose}: SlideOverPanelProps) {
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-                    
-                    <div className="flex flex-row mt-5">
-                       
-                    </div>
+                    {/* Render appointment details here */}
+                    <p>{`Customer Name: ${appointmentData.Appointment.CustomerName}`}</p>
+                    <p>{`Service Name: ${appointmentData.Appointment.ServiceName}`}</p>
+                    {/* <p>{`Service: ${appointmentData.ServiceName}`}</p> */}
+                    {/* Add other details as needed */}
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}

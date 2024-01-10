@@ -42,6 +42,7 @@ import ReactDOM from "react-dom";
 
 
 
+
 interface Staff {
   StaffID: number;
   StaffName: string;
@@ -62,6 +63,7 @@ function Main() {
   const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
   const [staffData, setStaffData] = useState([]);
   const [scheduleData, setScheduleData] = useState([]);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,19 +85,27 @@ function Main() {
     fetchStaffApiData();
   }, []);
 
-  
-  const handleSlotClicked = (info: any) => {
-  
 
+
+  
+  const handleSlotClicked = async (info: any) => {
     const startTime = moment(info.start).format('HH:mm');
     setDate(info.start);
     setSelectedTime(startTime);
     const staffTitle = info.resource.title;
     const staffID = info.resource.id;
-    setResourceTitle(staffTitle)
-    setResourceID(staffID)
-    setSlotSlideoverPreview(true)
+    setResourceTitle(staffTitle);
+    setResourceID(staffID);
+  
+    // Fetch services for the selected staff
+    // await fetchServiceApiData(staffID);
+  
+    // Open the slideover preview
+    setSlotSlideoverPreview(true);
   };
+
+
+  
   
 
   const [formData, setFormData] = useState({
@@ -169,9 +179,33 @@ function Main() {
     setSlotSlideoverPreview(false)
   }
 
-  const handleEventClick  = (info: { event: any; }) => {
-    setExistingInformationSlide(true)
-  }
+  const handleEventClick = async (info: { event: any }) => {
+    try {
+      const appointmentID = info.event.extendedProps.ID; // Replace 'id' with the actual property name
+      const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+        },
+        body: JSON.stringify({
+          "business_id": "20160908110055249272",
+          "id": appointmentID,
+        }),
+      });
+  
+      if (!apiResponse.ok) {
+        throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+      }
+  
+      const appointmentData = await apiResponse.json();
+      setSelectedAppointment(appointmentData);
+      setExistingInformationSlide(true);
+      console.log(appointmentData)
+    } catch (error) {
+      // console.error('Error fetching appointment information:', error.message);
+    }
+  };
 
   const fetchAppoinmentApiData = async (date: { getTime: () => number; } | undefined) => {
       try {
@@ -182,7 +216,7 @@ function Main() {
             'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
           },
           body: JSON.stringify({
-            "business_id": "20231128163756648686",
+            "business_id": "20160908110055249272",
             "date": date ? Math.floor(date.getTime() / 1000) : null,
           }),
         });
@@ -207,7 +241,7 @@ function Main() {
       }
     };
 
-    const fetchStaffApiData = async () => {
+  const fetchStaffApiData = async () => {
       try {
         const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetStaff', {
           method: 'POST',
@@ -216,7 +250,7 @@ function Main() {
             'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
           },
           body: JSON.stringify({
-            "business_id": "20231128163756648686",
+            "business_id": "20160908110055249272",
             "date": Math.floor(date.getTime() / 1000),
           }),
         });
@@ -232,6 +266,39 @@ function Main() {
         // console.error('Error fetching the API:', error.message);
       }
     };
+
+  // const fetchServiceApiData = async (staffID: string) => {
+  //     try {
+  //       const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetServices', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+  //         },
+  //         body: JSON.stringify({
+  //           "business_id": "20160908110055249272",
+  //           "StaffID": staffID,
+  //         }),
+  //       });
+    
+  //       if (!apiResponse.ok) {
+  //         throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+  //       }
+    
+  //       const responseData = await apiResponse.json();
+  //       console.log("Staff ID:", staffID);
+  //       console.log(responseData);
+    
+  //       // Update your state or perform any other action with the service data
+    
+  //     } catch (error) {
+  //       // console.error('Error fetching the API:', error.message);
+  //     }
+  //   };
+
+
+
+
   // Take all the data from the Api and add it to the calendar
 
   const options: CalendarOptions = {
@@ -266,6 +333,7 @@ function Main() {
         resourceId: (appointment as { StaffID: string }).StaffID,
         color: (appointment as { Colour: string }).Colour,
         extendedProps: {
+          ID: (appointment as { ID: string }).ID,
           IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
           IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
         },
@@ -279,11 +347,14 @@ function Main() {
   
       if (isFirstBooking) {
         const IconComponent = FaStar; // Display star icon for first booking
-        ReactDOM.render(<IconComponent size={18} />, iconContainer);
+
+
+        // ...
+
+        // const root = createRoot(document.getElementById('root'));
+        // root.render(<IconComponent size={15} />, iconContainer);
+        ReactDOM.render(<IconComponent size={15} />, iconContainer);
       }
-
-
-  
       el.appendChild(iconContainer);
     },
     longPressDelay:1,
@@ -386,7 +457,7 @@ function Main() {
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
       {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
-      {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide}/>)}
+      {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer />
       
     </div>
