@@ -7,7 +7,7 @@
   } from "../../base-components/Form";
   import Button from "../../base-components/Button";
   import Lucide from "../../base-components/Lucide";
-  import { useEffect, useState } from "react";
+  import { Key, useEffect, useState } from "react";
 
 import DatePickerMUI from "../DatePicker";
 import CustomDatePicker from "../DatePicker";
@@ -25,8 +25,9 @@ import ServiceCard from "../ServiceCard";
   interface SlideOverPanelProps {
     isOpen: boolean;
     onClose: () => void;
+    serviceData: any;
   }
-function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
+function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValue, setSearchValue] = useState("");
@@ -82,6 +83,11 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
         // console.error('Error fetching the API:', error.message);
       }
     };
+
+    console.log('Type of serviceData:', typeof serviceData);
+    console.log('ServiceData:', serviceData);
+    
+    
 
   return (
     <div>
@@ -160,14 +166,14 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                     {/* End Add Client Button */}
 
                     {/* Begin DatePicker */}
-                    <div className=" flex flex-row items-center w-full border-none shadow-none pl-12">
+                    {/* <div className=" flex flex-row items-center w-full border-none shadow-none pl-12">
                         <Flatpickr
                             value={new Date()}
                             options={{ dateFormat: 'D j F, Y' }}
                             className="pl-4 w-58 mt-3 border-none bg-transparent text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
                         {/* Time Picker */}
-                        <DatePicker
+                        {/* <DatePicker
                             onChange={() => {}}
                             selected={new Date()}
                             showTimeSelect
@@ -176,7 +182,7 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                             dateFormat="h:mm aa"
                             className="pl-4 w-28 items-center mt-3 border-none bg-transparent text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
-                    </div>
+                    </div> */}
                     {/* End DatePicker */}
                     
                     {/* Begin Add Services */}
@@ -239,12 +245,10 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                                         )}
                                     </div>
                                 </div>
-
-                                <ServiceCard />
-                                <ServiceCard />
-                                <ServiceCard />
-                                <ServiceCard />
-                                <ServiceCard />
+                                    {serviceData.Services && serviceData.Services.map((service: { ProductID: Key | null | undefined; }) => (
+                                        <ServiceCard key={service.ProductID} service={service} />
+                                    ))}
+                                {/* <ServiceCard service={serviceData} /> */}
                             </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>

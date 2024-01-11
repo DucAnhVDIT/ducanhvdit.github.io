@@ -64,6 +64,7 @@ function Main() {
   const [staffData, setStaffData] = useState([]);
   const [scheduleData, setScheduleData] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [serviceData, setServiceData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,8 +99,9 @@ function Main() {
     setResourceTitle(staffTitle);
     setResourceID(staffID);
   
-    await fetchServiceApiData(staffID);
-  
+    const data = await fetchServiceApiData(staffID);
+    console.log('Data from API:', data);
+    setServiceData(data);
     // Open the slideover preview
     setSlotSlideoverPreview(true);
   };
@@ -312,8 +314,9 @@ function Main() {
         }
     
         const responseData = await apiResponse.json();
-        console.log("Staff ID:", staffID);
         console.log(responseData);
+
+        return responseData
     
         // Update your state or perform any other action with the service data
     
@@ -437,9 +440,6 @@ function Main() {
     setSlotSlideoverPreview(false)
   }
 
-  const handleOpen = () => {
-    setSlotSlideoverPreview(true);
-  };
 
   const handleClose = () => {
     setSlotSlideoverPreview(false);
@@ -482,7 +482,7 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose}/>)}
+      {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData}/>)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer />
       
