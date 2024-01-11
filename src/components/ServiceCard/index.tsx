@@ -22,19 +22,21 @@ export const ServiceCard = ({ service }: { service: any }) => {
     return (
       <div>
         <Button className="border-none bg-transparent w-full shadow-none mt-3 -z-10">
-          <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
+          <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
             <div
               className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
               style={{ borderRight: '7px solid #1E40AF' }}
             >
-              <div className="p-1 flex justify-between">
-                <div className="flex">
-                  <div className="p-3">
+              <div className="p-1 flex justify-between items-start">
+                <div className="flex flex-start">
+                  <div className="p-2">
                     <h1 className="text-base">{`${service.ProductName || 'Loading...'}`}</h1>
                     {/* <h2>Leave empty for walk-ins</h2> */}
                   </div>
                 </div>
-  
+                {/* <div className='p-2'>
+                    <h1 className="text-sm">{`${service.Duration || 'Loading...'} mins`}</h1>
+                </div> */}
                 <div className="p-2">
                   <h1 className="text-base">{`£${service.Price !== undefined ? service.Price : 'Loading...'}`}</h1>
                 </div>

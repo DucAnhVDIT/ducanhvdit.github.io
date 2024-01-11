@@ -214,45 +214,50 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                       
                     {/* Begin Service List */}
                     {isServiceSlideoverOpen && (
-                        <Slideover open={isServiceSlideoverOpen} onClose={closeServicesList}>
+                    <Slideover open={isServiceSlideoverOpen} onClose={closeServicesList}>
                         <Slideover.Panel>
-                            <Slideover.Title className="p-5">
-                                <h2 className="mr-auto font-bold text-2xl">
-                                    Search service
-                                </h2>
-                            </Slideover.Title>
-                            <Slideover.Description className="text-center">
-                                <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-                                    <div className="relative text-slate-500">
-                                    <FormInput
-                                            type="text"
-                                            className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                                            placeholder="Search by service name"
-                                            value={searchValue}
-                                            onChange={(e) => setSearchValue(e.target.value)}
-                                        />
-                                        {searchValue ? (
-                                            <Lucide
-                                                icon="XCircle"
-                                                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                                onClick={() => setSearchValue("")}
-                                            />
-                                        ) : (
-                                            <Lucide
-                                                icon="Search"
-                                                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                                    {serviceData.Services && serviceData.Services.map((service: { ProductID: Key | null | undefined; }) => (
-                                        <ServiceCard key={service.ProductID} service={service} />
-                                    ))}
-                                {/* <ServiceCard service={serviceData} /> */}
-                            </Slideover.Description>
+                        <Slideover.Title className="p-5">
+                            <h2 className="mr-auto font-bold text-2xl">
+                            Search service
+                            </h2>
+                        </Slideover.Title>
+                        <Slideover.Description className="text-center">
+                            <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
+                            <div className="relative text-slate-500">
+                                <FormInput
+                                type="text"
+                                className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                placeholder="Search by service name"
+                                value={searchValue}
+                                onChange={(e) => setSearchValue(e.target.value)}
+                                />
+                                {searchValue ? (
+                                <Lucide
+                                    icon="XCircle"
+                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                    onClick={() => setSearchValue("")}
+                                />
+                                ) : (
+                                <Lucide
+                                    icon="Search"
+                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                />
+                                )}
+                            </div>
+                            </div>
+                            {serviceData.Services && serviceData.Services
+                            .filter((service: { ProductName: string }) =>
+                                service.ProductName.toLowerCase().startsWith(searchValue.toLowerCase())
+                            )
+                            .slice(0, 5) // Display only the first 5 results
+                            .map((service: { ProductID: string }) => (
+                                <ServiceCard key={service.ProductID} service={service} />
+                            ))}
+                        </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
                     )}
+
                     {/* End Service List */}                     
 
                     {isSecondSlideoverOpen && (
