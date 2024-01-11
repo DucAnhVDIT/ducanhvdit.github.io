@@ -64,11 +64,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-                    {/* Render appointment details here */}
-                    <p>{`Customer Name: ${appointmentData.Appointment.CustomerName}`}</p>
-                    <p>{`Service Name: ${appointmentData.Appointment.ServiceName}`}</p>
-                    {/* <p>{`Service: ${appointmentData.ServiceName}`}</p> */}
-                    {/* Add other details as needed */}
+                    <p>{`Customer Name: ${appointmentData.Appointment.CustomerName !== null ? appointmentData.Appointment.CustomerName : 'null'}`}</p>
+                    <p>{`Service Name: ${appointmentData.Appointment.ServiceName !== null ? appointmentData.Appointment.ServiceName : 'null'}`}</p>
+
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}

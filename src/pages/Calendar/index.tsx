@@ -83,6 +83,7 @@ function Main() {
   // Effect to fetch staff data
   useEffect(() => {
     fetchStaffApiData();
+    // fetchClientList();
   }, []);
 
 
@@ -97,8 +98,7 @@ function Main() {
     setResourceTitle(staffTitle);
     setResourceID(staffID);
   
-    // Fetch services for the selected staff
-    // await fetchServiceApiData(staffID);
+    await fetchServiceApiData(staffID);
   
     // Open the slideover preview
     setSlotSlideoverPreview(true);
@@ -267,34 +267,60 @@ function Main() {
       }
     };
 
-  // const fetchServiceApiData = async (staffID: string) => {
-  //     try {
-  //       const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetServices', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //           'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-  //         },
-  //         body: JSON.stringify({
-  //           "business_id": "20160908110055249272",
-  //           "StaffID": staffID,
-  //         }),
-  //       });
+    // const fetchClientList = async () => {
+    //   try {
+    //     const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetCustomers', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+    //       },
+    //       body: JSON.stringify({
+    //         "business_id": "20180918154802018866",
+    //       }),
+    //     });
+
+    //     if (!apiResponse.ok) {
+    //       throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+    //     }
+
+    //     const CustomersList = await apiResponse.json();
+    //     console.log(CustomersList);
+
+    //   } catch (error) {
+    //     // console.error('Error fetching the API:', error.message);
+    //   }
+    // };
+  
+
+  const fetchServiceApiData = async (staffID: string) => {
+      try {
+        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetServices', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+          },
+          body: JSON.stringify({
+            "business_id": "20160908110055249272",
+            "StaffID": staffID,
+          }),
+        });
     
-  //       if (!apiResponse.ok) {
-  //         throw new Error(`HTTP error! Status: ${apiResponse.status}`);
-  //       }
+        if (!apiResponse.ok) {
+          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+        }
     
-  //       const responseData = await apiResponse.json();
-  //       console.log("Staff ID:", staffID);
-  //       console.log(responseData);
+        const responseData = await apiResponse.json();
+        console.log("Staff ID:", staffID);
+        console.log(responseData);
     
-  //       // Update your state or perform any other action with the service data
+        // Update your state or perform any other action with the service data
     
-  //     } catch (error) {
-  //       // console.error('Error fetching the API:', error.message);
-  //     }
-  //   };
+      } catch (error) {
+        // console.error('Error fetching the API:', error.message);
+      }
+    };
 
 
 

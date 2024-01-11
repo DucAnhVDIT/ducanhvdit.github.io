@@ -7,7 +7,7 @@
   } from "../../base-components/Form";
   import Button from "../../base-components/Button";
   import Lucide from "../../base-components/Lucide";
-  import { useState } from "react";
+  import { useEffect, useState } from "react";
 
 import DatePickerMUI from "../DatePicker";
 import CustomDatePicker from "../DatePicker";
@@ -16,6 +16,8 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import ServiceCard from "../ServiceCard";
+
 
 
 
@@ -28,9 +30,11 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValue, setSearchValue] = useState("");
+    const [customersList, setCustomersList] = useState([]);
 
-    const openSearchClient = () => {
+    const openSearchClient = async () => {
         setSecondSlideoverOpen(true)
+        await fetchClientList();
     }
 
     const closeSearchClient = () => {
@@ -44,7 +48,41 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
     const closeServicesList = () => {
         setServiceSlideoverOpen(false)
     }
-    
+
+    interface ApiResponse {
+        Customers: {
+          CustomerID: string; // Adjust the type based on your actual data structure
+          FirstName: string;
+          // Add other properties as needed
+        }[];
+      }
+
+    const fetchClientList = async () => {
+      try {
+        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetCustomers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+          },
+          body: JSON.stringify({
+            "business_id": "20160908110055249272",
+          }),
+        });
+
+        if (!apiResponse.ok) {
+          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+        }
+
+        const CustomersList = await apiResponse.json();
+        setCustomersList(CustomersList);
+        console.log('Customers List:', CustomersList);
+
+      } catch (error) {
+        // console.error('Error fetching the API:', error.message);
+      }
+    };
+
   return (
     <div>
           <Slideover
@@ -201,12 +239,17 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                                         )}
                                     </div>
                                 </div>
+
+                                <ServiceCard />
+                                <ServiceCard />
+                                <ServiceCard />
+                                <ServiceCard />
+                                <ServiceCard />
                             </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
                     )}
-                    {/* End Service List */}
-
+                    {/* End Service List */}                     
 
                     {isSecondSlideoverOpen && (
                         <Slideover open={isSecondSlideoverOpen} onClose={closeSearchClient}>
@@ -253,6 +296,14 @@ function SlideOverPanel({ isOpen, onClose}: SlideOverPanelProps) {
                                             </Link>
                                 </Button>
                             </div>
+                            </Slideover.Description>
+                            <Slideover.Description className="text-center">
+                                {/* Display the list of customers */}
+                                {/* {customersList.map((customer) => (
+                                    <div key={customer.Customers.CustomerID}>
+                                    <p>{`Customer Name: ${customer.Customers.FirstName}`}</p>
+                                    </div>
+                                ))} */}
                             </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
