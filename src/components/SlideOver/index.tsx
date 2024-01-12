@@ -305,21 +305,23 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                     {/* Display the list of customers based on search criteria */}
                                     {customersList &&
                                         customersList.Customers &&
-                                        customersList.Customers.filter(
+                                        customersList.Customers
+                                            .filter(
                                             (customer: { FirstName: string | null | undefined; LastName: string | null | undefined; Mobile: string | null | undefined }) => {
-                                            const firstName = customer.FirstName || '';
-                                            const lastName = customer.LastName || '';
-                                            const mobile = customer.Mobile || '';
+                                                const firstName = customer.FirstName || '';
+                                                const lastName = customer.LastName || '';
+                                                const mobile = customer.Mobile || '';
 
-                                            return (
+                                                return (
                                                 firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
                                                 lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
                                                 mobile.toLowerCase().includes(searchValue.toLowerCase())
-                                            );
-                                            }
-                                        ).map((customer: { CustomerID: Key | null | undefined }) => (
+                                                );
+                                            })
+                                            .map((customer: { CustomerID: Key | null | undefined }) => (
                                             <CustomerCard key={customer.CustomerID} customer={customer} />
-                                        ))}
+                                            ))}
+
                                 </div>
                                 </Slideover.Description>
 
