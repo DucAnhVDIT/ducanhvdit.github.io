@@ -18,6 +18,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ServiceCard from "../ServiceCard";
 import CustomerCard from "../CustomerCard";
+import React from "react";
 
 
 
@@ -33,11 +34,26 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValue, setSearchValue] = useState("");
     const [customersList, setCustomersList] = useState([]);
+    const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
     const openSearchClient = async () => {
-        setSecondSlideoverOpen(true)
+        // Reset the selected customer when opening the search client
+        setSelectedCustomer(null);
+        setSecondSlideoverOpen(true);
         await fetchClientList();
     }
+
+    const selectCustomer = (customer: any) => {
+        // Set the selected customer when a customer is clicked
+        setSelectedCustomer(customer);
+        // Close the search client slideover if needed
+        setSecondSlideoverOpen(false);
+    }
+
+    // const openSearchClient = async () => {
+    //     setSecondSlideoverOpen(true)
+    //     await fetchClientList();
+    // }
 
     const closeSearchClient = () => {
         setSecondSlideoverOpen(false)
@@ -82,7 +98,15 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
         }
       };
       
-
+      const getInitials = (name: string | null | undefined) => {
+        if (!name) {
+          return ''; // Handle null or undefined case
+        }
+      
+        const names = name.split(' ');
+        return names.map((name: string) => name[0]).join('');
+      };
+      
 
 
   return (
@@ -137,22 +161,28 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                             >
                             <div className="p-3">
                                 <div className="flex">
-                                <Lucide
-                                    icon="User"
-                                    className="w-14 h-14 rounded-full p-3 bg-primary text-white"
-                                />
-                                <div className=" mt-4 ml-3">
-                                    <h1 className="text-lg">Select a client</h1>
-                                    {/* <h2>Leave empty for walkins</h2> */}
-                                </div>
-                                <div className="ml-auto">
+                                    {selectedCustomer && selectedCustomer.FirstName ? (
+                                    <div className="w-14 h-14 rounded-full p-3 bg-primary text-white flex items-center justify-center">
+                                        <span className="text-lg">{getInitials(selectedCustomer.FirstName)}</span>
+                                    </div>
+                                    ) : (
+                                    <Lucide icon="User" className="w-14 h-14 rounded-full p-3 bg-primary text-white" />
+                                    )}
+
+                                    <div className={`${selectedCustomer && selectedCustomer.FirstName ? 'mt-1 ml-3' : 'mt-4 ml-3'}`}>
+                                    <h1 className="text-lg text-left">{selectedCustomer ? selectedCustomer.FirstName : 'Select a client'}</h1>
+                                    <h1 className="text-sm">{selectedCustomer ? selectedCustomer.Mobile : ''}</h1>
+                                    </div>
+
+                                    <div className="ml-auto">
                                     <Button className="border-none shadow-none cursor-pointer ">
-                                    <Lucide
-                                        icon="Plus"
-                                        className="w-12 h-12 p-3 text-primary text-lg"
-                                    />
+                                        {selectedCustomer && selectedCustomer.FirstName ? (
+                                        <Lucide icon="Edit" className="w-12 h-12 p-3 text-primary text-lg" />
+                                        ) : (
+                                        <Lucide icon="Plus" className="w-12 h-12 p-3 text-primary text-lg" />
+                                        )}
                                     </Button>
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -222,7 +252,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                             <div className="relative text-slate-500">
                                 <FormInput
                                 type="text"
-                                className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
                                 placeholder="Search by service name"
                                 value={searchValue}
                                 onChange={(e) => setSearchValue(e.target.value)}
@@ -319,7 +349,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                                 );
                                             })
                                             .map((customer: { CustomerID: Key | null | undefined }) => (
-                                            <CustomerCard key={customer.CustomerID} customer={customer} />
+                                                <CustomerCard key={customer.CustomerID} customer={customer} onClick={() => selectCustomer(customer)} />
                                             ))}
 
                                 </div>
