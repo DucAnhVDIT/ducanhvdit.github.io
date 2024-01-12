@@ -25,7 +25,7 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
 
   return (
     <div>
-      <Button className="border-none bg-transparent w-full shadow-none mb-0" onClick={onClick}>
+      <Button className="border-none bg-transparent w-full shadow-none">
         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
           <div
             className="col-span-12 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
