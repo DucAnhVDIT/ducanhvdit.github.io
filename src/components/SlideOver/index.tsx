@@ -161,15 +161,18 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                             >
                             <div className="p-3">
                                 <div className="flex">
-                                <Lucide
-                                    icon="User"
-                                    className="w-14 h-14 rounded-full p-3 bg-primary text-white"
-                                />
-                                <div className=" mt-4 ml-3">
-                                    <h1 className="text-lg">Select a client</h1>
-                                    {/* <h2>Leave empty for walkins</h2> */}
+                                {selectedCustomer && selectedCustomer.FirstName ? (
+                                <div className="w-14 h-14 rounded-full p-3 bg-primary text-white flex items-center justify-center">
+                                    <span className="text-lg">{getInitials(selectedCustomer.FirstName)}</span>
                                 </div>
-                                <div className="ml-auto">
+                                ) : (
+                                <Lucide icon="User" className="w-14 h-14 rounded-full p-3 bg-primary text-white" />
+                                )}
+                                <div className={`${selectedCustomer ? 'mt-2 ml-3' : 'mt-4 ml-3'}`}>
+                                    <h1 className="text-lg text-left">{selectedCustomer ? selectedCustomer.FirstName : 'Select a client'}</h1>
+                                    <h1 className="text-sm">{selectedCustomer ? selectedCustomer.Mobile : ''}</h1>
+                                </div>
+                                    <div className="ml-auto">
                                     <Button className="border-none shadow-none cursor-pointer ">
                                         {selectedCustomer && selectedCustomer.FirstName ? (
                                         <Lucide icon="Edit" className="w-12 h-12 p-3 text-primary text-lg" />
