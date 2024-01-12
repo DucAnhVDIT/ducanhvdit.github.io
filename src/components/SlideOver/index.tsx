@@ -18,6 +18,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ServiceCard from "../ServiceCard";
 import CustomerCard from "../CustomerCard";
+import React from "react";
 
 
 
@@ -33,11 +34,26 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValue, setSearchValue] = useState("");
     const [customersList, setCustomersList] = useState([]);
+    const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
     const openSearchClient = async () => {
-        setSecondSlideoverOpen(true)
+        // Reset the selected customer when opening the search client
+        setSelectedCustomer(null);
+        setSecondSlideoverOpen(true);
         await fetchClientList();
     }
+
+    const selectCustomer = (customer: any) => {
+        // Set the selected customer when a customer is clicked
+        setSelectedCustomer(customer);
+        // Close the search client slideover if needed
+        setSecondSlideoverOpen(false);
+    }
+
+    // const openSearchClient = async () => {
+    //     setSecondSlideoverOpen(true)
+    //     await fetchClientList();
+    // }
 
     const closeSearchClient = () => {
         setSecondSlideoverOpen(false)
@@ -142,7 +158,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                     className="w-14 h-14 rounded-full p-3 bg-primary text-white"
                                 />
                                 <div className=" mt-4 ml-3">
-                                    <h1 className="text-lg">Select a client</h1>
+                                <h1 className="text-lg">{selectedCustomer ? selectedCustomer.FirstName : 'Select a client'}</h1>
                                     {/* <h2>Leave empty for walkins</h2> */}
                                 </div>
                                 <div className="ml-auto">
@@ -222,7 +238,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                             <div className="relative text-slate-500">
                                 <FormInput
                                 type="text"
-                                className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
                                 placeholder="Search by service name"
                                 value={searchValue}
                                 onChange={(e) => setSearchValue(e.target.value)}
@@ -319,7 +335,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                                 );
                                             })
                                             .map((customer: { CustomerID: Key | null | undefined }) => (
-                                            <CustomerCard key={customer.CustomerID} customer={customer} />
+                                                <CustomerCard key={customer.CustomerID} customer={customer} onClick={() => selectCustomer(customer)} />
                                             ))}
 
                                 </div>

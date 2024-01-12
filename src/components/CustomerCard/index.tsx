@@ -2,7 +2,13 @@ import React from 'react';
 import Button from '../../base-components/Button';
 import Lucide from '../../base-components/Lucide';
 
-const CustomerCard = ({ customer }: { customer: any }) => {
+interface CustomerCardProps {
+  customer: any;
+  onClick: () => void;
+}
+
+
+const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
   // Replace these placeholder values with the actual data you have
   // Function to get the initials from the customer name
   const getInitials = (name: string | null | undefined) => {
@@ -19,10 +25,10 @@ const CustomerCard = ({ customer }: { customer: any }) => {
 
   return (
     <div>
-      <Button className="border-none bg-transparent w-full shadow-none">
+      <Button className="border-none bg-transparent w-full shadow-none mb-0">
         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
           <div
-            className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
+            className="col-span-12 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
             style={{ borderRight: `7px solid ${borderColor}` }}
           >
             <div className="p-1 flex justify-between items-start">
@@ -37,9 +43,11 @@ const CustomerCard = ({ customer }: { customer: any }) => {
 
                 {/* Customer details on the right (moved to the far right) */}
                 <div className="p-1 ml-3 flex flex-col items-start">
-                    <h1 className="text-sm font-bold">{customer.FirstName}</h1>
-                    <p className="text-sm">{customer.Mobile}</p>
-                    <p className="text-sm">{customer.Email}</p>
+                    <h1 className="text-sm font-bold">{customer.FirstName} <span>- {customer.Mobile}</span></h1>
+                    <div className='flex flex-row justify-between'>
+                      {/* <p className="text-xs">{customer.Mobile}</p> */}
+                      <p className="text-xs">{customer.Email}</p>
+                    </div>
                 </div>
                 </div>
             </div>
