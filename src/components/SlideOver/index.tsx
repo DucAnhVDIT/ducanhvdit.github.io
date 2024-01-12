@@ -17,6 +17,7 @@ import 'flatpickr/dist/themes/dark.css';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ServiceCard from "../ServiceCard";
+import CustomerCard from "../CustomerCard";
 
 
 
@@ -50,44 +51,39 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
         setServiceSlideoverOpen(false)
     }
 
-    interface ApiResponse {
-        Customers: {
-          CustomerID: string; // Adjust the type based on your actual data structure
-          FirstName: string;
-          // Add other properties as needed
-        }[];
-      }
-
     const fetchClientList = async () => {
-      try {
-        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetCustomers', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-          },
-          body: JSON.stringify({
-            "business_id": "20160908110055249272",
-          }),
-        });
-
-        if (!apiResponse.ok) {
-          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+        try {
+          const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetCustomers', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+            },
+            body: JSON.stringify({
+              "business_id": "20160908110055249272",
+            }),
+          });
+      
+          if (!apiResponse.ok) {
+            throw new Error(`HTTP error! Status: ${apiResponse.status}`);
+          }
+      
+          const responseData = await apiResponse.json();
+          
+          if (responseData.Customers) {
+            setCustomersList(responseData);
+            console.log('Customers List:', responseData.Customers);
+          } else {
+            console.error('Error: Customers property not found in API response.');
+          }
+      
+        } catch (error) {
+        //   console.error('Error fetching the API:', error.message);
         }
+      };
+      
 
-        const CustomersList = await apiResponse.json();
-        setCustomersList(CustomersList);
-        console.log('Customers List:', CustomersList);
 
-      } catch (error) {
-        // console.error('Error fetching the API:', error.message);
-      }
-    };
-
-    console.log('Type of serviceData:', typeof serviceData);
-    console.log('ServiceData:', serviceData);
-    
-    
 
   return (
     <div>
@@ -135,7 +131,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
 
                     {/* Begin Add Client Button */}
                     <Button className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y border-2 border-black rounded-lg w-full">
+                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y border-2 border-black rounded-lg w-full ">
                             <div
                             className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
                             >
@@ -187,7 +183,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                     
                     {/* Begin Add Services */}
                     <Button className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
+                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
                             <div
                             className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
                             >
@@ -272,48 +268,61 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                 <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
                                     <div className="relative text-slate-500">
                                     <FormInput
-                                            type="text"
-                                            className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                                            placeholder="Search by client name"
-                                            value={searchValue}
-                                            onChange={(e) => setSearchValue(e.target.value)}
+                                        type="text"
+                                        className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                        placeholder="Search by client name"
+                                        value={searchValue}
+                                        onChange={(e) => setSearchValue(e.target.value)}
+                                    />
+                                    {searchValue ? (
+                                        <Lucide
+                                        icon="XCircle"
+                                        className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                        onClick={() => setSearchValue("")}
                                         />
-                                        {searchValue ? (
-                                            <Lucide
-                                                icon="XCircle"
-                                                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                                onClick={() => setSearchValue("")}
-                                            />
-                                        ) : (
-                                            <Lucide
-                                                icon="Search"
-                                                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-                                            />
-                                        )}
+                                    ) : (
+                                        <Lucide
+                                        icon="Search"
+                                        className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                        />
+                                    )}
                                     </div>
                                 </div>
-                            <div className="mt-3">
-                                <Button className="items-center justify-center text-center border-none shadow-none">
-                                            <Link to={'/clients/add'}>
-                                                <Button className="items-center justify-center text-center border-none shadow-none">
-                                                        <Lucide
-                                                            icon="PlusCircle"
-                                                            className="text-primary text-lg round mr-1"
-                                                        />
-                                                    <h1>Add new client</h1>
-                                                </Button>
-                                            </Link>
-                                </Button>
-                            </div>
-                            </Slideover.Description>
-                            <Slideover.Description className="text-center">
-                                {/* Display the list of customers */}
-                                {/* {customersList.map((customer) => (
-                                    <div key={customer.Customers.CustomerID}>
-                                    <p>{`Customer Name: ${customer.Customers.FirstName}`}</p>
-                                    </div>
-                                ))} */}
-                            </Slideover.Description>
+
+                                <div className="mt-3">
+                                    <Button className="items-center justify-center text-center border-none shadow-none">
+                                    <Link to={'/clients/add'}>
+                                        <Button className="items-center justify-center text-center border-none shadow-none">
+                                        <Lucide
+                                            icon="PlusCircle"
+                                            className="text-primary text-lg round mr-1"
+                                        />
+                                        <h1>Add new client</h1>
+                                        </Button>
+                                    </Link>
+                                    </Button>
+
+                                    {/* Display the list of customers based on search criteria */}
+                                    {customersList &&
+                                        customersList.Customers &&
+                                        customersList.Customers.filter(
+                                            (customer: { FirstName: string | null | undefined; LastName: string | null | undefined; Mobile: string | null | undefined }) => {
+                                            const firstName = customer.FirstName || '';
+                                            const lastName = customer.LastName || '';
+                                            const mobile = customer.Mobile || '';
+
+                                            return (
+                                                firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
+                                                lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
+                                                mobile.toLowerCase().includes(searchValue.toLowerCase())
+                                            );
+                                            }
+                                        ).map((customer: { CustomerID: Key | null | undefined }) => (
+                                            <CustomerCard key={customer.CustomerID} customer={customer} />
+                                        ))}
+                                </div>
+                                </Slideover.Description>
+
                         </Slideover.Panel>
                     </Slideover>
                     )}
