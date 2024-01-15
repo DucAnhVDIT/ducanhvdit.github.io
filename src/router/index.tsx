@@ -10,6 +10,7 @@ import PointOfSales from "../pages/PointOfSale";
 import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
 import LoginPage from "../pages/Login"; // Add your login page component
+import Register from "../pages/Register"
 import { useSelector } from 'react-redux';
 import { RootState } from "../stores/store";
 
@@ -48,6 +49,10 @@ function Router() {
           element: <DashboardOverview2 />,
         },
       ],
+    },
+    {
+      path: "/register",
+      element: <Register />,
     },
   ];
 
