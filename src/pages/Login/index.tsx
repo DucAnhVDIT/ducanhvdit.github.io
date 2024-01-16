@@ -21,11 +21,17 @@ function Main() {
     password: password
   }
   const handleLogin = () => {
-    console.log('click login')
     //handle validate field
-    login(loginForm)
+    login(loginForm).then((res: any) => {
+      if (res.data !== null) {
+        toast.success('Login success')
+        navigate('/');
+      } else {
+        toast.error('Login fail')
+      }
+    })
+    console.log('outside form')
     // Redirect to the home page after successful login
-    navigate('/');
   };
 
   return (
@@ -37,7 +43,6 @@ function Main() {
           "after:hidden after:xl:block after:content-[''] after:w-[57%] after:-mt-[20%] after:-mb-[13%] after:-ml-[13%] after:absolute after:inset-y-0 after:left-0 after:transform after:rotate-[-4.5deg] after:bg-primary after:rounded-[100%] after:dark:bg-darkmode-700",
         ])}
       >
-        <DarkModeSwitcher />
         <div className="container relative z-10 sm:px-10">
           <div className="block grid-cols-2 gap-4 xl:grid">
             {/* BEGIN: Login Info */}
@@ -83,6 +88,7 @@ function Main() {
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    autoFocus={true}
                   />
                   <FormInput
                     type="password"

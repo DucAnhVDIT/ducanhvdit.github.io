@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Dispatch } from 'redux';
-import userData from '../assets/json/userData.json'
 import userRepository from '../repositories/userRepository';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +18,7 @@ interface AuthContextProps {
 
 interface AuthContextType {
   user: User | null;
-  login: (loginDetail: any) => void;
+  login: (loginDetail: any) => any;
   logout: () => void;
   isAuthenticated: () => boolean;
 }
@@ -27,22 +26,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-
   const login = (loginDetail: any) => {
     return new Promise((resolve, reject) => {
       userRepository.login(loginDetail).then((res: any) => {
         const authenticatedUser = res.data
-        console.log(authenticatedUser)
-        if (authenticatedUser !== null) {
+        // if (authenticatedUser !== null) {
+        //   console.log('login successful')
           setUser(authenticatedUser);
           localStorage.setItem("authSuccess","true")
-          toast.success('Login success')
-          console.log('true')
-        }
-        else {
-          toast.error('wrong info');
-          
-        }
+        //   toast.success('Login success')
+        // }
         resolve(res)
       }).catch((err: any) => {
         reject(err)
