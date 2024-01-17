@@ -7,6 +7,8 @@ import fakerData from "../../utils/faker";
 import _ from "lodash";
 import clsx from "clsx";
 import { Transition } from "@headlessui/react";
+import { useAuth } from "../../services/AuthContext";
+import { useNavigate } from 'react-router-dom';
 
 function Main() {
   const [searchDropdown, setSearchDropdown] = useState(false);
@@ -16,6 +18,14 @@ function Main() {
   const hideSearchDropdown = () => {
     setSearchDropdown(false);
   };
+
+  const {logout} = useAuth()
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    navigate('/login')
+    console.log('this click?')
+    logout()
+  }
 
   return (
     <>
@@ -90,7 +100,7 @@ function Main() {
                     >
                       <div className="w-8 h-8 image-fit">
                         <img
-                          alt="Midone Tailwind HTML Admin Template"
+                          alt="VDIT Solutions"
                           className="rounded-full"
                           src={faker.photos[0]}
                         />
@@ -107,7 +117,7 @@ function Main() {
                   <a key={fakerKey} href="" className="flex items-center mt-2">
                     <div className="w-8 h-8 image-fit">
                       <img
-                        alt="Midone Tailwind HTML Admin Template"
+                        alt="VDIT Solutions"
                         className="rounded-full"
                         src={faker.images[0]}
                       />
@@ -145,7 +155,7 @@ function Main() {
               >
                 <div className="relative flex-none w-12 h-12 mr-1 image-fit">
                   <img
-                    alt="Midone Tailwind HTML Admin Template"
+                    alt="VDIT Solutions"
                     className="rounded-full"
                     src={faker.photos[0]}
                   />
@@ -173,7 +183,7 @@ function Main() {
         <Menu>
           <Menu.Button className="block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x">
             <img
-              alt="Midone Tailwind HTML Admin Template"
+              alt="VDIT Solutions"
               src={fakerData[9].photos[0]}
             />
           </Menu.Button>
@@ -198,7 +208,7 @@ function Main() {
               <Lucide icon="HelpCircle" className="w-4 h-4 mr-2" /> Help
             </Menu.Item>
             <Menu.Divider className="bg-white/[0.08]" />
-            <Menu.Item className="hover:bg-white/5">
+            <Menu.Item className="hover:bg-white/5" onClick={handleLogout}>
               <Lucide icon="ToggleRight" className="w-4 h-4 mr-2" /> Logout
             </Menu.Item>
           </Menu.Items>
