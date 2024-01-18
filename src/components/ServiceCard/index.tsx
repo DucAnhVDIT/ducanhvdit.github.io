@@ -2,10 +2,14 @@ import React from 'react';
 import Button from '../../base-components/Button';
 import Lucide from '../../base-components/Lucide';
 
-const ServiceCard = ({ service }: { service: any }) => {
+const ServiceCard = ({ service, onSelect }: { service: any, onSelect: (service: any, totalPrice: number) => void }) => {
+  const handleClick = () => {
+    const totalPrice = service.Price || 0;
+    onSelect(service, totalPrice);
+  };
   return (
     <div>
-      <Button className="border-none bg-transparent w-full shadow-none">
+      <Button className="border-none bg-transparent w-full shadow-none" onClick={handleClick} >
         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
           <div
             className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"

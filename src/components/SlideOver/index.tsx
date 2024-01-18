@@ -36,6 +36,27 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
     const [customersList, setCustomersList] = useState([]);
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
+    const [selectedServices, setSelectedServices] = React.useState<{ ProductID: any; ProductName?: any; Price?: number }[]>([]);
+
+    // Function to handle service selection
+    const handleServiceSelect = (selectedService: { ProductID: any; }) => {
+        // Check if the service is already selected
+        const isServiceSelected = selectedServices.some(service => service.ProductID === selectedService.ProductID);
+
+        // Add or remove the service based on its current selection state
+        if (isServiceSelected) {
+            setSelectedServices(prevSelected => prevSelected.filter(service => service.ProductID !== selectedService.ProductID));
+            setServiceSlideoverOpen(false);
+        } else {
+            setSelectedServices(prevSelected => [...prevSelected, selectedService]);
+            setServiceSlideoverOpen(false);
+        }
+    };
+
+    const calculateTotal = () => {
+        return selectedServices.reduce((total, service) => total + (service.Price || 0), 0);
+      };
+
     const openSearchClient = async () => {
         // Reset the selected customer when opening the search client
         setSelectedCustomer(null);
@@ -235,6 +256,16 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                         </div>
                     </div>
                     </Button>
+
+                    <div className="selected-services">
+                        {selectedServices.map((selectedService) => (
+                        <ServiceCard
+                            key={selectedService.ProductID}
+                            service={selectedService}
+                            onSelect={() => {}}
+                        />
+                        ))}
+                    </div>
                     {/* End Add Services */}
                       
                     {/* Begin Service List */}
@@ -276,7 +307,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                             )
                             .slice(0, 5) // Display only the first 5 results
                             .map((service: { ProductID: string }) => (
-                                <ServiceCard key={service.ProductID} service={service} />
+                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
                             ))}
                         </Slideover.Description>
                         </Slideover.Panel>
@@ -367,7 +398,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                   <Slideover.Footer>
                     <div className="flex flex-row justify-between mb-9">
                         <h1 className="text-2xl"> Total</h1>
-                        <h1 className="text-xl">£0</h1>
+                        <h1 className="text-xl">{`£${calculateTotal()}`}</h1>
                     </div>
                       <Button
                           variant="outline-secondary"
