@@ -1,7 +1,9 @@
+import calendarRepository from './calendarRepository'
 import userRepository from './userRepository'
 
 const repositories: any = {
   user: userRepository,
+  calendar: calendarRepository,
 }
 
 export const RepositoryFactory = {

@@ -38,6 +38,7 @@ import CustomDatePicker from "../../components/DatePicker";
 import ExistingInfo from "../../components/ExistingInfo";
 import "./styles.css"
 import ReactDOM from "react-dom";
+import calendarRepository from "../../repositories/calendarRepository";
 
 
 
@@ -211,6 +212,11 @@ function Main() {
 
   const fetchAppoinmentApiData = async (date: { getTime: () => number; } | undefined) => {
       try {
+        const data = date ? Math.floor(date.getTime() / 1000) : null
+        
+        calendarRepository.getAppointment(data).then((res) => console.log(res.data))
+
+
         const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointments', {
           method: 'POST',
           headers: {
@@ -252,7 +258,7 @@ function Main() {
             'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
           },
           body: JSON.stringify({
-            "business_id": "20230404105858862680",
+            "business_id": "20160908110055249272",
             "date": Math.floor(date.getTime() / 1000),
           }),
         });
@@ -304,7 +310,7 @@ function Main() {
             'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
           },
           body: JSON.stringify({
-            "business_id": "20230404105858862680",
+            "business_id": "20160908110055249272",
             "StaffID": staffID,
           }),
         });
