@@ -32,8 +32,9 @@ import React from "react";
 function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
-    const [searchValue, setSearchValue] = useState("");
-    const [customersList, setCustomersList] = useState([]);
+    const [searchValueClient, setSearchValueClient] = useState("");
+    const [searchValueService, setSearchValueService] = useState("");
+    const [customersList, setCustomersList] = useState<any>([]);
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
     const [selectedServices, setSelectedServices] = React.useState<{ ProductID: any; ProductName?: any; Price?: number }[]>([]);
@@ -41,16 +42,16 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         // Check if the service is already selected
-        const isServiceSelected = selectedServices.some(service => service.ProductID === selectedService.ProductID);
+        // const isServiceSelected = selectedServices.some(service => service.ProductID === selectedService.ProductID);
 
         // Add or remove the service based on its current selection state
-        if (isServiceSelected) {
-            setSelectedServices(prevSelected => prevSelected.filter(service => service.ProductID !== selectedService.ProductID));
-            setServiceSlideoverOpen(false);
-        } else {
+        // if (isServiceSelected) {
+        //     setSelectedServices(prevSelected => prevSelected.filter(service => service.ProductID !== selectedService.ProductID));
+        //     setServiceSlideoverOpen(false);
+        // } else {
             setSelectedServices(prevSelected => [...prevSelected, selectedService]);
             setServiceSlideoverOpen(false);
-        }
+        
     };
 
     const calculateTotal = () => {
@@ -284,14 +285,14 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                 type="text"
                                 className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
                                 placeholder="Search by service name"
-                                value={searchValue}
-                                onChange={(e) => setSearchValue(e.target.value)}
+                                value={searchValueService}
+                                onChange={(e) => setSearchValueService(e.target.value)}
                                 />
-                                {searchValue ? (
+                                {searchValueService ? (
                                 <Lucide
                                     icon="XCircle"
                                     className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                    onClick={() => setSearchValue("")}
+                                    onClick={() => setSearchValueService("")}
                                 />
                                 ) : (
                                 <Lucide
@@ -303,7 +304,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                             </div>
                             {serviceData.Services && serviceData.Services
                             .filter((service: { ProductName: string }) =>
-                                service.ProductName.toLowerCase().startsWith(searchValue.toLowerCase())
+                                service.ProductName.toLowerCase().startsWith(searchValueService.toLowerCase())
                             )
                             .slice(0, 5) // Display only the first 5 results
                             .map((service: { ProductID: string }) => (
@@ -331,14 +332,14 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                         type="text"
                                         className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
                                         placeholder="Search by client name"
-                                        value={searchValue}
-                                        onChange={(e) => setSearchValue(e.target.value)}
+                                        value={searchValueClient}
+                                        onChange={(e) => setSearchValueClient(e.target.value)}
                                     />
-                                    {searchValue ? (
+                                    {searchValueClient ? (
                                         <Lucide
                                         icon="XCircle"
                                         className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                        onClick={() => setSearchValue("")}
+                                        onClick={() => setSearchValueClient("")}
                                         />
                                     ) : (
                                         <Lucide
@@ -373,9 +374,9 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                                 const mobile = customer.Mobile || '';
 
                                                 return (
-                                                firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
-                                                lastName.toLowerCase().includes(searchValue.toLowerCase()) ||
-                                                mobile.toLowerCase().includes(searchValue.toLowerCase())
+                                                firstName.toLowerCase().includes(searchValueClient.toLowerCase()) ||
+                                                lastName.toLowerCase().includes(searchValueClient.toLowerCase()) ||
+                                                mobile.toLowerCase().includes(searchValueClient.toLowerCase())
                                                 );
                                             })
                                             .map((customer: { CustomerID: Key | null | undefined }) => (
