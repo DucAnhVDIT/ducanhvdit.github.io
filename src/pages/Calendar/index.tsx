@@ -388,11 +388,13 @@ function Main() {
     },
     longPressDelay:1,
     eventClick: handleEventClick,
-    resources: staffData.map((staff) => ({
-      id: staffData ? String((staff as { StaffID: number }).StaffID) : '',
-      title: staffData && staffData.length > 0 ? (staff as { StaffName: string }).StaffName : '',
-      staffColor: (staff as { StaffColour: string }).StaffColour, // Use staff color if available
-    })),
+    resources: staffData
+    ? staffData.map((staff) => ({
+        id: String((staff as { StaffID: number }).StaffID),
+        title: (staff as { StaffName: string }).StaffName || '',
+        staffColor: (staff as { StaffColour: string }).StaffColour || '', // Use staff color if available
+      }))
+    : [],
     select: handleSlotClicked
   }
   
