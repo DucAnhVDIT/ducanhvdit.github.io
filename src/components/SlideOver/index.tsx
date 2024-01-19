@@ -154,7 +154,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
       const apiUrl = 'https://beautyapi.vdit.co.uk/v1/AddNewAppointment';
       
       const newAppointmentRequest = {
-            "business_id": "20160908110055249272",
+            business_id: "20160908110055249272",
             "FirstName": "Jenny",
             "LastName": "Kim",
             "Mobile": "07582645956",
@@ -176,7 +176,12 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
 
       const handleAddNewAppointment = () => {
         console.log('click add')
-        calendarRepository.addAppointment(newAppointmentRequest).then((res) => console.log(res))
+        calendarRepository.addAppointment(newAppointmentRequest).then((res) => 
+        {
+            if (res.data !== null) {
+                // list = [...res.Ap]
+            }
+        })
       }
     
     //   const handleAddNewAppointment = () => {
