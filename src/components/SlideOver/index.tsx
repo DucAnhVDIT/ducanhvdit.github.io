@@ -155,15 +155,15 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
       
       const newAppointmentRequest = {
             "business_id": "20160908110055249272",
-            "FirstName": "Jenny",
-            "LastName": "Kim",
-            "Mobile": "07582645956",
-            "Email": "jennyKim@gmail.com",
-            "Appointments": [
+            "FirstName": selectedCustomer?.FirstName || "",
+            "LastName": selectedCustomer?.LastName || "",
+            "Mobile": selectedCustomer?.Phone || "",
+            "Email": selectedCustomer?.Email || "",
+                "Appointments": [
                 {
                     "BookDate": "2024-01-19T00:00:00",
-                    "StartTime": "2024-01-19T15:00:00",
-                    "ServiceID": 64,
+                    "StartTime": "2024-01-19T18:00:00",
+                    // "ServiceID": selectedServices?.ProductID || "",
                     "StaffID": 9,
                     "Deposit": 0,
                     "Islocked": false,
@@ -176,35 +176,18 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
 
       const handleAddNewAppointment = () => {
         console.log('click add')
-        calendarRepository.addAppointment(newAppointmentRequest).then((res) => console.log(res))
-      }
-    
-    //   const handleAddNewAppointment = () => {
-    //     fetch(apiUrl, {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-    //       },
-    //       body: JSON.stringify({ newAppointmentRequest }),
-    //     })
-    //       .then((response) => {
-    //         if (!response.ok) {
-    //           throw new Error(`HTTP error! Status: ${response.status}`);
-    //         }
-    //         return response.json();
-    //       })
-    //       .then((data) => {
-    //         console.log('Success:', data);
-    //         // Handle the success response
-    //       })
-    //       .catch((error) => {
-    //         console.error('Error:', error);
-    //         // Handle errors
-    //       });
-    //   };
+        if (!selectedCustomer) {
+            console.error('Selected customer is null.');
+            return;
+          }
+        calendarRepository.addAppointment(newAppointmentRequest)
+        .then((res) => console.log(res))
 
-      
+
+        
+      }
+
+    
 
   return (
     <div>
