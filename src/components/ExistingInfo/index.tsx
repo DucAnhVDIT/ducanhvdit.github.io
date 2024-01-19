@@ -1,29 +1,24 @@
 
 import { Menu, Slideover } from "../../base-components/Headless";
-import {
-  FormLabel,
-  FormInput,
-  FormSelect,
-} from "../../base-components/Form";
+
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import { useState } from "react";
 
-import DatePickerMUI from "../DatePicker";
-import CustomDatePicker from "../DatePicker";
-import { Link } from 'react-router-dom';
-import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
-import DatePicker from 'react-datepicker';
+
 import 'react-datepicker/dist/react-datepicker.css';
 
 import React from 'react'
+
+import ServiceCard from "../ServiceCard";
+import CustomerCard from "../CustomerCard";
 
 
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  appointmentData: any 
+  appointmentData: any, 
 }
 
 function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps) {
@@ -64,6 +59,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
+                    <CustomerCard key={appointmentData.CustomerID} customer={appointmentData} onClick={() =>{}} />
+                    {/* <ServiceCard key={serviceData.ProductID} service={service} onSelect={handleServiceSelect}/> */}
                     <p>{`Customer Name: ${appointmentData.Appointment.CustomerName !== null ? appointmentData.Appointment.CustomerName : 'null'}`}</p>
                     <p>{`Service Name: ${appointmentData.Appointment.ServiceName !== null ? appointmentData.Appointment.ServiceName : 'null'}`}</p>
 

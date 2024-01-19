@@ -153,10 +153,10 @@ function Main() {
     }
     console.log(event)
 
-    toast.success('Booking added successfully!', {
-      position: toast.POSITION.TOP_RIGHT,
-      autoClose: 2400,
-    });
+    // toast.success('Booking added successfully!', {
+    //   position: toast.POSITION.TOP_RIGHT,
+    //   autoClose: 2400,
+    // });
 
     // Reset the form data after submission (optional)
     setFormData({
@@ -204,7 +204,7 @@ function Main() {
       const appointmentData = await apiResponse.json();
       setSelectedAppointment(appointmentData);
       setExistingInformationSlide(true);
-      console.log(appointmentData)
+
     } catch (error) {
       // console.error('Error fetching appointment information:', error.message);
     }

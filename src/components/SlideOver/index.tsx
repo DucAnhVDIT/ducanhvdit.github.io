@@ -19,6 +19,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ServiceCard from "../ServiceCard";
 import CustomerCard from "../CustomerCard";
 import React from "react";
+import axios from 'axios';
 
 
 
@@ -39,6 +40,30 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
 
     const [selectedServices, setSelectedServices] = React.useState<{ ProductID: any; ProductName?: any; Price?: number }[]>([]);
 
+    const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
+    const totalCustomers = customersList?.Customers?.length || 0;
+
+    // const axios = require('axios');
+
+    console.log(serviceData)
+    const loadMoreCustomers = () => {
+        // Increase the number of visible customers by 10 or until reaching the total number of customers
+        setVisibleCustomers((prevVisible) => Math.min(prevVisible + 10, totalCustomers));
+      };
+    
+      const filteredCustomers = customersList?.Customers
+        ? customersList.Customers.filter((customer: { FirstName: string; LastName: string; Mobile: string; }) => {
+            const firstName = customer.FirstName || '';
+            const lastName = customer.LastName || '';
+            const mobile = customer.Mobile || '';
+    
+            return (
+              firstName.toLowerCase().includes(searchValueClient.toLowerCase()) ||
+              lastName.toLowerCase().includes(searchValueClient.toLowerCase()) ||
+              mobile.toLowerCase().includes(searchValueClient.toLowerCase())
+            );
+          })
+        : [];
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         // Check if the service is already selected
@@ -71,11 +96,6 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
         // Close the search client slideover if needed
         setSecondSlideoverOpen(false);
     }
-
-    // const openSearchClient = async () => {
-    //     setSecondSlideoverOpen(true)
-    //     await fetchClientList();
-    // }
 
     const closeSearchClient = () => {
         setSecondSlideoverOpen(false)
@@ -130,7 +150,58 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
         return names.map((name: string) => name[0]).join('');
       };
       
-
+      const apiUrl = 'https://beautyapi.vdit.co.uk/v1/AddNewAppointment';
+      
+      const newAppointmentRequest = {
+            "business_id": "20160908110055249272",
+            "FirstName": "Jenny",
+            "LastName": "Kim",
+            "Mobile": "07582645956",
+            "Email": "jennyKim@gmail.com",
+            "Appointments": [
+                {
+                    "BookDate": "2024-01-19T00:00:00",
+                    "StartTime": "2024-01-19T12:00:00",
+                    "ServiceID": 64,
+                    "StaffID": 6,
+                    "Deposit": 0,
+                    "Islocked": false,
+                    "CustomerNote": "",
+                    "CompanyNote": null
+                }
+            ]
+      };
+    
+      const handleAddNewAppointment = () => {
+        fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+          },
+          body: JSON.stringify({ newAppointmentRequest }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log('Success:', data);
+            // Handle the success response
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            // Handle errors
+          });
+      };
+      
+      const handleButtonClick = () => {
+        console.log('click')
+        handleAddNewAppointment();
+      };
+      
 
   return (
     <div>
@@ -364,24 +435,15 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                                     </Button>
 
                                     {/* Display the list of customers based on search criteria */}
-                                    {customersList &&
-                                        customersList.Customers &&
-                                        customersList.Customers
-                                            .filter(
-                                            (customer: { FirstName: string | null | undefined; LastName: string | null | undefined; Mobile: string | null | undefined }) => {
-                                                const firstName = customer.FirstName || '';
-                                                const lastName = customer.LastName || '';
-                                                const mobile = customer.Mobile || '';
+                                    {filteredCustomers.slice(0, visibleCustomers).map((customer: { CustomerID: Key | null | undefined; }) => (
+                                        <CustomerCard key={customer.CustomerID} customer={customer} onClick={() => selectCustomer(customer)} />
+                                    ))}
 
-                                                return (
-                                                firstName.toLowerCase().includes(searchValueClient.toLowerCase()) ||
-                                                lastName.toLowerCase().includes(searchValueClient.toLowerCase()) ||
-                                                mobile.toLowerCase().includes(searchValueClient.toLowerCase())
-                                                );
-                                            })
-                                            .map((customer: { CustomerID: Key | null | undefined }) => (
-                                                <CustomerCard key={customer.CustomerID} customer={customer} onClick={() => selectCustomer(customer)} />
-                                            ))}
+                                    {visibleCustomers < totalCustomers && (
+                                        <button onClick={loadMoreCustomers} className=" mt-2 text-primary cursor-pointer">
+                                        Load More
+                                        </button>
+                                    )}
 
                                 </div>
                                 </Slideover.Description>
@@ -414,6 +476,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                           variant="primary"
                           type="button"
                           className="w-32"
+                          onClick={handleButtonClick}
                       >
                           Save
                       </Button>
