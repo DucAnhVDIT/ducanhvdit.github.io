@@ -20,6 +20,7 @@ import ServiceCard from "../ServiceCard";
 import CustomerCard from "../CustomerCard";
 import React from "react";
 import axios from 'axios';
+import calendarRepository from "../../repositories/calendarRepository";
 
 
 
@@ -161,9 +162,9 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
             "Appointments": [
                 {
                     "BookDate": "2024-01-19T00:00:00",
-                    "StartTime": "2024-01-19T12:00:00",
+                    "StartTime": "2024-01-19T15:00:00",
                     "ServiceID": 64,
-                    "StaffID": 6,
+                    "StaffID": 9,
                     "Deposit": 0,
                     "Islocked": false,
                     "CustomerNote": "",
@@ -171,36 +172,38 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                 }
             ]
       };
-    
+
+
       const handleAddNewAppointment = () => {
-        fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-          },
-          body: JSON.stringify({ newAppointmentRequest }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log('Success:', data);
-            // Handle the success response
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            // Handle errors
-          });
-      };
-      
-      const handleButtonClick = () => {
-        console.log('click')
-        handleAddNewAppointment();
-      };
+        console.log('click add')
+        calendarRepository.addAppointment(newAppointmentRequest).then((res) => console.log(res))
+      }
+    
+    //   const handleAddNewAppointment = () => {
+    //     fetch(apiUrl, {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+    //       },
+    //       body: JSON.stringify({ newAppointmentRequest }),
+    //     })
+    //       .then((response) => {
+    //         if (!response.ok) {
+    //           throw new Error(`HTTP error! Status: ${response.status}`);
+    //         }
+    //         return response.json();
+    //       })
+    //       .then((data) => {
+    //         console.log('Success:', data);
+    //         // Handle the success response
+    //       })
+    //       .catch((error) => {
+    //         console.error('Error:', error);
+    //         // Handle errors
+    //       });
+    //   };
+
       
 
   return (
@@ -476,7 +479,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                           variant="primary"
                           type="button"
                           className="w-32"
-                          onClick={handleButtonClick}
+                          onClick={handleAddNewAppointment}
                       >
                           Save
                       </Button>
