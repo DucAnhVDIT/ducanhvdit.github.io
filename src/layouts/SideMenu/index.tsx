@@ -10,7 +10,6 @@ import clsx from "clsx";
 import TopBar from "../../components/TopBar";
 import MobileMenu from "../../components/MobileMenu";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
-import MainColorSwitcher from "../../components/MainColorSwitcher";
 import SideMenuTooltip from "../../components/SideMenuTooltip";
 
 function Main() {

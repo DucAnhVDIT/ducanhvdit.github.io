@@ -38,7 +38,7 @@ function Main() {
             className="flex items-center pt-4 pl-5 intro-x"
           >
             <img
-              alt="Midone Tailwind HTML Admin Template"
+              alt="VDIT Solutions"
               className="w-6"
               src={logoUrl}
             />

@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import fakerData from "../../utils/faker";
 import Button from "../../base-components/Button";
 import {
@@ -10,13 +10,28 @@ import {
 } from "../../base-components/Form";
 import Lucide from "../../base-components/Lucide";
 import { Menu, Tab, Dialog } from "../../base-components/Headless";
+import eposRepository from "../../repositories/eposRepository";
+import { servicesCategoryData } from "../../types/epos";
 
 function Main() {
   const [newOrderModal, setNewOrderModal] = useState(false);
   const [addItemModal, setAddItemModal] = useState(false);
+  const [servicesCategory, setServicesCategory] = useState(servicesCategoryData)
   const createTicketRef = useRef(null);
   const addItemRef = useRef(null);
-
+  const catData = servicesCategory
+  console.log(catData)
+  const getServicesCategory = () => {
+    eposRepository.getServicesCategory().then((res: any) => {
+      const catData = res.data.Categories
+      console.log(catData)
+      setServicesCategory(res.data.Categories)
+      console.log(servicesCategory)
+    })
+  }
+  useEffect(() => {
+    getServicesCategory()
+  }, [])
   return (
     <>
       <div className="flex flex-col items-center mt-8 intro-y sm:flex-row">
@@ -87,37 +102,9 @@ function Main() {
             </FormSelect>
           </div>
           <div className="grid grid-cols-12 gap-5 mt-5">
+            {/* need to map list of category here -> leave it till next time */}
             <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-              <div className="text-base font-medium">Soup</div>
-              <div className="text-slate-500">5 Items</div>
-            </div>
-            <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box bg-primary zoom-in">
-              <div className="text-base font-medium text-white">
-                Pancake & Toast
-              </div>
-              <div className="text-white text-opacity-80 dark:text-slate-500">
-                8 Items
-              </div>
-            </div>
-            <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-              <div className="text-base font-medium">Pasta</div>
-              <div className="text-slate-500">4 Items</div>
-            </div>
-            <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-              <div className="text-base font-medium">Waffle</div>
-              <div className="text-slate-500">3 Items</div>
-            </div>
-            <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-              <div className="text-base font-medium">Snacks</div>
-              <div className="text-slate-500">8 Items</div>
-            </div>
-            <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-              <div className="text-base font-medium">Deserts</div>
-              <div className="text-slate-500">8 Items</div>
-            </div>
-            <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-              <div className="text-base font-medium">Beverage</div>
-              <div className="text-slate-500">9 Items</div>
+              <div className="text-base font-medium">{catData.CategoryName}</div>
             </div>
           </div>
           <div className="grid grid-cols-12 gap-5 pt-5 mt-5 border-t">
@@ -135,7 +122,7 @@ function Main() {
                   <div className="flex-none relative block before:block before:w-full before:pt-[100%]">
                     <div className="absolute top-0 left-0 w-full h-full image-fit">
                       <img
-                        alt="Midone Tailwind HTML Admin Template"
+                        alt="VDIT Solutions"
                         className="rounded-md"
                         src={faker.foods[0].image}
                       />

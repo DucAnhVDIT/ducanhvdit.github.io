@@ -16,7 +16,10 @@ import { useAuth } from "../services/AuthContext";
 
 function Router() {
   const user = useAuth();
-
+  //get data from session storage
+  const sessionUser = sessionStorage.getItem('user')
+  //parse data from string back to object
+  const isAuthenticated = JSON.parse(sessionUser!)
   const routes = [
     {
       path: "/login",
@@ -24,7 +27,8 @@ function Router() {
     },
     {
       path: "/",
-      element: !!user.user ? <SideMenu /> : <Navigate to="/login" />,
+      // check if there is data and rediect to page or back to login
+      element: !!isAuthenticated ? <SideMenu /> : <Navigate to="/login" />,
       children: [
         {
           path: "/",

@@ -15,3 +15,28 @@ export interface IRegister {
   postcode: string
   country: string
 }
+
+export interface IUser {
+  AccountID: number
+  FirstName: string
+  LastName: string
+  Email: string
+  UserLevel: number
+  NameNo: number
+  BusinessModel: [
+    {
+      BusinessID: string
+      BusinessName: string
+    }
+  ]
+}
+
+export interface ICategory {
+  CategoryID: number
+  CompanyID: string
+  CategoryName: string
+  Description: string
+  CategoryIndex: number
+  CategoryImage: string
+  OrderNo: number
+}

@@ -6,9 +6,11 @@ import { Menu, Popover } from "../../base-components/Headless";
 import fakerData from "../../utils/faker";
 import _ from "lodash";
 import clsx from "clsx";
+import { dataUser } from "../../types/user";
 import { Transition } from "@headlessui/react";
 import { useAuth } from "../../services/AuthContext";
 import { useNavigate } from 'react-router-dom';
+import { rolesName } from "../../constant/log-roles";
 
 function Main() {
   const [searchDropdown, setSearchDropdown] = useState(false);
@@ -19,10 +21,17 @@ function Main() {
     setSearchDropdown(false);
   };
 
+  // get user data from storage
+  const dataUsers = dataUser
+  console.log(dataUsers)
+
+  // call logout from AuthContext
   const {logout} = useAuth()
   const navigate = useNavigate();
   const handleLogout = () => {
+    //redirect back to login page
     navigate('/login')
+    // execute logout function from AuthContext
     logout()
   }
 
@@ -133,7 +142,7 @@ function Main() {
         </div>
         {/* END: Search  */}
         {/* BEGIN: Notifications */}
-        <Popover className="mr-auto intro-x sm:mr-6">
+        {/* <Popover className="mr-auto intro-x sm:mr-6">
           <Popover.Button
             className="
               relative text-slate-600 outline-none block
@@ -176,7 +185,7 @@ function Main() {
               </div>
             ))}
           </Popover.Panel>
-        </Popover>
+        </Popover> */}
         {/* END: Notifications  */}
         {/* BEGIN: Account Menu */}
         <Menu>
@@ -188,17 +197,14 @@ function Main() {
           </Menu.Button>
           <Menu.Items className="w-56 mt-px text-white bg-primary">
             <Menu.Header className="font-normal">
-              <div className="font-medium">{fakerData[0].users[0].name}</div>
+              <div className="font-medium">{dataUsers.FirstName} {dataUsers.LastName}</div>
               <div className="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-                {fakerData[0].jobs[0]}
+                {rolesName(dataUsers.UserLevel)}
               </div>
             </Menu.Header>
             <Menu.Divider className="bg-white/[0.08]" />
             <Menu.Item className="hover:bg-white/5">
               <Lucide icon="User" className="w-4 h-4 mr-2" /> Profile
-            </Menu.Item>
-            <Menu.Item className="hover:bg-white/5">
-              <Lucide icon="Edit" className="w-4 h-4 mr-2" /> Add Account
             </Menu.Item>
             <Menu.Item className="hover:bg-white/5">
               <Lucide icon="Lock" className="w-4 h-4 mr-2" /> Reset Password

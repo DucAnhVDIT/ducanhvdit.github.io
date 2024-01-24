@@ -30,9 +30,14 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   const login = (loginDetail: any) => {
     return new Promise((resolve, reject) => {
       userRepository.login(loginDetail).then((res: any) => {
+        // API always return true so check if have data
         if (res.data !== null) {
           const authenticatedUser = res.data.Account
+          //save data into value of user to export for other components to use. This can change later
           setUser(authenticatedUser);
+          //save data into session storage
+          sessionStorage.setItem('user', JSON.stringify(authenticatedUser))
+          // export res data
           resolve(res)
         } else {
           toast.error('Wrong login details')
@@ -45,7 +50,7 @@ export const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
   };
 
   const logout = () => {
-    console.log('logout')
+    sessionStorage.removeItem('user')
     setUser(null)
   }
 
