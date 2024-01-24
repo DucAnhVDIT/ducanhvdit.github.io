@@ -88,8 +88,6 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
           
           if (responseData.Customers) {
             setCustomersList(responseData);
-            console.log('Customers List:', responseData.Customers);
-            console.log(customersList)
           } else {
             console.error('Error: Customers property not found in API response.');
           }

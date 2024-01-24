@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
-
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
-import MainColorSwitcher from "../../components/MainColorSwitcher";
 import VDITURL from "../../assets/images/vditheader.png"
 import illustrationUrl from "../../assets/images/illustration.svg";
 import { FormInput, FormCheck } from "../../base-components/Form";
@@ -30,7 +28,6 @@ function Main() {
         toast.error('Login fail')
       }
     })
-    console.log('outside form')
     // Redirect to the home page after successful login
   };
 

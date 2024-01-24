@@ -12,14 +12,11 @@ import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
 import LoginPage from "../pages/Login"; // Add your login page component
 import Register from "../pages/Register"
-import { useSelector } from 'react-redux';
-import { RootState } from "../stores/store";
+import { useAuth } from "../services/AuthContext";
 
 function Router() {
-  const isAuthenticated = useSelector((state: RootState) => state.authState.success)
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isLoggedIn = localStorage.getItem("authSuccess")
-  
+  const user = useAuth();
+
   const routes = [
     {
       path: "/login",
@@ -27,7 +24,7 @@ function Router() {
     },
     {
       path: "/",
-      element: isLoggedIn ? <SideMenu /> : <Navigate to="/login" />,
+      element: !!user.user ? <SideMenu /> : <Navigate to="/login" />,
       children: [
         {
           path: "/",

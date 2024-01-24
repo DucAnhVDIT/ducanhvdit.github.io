@@ -23,7 +23,6 @@ function Main() {
   const navigate = useNavigate();
   const handleLogout = () => {
     navigate('/login')
-    console.log('this click?')
     logout()
   }
 

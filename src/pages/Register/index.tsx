@@ -19,7 +19,6 @@ function Main() {
     setFormRegister((data) => ({ ...data, [name]: value}))
   }
   const handleRegister = () => {
-    console.log(formRegister)
     userRepository.register(formRegister).then((res: any) => {
       const data = res.data.RegisterAccountStatus
       if (data === 0) {

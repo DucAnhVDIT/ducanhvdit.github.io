@@ -78,8 +78,6 @@ function Main() {
   
   // Effect to log scheduleData changes
   useEffect(() => {
-    console.log("Updated Schedule Data:", scheduleData);
-    console.log(staffData)
   }, [scheduleData]);
   
   // Effect to fetch staff data
@@ -101,7 +99,6 @@ function Main() {
     setResourceID(staffID);
   
     const data = await fetchServiceApiData(staffID);
-    console.log('Data from API:', data);
     setServiceData(data);
     // Open the slideover preview
     setSlotSlideoverPreview(true);
@@ -151,10 +148,8 @@ function Main() {
       // Use the addEvent method to add the event to the calendar
       calendarRef.current.getApi().addEvent(event);
     }
-    console.log(event)
 
     toast.success('Booking added successfully!', {
-      position: toast.POSITION.TOP_RIGHT,
       autoClose: 2400,
     });
 
@@ -204,7 +199,6 @@ function Main() {
       const appointmentData = await apiResponse.json();
       setSelectedAppointment(appointmentData);
       setExistingInformationSlide(true);
-      console.log(appointmentData)
     } catch (error) {
       // console.error('Error fetching appointment information:', error.message);
     }
@@ -214,7 +208,7 @@ function Main() {
       try {
         const data = date ? Math.floor(date.getTime() / 1000) : null
         
-        calendarRepository.getAppointment(data).then((res) => console.log(res.data))
+        // calendarRepository.getAppointment(data).then((res) => )
 
 
         const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointments', {
@@ -234,7 +228,6 @@ function Main() {
         }
 
         const appointmentsData = await apiResponse.json();
-        console.log('API Response:', appointmentsData.Appointments);
         const appointmentsArray = appointmentsData.Appointments || [];
 
         // Update the state only if the array is not empty
@@ -320,8 +313,6 @@ function Main() {
         }
     
         const responseData = await apiResponse.json();
-        console.log(responseData);
-
         return responseData
     
         // Update your state or perform any other action with the service data
