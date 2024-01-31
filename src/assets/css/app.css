@@ -146,3 +146,31 @@
    border-width: 3px 0 0;
    
    }
+
+
+   /* WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+   width: 6px;
+ }
+ 
+ ::-webkit-scrollbar-thumb {
+   background-color: #888; /* color of the thumb */
+   border-radius: 6px; /* roundness of the thumb */
+ }
+ 
+ ::-webkit-scrollbar-track {
+   background-color: #f1f1f1; /* color of the track */
+ }
+ 
+ /* Firefox */
+ /* Note: `scrollbar-color` and `scrollbar-width` are part of the Firefox-only scrollbar styling properties. */
+ /* Firefox 64 and earlier require the -moz- prefix */
+ /* Firefox 65 and later support the standard syntax */
+ 
+ /* Set the color of the thumb and track */
+ /* You can use the same color for both thumb and track, or different colors */
+ /* The first color is the thumb color, and the second is the track color */
+ scrollbar-color: #888 #f1f1f1;
+ 
+ /* Set the width of the scrollbar */
+ scrollbar-width: thin;

@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import Lucide from "../../base-components/Lucide";
 import Breadcrumb from "../../base-components/Breadcrumb";
 import { FormInput } from "../../base-components/Form";
@@ -20,10 +20,8 @@ function Main() {
   const hideSearchDropdown = () => {
     setSearchDropdown(false);
   };
-
-  // get user data from storage
-  const dataUsers = dataUser
-  console.log(dataUsers)
+  //get user data from storage parse data from string back to object
+  const dataUsers = JSON.parse(sessionStorage.getItem('user')!)
 
   // call logout from AuthContext
   const {logout} = useAuth()
