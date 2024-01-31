@@ -12,7 +12,7 @@ import Lucide from "../../base-components/Lucide";
 import { Menu, Tab, Dialog } from "../../base-components/Headless";
 import eposRepository from "../../repositories/eposRepository";
 import { useDispatch, useSelector } from "react-redux";
-import { addToBill } from "../../stores/billSlice";
+import { addToBill, clearBill } from "../../stores/billSlice";
 
 function Main() {
   const dispatch = useDispatch();
@@ -30,6 +30,9 @@ function Main() {
   const [servicesCategory, setServicesCategory] = useState<any>([])
   const [services, setServices] = useState<any>([])
   const [fullServices, setFullServices] = useState<any>([])
+  // const [billDetails, setBillDetails] = useState<any>([])
+  // const [totalPrice, setTotalPrice] = useState<any>([])
+
   const createTicketRef = useRef(null);
   const addItemRef = useRef(null);
   
@@ -85,10 +88,17 @@ function Main() {
   }, [fullServices]);
 
   const showListCat = () => {
-    setStaffHidden(true)
-    setListHidden(false)
-    setCategoryHidden(false)
-    setServiceHidden(true)
+    if (servicesCategory.length > 0) {
+      setStaffHidden(true)
+      setListHidden(false)
+      setCategoryHidden(false)
+      setServiceHidden(true)
+    } else {
+      setStaffHidden(false)
+      setListHidden(true)
+      setCategoryHidden(true)
+      setServiceHidden(true)
+    }
   }
 
   const clickStaffButton = () => {
@@ -108,12 +118,18 @@ function Main() {
   }, [])
   
   const billDetails = useSelector((state: any) => state.bill.billItems)
+  console.log(billDetails)
   const totalPrice = useSelector((state: any) => state.bill.totalPrice)
-
+  
   const addItem = (data: any) => {
     dispatch(addToBill(data))
   }
 
+  const handleNewOrderClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    // setNewOrderModal(true);
+    dispatch(clearBill())
+  }
 
   return (
     <>
@@ -124,10 +140,7 @@ function Main() {
             as="a"
             href="#"
             variant="primary"
-            onClick={(event: React.MouseEvent) => {
-              event.preventDefault();
-              setNewOrderModal(true);
-            }}
+            onClick={handleNewOrderClick}
             className="mr-2 shadow-md"
           >
             New Order
@@ -163,7 +176,7 @@ function Main() {
                 className="w-full px-4 py-3 pr-10 lg:w-64 !box"
                 placeholder="Search item by code or name..."
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) => {setSearchValue(e.target.value)}}
               />
               <Lucide
                 icon="Search"
@@ -224,7 +237,7 @@ function Main() {
           {/*BEGIN: Display list Services*/}
           {
             !serviceHidden && 
-            <div className="grid grid-cols-12 gap-5 p-4 mt-5 border-t h-96 overflow-y-auto">
+            <div className="grid grid-cols-12 gap-5 p-4 mt-5 border-t h-[70vh] overflow-y-auto">
             {services.map((service: any, ProductID: number) => (
               <a
                 key={ProductID}
@@ -267,31 +280,36 @@ function Main() {
           </div>
           <Tab.Panels>
             <Tab.Panel>
-              <div className="p-2 mt-5 box">
-                {billDetails.map((bill: any, ProductID: number) => (
-                  <a
-                    href="#"
-                    key={ProductID}
-                    onClick={(event: React.MouseEvent) => {
-                      event.preventDefault();
-                      setAddItemModal(true);
-                    }}
-                    className="flex items-center p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400"
-                  >
-                    <div className="max-w-[50%] truncate mr-1">
-                      {bill.ProductName}
-                    </div>
-                    <div className="text-slate-500">x {bill.quantity}</div>
-                    <Lucide
-                      icon="Edit"
-                      className="w-4 h-4 ml-2 text-slate-500"
-                    />
-                    <div className="ml-auto font-medium">
-                      £{bill.quantityPrice}
-                    </div>
-                  </a>
-                ))}
-              </div>
+              {billDetails.length !== 0 ? (
+                <div className="p-2 mt-5 box">
+                  {billDetails.map((bill: any, ProductID: number) => (
+                    <a
+                      href="#"
+                      key={ProductID}
+                      onClick={(event: React.MouseEvent) => {
+                        event.preventDefault();
+                        setAddItemModal(true);
+                      }}
+                      className="flex items-center p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400"
+                    >
+                      <div className="max-w-[50%] truncate mr-1">
+                        {bill.ProductName}
+                      </div>
+                      <div className="text-slate-500">x {bill.quantity}</div>
+                      <Lucide
+                        icon="Edit"
+                        className="w-4 h-4 ml-2 text-slate-500"
+                      />
+                      <div className="ml-auto font-medium">
+                        £{bill.quantityPrice}
+                      </div>
+                    </a>
+                  ))}
+                </div>
+                ) : (
+                  <div className="p-2 mt-5 box text-center">Your bill is empty. Add items to your order.</div>
+                )
+              }
               <div className="flex p-5 mt-5 box">
                 <FormInput
                   type="text"

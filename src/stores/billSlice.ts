@@ -24,8 +24,12 @@ const basketSlice = createSlice({
       // calculate total price
       state.totalPrice = state.totalPrice + action.payload.Price
     },
+    clearBill: (state) => {
+      state.billItems = []
+      state.totalPrice = 0
+    },
   },
 })
 
-export const { addToBill } = basketSlice.actions
+export const { addToBill, clearBill } = basketSlice.actions
 export default basketSlice.reducer

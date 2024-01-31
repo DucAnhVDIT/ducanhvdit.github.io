@@ -26,7 +26,7 @@ function Main() {
 
   return (
     <div className="py-2">
-      <DarkModeSwitcher />
+      {/* <DarkModeSwitcher /> */}
       {/* <MainColorSwitcher /> */}
       <MobileMenu />
       <div className="flex mt-[4.7rem] md:mt-0">
