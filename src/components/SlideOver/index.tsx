@@ -30,8 +30,9 @@ import calendarRepository from "../../repositories/calendarRepository";
     isOpen: boolean;
     onClose: () => void;
     serviceData: any;
+    selectedTime : any;
   }
-function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
+function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -39,7 +40,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
     const [customersList, setCustomersList] = useState<any>([]);
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
-    const [selectedServices, setSelectedServices] = React.useState<{ ProductID: any; ProductName?: any; Price?: number }[]>([]);
+    const [selectedServices, setSelectedServices] = React.useState<{ ProductID?: any; ProductName?: any; Price?: number }[]>([]);
 
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
@@ -161,10 +162,11 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
             "Email": selectedCustomer?.Email || "",
                 "Appointments": [
                 {
-                    "BookDate": "2024-01-19T00:00:00",
-                    "StartTime": "2024-01-19T18:00:00",
-                    // "ServiceID": selectedServices?.ProductID || "",
-                    "StaffID": 9,
+                    "BookDate": new Date(), 
+                    "StartTime": selectedTime,
+                    // "ServiceID": selectedServices.ProductID,
+                    "ServiceID": 64,
+                    "StaffID": 13,
                     "Deposit": 0,
                     "Islocked": false,
                     "CustomerNote": "",
@@ -173,18 +175,18 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
             ]
       };
 
+      console.log(selectedTime)
+
 
       const handleAddNewAppointment = () => {
         console.log('click add')
-        if (!selectedCustomer) {
-            console.error('Selected customer is null.');
-            return;
-          }
+        // if (!selectedCustomer) {
+        //     console.error('Selected customer is null.');
+        //     return;
+        //   }
         calendarRepository.addAppointment(newAppointmentRequest)
         .then((res) => console.log(res))
-
-
-        
+        setSecondSlideoverOpen(false);
       }
 
     
@@ -464,7 +466,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData }: SlideOverPanelProps) {
                           className="w-32"
                           onClick={handleAddNewAppointment}
                       >
-                          Save
+                          Add
                       </Button>
                   </Slideover.Footer>
               </Slideover.Panel>

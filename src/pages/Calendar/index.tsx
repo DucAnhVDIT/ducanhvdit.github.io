@@ -101,7 +101,7 @@ function Main() {
     setResourceID(staffID);
   
     const data = await fetchServiceApiData(staffID);
-    console.log('Data from API:', data);
+    console.log(info.start);
     setServiceData(data);
     // Open the slideover preview
     setSlotSlideoverPreview(true);
@@ -200,7 +200,7 @@ function Main() {
         }
 
         const staffData = await apiResponse.json();
-        // console.log('API Response:', staffData);
+        console.log('Staff List', staffData);
         setStaffData(staffData.Staffs);
       } catch (error) {
         // console.error('Error fetching the API:', error.message);
@@ -422,7 +422,7 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData}/>)}
+      {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime = {selectedTime}/>)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer />
       
