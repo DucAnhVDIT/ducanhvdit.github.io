@@ -1,26 +1,22 @@
 
-  import { Menu, Slideover } from "../../base-components/Headless";
-  import {
+import { Menu, Slideover } from "../../base-components/Headless";
+import {
     FormLabel,
     FormInput,
     FormSelect,
   } from "../../base-components/Form";
-  import Button from "../../base-components/Button";
-  import Lucide from "../../base-components/Lucide";
-  import { Key, useEffect, useState } from "react";
-
-import DatePickerMUI from "../DatePicker";
-import CustomDatePicker from "../DatePicker";
+import Button from "../../base-components/Button";
+import Lucide from "../../base-components/Lucide";
+import { Key, useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
-import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ServiceCard from "../ServiceCard";
 import CustomerCard from "../CustomerCard";
 import React from "react";
 import axios from 'axios';
 import calendarRepository from "../../repositories/calendarRepository";
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -31,8 +27,12 @@ import calendarRepository from "../../repositories/calendarRepository";
     onClose: () => void;
     serviceData: any;
     selectedTime : any;
+    date: any;
+    showAppointmentToast :any;
+    fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
+    updateScheduleData: any
   }
-function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOverPanelProps) {
+function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -40,14 +40,13 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOve
     const [customersList, setCustomersList] = useState<any>([]);
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
-    const [selectedServices, setSelectedServices] = React.useState<{ ProductID?: any; ProductName?: any; Price?: number }[]>([]);
+    const [selectedServices, setSelectedServices] = React.useState<any>(null);
 
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
 
     // const axios = require('axios');
 
-    console.log(serviceData)
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
         setVisibleCustomers((prevVisible) => Math.min(prevVisible + 10, totalCustomers));
@@ -68,23 +67,23 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOve
         : [];
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
-        // Check if the service is already selected
-        // const isServiceSelected = selectedServices.some(service => service.ProductID === selectedService.ProductID);
-
-        // Add or remove the service based on its current selection state
-        // if (isServiceSelected) {
-        //     setSelectedServices(prevSelected => prevSelected.filter(service => service.ProductID !== selectedService.ProductID));
-        //     setServiceSlideoverOpen(false);
-        // } else {
-            setSelectedServices(prevSelected => [...prevSelected, selectedService]);
-            setServiceSlideoverOpen(false);
-        
+        setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
+        setServiceSlideoverOpen(false);
     };
-
+    
+    console.log(selectedServices?.ProductID || 0,)
     const calculateTotal = () => {
-        return selectedServices.reduce((total, service) => total + (service.Price || 0), 0);
+        if (!selectedServices || selectedServices.length === 0) {
+          return 0; // Return 0 if selectedServices is null, undefined, or empty
+        }
+      
+        return selectedServices.reduce((total: any, service: { Price: any; }) => {
+          const price = service.Price || 0; // Default to 0 if Price is null or undefined
+          return total + price;
+        }, 0);
       };
-
+      
+      
     const openSearchClient = async () => {
         // Reset the selected customer when opening the search client
         setSelectedCustomer(null);
@@ -94,6 +93,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOve
 
     const selectCustomer = (customer: any) => {
         // Set the selected customer when a customer is clicked
+        console.log('selected customer', customer)
         setSelectedCustomer(customer);
         // Close the search client slideover if needed
         setSecondSlideoverOpen(false);
@@ -162,10 +162,10 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOve
             "Email": selectedCustomer?.Email || "",
                 "Appointments": [
                 {
-                    "BookDate": new Date(), 
+                    "BookDate": date, 
                     "StartTime": selectedTime,
-                    // "ServiceID": selectedServices.ProductID,
-                    "ServiceID": 64,
+                    "ServiceID": selectedServices?.ProductID || 0,
+                    // "ServiceID": 62,
                     "StaffID": 13,
                     "Deposit": 0,
                     "Islocked": false,
@@ -177,17 +177,34 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOve
 
       console.log(selectedTime)
 
-
+      const navigate = useNavigate();
       const handleAddNewAppointment = () => {
-        console.log('click add')
-        // if (!selectedCustomer) {
-        //     console.error('Selected customer is null.');
-        //     return;
-        //   }
+        console.log('click add');
+        console.log(typeof showAppointmentToast); // Check the type
+      
         calendarRepository.addAppointment(newAppointmentRequest)
-        .then((res) => console.log(res))
+          .then((res) => {
+            console.log(res);
+            // updateScheduleData(res.data);
+            window.location.replace('/');
+            showAppointmentToast('Appointment added successfully');
+            onClose();
+            // Redirect to the home page after a delay
+            // setTimeout(() => {
+            //   window.location.replace('/');
+            //   navigate('/');
+            //   onClose();
+            // }, 1000); // Adjust the delay as needed (in milliseconds)
+          })
+          .catch((error) => {
+            console.error('Error adding appointment:', error);
+            showAppointmentToast('Error adding appointment', 'error');
+          });
+      
         setSecondSlideoverOpen(false);
-      }
+      };
+      
+      
 
     
 
@@ -318,13 +335,16 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOve
                     </Button>
 
                     <div className="selected-services">
-                        {selectedServices.map((selectedService) => (
+                    <div className="selected-services">
+                    {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
                         <ServiceCard
-                            key={selectedService.ProductID}
-                            service={selectedService}
-                            onSelect={() => {}}
+                        key={selectedService.ProductID}
+                        service={selectedService}
+                        onSelect={() => {}}
                         />
-                        ))}
+                    ))}
+                    </div>
+
                     </div>
                     {/* End Add Services */}
                       
@@ -478,3 +498,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime }: SlideOve
 }
 
 export default SlideOverPanel
+
+function showAppointmentToast(arg0: string, arg1: string) {
+    throw new Error("Function not implemented.");
+}

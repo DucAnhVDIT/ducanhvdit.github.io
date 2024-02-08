@@ -12,7 +12,7 @@ import {
   Source,
   Highlight,
 } from "../../base-components/PreviewComponent";
-import { useState, useRef, SetStateAction, useEffect } from "react";
+import { useState, useRef, SetStateAction, useEffect, JSXElementConstructor, ReactElement, ReactNode } from "react";
 import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle, Application } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
@@ -30,7 +30,7 @@ import AppointmentStatus from "../../components/Status";
 import FloatingActionButtons from "../../components/FloatingButtons";
 import TippyContent from "../../base-components/TippyContent";
 import { FaSleigh, FaStar } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, ToastContentProps, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "../../components/SlideOver";
 import DatePickerMUI from "../../components/DatePicker";
@@ -63,7 +63,7 @@ function Main() {
   const [resourceID, setResourceID] = useState("");
   const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
   const [staffData, setStaffData] = useState([]);
-  const [scheduleData, setScheduleData] = useState([]);
+  const [scheduleData, setScheduleData] = useState<any[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
 
@@ -171,6 +171,7 @@ function Main() {
 
         // Update the state only if the array is not empty
         if (appointmentsArray.length > 0) {
+          console.log('appointment list',appointmentsArray) 
           setScheduleData(appointmentsArray);
         }
         return appointmentsData
@@ -262,8 +263,22 @@ function Main() {
         // console.error('Error fetching the API:', error.message);
       }
     };
-
-
+  
+    const showAppointmentToast = (
+      message: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ((props: ToastContentProps<unknown>) => ReactNode) | null | undefined,
+      type: 'success' | 'error' = 'success'
+    ) => {
+      if (type === 'success') {
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    };
+    
+    const updateScheduleData = (newData: any) => {
+      setScheduleData((prevScheduleData: any) => [...prevScheduleData, newData]);
+    };
+    
 
 
   // Take all the data from the Api and add it to the calendar
@@ -422,9 +437,19 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel  isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime = {selectedTime}/>)}
+      {slotSlideoverPreview && (<SlideOverPanel date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} updateScheduleData={undefined}/>)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
-      <ToastContainer />
+      <ToastContainer
+        position="top-center" // Set the position to top-center
+        autoClose={5000} // Adjust autoClose duration as needed
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       
     </div>
     
