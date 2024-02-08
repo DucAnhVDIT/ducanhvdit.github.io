@@ -31,8 +31,9 @@ import { useNavigate } from 'react-router-dom';
     showAppointmentToast :any;
     fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
     updateScheduleData: any
+    resourceID : any
   }
-function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date  }: SlideOverPanelProps) {
+function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -164,9 +165,9 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
                 {
                     "BookDate": date, 
                     "StartTime": selectedTime,
-                    "ServiceID": selectedServices?.ProductID || 0,
-                    // "ServiceID": 62,
-                    "StaffID": 13,
+                    // "ServiceID": selectedServices?.ProductID || 0,
+                    "ServiceID": 62,
+                    "StaffID": resourceID,
                     "Deposit": 0,
                     "Islocked": false,
                     "CustomerNote": "",
@@ -175,7 +176,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
             ]
       };
 
-      console.log(selectedTime)
+      console.log(resourceID)
 
       const navigate = useNavigate();
       const handleAddNewAppointment = () => {

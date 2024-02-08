@@ -108,7 +108,6 @@ function Main() {
   };
 
 
-
   const handleCancel = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setSlotSlideoverPreview(false)
@@ -437,7 +436,7 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} updateScheduleData={undefined}/>)}
+      {slotSlideoverPreview && (<SlideOverPanel resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} updateScheduleData={undefined}/>)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
         position="top-center" // Set the position to top-center
