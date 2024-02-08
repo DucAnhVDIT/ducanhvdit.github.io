@@ -30,10 +30,10 @@ import { useNavigate } from 'react-router-dom';
     date: any;
     showAppointmentToast :any;
     fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
-    updateScheduleData: any
     resourceID : any
+    addEvent:any
   }
-function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
+function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID, addEvent  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -71,8 +71,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
         setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
         setServiceSlideoverOpen(false);
     };
-    
-    console.log(selectedServices?.ProductID || 0,)
+
     const calculateTotal = () => {
         if (!selectedServices || selectedServices.length === 0) {
           return 0; // Return 0 if selectedServices is null, undefined, or empty
@@ -130,11 +129,12 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
           }
       
           const responseData = await apiResponse.json();
+
           
           if (responseData.Customers) {
             setCustomersList(responseData);
-            console.log('Customers List:', responseData.Customers);
-            console.log(customersList)
+            // console.log('Customers List:', responseData.Customers);
+            // console.log(customersList)
           } else {
             console.error('Error: Customers property not found in API response.');
           }
@@ -165,7 +165,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
                 {
                     "BookDate": date, 
                     "StartTime": selectedTime,
-                    // "ServiceID": selectedServices?.ProductID || 0,
+                    // "ServiceID": selectedServices?.ProductID,
                     "ServiceID": 62,
                     "StaffID": resourceID,
                     "Deposit": 0,
@@ -176,19 +176,22 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
             ]
       };
 
-      console.log(resourceID)
 
       const navigate = useNavigate();
       const handleAddNewAppointment = () => {
         console.log('click add');
-        console.log(typeof showAppointmentToast); // Check the type
+        // console.log(typeof showAppointmentToast); // Check the type
       
         calendarRepository.addAppointment(newAppointmentRequest)
           .then((res) => {
             console.log(res);
             // updateScheduleData(res.data);
-            window.location.replace('/');
+            // window.location.replace('/');
             showAppointmentToast('Appointment added successfully');
+            addEvent({
+                title:newAppointmentRequest.FirstName,
+                start:newAppointmentRequest.Appointments[0].BookDate
+            })
             onClose();
             // Redirect to the home page after a delay
             // setTimeout(() => {

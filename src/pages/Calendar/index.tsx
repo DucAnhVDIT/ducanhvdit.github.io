@@ -101,7 +101,7 @@ function Main() {
     setResourceID(staffID);
   
     const data = await fetchServiceApiData(staffID);
-    console.log(info.start);
+    // console.log(info.start);
     setServiceData(data);
     // Open the slideover preview
     setSlotSlideoverPreview(true);
@@ -206,33 +206,6 @@ function Main() {
         // console.error('Error fetching the API:', error.message);
       }
     };
-
-    // const fetchClientList = async () => {
-    //   try {
-    //     const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetCustomers', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-    //       },
-    //       body: JSON.stringify({
-    //         "business_id": "20180918154802018866",
-    //       }),
-    //     });
-
-    //     if (!apiResponse.ok) {
-    //       throw new Error(`HTTP error! Status: ${apiResponse.status}`);
-    //     }
-
-    //     const CustomersList = await apiResponse.json();
-    //     console.log(CustomersList);
-
-    //   } catch (error) {
-    //     // console.error('Error fetching the API:', error.message);
-    //   }
-    // };
-  
-
   const fetchServiceApiData = async (staffID: string) => {
       try {
         const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetServices', {
@@ -274,9 +247,7 @@ function Main() {
       }
     };
     
-    const updateScheduleData = (newData: any) => {
-      setScheduleData((prevScheduleData: any) => [...prevScheduleData, newData]);
-    };
+
     
 
 
@@ -436,7 +407,7 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} updateScheduleData={undefined}/>)}
+      {slotSlideoverPreview && (<SlideOverPanel resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
         position="top-center" // Set the position to top-center

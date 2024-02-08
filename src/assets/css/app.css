@@ -94,7 +94,7 @@
 }
 
 .fc .fc-timegrid-slot-minor {
-   border-top-style: dashed;
+   border-top-style: solid;
 }
 
 .fc-direction-ltr .fc-timegrid-now-indicator-arrow {
