@@ -31,9 +31,8 @@ import { useNavigate } from 'react-router-dom';
     showAppointmentToast :any;
     fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
     resourceID : any
-    addEvent:any
   }
-function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID, addEvent  }: SlideOverPanelProps) {
+function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -42,7 +41,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
     const [selectedServices, setSelectedServices] = React.useState<any>(null);
-
+    const [selectedServiceIDs, setSelectedServiceIDs] = useState<any>(null);
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
 
@@ -69,6 +68,8 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
+        setSelectedServiceIDs(selectedService.ProductID);
+        console.log(selectedServiceIDs)
         setServiceSlideoverOpen(false);
     };
 
@@ -166,7 +167,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
                     "BookDate": date, 
                     "StartTime": selectedTime,
                     // "ServiceID": selectedServices?.ProductID,
-                    "ServiceID": 62,
+                    "ServiceID": selectedServiceIDs,
                     "StaffID": resourceID,
                     "Deposit": 0,
                     "Islocked": false,
@@ -188,10 +189,6 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
             // updateScheduleData(res.data);
             // window.location.replace('/');
             showAppointmentToast('Appointment added successfully');
-            addEvent({
-                title:newAppointmentRequest.FirstName,
-                start:newAppointmentRequest.Appointments[0].BookDate
-            })
             onClose();
             // Redirect to the home page after a delay
             // setTimeout(() => {
