@@ -39,6 +39,9 @@ import ExistingInfo from "../../components/ExistingInfo";
 import "./styles.css"
 import ReactDOM from "react-dom";
 import calendarRepository from "../../repositories/calendarRepository";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -88,8 +91,11 @@ function Main() {
     // fetchClientList();
   }, []);
 
-
-
+  const handleUpdateAppoinmentList = (newAppoinment: any) => {
+    setScheduleData((prevAppoinments) => [...prevAppoinments, newAppoinment])
+  }
+   const navigate = useNavigate();
+  console.log('handleUpdateAppoinmentList:', handleUpdateAppoinmentList);
   
   const handleSlotClicked = async (info: any) => {
     const startTime = moment(info.start).format('HH:mm');
@@ -299,18 +305,44 @@ function Main() {
   
       if (isFirstBooking) {
         const IconComponent = FaStar; // Display star icon for first booking
-
-
-        // ...
-
-        // const root = createRoot(document.getElementById('root'));
-        // root.render(<IconComponent size={15} />, iconContainer);
         ReactDOM.render(<IconComponent size={15} />, iconContainer);
       }
       el.appendChild(iconContainer);
     },
     longPressDelay:1,
     eventClick: handleEventClick,
+    eventDrop: ({ event }) => {
+      if (event.start) {
+        const updatedAppointmentData = {
+          ID: event.extendedProps?.ID,
+          business_id: "20160908110055249272",
+          FirstName: "Anna",
+          LastName: "Lee",
+          Mobile: "Luxury Pedicure",
+          BookDate: event.start.toISOString(), // Convert to ISO string
+          StartTime: event.start.toISOString(), // Convert to ISO string
+          Islocked: false,
+          CustomerNote: "",
+          GuestNotes: null,
+        };
+    
+      // Make Axios POST request directly inside eventDrop
+      axios.post('https://beautyapi.vdit.co.uk/v1/UpdateAppointment', updatedAppointmentData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+        },
+      })
+        .then(response => {
+          // Handle success response from the server
+          console.log('Event updated in the database:', response.data);
+        })
+        .catch(error => {
+          // Handle error response from the server
+          console.error('Error updating event in the database:', error);
+        });
+      }
+    },
     resources: staffData
     ? staffData.map((staff) => ({
         id: String((staff as { StaffID: number }).StaffID),
@@ -320,6 +352,7 @@ function Main() {
     : [],
     select: handleSlotClicked
   }
+
   
   const handleDateChange = (date: Date) => {
     setDate(date);
@@ -407,7 +440,7 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
+      {slotSlideoverPreview && (<SlideOverPanel updateAppoinmentList={handleUpdateAppoinmentList} resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
         position="top-center" // Set the position to top-center

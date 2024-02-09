@@ -30,9 +30,10 @@ import { useNavigate } from 'react-router-dom';
     date: any;
     showAppointmentToast :any;
     fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
-    resourceID : any
+    resourceID : any,
+    updateAppoinmentList: (arg: any) => void;
   }
-function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
+function SlideOverPanel({ updateAppoinmentList, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -41,11 +42,16 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
     const [selectedServices, setSelectedServices] = React.useState<any>(null);
-    const [selectedServiceIDs, setSelectedServiceIDs] = useState<any>(null);
+    const [selectedServiceIDs, setSelectedServiceIDs] = useState<any>([]);
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
 
     // const axios = require('axios');
+    const [updateAppoinmentListRef, setUpdateAppoinmentListRef] = useState(() => updateAppoinmentList);
+
+    // useEffect(() => {
+    //     setUpdateAppoinmentListRef(updateAppoinmentList);
+    // }, [updateAppoinmentList]);
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -95,6 +101,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
     const selectCustomer = (customer: any) => {
         // Set the selected customer when a customer is clicked
         console.log('selected customer', customer)
+ 
         setSelectedCustomer(customer);
         // Close the search client slideover if needed
         setSecondSlideoverOpen(false);
@@ -156,29 +163,37 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
       
       const apiUrl = 'https://beautyapi.vdit.co.uk/v1/AddNewAppointment';
       
+    
+
       const newAppointmentRequest = {
-            "business_id": "20160908110055249272",
-            "FirstName": selectedCustomer?.FirstName || "",
-            "LastName": selectedCustomer?.LastName || "",
-            "Mobile": selectedCustomer?.Phone || "",
-            "Email": selectedCustomer?.Email || "",
-                "Appointments": [
-                {
-                    "BookDate": date, 
-                    "StartTime": selectedTime,
-                    // "ServiceID": selectedServices?.ProductID,
-                    "ServiceID": selectedServiceIDs,
-                    "StaffID": resourceID,
-                    "Deposit": 0,
-                    "Islocked": false,
-                    "CustomerNote": "",
-                    "CompanyNote": null
-                }
-            ]
-      };
+        "business_id": "20160908110055249272",
+        "FirstName": selectedCustomer?.FirstName || "",
+        "LastName": selectedCustomer?.LastName || "",
+        "Mobile": selectedCustomer?.Mobile || "",
+        "Email": selectedCustomer?.Email || "",
+            "Appointments": [
+            {
+                "BookDate": date, 
+                "StartTime": selectedTime,
+                "ServiceID": selectedServiceIDs,
+                "StaffID": resourceID,
+                "Deposit": 0,
+                "Islocked": false,
+                "CustomerNote": "",
+                "CompanyNote": null
+            },
+        ]
+  };
+    
+    const calculateEndTime = (service: any) => {
+        // Assuming you have a duration property in each service object
+        const lastService = service.Services.slice(-1)[0];
+        const endTime = lastService.StartTime + lastService.Duration;
+        return endTime;
+    };
+      
 
 
-      const navigate = useNavigate();
       const handleAddNewAppointment = () => {
         console.log('click add');
         // console.log(typeof showAppointmentToast); // Check the type
@@ -186,16 +201,11 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
         calendarRepository.addAppointment(newAppointmentRequest)
           .then((res) => {
             console.log(res);
-            // updateScheduleData(res.data);
             // window.location.replace('/');
+            // updateAppoinmentList(res)
             showAppointmentToast('Appointment added successfully');
+            window.location.reload();
             onClose();
-            // Redirect to the home page after a delay
-            // setTimeout(() => {
-            //   window.location.replace('/');
-            //   navigate('/');
-            //   onClose();
-            // }, 1000); // Adjust the delay as needed (in milliseconds)
           })
           .catch((error) => {
             console.error('Error adding appointment:', error);
@@ -204,7 +214,7 @@ function SlideOverPanel({ isOpen, onClose, serviceData, selectedTime, showAppoin
       
         setSecondSlideoverOpen(false);
       };
-      
+    
       
 
     

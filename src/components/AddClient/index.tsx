@@ -22,10 +22,64 @@ const AddClient = () => {
     const [allowEmail, setAllowEmail] = useState(false);
     const [allowMarketingNotification, setAllowMarketingNotification] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle form submission here
+
+        // Prepare the request body
+        const requestBody = {
+            "business_id": "20160908110055249272",
+            "FirstName": firstName,
+            "LastName": lastName,
+            "Mobile": mobileNumber,
+            "Email": email,
+            "EmailConsent": allowEmail,
+            "SMSConsent": allowSMS,
+            "DateOfBirth": dateOfBirth || null
+        };
+
+        try {
+            // Make the API request
+            const response = await fetch('https://beautyapi.vdit.co.uk/v1/AddCustomer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
+                },
+                body: JSON.stringify(requestBody),
+            });
+
+            if (response.ok) {
+                // Request successful, handle accordingly
+                console.log(response)
+                console.log('Customer added successfully');
+                // showSuccessToast('Customer added successfully');
+            } else {
+                // Request failed, handle error
+                console.error('Error adding customer:', response.statusText);
+                // showErrorToast('Error adding customer');
+            }
+        } catch (error) {
+            // Catch any unexpected errors
+            console.error('Unexpected error:', error);
+            // showErrorToast('Unexpected error occurred');
+        }
     };
+
+    // // Function to show success toast notification
+    // const showSuccessToast = (message: string) => {
+    //     Toastify({
+    //         text: message,
+    //         backgroundColor: 'green',
+    //     }).showToast();
+    // };
+
+    // // Function to show error toast notification
+    // const showErrorToast = (message: string) => {
+    //     Toastify({
+    //         text: message,
+    //         backgroundColor: 'red',
+    //     }).showToast();
+    // };
 
 
     return (
@@ -35,7 +89,7 @@ const AddClient = () => {
                         <Lucide icon={'X'}></Lucide>
                     </Link>
                     <h1 className="text-xl font-bold">Add Client</h1>
-                    <Button className="text-lg font-bold text-white bg-primary">Save</Button>
+                    <Button onClick={handleSubmit} className="text-lg font-bold text-white bg-primary">Save</Button>
             </div>
             <div className=' md:flex h-full items-start justify-center bg-white shadow'>
                 {/* Begin Basic Info */}
