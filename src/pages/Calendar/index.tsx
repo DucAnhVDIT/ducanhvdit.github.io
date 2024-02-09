@@ -69,15 +69,21 @@ function Main() {
   const [scheduleData, setScheduleData] = useState<any[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
+  const [appoinmentChange, setAppointmentChange] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
-      const appointmentsData = await fetchAppoinmentApiData(date);
-      setScheduleData(appointmentsData.Appointments);
+        const appointmentsData = await fetchAppoinmentApiData(date);
+        setScheduleData(appointmentsData.Appointments);
+        // Update the calendar events
+        if (calendarRef.current) {
+            calendarRef.current.getApi().refetchEvents();
+            console.log(appoinmentChange)
+        }
     };
-  
+
     fetchData();
-  }, []); // Run this effect once when the component mounts
+}, [appoinmentChange, date]);
   
   // Effect to log scheduleData changes
   useEffect(() => {
@@ -91,11 +97,7 @@ function Main() {
     // fetchClientList();
   }, []);
 
-  const handleUpdateAppoinmentList = (newAppoinment: any) => {
-    setScheduleData((prevAppoinments) => [...prevAppoinments, newAppoinment])
-  }
    const navigate = useNavigate();
-  console.log('handleUpdateAppoinmentList:', handleUpdateAppoinmentList);
   
   const handleSlotClicked = async (info: any) => {
     const startTime = moment(info.start).format('HH:mm');
@@ -440,7 +442,7 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
-      {slotSlideoverPreview && (<SlideOverPanel updateAppoinmentList={handleUpdateAppoinmentList} resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
+      {slotSlideoverPreview && (<SlideOverPanel appoinmentChange={appoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
         position="top-center" // Set the position to top-center

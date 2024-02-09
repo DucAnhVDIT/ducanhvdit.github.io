@@ -31,9 +31,9 @@ import { useNavigate } from 'react-router-dom';
     showAppointmentToast :any;
     fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
     resourceID : any,
-    updateAppoinmentList: (arg: any) => void;
+    appoinmentChange: boolean;
   }
-function SlideOverPanel({ updateAppoinmentList, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
+function SlideOverPanel({ appoinmentChange, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -46,12 +46,9 @@ function SlideOverPanel({ updateAppoinmentList, isOpen, onClose, serviceData, se
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
 
-    // const axios = require('axios');
-    const [updateAppoinmentListRef, setUpdateAppoinmentListRef] = useState(() => updateAppoinmentList);
 
-    // useEffect(() => {
-    //     setUpdateAppoinmentListRef(updateAppoinmentList);
-    // }, [updateAppoinmentList]);
+
+    // const axios = require('axios');
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -204,7 +201,7 @@ function SlideOverPanel({ updateAppoinmentList, isOpen, onClose, serviceData, se
             // window.location.replace('/');
             // updateAppoinmentList(res)
             showAppointmentToast('Appointment added successfully');
-            window.location.reload();
+            appoinmentChange = true
             onClose();
           })
           .catch((error) => {
