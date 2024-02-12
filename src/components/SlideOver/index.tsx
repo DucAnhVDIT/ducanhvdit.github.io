@@ -31,9 +31,9 @@ import { useNavigate } from 'react-router-dom';
     showAppointmentToast :any;
     fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
     resourceID : any,
-    appoinmentChange: boolean;
+    handleAppoinmentChange: (value: boolean) => void;
   }
-function SlideOverPanel({ appoinmentChange, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
+function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
@@ -198,10 +198,8 @@ function SlideOverPanel({ appoinmentChange, isOpen, onClose, serviceData, select
         calendarRepository.addAppointment(newAppointmentRequest)
           .then((res) => {
             console.log(res);
-            // window.location.replace('/');
-            // updateAppoinmentList(res)
             showAppointmentToast('Appointment added successfully');
-            appoinmentChange = true
+            handleAppoinmentChange(true)
             onClose();
           })
           .catch((error) => {
