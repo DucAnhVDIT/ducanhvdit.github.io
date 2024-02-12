@@ -213,6 +213,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
       const handleOpenAddClient = () => {
         setAddCustomerSlideOpen(true)
+        setSecondSlideoverOpen(false)
       }
 
       const handleCloseAddCustomer = () => {
@@ -229,7 +230,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           "Email": email,
           "DateOfBirth": dateOfBirth || null,
           "EmailConsent": true,
-          "SMSConsent": true
+          "SMSConsent": true,
         };
       
         const apiURL = "https://beautyapi.vdit.co.uk/v1/AddCustomer";
@@ -620,14 +621,13 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                             </div>                        
                             </Slideover.Description>
                             <Slideover.Footer>
-                                <Button
-                                    variant="primary"
+                                <button
                                     type="button"
                                     className="w-32"
                                     onClick={handleAddNewClient}
                                 >
                                     Add
-                                </Button>
+                                </button>
                             </Slideover.Footer>
                         </Slideover.Panel>
                         </Slideover>
