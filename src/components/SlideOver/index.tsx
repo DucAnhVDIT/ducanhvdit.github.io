@@ -222,6 +222,14 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
       }
 
       const handleAddNewClient = () => {
+
+        if (!mobileNumber) {
+            // Show toast for missing phone number
+            showAppointmentToast('Phone number is required', 'error');
+            return;
+          }
+
+          
         const requestBody = {
           "business_id": "20160908110055249272",
           "FirstName": firstName,
@@ -625,7 +633,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                     variant="primary"
                                     type="button"
                                     className="w-32"
-                                    onClick={handleAddNewAppointment}
+                                    onClick={handleAddNewClient}
                                 >
                                     Add
                                 </Button>
