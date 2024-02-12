@@ -30,7 +30,7 @@ import AppointmentStatus from "../../components/Status";
 import FloatingActionButtons from "../../components/FloatingButtons";
 import TippyContent from "../../base-components/TippyContent";
 import { FaSleigh, FaStar } from "react-icons/fa";
-import { ToastContainer, ToastContentProps, toast } from 'react-toastify';
+import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "../../components/SlideOver";
 import DatePickerMUI from "../../components/DatePicker";
@@ -352,28 +352,6 @@ function Main() {
               "GuestNotes": null,
             }
           };
-  
-          // Use fetch for the POST request
-          // fetch("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", {
-          //     method: 'POST',
-          //     headers: {
-          //         'Content-Type': 'application/json',
-          //         'Authorization': `Basic ${btoa('testvdit:testvdit')}`
-          //     },
-          //     body: JSON.stringify(appointmentData),
-          // })
-          // .then(response => response.json())
-          // .then(data => {
-          //     if (data === "OK") {
-          //         console.log("Appointment updated successfully");
-          //     } else {
-          //         console.error("Error updating appointment:", data);
-          //     }
-          // })
-          // .catch(error => {
-          //     console.error('Error updating appointment details:', error);
-          // });
-
           axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {
             headers: {
                 'Content-Type': 'application/json',
@@ -497,15 +475,18 @@ function Main() {
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
-        position="top-center" // Set the position to top-center
-        autoClose={5000} // Adjust autoClose duration as needed
-        hideProgressBar={false}
+        position="top-center" 
+        autoClose={3000} 
+        hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
+        theme="colored"
         pauseOnHover
+       transition={Flip}
+
       />
       
     </div>

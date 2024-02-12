@@ -181,20 +181,13 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           : [],
       };
       
-      
-    
-    const calculateEndTime = (service: any) => {
-        // Assuming you have a duration property in each service object
-        const lastService = service.Services.slice(-1)[0];
-        const endTime = lastService.StartTime + lastService.Duration;
-        return endTime;
-    };
-      
-
 
       const handleAddNewAppointment = () => {
-        console.log('click add');
-        // console.log(typeof showAppointmentToast); // Check the type
+        if (!selectedServiceIDs || selectedServiceIDs.length === 0) {
+            // No services selected, show warning and return
+            showAppointmentToast('Please select at least one service', 'warning');
+            return;
+          }
       
         calendarRepository.addAppointment(newAppointmentRequest)
           .then((res) => {
