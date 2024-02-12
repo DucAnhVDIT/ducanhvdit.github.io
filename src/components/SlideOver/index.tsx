@@ -42,7 +42,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
     const [selectedServices, setSelectedServices] = React.useState<any>(null);
-    const [selectedServiceIDs, setSelectedServiceIDs] = useState<any>([]);
+    const [selectedServiceIDs, setSelectedServiceIDs] = useState<any[]>([]);
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
 
@@ -71,8 +71,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
-        setSelectedServiceIDs(selectedService.ProductID);
-        console.log(selectedServiceIDs)
+        setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
         setServiceSlideoverOpen(false);
     };
 
@@ -168,19 +167,21 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         "LastName": selectedCustomer?.LastName || "",
         "Mobile": selectedCustomer?.Mobile || "",
         "Email": selectedCustomer?.Email || "",
-            "Appointments": [
-            {
-                "BookDate": date, 
-                "StartTime": selectedTime,
-                "ServiceID": selectedServiceIDs,
-                "StaffID": resourceID,
-                "Deposit": 0,
-                "Islocked": false,
-                "CustomerNote": "",
-                "CompanyNote": null
-            },
-        ]
-  };
+        "Appointments": Array.isArray(selectedServiceIDs) && selectedServiceIDs.length > 0
+          ? selectedServiceIDs.map((serviceID) => ({
+              "BookDate": date,
+              "StartTime": selectedTime,
+              "ServiceID": serviceID,
+              "StaffID": resourceID,
+              "Deposit": 0,
+              "Islocked": false,
+              "CustomerNote": "",
+              "CompanyNote": null,
+            }))
+          : [],
+      };
+      
+      
     
     const calculateEndTime = (service: any) => {
         // Assuming you have a duration property in each service object

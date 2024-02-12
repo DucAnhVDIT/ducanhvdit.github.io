@@ -76,10 +76,6 @@ function Main() {
     const fetchData = async () => {
         const appointmentsData = await fetchAppoinmentApiData(date);
         setScheduleData(appointmentsData.Appointments);
-        // Update the calendar events
-        // if (calendarRef.current) {
-        //     calendarRef.current.getApi().refetchEvents();
-        // }
         setAppointmentChange(false);
     };
 
@@ -92,8 +88,8 @@ function Main() {
   
   // Effect to log scheduleData changes
   useEffect(() => {
-    console.log("Updated Schedule Data:", scheduleData);
-    console.log(staffData)
+    // console.log("Updated Schedule Data:", scheduleData);
+    // console.log(staffData)
   }, [scheduleData]);
   
   // Effect to fetch staff data
@@ -158,7 +154,7 @@ function Main() {
       try {
         const data = date ? Math.floor(date.getTime() / 1000) : null
         
-        calendarRepository.getAppointment(data).then((res) => console.log(res.data))
+        // calendarRepository.getAppointment(data).then((res) => console.log(res.data))
 
 
         const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointments', {
@@ -178,7 +174,7 @@ function Main() {
         }
 
         const appointmentsData = await apiResponse.json();
-        console.log('API Response:', appointmentsData.Appointments);
+        // console.log('API Response:', appointmentsData.Appointments);
         const appointmentsArray = appointmentsData.Appointments || [];
 
         // Update the state only if the array is not empty
@@ -299,6 +295,12 @@ function Main() {
         color: (appointment as { Colour: string }).Colour,
         extendedProps: {
           ID: (appointment as { ID: string }).ID,
+          resourceId: (appointment as { StaffID: string }).StaffID,
+          firstName : (appointment as { FirstName: string }).FirstName,
+          lastName : (appointment as { LastName: string }).LastName,
+          Mobile : (appointment as { Mobile: string }).Mobile,
+          bookDate: (appointment as { BookDate: Date }).BookDate,
+          serviceName: (appointment as { ServiceName: string }).ServiceName,
           IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
           IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
         },
@@ -318,38 +320,83 @@ function Main() {
     },
     longPressDelay:1,
     eventClick: handleEventClick,
-    eventDrop: ({ event }) => {
-      if (event.start) {
-        const updatedAppointmentData = {
-          ID: event.extendedProps?.ID,
-          business_id: "20160908110055249272",
-          FirstName: "Anna",
-          LastName: "Lee",
-          Mobile: "Luxury Pedicure",
-          BookDate: event.start.toISOString(), // Convert to ISO string
-          StartTime: event.start.toISOString(), // Convert to ISO string
-          Islocked: false,
-          CustomerNote: "",
-          GuestNotes: null,
-        };
-    
-      // Make Axios POST request directly inside eventDrop
-      axios.post('https://beautyapi.vdit.co.uk/v1/UpdateAppointment', updatedAppointmentData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-        },
-      })
+    eventDrop: function (info) {
+      if (info.event.extendedProps.ID === 0) {
+          info.revert();
+          return;
+      }
+  
+      if (!confirm("Are you sure you want to change?")) {
+          info.revert();
+      } else {
+          if (info.event.extendedProps.requirelock) {
+              alert("This appointment is locked, unable to make any changes.");
+              info.revert();
+          }
+  
+          // Extracting relevant data for the request
+          const appointmentData = {
+            "Appointment":{
+              "ID": info.event.extendedProps.ID,
+              "business_id": "20160908110055249272",
+              "FirstName": info.event.extendedProps.firstName,
+              "LastName": info.event.extendedProps.lastName,
+              "Mobile": info.event.extendedProps.Mobile,
+              "Email": "",
+              "BookDate": info.event.extendedProps.bookDate,
+              "StartTime": info.event.start,
+              "ServiceID": info.event.extendedProps.serviceName,
+              "StaffID": info.newResource?._resource.id,
+              "Islocked": false,
+              "CustomerNote": "",
+              "GuestNotes": null,
+            }
+          };
+  
+          // Use fetch for the POST request
+          // fetch("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", {
+          //     method: 'POST',
+          //     headers: {
+          //         'Content-Type': 'application/json',
+          //         'Authorization': `Basic ${btoa('testvdit:testvdit')}`
+          //     },
+          //     body: JSON.stringify(appointmentData),
+          // })
+          // .then(response => response.json())
+          // .then(data => {
+          //     if (data === "OK") {
+          //         console.log("Appointment updated successfully");
+          //     } else {
+          //         console.error("Error updating appointment:", data);
+          //     }
+          // })
+          // .catch(error => {
+          //     console.error('Error updating appointment details:', error);
+          // });
+
+          axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${btoa('testvdit:testvdit')}`
+            }
+        })
         .then(response => {
-          // Handle success response from the server
-          console.log('Event updated in the database:', response.data);
+            if (response.status === 200) {
+                console.log("Full response from the server:", response);
+                // Handle success if needed
+            } else {
+                console.error("Error updating appointment. Server returned:", response.status, response.statusText);
+                // Handle other responses if needed
+            }
         })
         .catch(error => {
-          // Handle error response from the server
-          console.error('Error updating event in the database:', error);
+            console.error('Error updating appointment details:', error);
+            // Handle the error appropriately
         });
       }
-    },
+  },
+  
+  
     resources: staffData
     ? staffData.map((staff) => ({
         id: String((staff as { StaffID: number }).StaffID),
