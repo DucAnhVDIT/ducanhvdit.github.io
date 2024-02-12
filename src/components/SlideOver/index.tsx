@@ -621,13 +621,14 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                             </div>                        
                             </Slideover.Description>
                             <Slideover.Footer>
-                                <button
+                                <Button
+                                    variant="primary"
                                     type="button"
                                     className="w-32"
-                                    onClick={handleAddNewClient}
+                                    onClick={handleAddNewAppointment}
                                 >
                                     Add
-                                </button>
+                                </Button>
                             </Slideover.Footer>
                         </Slideover.Panel>
                         </Slideover>
