@@ -7,7 +7,7 @@ import {
   } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
-import { Key, useEffect, useState } from "react";
+import { Key, useEffect, useRef, useState } from "react";
 import { Link } from 'react-router-dom';
 import 'flatpickr/dist/themes/dark.css';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -17,6 +17,11 @@ import React from "react";
 import axios from 'axios';
 import calendarRepository from "../../repositories/calendarRepository";
 import { useNavigate } from 'react-router-dom';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/dark.css';
+import Dropzone from "dropzone";
+import { CheckboxToggle } from "react-rainbow-components";
+import { Phone } from "lucide-react";
 
 
 
@@ -36,6 +41,7 @@ import { useNavigate } from 'react-router-dom';
 function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
+    const [isAddCustomerSlideOpen, setAddCustomerSlideOpen] = useState(false)
     const [searchValueClient, setSearchValueClient] = useState("");
     const [searchValueService, setSearchValueService] = useState("");
     const [customersList, setCustomersList] = useState<any>([]);
@@ -46,6 +52,11 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
 
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
 
 
     // const axios = require('axios');
@@ -156,10 +167,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         const names = name.split(' ');
         return names.map((name: string) => name[0]).join('');
       };
-      
-      const apiUrl = 'https://beautyapi.vdit.co.uk/v1/AddNewAppointment';
-      
-    
 
       const newAppointmentRequest = {
         "business_id": "20160908110055249272",
@@ -203,10 +210,53 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
       
         setSecondSlideoverOpen(false);
       };
-    
-      
 
-    
+      const handleOpenAddClient = () => {
+        setAddCustomerSlideOpen(true)
+      }
+
+      const handleCloseAddCustomer = () => {
+        setAddCustomerSlideOpen(false)
+        setSecondSlideoverOpen(true)
+      }
+
+      const handleAddNewClient = () => {
+        const requestBody = {
+          "business_id": "20160908110055249272",
+          "FirstName": firstName,
+          "LastName": lastName,
+          "Mobile": mobileNumber,
+          "Email": email,
+          "DateOfBirth": dateOfBirth || null,
+          "EmailConsent": true,
+          "SMSConsent": true
+        };
+      
+        const apiURL = "https://beautyapi.vdit.co.uk/v1/AddCustomer";
+      
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${btoa('testvdit:testvdit')}`
+        };
+      
+        axios.post(apiURL, requestBody, { headers })
+          .then(response => {
+            console.log(response.data); // Handle success response
+            setSelectedCustomer(response.data);
+
+            // Show success toast
+            showAppointmentToast('Client added successfully');
+            setAddCustomerSlideOpen(false)
+            setFirstName("")
+            setLastName("")
+            setEmail("")
+            setMobileNumber("")
+          })
+          .catch(error => {
+            console.error('Error adding client:', error);
+            // Handle error
+          });
+      };
 
   return (
     <div>
@@ -356,6 +406,9 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                             <h2 className="mr-auto font-bold text-2xl">
                             Search service
                             </h2>
+                            <Button className="border-none shadow-none" onClick={closeServicesList}>
+                                    <Lucide icon="ArrowLeft"/>
+                            </Button>
                         </Slideover.Title>
                         <Slideover.Description className="text-center">
                             <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
@@ -403,6 +456,9 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                 <h2 className="mr-auto font-bold text-2xl">
                                     Search Client
                                 </h2>
+                                <Button className="border-none shadow-none" onClick={closeSearchClient}>
+                                    <Lucide icon="ArrowLeft"/>
+                                </Button>
                             </Slideover.Title>
                             <Slideover.Description className="text-center">
                                 <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
@@ -431,15 +487,13 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
                                 <div className="mt-3">
                                     <Button className="items-center justify-center text-center border-none shadow-none">
-                                    <Link to={'/clients/add'}>
-                                        <Button className="items-center justify-center text-center border-none shadow-none">
+                                        <Button onClick={handleOpenAddClient} className="items-center justify-center text-center border-none shadow-none">
                                         <Lucide
                                             icon="PlusCircle"
                                             className="text-primary text-lg round mr-1"
                                         />
                                         <h1>Add new client</h1>
                                         </Button>
-                                    </Link>
                                     </Button>
 
                                     {/* Display the list of customers based on search criteria */}
@@ -460,6 +514,125 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     </Slideover>
                     )}
 
+                    {/* Begin Add Customer */}
+                    {isAddCustomerSlideOpen && (
+                        <Slideover open={isAddCustomerSlideOpen} onClose={handleCloseAddCustomer}>
+                        <Slideover.Panel>
+                            <Slideover.Title className="p-5">
+                                <h2 className="mr-auto font-bold text-2xl">
+                                    Add Client
+                                </h2>
+                                <Button className="border-none shadow-none" onClick={handleCloseAddCustomer}>
+                                    <Lucide icon="ArrowLeft"/>
+                                </Button>
+                            </Slideover.Title>
+                            <Slideover.Description className="text-center">
+                                <div className="input-form flex flex-col w-full">
+                                    <div className='flex flex-col justify-between w-full mr-4'>
+                                        <FormLabel
+                                            htmlFor="validation-form-1"
+                                            className="flex flex-col w-full sm:flex-row"
+                                        >
+                                        First Name
+                                        </FormLabel>
+                                        <FormInput
+                                            id="validation-form-1"
+                                            type="text"
+                                            name="name"
+                                            placeholder="Enter First Name"
+                                            className="w-full"
+                                            value={firstName}
+                                            onChange={(event) => setFirstName(event.target.value)}
+                                        />
+                                    </div>
+                                    <div className='flex flex-col w-full mt-2'>
+                                        <FormLabel
+                                            htmlFor="validation-form-1"
+                                            className="flex flex-col w-full sm:flex-row"
+                                        >
+                                        Last Name
+                                        </FormLabel>
+                                        <FormInput
+                                            id="validation-form-1"
+                                            type="text"
+                                            name="name"
+                                            placeholder="Enter Last Name"
+                                            className="w-full"
+                                            value={lastName}
+                                            onChange={(event) => setLastName(event.target.value)}
+                                        />
+                                    </div>                                
+                                </div>
+                                <div className="input-form flex flex-col w-full mt-3">
+                                    <div className='flex flex-col justify-between w-full mr-4'>
+                                        <FormLabel
+                                            htmlFor="validation-form-1"
+                                            className="flex flex-col w-full sm:flex-row"
+                                        >
+                                        Email
+                                        </FormLabel>
+                                        <FormInput
+                                            id="validation-form-1"
+                                            type="email"
+                                            name="name"
+                                            placeholder="Enter Email"
+                                            className="w-full"
+                                            value={email}
+                                            onChange={(event) => setEmail(event.target.value)}
+                                        />
+                                    </div>
+                                    <div className='flex flex-col w-full mt-2'>
+                                        <FormLabel
+                                            htmlFor="validation-form-1"
+                                            className="flex flex-col w-full sm:flex-row"
+                                        >
+                                        Phone Number
+                                        </FormLabel>
+                                        <FormInput
+                                            id="validation-form-1"
+                                            type="number"
+                                            name="name"
+                                            placeholder="Enter Phone Number"
+                                            className="w-full"
+                                            value={mobileNumber}
+                                            onChange={(event) => setMobileNumber(event.target.value)}                                        />
+                                    </div>                                
+                                </div>
+                                <div className="mt-3 input-form w-full">
+                                            <FormLabel
+                                            htmlFor="validation-form-4"
+                                            className="flex flex-col w-full sm:flex-row"
+                                            >
+                                            Birth Date
+                                            </FormLabel>
+                                            <Flatpickr
+                                                className='w-full rounded-xl'
+                                                options={{
+                                                    altInput: true,
+                                                    altFormat: "F j, Y",
+                                                    dateFormat: "Y-m-d",
+                                                }}
+                                                placeholder="Choose Birth Date"
+                                            />
+                                        </div>
+                                        <div className='md:w-1/3'>
+
+                            </div>                        
+                            </Slideover.Description>
+                            <Slideover.Footer>
+                                <Button
+                                    variant="primary"
+                                    type="button"
+                                    className="w-32"
+                                    onClick={handleAddNewClient}
+                                >
+                                    Add
+                                </Button>
+                            </Slideover.Footer>
+                        </Slideover.Panel>
+                        </Slideover>
+                    )}
+                    {/* End Add Customer */}
                     <div className="flex flex-row mt-5">
                        
                     </div>
