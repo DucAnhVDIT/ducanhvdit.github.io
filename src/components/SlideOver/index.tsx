@@ -195,6 +195,12 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             showAppointmentToast('Please select at least one service', 'warning');
             return;
           }
+
+          if (!selectedCustomer || selectedCustomer.length === 0) {
+            // No services selected, show warning and return
+            showAppointmentToast('Please select client', 'warning');
+            return;
+          }
       
         calendarRepository.addAppointment(newAppointmentRequest)
           .then((res) => {
@@ -229,7 +235,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             return;
           }
 
-          
+
         const requestBody = {
           "business_id": "20160908110055249272",
           "FirstName": firstName,

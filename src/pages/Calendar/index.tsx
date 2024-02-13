@@ -247,12 +247,17 @@ function Main() {
   
     const showAppointmentToast = (
       message: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ((props: ToastContentProps<unknown>) => ReactNode) | null | undefined,
-      type: 'success' | 'error' = 'success'
+      type: 'success' | 'error' | 'warning' = 'success'
     ) => {
       if (type === 'success') {
         toast.success(message);
-      } else {
+      } else if (type === 'error') {
         toast.error(message);
+      } else if (type === 'warning') {
+        toast.warning(message);
+      } else {
+        // Default to success if an invalid type is provided
+        toast.success(message);
       }
     };
     
