@@ -95,7 +95,7 @@ function Main() {
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => { 
                       if (e.key === "Enter") { 
-                        {handleLogin}
+                        handleLogin()
                       } 
                   }} 
                   />
@@ -114,7 +114,11 @@ function Main() {
                       Remember me
                     </label>
                   </div>
-                  <a href="">Forgot Password?</a>
+                  <a href='#' onClick={(e) => {
+                      e.preventDefault()
+                      navigate('/forgotpassword')
+                    }
+                  }>Forgot Password?</a>
                 </div>
                 <div className="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button

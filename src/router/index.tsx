@@ -12,6 +12,8 @@ import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
 import LoginPage from "../pages/Login"; // Add your login page component
 import Register from "../pages/Register"
+import ForgotPass from "../pages/ForgotPassword"
+import NotFound from "../pages/404"
 import { useAuth } from "../services/AuthContext";
 
 function Router() {
@@ -60,6 +62,14 @@ function Router() {
       path: "/register",
       element: <Register />,
     },
+    {
+      path: "/forgotpassword",
+      element: <ForgotPass />
+    },
+    {
+      path: "*",
+      element: <NotFound />
+    }
   ];
 
   return useRoutes(routes);
