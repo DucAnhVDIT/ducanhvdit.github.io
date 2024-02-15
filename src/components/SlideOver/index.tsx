@@ -82,8 +82,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
-        setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
-        setServiceSlideoverOpen(false);
+        // setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
+        console.log(selectedServices)
     };
 
     const calculateTotal = () => {
