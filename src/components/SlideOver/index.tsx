@@ -82,9 +82,14 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
-        // setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
-        console.log(selectedServices)
+        setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
+        setServiceSlideoverOpen(false);
     };
+
+    useEffect(() => {
+        handleAddNewAppointment()
+        console.log('Updated selectedServices:', selectedServices);
+      }, [selectedServices]);
 
     const calculateTotal = () => {
         if (!selectedServices || selectedServices.length === 0) {
@@ -174,18 +179,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         "LastName": selectedCustomer?.LastName || "",
         "Mobile": selectedCustomer?.Mobile || "",
         "Email": selectedCustomer?.Email || "",
-        "Appointments": Array.isArray(selectedServiceIDs) && selectedServiceIDs.length > 0
-          ? selectedServiceIDs.map((serviceID) => ({
-              "BookDate": date,
-              "StartTime": selectedTime,
-              "ServiceID": serviceID,
-              "StaffID": resourceID,
-              "Deposit": 0,
-              "Islocked": false,
-              "CustomerNote": "",
-              "CompanyNote": null,
-            }))
-          : [],
+        "Appointments": selectedServices
       };
       
 
