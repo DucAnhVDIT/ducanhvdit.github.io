@@ -22,6 +22,9 @@ import 'flatpickr/dist/themes/dark.css';
 import Dropzone from "dropzone";
 import { CheckboxToggle } from "react-rainbow-components";
 import { Phone } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { addService } from "../../stores/serviceListSlice";
+import { RootState } from "../../stores/store";
 
 
 
@@ -47,7 +50,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [customersList, setCustomersList] = useState<any>([]);
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
-    const [selectedServices, setSelectedServices] = React.useState<any>(null);
+    // const [selectedServices, setSelectedServices] = React.useState<any>(null);
     const [selectedServiceIDs, setSelectedServiceIDs] = useState<any[]>([]);
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
@@ -58,8 +61,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [email, setEmail] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
 
-
-    // const axios = require('axios');
+    const dispatch = useDispatch()
+    const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -81,16 +84,18 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         : [];
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
-        setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
+        // setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
+        dispatch(addService(selectedService))
+
         setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
         setServiceSlideoverOpen(false);
     };
 
     useEffect(() => {
-        handleAddNewAppointment()
-        console.log('Updated selectedServices:', selectedServices);
+        console.log(selectedServices);
       }, [selectedServices]);
-
+    
+    
     const calculateTotal = () => {
         if (!selectedServices || selectedServices.length === 0) {
           return 0; // Return 0 if selectedServices is null, undefined, or empty

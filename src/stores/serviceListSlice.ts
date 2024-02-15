@@ -6,8 +6,8 @@ const serviceListSlice = createSlice({
       selectedServices : <any>[]
     },
     reducers: {
-        addService:(state) => {
-
+        addService:(state, action) => {
+            state.selectedServices.push(action.payload);
         },
         deleteService:(state) => {
 
