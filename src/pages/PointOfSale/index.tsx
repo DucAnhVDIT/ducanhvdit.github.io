@@ -12,7 +12,7 @@ import Lucide from "../../base-components/Lucide";
 import { Menu, Tab, Dialog } from "../../base-components/Headless";
 import eposRepository from "../../repositories/eposRepository";
 import { useDispatch, useSelector } from "react-redux";
-import { addToBill, clearBill } from "../../stores/billSlice";
+import { addToBill, clearBill, clearItem } from "../../stores/billSlice";
 
 function Main() {
   const dispatch = useDispatch();
@@ -237,7 +237,7 @@ function Main() {
           {/*BEGIN: Display list Services*/}
           {
             !serviceHidden && 
-            <div className="grid grid-cols-12 gap-5 p-4 mt-5 border-t h-[70vh] overflow-y-auto">
+            <div className="grid grid-cols-12 gap-5 p-4 mt-5 border-t max-h-[70vh] overflow-y-auto">
             {services.map((service: any, ProductID: number) => (
               <a
                 key={ProductID}
@@ -279,26 +279,26 @@ function Main() {
             </div>
           </div>
           <Tab.Panels>
+            {/* Show list bill */}
             <Tab.Panel>
               {billDetails.length !== 0 ? (
                 <div className="p-2 mt-5 box">
                   {billDetails.map((bill: any, ProductID: number) => (
                     <a
-                      href="#"
                       key={ProductID}
-                      onClick={(event: React.MouseEvent) => {
-                        event.preventDefault();
-                        setAddItemModal(true);
-                      }}
-                      className="flex items-center p-3 transition duration-300 ease-in-out bg-white rounded-md cursor-pointer dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400"
+                      className="flex items-center p-3 transition duration-300 ease-in-out bg-white rounded-md dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400"
                     >
                       <div className="max-w-[50%] truncate mr-1">
                         {bill.ProductName}
                       </div>
                       <div className="text-slate-500">x {bill.quantity}</div>
                       <Lucide
-                        icon="Edit"
-                        className="w-4 h-4 ml-2 text-slate-500"
+                        icon="Trash2"
+                        onClick={(event: React.MouseEvent) => {
+                          event.preventDefault();
+                          dispatch(clearItem(bill))
+                        }}
+                        className="w-4 h-4 ml-2 text-slate-500 cursor-pointer"
                       />
                       <div className="ml-auto font-medium">
                         £{bill.quantityPrice}

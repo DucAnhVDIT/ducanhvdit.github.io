@@ -28,8 +28,26 @@ const basketSlice = createSlice({
       state.billItems = []
       state.totalPrice = 0
     },
+    clearItem: (state, action) => {
+      // find item in the array
+      const existingItem = state.billItems.find((item: any) => item.ProductID === action.payload.ProductID)
+      // if item in the array and quantity > 1
+      if (existingItem && existingItem.quantity > 1) {
+        // then reduce item quantity by 1
+        existingItem.quantity -= 1
+        // recalculate Price
+        existingItem.quantityPrice = existingItem.Price * existingItem.quantity
+      } else {
+        // if item smaller than 1 mean the last item
+        // find index of the item
+        const index = state.billItems.findIndex((item: any) => item.ProductID === action.payload.ProductID)
+        // remove item with that index
+        state.billItems.splice(index, 1)
+      }
+      state.totalPrice = state.totalPrice - action.payload.Price
+    },
   },
 })
 
-export const { addToBill, clearBill } = basketSlice.actions
+export const { addToBill, clearBill, clearItem } = basketSlice.actions
 export default basketSlice.reducer

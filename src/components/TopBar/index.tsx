@@ -205,7 +205,7 @@ function Main() {
               <Lucide icon="User" className="w-4 h-4 mr-2" /> Profile
             </Menu.Item>
             <Menu.Item className="hover:bg-white/5">
-              <Lucide icon="Lock" className="w-4 h-4 mr-2" /> Reset Password
+              <Lucide icon="Lock" className="w-4 h-4 mr-2" /> Change Password
             </Menu.Item>
             <Menu.Item className="hover:bg-white/5">
               <Lucide icon="HelpCircle" className="w-4 h-4 mr-2" /> Help

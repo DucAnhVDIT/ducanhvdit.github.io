@@ -12,23 +12,22 @@ import { toast, ToastContainer } from "react-toastify";
 import { logErrorRegister } from "../../constant/log-error";
 
 function Main() {
-  const [formRegister, setFormRegister] = useState(registerData)
+  const [email, setEmail] = useState('')
   const navigate = useNavigate()
-  const handleChange = (e: any) => {
-    const { name, value } = e.target
-    setFormRegister((data) => ({ ...data, [name]: value}))
-  }
+
   const handleSubmit = () => {
-    userRepository.register(formRegister).then((res: any) => {
+    const payload = {email : email}
+    userRepository.reset(payload).then((res: any) => {
       const data = res.data.RegisterAccountStatus
-      if (data === 0) {
-        toast.success('register success')
+      console.log(data)
+      if (data === -1) {
+        toast.success('Request new password success')
         navigate('/login')
       } else {
         logErrorRegister(data)
       }
     }).catch((err: any) => {
-      toast.error('Fail Register')
+      toast.error('Fail Request')
     })
   }
   return (
@@ -84,8 +83,8 @@ function Main() {
                     className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
                     placeholder="Email"
                     name="email"
-                    value={formRegister.email}
-                    onChange={handleChange}
+                    value={email}
+                    onChange={(e) => {setEmail(e.target.value)}}
                   />
                 </div>
                 <div className="mt-5 text-center intro-x xl:mt-8 xl:text-left">
@@ -94,7 +93,7 @@ function Main() {
                     className="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
                     onClick={handleSubmit}
                   >
-                    Register
+                    Submit
                   </Button>
                   <Button
                     variant="outline-secondary"
