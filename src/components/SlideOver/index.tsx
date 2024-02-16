@@ -25,6 +25,7 @@ import { Phone } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addService } from "../../stores/serviceListSlice";
 import { RootState } from "../../stores/store";
+import moment from "moment";
 
 
 
@@ -178,15 +179,58 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         return names.map((name: string) => name[0]).join('');
       };
 
+
       const newAppointmentRequest = {
         "business_id": "20160908110055249272",
         "FirstName": selectedCustomer?.FirstName || "",
         "LastName": selectedCustomer?.LastName || "",
         "Mobile": selectedCustomer?.Mobile || "",
         "Email": selectedCustomer?.Email || "",
-        "Appointments": selectedServices
+        "Appointments": [] as Appointment[],
       };
-      
+
+      interface Appointment {
+        BookDate: string;
+        StartTime: string;
+        EndTime: string;
+        ServiceID: string;
+        StaffID: string;
+        Deposit: number;
+        Islocked: boolean;
+        CustomerNote: string;
+        CompanyNote: null;
+    }
+        let previousEndTime = selectedTime; 
+
+        selectedServices.forEach((service: { Duration: any; ProductID: any; }) => {
+            // Calculate end time based on start time and service duration
+            const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
+
+            const newAppointment : Appointment = {
+                "BookDate": date,
+                "StartTime": previousEndTime, // Use the end time of the previous service
+                "EndTime": serviceEndTime,
+                "ServiceID": service.ProductID,
+                "StaffID": resourceID,
+                "Deposit": 0,
+                "Islocked": false,
+                "CustomerNote": "",
+                "CompanyNote": null,
+            };
+
+            newAppointmentRequest.Appointments.push(newAppointment);
+
+            // Update previousEndTime for the next iteration
+            previousEndTime = serviceEndTime;
+        });
+
+        // Function to calculate end time based on start time and duration
+        function calculateEndTime(startTime: string, duration: number): string {
+            const startMoment = moment(startTime, 'HH:mm');
+            const endMoment = startMoment.clone().add(duration, 'minutes');
+            return endMoment.format('HH:mm');
+        }
+            
 
       const handleAddNewAppointment = () => {
         if (!selectedServiceIDs || selectedServiceIDs.length === 0) {
