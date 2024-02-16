@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../services/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
-
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
-import MainColorSwitcher from "../../components/MainColorSwitcher";
 import VDITURL from "../../assets/images/vditheader.png"
 import illustrationUrl from "../../assets/images/illustration.svg";
 import { FormInput, FormCheck } from "../../base-components/Form";
@@ -30,7 +28,6 @@ function Main() {
         toast.error('Login fail')
       }
     })
-    console.log('outside form')
     // Redirect to the home page after successful login
   };
 
@@ -98,7 +95,7 @@ function Main() {
                     onChange={(e) => setPassword(e.target.value)}
                     onKeyDown={(e) => { 
                       if (e.key === "Enter") { 
-                        {handleLogin}
+                        handleLogin()
                       } 
                   }} 
                   />
@@ -117,7 +114,11 @@ function Main() {
                       Remember me
                     </label>
                   </div>
-                  <a href="">Forgot Password?</a>
+                  <a href='#' onClick={(e) => {
+                      e.preventDefault()
+                      navigate('/forgotpassword')
+                    }
+                  }>Forgot Password?</a>
                 </div>
                 <div className="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button

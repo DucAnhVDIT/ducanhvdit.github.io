@@ -22,7 +22,6 @@ interface SlideOverPanelProps {
 }
 
 function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps) {
-  console.log('Appointment Data:', appointmentData);
   if (!appointmentData) {
     // Handle the case when appointmentData is null
     return (

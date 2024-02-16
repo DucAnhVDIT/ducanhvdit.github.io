@@ -15,7 +15,6 @@ const FloatingActionButtons: React.FC<FloatingActionButtonsProps> = ({ onPlusCli
     const offsetY = -59;
     
     
-    console.log('Floating button group position:', position);
     const springProps = useSpring({
         zIndex: 1000,
         opacity: 1,

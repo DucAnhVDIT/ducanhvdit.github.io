@@ -144,7 +144,6 @@ function Main() {
       const appointmentData = await apiResponse.json();
       setSelectedAppointment(appointmentData);
       setExistingInformationSlide(true);
-
     } catch (error) {
       // console.error('Error fetching appointment information:', error.message);
     }
@@ -234,8 +233,6 @@ function Main() {
         }
     
         const responseData = await apiResponse.json();
-        console.log(responseData);
-
         return responseData
     
         // Update your state or perform any other action with the service data

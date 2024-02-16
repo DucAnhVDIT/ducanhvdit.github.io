@@ -12,14 +12,16 @@ import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
 import LoginPage from "../pages/Login"; // Add your login page component
 import Register from "../pages/Register"
-import { useSelector } from 'react-redux';
-import { RootState } from "../stores/store";
+import ForgotPass from "../pages/ForgotPassword"
+import NotFound from "../pages/404"
+import { useAuth } from "../services/AuthContext";
 
 function Router() {
-  const isAuthenticated = useSelector((state: RootState) => state.authState.success)
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const isLoggedIn = localStorage.getItem("authSuccess")
-  
+  const user = useAuth();
+  //get data from session storage
+  const sessionUser = sessionStorage.getItem('user')
+  //parse data from string back to object
+  const isAuthenticated = JSON.parse(sessionUser!)
   const routes = [
     {
       path: "/login",
@@ -27,7 +29,8 @@ function Router() {
     },
     {
       path: "/",
-      element: isLoggedIn ? <SideMenu /> : <Navigate to="/login" />,
+      // check if there is data and rediect to page or back to login
+      element: !!isAuthenticated ? <SideMenu /> : <Navigate to="/login" />,
       children: [
         {
           path: "/",
@@ -59,6 +62,14 @@ function Router() {
       path: "/register",
       element: <Register />,
     },
+    {
+      path: "/forgotpassword",
+      element: <ForgotPass />
+    },
+    {
+      path: "*",
+      element: <NotFound />
+    }
   ];
 
   return useRoutes(routes);

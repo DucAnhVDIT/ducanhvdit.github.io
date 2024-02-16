@@ -10,7 +10,6 @@ import clsx from "clsx";
 import TopBar from "../../components/TopBar";
 import MobileMenu from "../../components/MobileMenu";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
-import MainColorSwitcher from "../../components/MainColorSwitcher";
 import SideMenuTooltip from "../../components/SideMenuTooltip";
 
 function Main() {
@@ -27,7 +26,7 @@ function Main() {
 
   return (
     <div className="py-2">
-      <DarkModeSwitcher />
+      {/* <DarkModeSwitcher /> */}
       {/* <MainColorSwitcher /> */}
       <MobileMenu />
       <div className="flex mt-[4.7rem] md:mt-0">

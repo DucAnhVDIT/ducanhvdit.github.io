@@ -10,7 +10,6 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ path, element }) => {
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated)
   return isAuthenticated() ? (
     <Route path={path} element={element} />
   ) : (
