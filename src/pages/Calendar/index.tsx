@@ -276,6 +276,16 @@ function Main() {
         }
     },
     slotDuration:"00:10",
+    eventTimeFormat: {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    },
+    slotLabelFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    },
     eventResourceEditable: true,
     refetchResourcesOnNavigate: true,
     allDaySlot: false,

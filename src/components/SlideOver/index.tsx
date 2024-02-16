@@ -22,6 +22,10 @@ import 'flatpickr/dist/themes/dark.css';
 import Dropzone from "dropzone";
 import { CheckboxToggle } from "react-rainbow-components";
 import { Phone } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { addService, deleteService  } from "../../stores/serviceListSlice";
+import { RootState } from "../../stores/store";
+import moment from "moment";
 
 
 
@@ -47,7 +51,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [customersList, setCustomersList] = useState<any>([]);
     const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
-    const [selectedServices, setSelectedServices] = React.useState<any>(null);
+    // const [selectedServices, setSelectedServices] = React.useState<any>(null);
     const [selectedServiceIDs, setSelectedServiceIDs] = useState<any[]>([]);
     const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
     const totalCustomers = customersList?.Customers?.length || 0;
@@ -58,8 +62,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [email, setEmail] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
 
-
-    // const axios = require('axios');
+    const dispatch = useDispatch()
+    const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -81,16 +85,23 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         : [];
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
-        setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
+        // setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
+        dispatch(addService(selectedService))
+
         setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
         setServiceSlideoverOpen(false);
     };
 
-    useEffect(() => {
-        handleAddNewAppointment()
-        console.log('Updated selectedServices:', selectedServices);
-      }, [selectedServices]);
+    const handleServiceDelete = (selectedService: any) => {
+        dispatch(deleteService(selectedService.ProductID));
+        console.log("deleted")
+    };
 
+    useEffect(() => {
+        console.log(selectedServices);
+      }, [selectedServices]);
+    
+    
     const calculateTotal = () => {
         if (!selectedServices || selectedServices.length === 0) {
           return 0; // Return 0 if selectedServices is null, undefined, or empty
@@ -173,18 +184,61 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         return names.map((name: string) => name[0]).join('');
       };
 
+
       const newAppointmentRequest = {
         "business_id": "20160908110055249272",
         "FirstName": selectedCustomer?.FirstName || "",
         "LastName": selectedCustomer?.LastName || "",
         "Mobile": selectedCustomer?.Mobile || "",
         "Email": selectedCustomer?.Email || "",
-        "Appointments": selectedServices
+        "Appointments": [] as Appointment[],
       };
-      
+
+      interface Appointment {
+        BookDate: string;
+        StartTime: string;
+        EndTime: string;
+        ServiceID: string;
+        StaffID: string;
+        Deposit: number;
+        Islocked: boolean;
+        CustomerNote: string;
+        CompanyNote: null;
+    }
+        let previousEndTime = selectedTime; 
+
+        selectedServices.forEach((service: { Duration: any; ProductID: any; }) => {
+            // Calculate end time based on start time and service duration
+            const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
+
+            const newAppointment : Appointment = {
+                "BookDate": date,
+                "StartTime": previousEndTime, // Use the end time of the previous service
+                "EndTime": serviceEndTime,
+                "ServiceID": service.ProductID,
+                "StaffID": resourceID,
+                "Deposit": 0,
+                "Islocked": false,
+                "CustomerNote": "",
+                "CompanyNote": null,
+            };
+
+            newAppointmentRequest.Appointments.push(newAppointment);
+
+            // Update previousEndTime for the next iteration
+            previousEndTime = serviceEndTime;
+        });
+
+        // Function to calculate end time based on start time and duration
+        function calculateEndTime(startTime: string, duration: number): string {
+            const startMoment = moment(startTime, 'HH:mm');
+            const endMoment = startMoment.clone().add(duration, 'minutes');
+            return endMoment.format('HH:mm');
+        }
+            
 
       const handleAddNewAppointment = () => {
-        if (!selectedServiceIDs || selectedServiceIDs.length === 0) {
+        if (!selectedServices || selectedServices.length === 0) {
             // No services selected, show warning and return
             showAppointmentToast('Please select at least one service', 'warning');
             return;
@@ -344,28 +398,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                         </div>
                     </div>
                     </Button>
-
-                    {/* End Add Client Button */}
-
-                    {/* Begin DatePicker */}
-                    {/* <div className=" flex flex-row items-center w-full border-none shadow-none pl-12">
-                        <Flatpickr
-                            value={new Date()}
-                            options={{ dateFormat: 'D j F, Y' }}
-                            className="pl-4 w-58 mt-3 border-none bg-transparent text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        />
-                        {/* Time Picker */}
-                        {/* <DatePicker
-                            onChange={() => {}}
-                            selected={new Date()}
-                            showTimeSelect
-                            showTimeSelectOnly
-                            timeIntervals={15}
-                            dateFormat="h:mm aa"
-                            className="pl-4 w-28 items-center mt-3 border-none bg-transparent text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        />
-                    </div> */}
-                    {/* End DatePicker */}
                     
                     {/* Begin Add Services */}
                     <Button className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
@@ -397,9 +429,9 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     <div className="selected-services">
                     {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
                         <ServiceCard
-                        key={selectedService.ProductID}
-                        service={selectedService}
-                        onSelect={() => {}}
+                            key={selectedService.ProductID}
+                            service={selectedService}
+                            onSelect={handleServiceDelete}
                         />
                     ))}
                     </div>

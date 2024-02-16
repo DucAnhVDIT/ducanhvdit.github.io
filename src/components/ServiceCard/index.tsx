@@ -2,10 +2,9 @@ import React from 'react';
 import Button from '../../base-components/Button';
 import Lucide from '../../base-components/Lucide';
 
-const ServiceCard = ({ service, onSelect }: { service: any, onSelect: (service: any, totalPrice: number) => void }) => {
+const ServiceCard = ({ service, onSelect }: { service: any, onSelect: (service: any) => void }) => {
   const handleClick = () => {
-    const totalPrice = service.Price || 0;
-    onSelect(service, totalPrice);
+    onSelect(service);
   };
   return (
     <div>

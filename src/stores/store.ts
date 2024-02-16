@@ -6,6 +6,7 @@ import simpleMenuReducer from './simpleMenuSlice'
 import topMenuReducer from './topMenuSlice'
 import authReducer from './userSlice'
 import billReducer from './billSlice'
+import serviceListReducer from './serviceListSlice'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     topMenu: topMenuReducer,
     authState: authReducer,
     bill: billReducer,
+    serviceListState: serviceListReducer,
   },
 })
 
