@@ -9,9 +9,11 @@ const serviceListSlice = createSlice({
         addService:(state, action) => {
             state.selectedServices.push(action.payload);
         },
-        deleteService:(state) => {
-
-        }
+        deleteService: (state, action) => {
+            const serviceIdToDelete = action.payload;
+            state.selectedServices = state.selectedServices.filter((service: { ProductID: any; }) => service.ProductID !== serviceIdToDelete);
+        },
+        
     }
 })
 

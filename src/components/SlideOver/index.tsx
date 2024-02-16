@@ -23,7 +23,7 @@ import Dropzone from "dropzone";
 import { CheckboxToggle } from "react-rainbow-components";
 import { Phone } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { addService } from "../../stores/serviceListSlice";
+import { addService, deleteService  } from "../../stores/serviceListSlice";
 import { RootState } from "../../stores/store";
 import moment from "moment";
 
@@ -90,6 +90,11 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
         setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
         setServiceSlideoverOpen(false);
+    };
+
+    const handleServiceDelete = (selectedService: any) => {
+        dispatch(deleteService(selectedService.ProductID));
+        console.log("deleted")
     };
 
     useEffect(() => {
@@ -393,28 +398,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                         </div>
                     </div>
                     </Button>
-
-                    {/* End Add Client Button */}
-
-                    {/* Begin DatePicker */}
-                    {/* <div className=" flex flex-row items-center w-full border-none shadow-none pl-12">
-                        <Flatpickr
-                            value={new Date()}
-                            options={{ dateFormat: 'D j F, Y' }}
-                            className="pl-4 w-58 mt-3 border-none bg-transparent text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        />
-                        {/* Time Picker */}
-                        {/* <DatePicker
-                            onChange={() => {}}
-                            selected={new Date()}
-                            showTimeSelect
-                            showTimeSelectOnly
-                            timeIntervals={15}
-                            dateFormat="h:mm aa"
-                            className="pl-4 w-28 items-center mt-3 border-none bg-transparent text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        />
-                    </div> */}
-                    {/* End DatePicker */}
                     
                     {/* Begin Add Services */}
                     <Button className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
@@ -446,9 +429,9 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     <div className="selected-services">
                     {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
                         <ServiceCard
-                        key={selectedService.ProductID}
-                        service={selectedService}
-                        onSelect={() => {}}
+                            key={selectedService.ProductID}
+                            service={selectedService}
+                            onSelect={handleServiceDelete}
                         />
                     ))}
                     </div>
