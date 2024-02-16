@@ -238,7 +238,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             
 
       const handleAddNewAppointment = () => {
-        if (!selectedServiceIDs || selectedServiceIDs.length === 0) {
+        if (!selectedServices || selectedServices.length === 0) {
             // No services selected, show warning and return
             showAppointmentToast('Please select at least one service', 'warning');
             return;
