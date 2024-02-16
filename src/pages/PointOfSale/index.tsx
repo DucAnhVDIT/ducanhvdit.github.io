@@ -65,9 +65,8 @@ function Main() {
   const getServices = (CatID: number) => {
     setCategoryHidden(true)
     setServiceHidden(false)
-    eposRepository.getServices(0, CatID).then((res: any) => {
-      setServices(res.data.Services)
-    })
+    const sameCat = fullServices.filter((item: any) => item.CategoryID === CatID)
+    setServices(sameCat)
   }
 
   const getListStaffService = async (staffID: number) => {
@@ -118,7 +117,7 @@ function Main() {
   }, [])
   
   const billDetails = useSelector((state: any) => state.bill.billItems)
-  console.log(billDetails)
+
   const totalPrice = useSelector((state: any) => state.bill.totalPrice)
   
   const addItem = (data: any) => {
@@ -223,7 +222,7 @@ function Main() {
               <div  key={CategoryID} 
                     onClick={(event) => {
                       event.preventDefault();
-                      getServices(CategoryID)
+                      getServices(category.CategoryID)
                     }}
                     className="intro-y col-span-12 p-5 cursor-pointer border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white sm:col-span-4 2xl:col-span-3 box zoom-in">
                   <div className="text-base font-medium truncate">{category.CategoryName}</div>
