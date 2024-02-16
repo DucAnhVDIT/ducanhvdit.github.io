@@ -42,18 +42,11 @@ import calendarRepository from "../../repositories/calendarRepository";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-
-
-
-
-
 interface Staff {
   StaffID: number;
   StaffName: string;
   StaffColour: string | null;
 }
-
-
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -258,10 +251,6 @@ function Main() {
       }
     };
     
-
-    
-
-
   // Take all the data from the Api and add it to the calendar
 
   const options: CalendarOptions = {
