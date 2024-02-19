@@ -323,7 +323,6 @@ function Main() {
     longPressDelay:1,
     eventClick: handleEventClick,
     eventDrop: function (info) {
-      const newStaffID = info.newResource?._resource.id;
 
       if (!confirm("Are you sure you want to change?")) {
           info.revert();
@@ -358,15 +357,37 @@ function Main() {
         .then(response => {
             if (response.status === 200) {
                 console.log("Full response from the server:", response);
-                // Handle success if needed
+                toast.success('Appointment rescheduled successfully', {
+                  position: "top-center",
+                  autoClose: 3000, // Auto close the toast after 3 seconds
+                  hideProgressBar: true,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                });
+                
             } else {
                 console.error("Error updating appointment. Server returned:", response.status, response.statusText);
-                // Handle other responses if needed
+                toast.error('Error updating appointment. Please try again.', {
+                  position: "top-center",
+                  autoClose: 5000, // Auto close the toast after 5 seconds
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                });
             }
         })
         .catch(error => {
             console.error('Error updating appointment details:', error);
-            // Handle the error appropriately
+            toast.error('An unexpected error occurred. Please try again later.', {
+              position: "top-center",
+              autoClose: 5000, // Auto close the toast after 5 seconds
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
         });
       }
   },
