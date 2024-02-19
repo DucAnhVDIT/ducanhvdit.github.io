@@ -300,6 +300,7 @@ function Main() {
           firstName : (appointment as { FirstName: string }).FirstName,
           lastName : (appointment as { LastName: string }).LastName,
           Mobile : (appointment as { Mobile: string }).Mobile,
+          Duration : (appointment as { Duration: any }).Duration,
           bookDate: (appointment as { BookDate: Date }).BookDate,
           serviceName: (appointment as { ServiceName: string }).ServiceName,
           serviceID: (appointment as { ServiceID: string }).ServiceID,
@@ -403,7 +404,7 @@ function Main() {
         const newStartTime: any = info.event.start;
         const newEndTime: any = info.event.end;
         const newDurationInMinutes = (newEndTime - newStartTime) / (1000 * 60);
-    
+        const originalDurationInMinutes = info.event.extendedProps.Duration;
     
         // Extracting relevant data for the request
         const appointmentData = {
@@ -414,13 +415,13 @@ function Main() {
           "Mobile": info.event.extendedProps.Mobile,
           "Email": "",
           "BookDate": info.event.extendedProps.bookDate,
-          "StartTime": info.event.start,
+          "StartTime": newStartTime,
           "ServiceID": info.event.extendedProps.serviceID,
           "StaffID": info.event.extendedProps.resourceId,
           "Islocked": false,
           "CustomerNote": "",
           "GuestNotes": null,
-          "Duration": newDurationInMinutes,
+          "Duration": newDurationInMinutes || originalDurationInMinutes,
         };
     
         axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {

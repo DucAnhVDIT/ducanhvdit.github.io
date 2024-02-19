@@ -13,9 +13,11 @@ const serviceListSlice = createSlice({
             const serviceIdToDelete = action.payload;
             state.selectedServices = state.selectedServices.filter((service: { ProductID: any; }) => service.ProductID !== serviceIdToDelete);
         },
-        
+        resetSelectedServices: (state) => {
+            state.selectedServices = [];
+          },
     }
 })
 
-export const { addService, deleteService } = serviceListSlice.actions
+export const { addService, deleteService, resetSelectedServices } = serviceListSlice.actions
 export default serviceListSlice.reducer

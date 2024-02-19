@@ -23,7 +23,7 @@ import Dropzone from "dropzone";
 import { CheckboxToggle } from "react-rainbow-components";
 import { Phone } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { addService, deleteService  } from "../../stores/serviceListSlice";
+import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 import { RootState } from "../../stores/store";
 import moment from "moment";
 
@@ -256,6 +256,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             showAppointmentToast('Appointment added successfully');
             handleAppoinmentChange(true)
             onClose();
+            dispatch(resetSelectedServices());
           })
           .catch((error) => {
             console.error('Error adding appointment:', error);
