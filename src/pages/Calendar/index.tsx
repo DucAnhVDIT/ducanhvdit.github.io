@@ -390,7 +390,82 @@ function Main() {
             });
         });
       }
-  },
+    },
+    eventResize: function (info) {
+      if (!confirm("Are you sure you want to change?")) {
+        info.revert();
+      } else {
+        if (info.event.extendedProps.requirelock) {
+          alert("This appointment is locked, unable to make any changes.");
+          info.revert();
+        }
+
+        const newStartTime: any = info.event.start;
+        const newEndTime: any = info.event.end;
+        const newDurationInMinutes = (newEndTime - newStartTime) / (1000 * 60);
+    
+    
+        // Extracting relevant data for the request
+        const appointmentData = {
+          "ID": info.event.extendedProps.ID,
+          "business_id": "20160908110055249272",
+          "FirstName": info.event.extendedProps.firstName,
+          "LastName": info.event.extendedProps.lastName,
+          "Mobile": info.event.extendedProps.Mobile,
+          "Email": "",
+          "BookDate": info.event.extendedProps.bookDate,
+          "StartTime": info.event.start,
+          "ServiceID": info.event.extendedProps.serviceID,
+          "StaffID": info.event.extendedProps.resourceId,
+          "Islocked": false,
+          "CustomerNote": "",
+          "GuestNotes": null,
+          "Duration": newDurationInMinutes,
+        };
+    
+        axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${btoa('testvdit:testvdit')}`
+          }
+        })
+        .then(response => {
+          if (response.status === 200) {
+            console.log("Full response from the server:", response);
+            toast.success('Appointment updated successfully', {
+              position: "top-center",
+              autoClose: 3000, // Auto close the toast after 3 seconds
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
+          } else {
+            console.error("Error updating appointment. Server returned:", response.status, response.statusText);
+            toast.error('Error updating appointment. Please try again.', {
+              position: "top-center",
+              autoClose: 5000, // Auto close the toast after 5 seconds
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error updating appointment details:', error);
+          toast.error('An unexpected error occurred. Please try again later.', {
+            position: "top-center",
+            autoClose: 5000, // Auto close the toast after 5 seconds
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+        });
+      }
+    },
+    
   
   
     resources: staffData
