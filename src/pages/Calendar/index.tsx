@@ -302,6 +302,7 @@ function Main() {
           Mobile : (appointment as { Mobile: string }).Mobile,
           bookDate: (appointment as { BookDate: Date }).BookDate,
           serviceName: (appointment as { ServiceName: string }).ServiceName,
+          serviceID: (appointment as { ServiceID: string }).ServiceID,
           IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
           IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
         },
@@ -322,11 +323,8 @@ function Main() {
     longPressDelay:1,
     eventClick: handleEventClick,
     eventDrop: function (info) {
-      if (info.event.extendedProps.ID === 0) {
-          info.revert();
-          return;
-      }
-  
+      const newStaffID = info.newResource?._resource.id;
+
       if (!confirm("Are you sure you want to change?")) {
           info.revert();
       } else {
@@ -337,7 +335,6 @@ function Main() {
   
           // Extracting relevant data for the request
           const appointmentData = {
-            "Appointment":{
               "ID": info.event.extendedProps.ID,
               "business_id": "20160908110055249272",
               "FirstName": info.event.extendedProps.firstName,
@@ -346,12 +343,11 @@ function Main() {
               "Email": "",
               "BookDate": info.event.extendedProps.bookDate,
               "StartTime": info.event.start,
-              "ServiceID": info.event.extendedProps.serviceName,
-              "StaffID": info.newResource?._resource.id,
+              "ServiceID": info.event.extendedProps.serviceID,
+              "StaffID": info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
               "Islocked": false,
               "CustomerNote": "",
               "GuestNotes": null,
-            }
           };
           axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {
             headers: {
