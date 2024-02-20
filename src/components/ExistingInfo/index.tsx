@@ -10,6 +10,7 @@ import CustomerCard from "../CustomerCard";
 import { useSelector, useDispatch } from 'react-redux';
 import { cancelAppointment } from '../../stores/appoinmentSlice';
 import axios from "axios";
+import { toast } from "react-toastify";
 
 
 interface SlideOverPanelProps {
@@ -47,8 +48,24 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
       if (res.status === 200) {
         console.log("Deleted appointment")
         onClose()
+        toast.success('Deleted appointment', {
+          position: "top-center",
+          autoClose: 3000, // Auto close the toast after 3 seconds
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       } else {
         console.error("Error updating appointment. Server returned:", res.status, res.statusText);
+        toast.success('Can not delete appointment', {
+          position: "top-center",
+          autoClose: 3000, // Auto close the toast after 3 seconds
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     })
     .catch(err => {
