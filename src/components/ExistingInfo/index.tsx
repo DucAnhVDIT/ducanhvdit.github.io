@@ -1,18 +1,15 @@
 
 import { Menu, Slideover } from "../../base-components/Headless";
-
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
-import { useState } from "react";
-
 import 'flatpickr/dist/themes/dark.css';
-
 import 'react-datepicker/dist/react-datepicker.css';
-
 import React from 'react'
-
 import ServiceCard from "../ServiceCard";
 import CustomerCard from "../CustomerCard";
+import { useSelector, useDispatch } from 'react-redux';
+import { cancelAppointment } from '../../stores/appoinmentSlice';
+import axios from "axios";
 
 
 interface SlideOverPanelProps {
@@ -21,7 +18,44 @@ interface SlideOverPanelProps {
   appointmentData: any, 
 }
 
+
 function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps) {
+
+  const dispatch = useDispatch();
+
+  const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
+
+  const handleCancelAppointment = () => {
+    const appointmentId = appointmentData.Appointment.ID;
+    dispatch(cancelAppointment(appointmentId));
+
+    console.log(appointmentData.Appointment.StatusID)
+
+    const cancelAppointmentBody = {
+      "ID": appointmentData.Appointment.ID,
+      "business_id": "20160908110055249272",
+      "StatusID": 6
+    }
+
+    axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", cancelAppointmentBody, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${btoa('testvdit:testvdit')}`
+      }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        console.log("Deleted appointment")
+        onClose()
+      } else {
+        console.error("Error updating appointment. Server returned:", res.status, res.statusText);
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+
   if (!appointmentData) {
     // Handle the case when appointmentData is null
     return (
@@ -67,7 +101,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}
                   <Slideover.Footer>
-                    Hello
+                    <button onClick={handleCancelAppointment}>
+                      Delete
+                    </button>
                   </Slideover.Footer>
               </Slideover.Panel>
               {/* END: Slide Over Footer */}
