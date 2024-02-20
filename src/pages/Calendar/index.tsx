@@ -77,8 +77,8 @@ function Main() {
     const fetchData = async () => {
         const appointmentsData = await fetchAppoinmentApiData(date);
         dispatch(setScheduleData(appointmentsData.Appointments));
+        console.log('fetch data từ api để hiển thị')
     };
-
     fetchData();
 }, [appoinmentChange, date]);
 
@@ -170,9 +170,9 @@ function Main() {
 
         // Update the state only if the array is not empty
         if (appointmentsArray.length > 0) {
-          console.log('appointment list',appointmentsArray) 
           // setScheduleData(appointmentsArray);
           dispatch(setScheduleData(appointmentsArray));
+          console.log('hiển thị appoinment', appointmentsArray )
         }
         return appointmentsData
 

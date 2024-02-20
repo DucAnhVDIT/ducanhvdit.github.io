@@ -88,6 +88,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         // setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
+        console.log('add service vào redux',selectedServices)
         dispatch(addService(selectedService))
 
         setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
@@ -100,7 +101,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     };
 
     useEffect(() => {
-        console.log(selectedServices);
+        console.log('lấy thông tin của redux',selectedServices);
       }, [selectedServices]);
     
     
