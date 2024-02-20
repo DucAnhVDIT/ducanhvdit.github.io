@@ -259,7 +259,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
               .then((res) => {
                 console.log(res);
                 showAppointmentToast('Appointment added successfully');
-                handleAppoinmentChange(true);
+                handleAppoinmentChange(prev => !prev);
                 onClose();
                 dispatch(resetSelectedServices());
               })

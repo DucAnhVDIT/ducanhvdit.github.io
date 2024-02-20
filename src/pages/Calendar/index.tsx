@@ -80,7 +80,7 @@ function Main() {
         console.log('fetch data từ api để hiển thị')
     };
     fetchData();
-}, [appoinmentChange, date]);
+}, [appoinmentChange]);
 
   const handleAppoinmentChange = (value: boolean | ((prevState: boolean) => boolean)) => {
     setAppointmentChange(value);
