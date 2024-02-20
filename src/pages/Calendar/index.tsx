@@ -12,7 +12,7 @@ import {
   Source,
   Highlight,
 } from "../../base-components/PreviewComponent";
-import { useState, useRef, SetStateAction, useEffect, JSXElementConstructor, ReactElement, ReactNode } from "react";
+import { useState, useRef, SetStateAction, useEffect, JSXElementConstructor, ReactElement, ReactNode, useCallback } from "react";
 import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle, Application } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
@@ -41,6 +41,10 @@ import ReactDOM from "react-dom";
 import calendarRepository from "../../repositories/calendarRepository";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setScheduleData } from '../../stores/appoinmentSlice';
+
+
 
 interface Staff {
   StaffID: number;
@@ -59,17 +63,20 @@ function Main() {
   const [resourceID, setResourceID] = useState("");
   const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
   const [staffData, setStaffData] = useState([]);
-  const [scheduleData, setScheduleData] = useState<any[]>([]);
+  // const [scheduleData, setScheduleData] = useState<any[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false)
+
+  const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
+  const dispatch = useDispatch();
+
 
 
   useEffect(() => {
     const fetchData = async () => {
         const appointmentsData = await fetchAppoinmentApiData(date);
-        setScheduleData(appointmentsData.Appointments);
-        setAppointmentChange(false);
+        dispatch(setScheduleData(appointmentsData.Appointments));
     };
 
     fetchData();
@@ -78,17 +85,9 @@ function Main() {
   const handleAppoinmentChange = (value: boolean | ((prevState: boolean) => boolean)) => {
     setAppointmentChange(value);
   };
-  
-  // Effect to log scheduleData changes
-  useEffect(() => {
-    // console.log("Updated Schedule Data:", scheduleData);
-    // console.log(staffData)
-  }, [scheduleData]);
-  
-  // Effect to fetch staff data
+
   useEffect(() => {
     fetchStaffApiData();
-    // fetchClientList();
   }, []);
 
    const navigate = useNavigate();
@@ -172,7 +171,8 @@ function Main() {
         // Update the state only if the array is not empty
         if (appointmentsArray.length > 0) {
           console.log('appointment list',appointmentsArray) 
-          setScheduleData(appointmentsArray);
+          // setScheduleData(appointmentsArray);
+          dispatch(setScheduleData(appointmentsArray));
         }
         return appointmentsData
 
@@ -250,8 +250,8 @@ function Main() {
         toast.success(message);
       }
     };
-    
-  // Take all the data from the Api and add it to the calendar
+  
+  
 
   const options: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
@@ -265,6 +265,7 @@ function Main() {
         }
     },
     slotDuration:"00:10",
+    selectOverlap: false,
     eventTimeFormat: {
       hour: "2-digit",
       minute: "2-digit",
@@ -288,7 +289,7 @@ function Main() {
     selectable: true,
     nowIndicator:true,
     events: scheduleData
-    ? scheduleData.map((appointment) => ({
+    ? scheduleData.map((appointment: any) => ({
         title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
         start: (appointment as { StartTime: Date }).StartTime,
         end: (appointment as { EndTime: Date }).EndTime,
@@ -404,8 +405,7 @@ function Main() {
         const newStartTime: any = info.event.start;
         const newEndTime: any = info.event.end;
         const newDurationInMinutes = (newEndTime - newStartTime) / (1000 * 60);
-        const originalDurationInMinutes = info.event.extendedProps.Duration;
-    
+
         // Extracting relevant data for the request
         const appointmentData = {
           "ID": info.event.extendedProps.ID,
@@ -421,7 +421,7 @@ function Main() {
           "Islocked": false,
           "CustomerNote": "",
           "GuestNotes": null,
-          "Duration": newDurationInMinutes || originalDurationInMinutes,
+          "Duration": newDurationInMinutes,
         };
     
         axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {
@@ -432,7 +432,6 @@ function Main() {
         })
         .then(response => {
           if (response.status === 200) {
-            console.log("Full response from the server:", response);
             toast.success('Appointment updated successfully', {
               position: "top-center",
               autoClose: 3000, // Auto close the toast after 3 seconds

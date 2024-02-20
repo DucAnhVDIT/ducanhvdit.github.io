@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 import { RootState } from "../../stores/store";
 import moment from "moment";
+import { setScheduleData } from '../../stores/appoinmentSlice';
 
 
 
@@ -64,6 +65,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
     const dispatch = useDispatch()
     const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
+    const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -192,6 +194,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         "Mobile": selectedCustomer?.Mobile || "",
         "Email": selectedCustomer?.Email || "",
         "Appointments": [] as Appointment[],
+
       };
 
       interface Appointment {
@@ -237,34 +240,36 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         }
             
 
-      const handleAddNewAppointment = () => {
-        if (!selectedServices || selectedServices.length === 0) {
-            // No services selected, show warning and return
-            showAppointmentToast('Please select at least one service', 'warning');
-            return;
-          }
-
-          if (!selectedCustomer || selectedCustomer.length === 0) {
-            // No services selected, show warning and return
-            showAppointmentToast('Please select client', 'warning');
-            return;
-          }
-      
-        calendarRepository.addAppointment(newAppointmentRequest)
-          .then((res) => {
-            console.log(res);
-            showAppointmentToast('Appointment added successfully');
-            handleAppoinmentChange(true)
-            onClose();
-            dispatch(resetSelectedServices());
-          })
-          .catch((error) => {
-            console.error('Error adding appointment:', error);
-            showAppointmentToast('Error adding appointment', 'error');
-          });
-      
-        setSecondSlideoverOpen(false);
-      };
+        const handleAddNewAppointment = () => {
+            if (!selectedServices || selectedServices.length === 0) {
+              // No services selected, show warning and return
+              showAppointmentToast('Please select at least one service', 'warning');
+              return;
+            }
+          
+            if (!selectedCustomer || selectedCustomer.length === 0) {
+              // No services selected, show warning and return
+              showAppointmentToast('Please select a client', 'warning');
+              return;
+            }
+          
+          
+            calendarRepository.addAppointment(newAppointmentRequest)
+              .then((res) => {
+                console.log(res);
+                showAppointmentToast('Appointment added successfully');
+                handleAppoinmentChange(true);
+                onClose();
+                dispatch(resetSelectedServices());
+              })
+              .catch((error) => {
+                console.error('Error adding appointment:', error);
+                showAppointmentToast('Error adding appointment', 'error');
+              });
+          
+            setSecondSlideoverOpen(false);
+          };
+          
 
       const handleOpenAddClient = () => {
         setAddCustomerSlideOpen(true)
