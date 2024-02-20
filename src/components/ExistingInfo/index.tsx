@@ -8,7 +8,7 @@ import React from 'react'
 import ServiceCard from "../ServiceCard";
 import CustomerCard from "../CustomerCard";
 import { useSelector, useDispatch } from 'react-redux';
-import { cancelAppointment } from '../../stores/appoinmentSlice';
+import { deleteAppointment } from '../../stores/appoinmentSlice';
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -26,19 +26,19 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
 
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
 
-  const handleCancelAppointment = () => {
+  const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.Appointment.ID;
-    dispatch(cancelAppointment(appointmentId));
+    dispatch(deleteAppointment(appointmentId));
 
     console.log(appointmentData.Appointment.StatusID)
 
-    const cancelAppointmentBody = {
+    const deleteAppointmentBody = {
       "ID": appointmentData.Appointment.ID,
       "business_id": "20160908110055249272",
       "StatusID": 6
     }
 
-    axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", cancelAppointmentBody, {
+    axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", deleteAppointmentBody, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${btoa('testvdit:testvdit')}`
@@ -48,7 +48,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
       if (res.status === 200) {
         console.log("Deleted appointment")
         onClose()
-        toast.success('Deleted appointment', {
+        toast.info('Deleted appointment', {
           position: "top-center",
           autoClose: 3000, // Auto close the toast after 3 seconds
           hideProgressBar: true,
@@ -58,7 +58,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
         });
       } else {
         console.error("Error updating appointment. Server returned:", res.status, res.statusText);
-        toast.success('Can not delete appointment', {
+        toast.error('Can not delete appointment', {
           position: "top-center",
           autoClose: 3000, // Auto close the toast after 3 seconds
           hideProgressBar: true,
@@ -118,9 +118,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}
                   <Slideover.Footer>
-                    <button onClick={handleCancelAppointment}>
+                    <Button className=" bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
-                    </button>
+                    </Button>
                   </Slideover.Footer>
               </Slideover.Panel>
               {/* END: Slide Over Footer */}
