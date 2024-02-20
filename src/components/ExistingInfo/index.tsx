@@ -48,7 +48,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
       if (res.status === 200) {
         console.log("Deleted appointment")
         onClose()
-        toast.info('Deleted appointment', {
+        toast.success('Deleted appointment', {
           position: "top-center",
           autoClose: 3000, // Auto close the toast after 3 seconds
           hideProgressBar: true,
