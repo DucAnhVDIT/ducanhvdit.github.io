@@ -367,7 +367,7 @@ function Main() {
                   pauseOnHover: true,
                   draggable: true,
                 });
-                
+                setAppointmentChange(prev => !prev)
             } else {
                 console.error("Error updating appointment. Server returned:", response.status, response.statusText);
                 toast.error('Error updating appointment. Please try again.', {
@@ -440,6 +440,7 @@ function Main() {
               pauseOnHover: true,
               draggable: true,
             });
+            setAppointmentChange(prev => !prev)
           } else {
             console.error("Error updating appointment. Server returned:", response.status, response.statusText);
             toast.error('Error updating appointment. Please try again.', {
