@@ -6,7 +6,7 @@ const getServices = '/GetServices'
 const searchServices = '/SearchService'
 const getStaff = '/GetStaff'
 const businessID = '20160908110055249272'
-const businessIDTest = !dataUser ? '' : dataUser.BusinessModel[0].BusinessID
+// const businessID = !dataUser ? '' : dataUser.BusinessModel[0].BusinessID
 
 export default {
   getServicesCategory() {

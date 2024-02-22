@@ -32,7 +32,7 @@ import TippyContent from "../../base-components/TippyContent";
 import { FaSleigh, FaStar } from "react-icons/fa";
 import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SlideOverPanel from "../../components/SlideOver";
+import SlideOverPanel from "./sideSlide";
 import DatePickerMUI from "../../components/DatePicker";
 import CustomDatePicker from "../../components/DatePicker";
 import ExistingInfo from "../../components/ExistingInfo";
@@ -43,6 +43,8 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setScheduleData } from '../../stores/appoinmentSlice';
+import eposRepository from "../../repositories/eposRepository";
+import { logError, logSuccess } from "../../constant/log-error";
 
 
 
@@ -71,16 +73,9 @@ function Main() {
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const dispatch = useDispatch();
 
-
-
   useEffect(() => {
-    const fetchData = async () => {
-        const appointmentsData = await fetchAppoinmentApiData(date);
-        dispatch(setScheduleData(appointmentsData.Appointments));
-        console.log('fetch data từ api để hiển thị')
-    };
-    fetchData();
-}, [appoinmentChange]);
+    fetchAppoinmentApiData(date);  
+  }, [appoinmentChange]);
 
   const handleAppoinmentChange = (value: boolean | ((prevState: boolean) => boolean)) => {
     setAppointmentChange(value);
@@ -89,8 +84,6 @@ function Main() {
   useEffect(() => {
     fetchStaffApiData();
   }, []);
-
-   const navigate = useNavigate();
   
   const handleSlotClicked = async (info: any) => {
     const startTime = moment(info.start).format('HH:mm');
@@ -101,13 +94,9 @@ function Main() {
     setResourceTitle(staffTitle);
     setResourceID(staffID);
   
-    const data = await fetchServiceApiData(staffID);
-    // console.log(info.start);
-    setServiceData(data);
-    // Open the slideover preview
+    fetchServiceApiData(staffID);
     setSlotSlideoverPreview(true);
   };
-
 
   const handleCancel = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -117,25 +106,10 @@ function Main() {
   const handleEventClick = async (info: { event: any }) => {
     try {
       const appointmentID = info.event.extendedProps.ID; // Replace 'id' with the actual property name
-      const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-        },
-        body: JSON.stringify({
-          "business_id": "20160908110055249272",
-          "id": appointmentID,
-        }),
-      });
-  
-      if (!apiResponse.ok) {
-        throw new Error(`HTTP error! Status: ${apiResponse.status}`);
-      }
-  
-      const appointmentData = await apiResponse.json();
-      setSelectedAppointment(appointmentData);
-      setExistingInformationSlide(true);
+      await calendarRepository.getAppointment(appointmentID).then((res: any) => {
+        setSelectedAppointment(res.data);
+        setExistingInformationSlide(true);
+      })
     } catch (error) {
       // console.error('Error fetching appointment information:', error.message);
     }
@@ -144,38 +118,13 @@ function Main() {
   const fetchAppoinmentApiData = async (date: { getTime: () => number; } | undefined) => {
       try {
         const data = date ? Math.floor(date.getTime() / 1000) : null
-        
-        // calendarRepository.getAppointment(data).then((res) => console.log(res.data))
-
-
-        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetAppointments', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-          },
-          body: JSON.stringify({
-            "business_id": "20160908110055249272",
-            "date": date ? Math.floor(date.getTime() / 1000) : null,
-          }),
-        });
-
-        if (!apiResponse.ok) {
-          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
-        }
-
-        const appointmentsData = await apiResponse.json();
-        // console.log('API Response:', appointmentsData.Appointments);
-        const appointmentsArray = appointmentsData.Appointments || [];
-
-        // Update the state only if the array is not empty
-        if (appointmentsArray.length > 0) {
-          // setScheduleData(appointmentsArray);
-          dispatch(setScheduleData(appointmentsArray));
-          console.log('hiển thị appoinment', appointmentsArray )
-        }
-        return appointmentsData
-
+        await calendarRepository.getAppointment(data).then((res: any) => {
+          const appointmentsArray = res.Appointments || [];
+          if (appointmentsArray.length > 0) {
+            setScheduleData(appointmentsArray);
+            dispatch(setScheduleData(appointmentsArray));
+          }
+        })
       } catch (error) {
         console.error('Error fetching the API:', (error as Error).message);
         return null;
@@ -184,53 +133,20 @@ function Main() {
 
   const fetchStaffApiData = async () => {
       try {
-        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetStaff', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-          },
-          body: JSON.stringify({
-            "business_id": "20160908110055249272",
-            "date": Math.floor(date.getTime() / 1000),
-          }),
-        });
-
-        if (!apiResponse.ok) {
-          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
-        }
-
-        const staffData = await apiResponse.json();
-        console.log('Staff List', staffData);
-        setStaffData(staffData.Staffs);
+        await calendarRepository.getStaff(Math.floor(date.getTime() / 1000)).then((res: any) => {
+          setStaffData(res.data.Staffs)
+        })
       } catch (error) {
         // console.error('Error fetching the API:', error.message);
       }
-    };
+    }
+
   const fetchServiceApiData = async (staffID: string) => {
       try {
-        const apiResponse = await fetch('https://beautyapi.vdit.co.uk/v1/GetServices', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-          },
-          body: JSON.stringify({
-            "business_id": "20160908110055249272",
-            "StaffID": staffID,
-          }),
-        });
-    
-        if (!apiResponse.ok) {
-          throw new Error(`HTTP error! Status: ${apiResponse.status}`);
-        }
-    
-        const responseData = await apiResponse.json();
-        return responseData
-    
-        // Update your state or perform any other action with the service data
-    
-      } catch (error) {
+        await eposRepository.getServices(staffID, 0).then((res: any) => {
+          setServiceData(res.data.Services)
+        })
+       } catch (error) {
         // console.error('Error fetching the API:', error.message);
       }
     };
@@ -250,8 +166,6 @@ function Main() {
         toast.success(message);
       }
     };
-  
-  
 
   const options: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
@@ -336,60 +250,30 @@ function Main() {
   
           // Extracting relevant data for the request
           const appointmentData = {
-              "ID": info.event.extendedProps.ID,
-              "business_id": "20160908110055249272",
-              "FirstName": info.event.extendedProps.firstName,
-              "LastName": info.event.extendedProps.lastName,
-              "Mobile": info.event.extendedProps.Mobile,
-              "Email": "",
-              "BookDate": info.event.extendedProps.bookDate,
-              "StartTime": info.event.start,
-              "ServiceID": info.event.extendedProps.serviceID,
-              "StaffID": info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
-              "Islocked": false,
-              "CustomerNote": "",
-              "GuestNotes": null,
+              ID: info.event.extendedProps.ID,
+              business_id: "20160908110055249272",
+              FirstName: info.event.extendedProps.firstName,
+              LastName: info.event.extendedProps.lastName,
+              Mobile: info.event.extendedProps.Mobile,
+              Email: "",
+              BookDate: info.event.extendedProps.bookDate,
+              StartTime: info.event.start,
+              ServiceID: info.event.extendedProps.serviceID,
+              StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
+              Islocked: false,
+              CustomerNote: "",
+              GuestNotes: null,
           };
-          axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Basic ${btoa('testvdit:testvdit')}`
-            }
-        })
-        .then(response => {
+          calendarRepository.updateAppointment(appointmentData).then(response => {
             if (response.status === 200) {
-                console.log("Full response from the server:", response);
-                toast.success('Appointment rescheduled successfully', {
-                  position: "top-center",
-                  autoClose: 3000, // Auto close the toast after 3 seconds
-                  hideProgressBar: true,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                });
+                logSuccess('Appointment rescheduled successfully')
                 setAppointmentChange(prev => !prev)
             } else {
-                console.error("Error updating appointment. Server returned:", response.status, response.statusText);
-                toast.error('Error updating appointment. Please try again.', {
-                  position: "top-center",
-                  autoClose: 5000, // Auto close the toast after 5 seconds
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                });
+                logError('Error updating appointment. Please try again.')
             }
         })
         .catch(error => {
-            console.error('Error updating appointment details:', error);
-            toast.error('An unexpected error occurred. Please try again later.', {
-              position: "top-center",
-              autoClose: 5000, // Auto close the toast after 5 seconds
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
+          logError('An unexpected error occurred. Please try again later.')
         });
       }
     },
@@ -423,52 +307,20 @@ function Main() {
           "GuestNotes": null,
           "Duration": newDurationInMinutes,
         };
-    
-        axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", appointmentData, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${btoa('testvdit:testvdit')}`
-          }
-        })
-        .then(response => {
+        calendarRepository.updateAppointment(appointmentData).then(response => {
           if (response.status === 200) {
-            toast.success('Appointment updated successfully', {
-              position: "top-center",
-              autoClose: 3000, // Auto close the toast after 3 seconds
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
+            logSuccess('Appointment updated successfully')
             setAppointmentChange(prev => !prev)
           } else {
-            console.error("Error updating appointment. Server returned:", response.status, response.statusText);
-            toast.error('Error updating appointment. Please try again.', {
-              position: "top-center",
-              autoClose: 5000, // Auto close the toast after 5 seconds
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
+            logError('Error updating appointment. Please try again.')
           }
         })
         .catch(error => {
-          console.error('Error updating appointment details:', error);
-          toast.error('An unexpected error occurred. Please try again later.', {
-            position: "top-center",
-            autoClose: 5000, // Auto close the toast after 5 seconds
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-          });
+          logError('An unexpected error occurred. Please try again later.')
         });
       }
     },
     
-  
-  
     resources: staffData
     ? staffData.map((staff) => ({
         id: String((staff as { StaffID: number }).StaffID),
@@ -479,7 +331,6 @@ function Main() {
     select: handleSlotClicked
   }
 
-  
   const handleDateChange = (date: Date) => {
     setDate(date);
     // Use calendarRef to access FullCalendar instance and navigate to the selected date
@@ -491,7 +342,6 @@ function Main() {
   };
 
   const nextDay = () => {
-
     if (calendarRef.current) {
       calendarRef.current.getApi().next();
       const currentDate = calendarRef.current.getApi().view.currentStart;
@@ -499,7 +349,6 @@ function Main() {
       fetchAppoinmentApiData(currentDate)
     }
   };
-
 
   const prevDay = () => {
     if (calendarRef.current) {
@@ -519,11 +368,9 @@ function Main() {
     }
   };
 
-
   const closeModal = () => {
     setSlotSlideoverPreview(false)
   }
-
 
   const handleClose = () => {
     setSlotSlideoverPreview(false);
@@ -532,7 +379,6 @@ function Main() {
   const handleCloseEventSlide = () => {
     setExistingInformationSlide(false);
   };
-
 
   return (
     <div  className="full-calendar">
@@ -562,7 +408,6 @@ function Main() {
               </>
             )}
       </PreviewComponent>
-
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
@@ -580,15 +425,10 @@ function Main() {
         theme="colored"
         pauseOnHover
        transition={Flip}
-
       />
-      
     </div>
-    
   );
 }
-
-
 
 export default Main;
 

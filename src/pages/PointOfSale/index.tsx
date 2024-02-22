@@ -30,8 +30,6 @@ function Main() {
   const [servicesCategory, setServicesCategory] = useState<any>([])
   const [services, setServices] = useState<any>([])
   const [fullServices, setFullServices] = useState<any>([])
-  // const [billDetails, setBillDetails] = useState<any>([])
-  // const [totalPrice, setTotalPrice] = useState<any>([])
 
   const createTicketRef = useRef(null);
   const addItemRef = useRef(null);
@@ -79,12 +77,23 @@ function Main() {
   }
 
   useEffect(() => {
-    const commonServices = servicesCategory.filter((category: any) =>
+    if (fullServices !== null && servicesCategory !== null) {
+      const commonServices = servicesCategory.filter((category: any) =>
       fullServices.some((service: any) => service.CategoryID === category.CategoryID)
     )
-    setServicesCategory(commonServices)
+      setServicesCategory(commonServices)
+    } else {
+      setServicesCategory([])
+    }
     showListCat()
   }, [fullServices]);
+
+  useEffect(() => {
+    const filtered = fullServices.filter((service: any) =>
+      service.ProductName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+  setFullServices(filtered)
+  }, [searchValue])
 
   const showListCat = () => {
     if (servicesCategory.length > 0) {
@@ -156,7 +165,7 @@ function Main() {
             <div  key={StaffID} 
                   onClick={(event) => {
                     event.preventDefault();
-                    getListStaffService(StaffID)
+                    getListStaffService(staff.StaffID)
                   }}
                   className="col-span-12 p-5 cursor-pointer border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white sm:col-span-4 2xl:col-span-3 box zoom-in">
                 <div className="text-base font-medium">{staff.StaffName}</div>

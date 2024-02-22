@@ -8,26 +8,21 @@ import {
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import { Key, useEffect, useRef, useState } from "react";
-import { Link } from 'react-router-dom';
 import 'flatpickr/dist/themes/dark.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import ServiceCard from "../ServiceCard";
-import CustomerCard from "../CustomerCard";
+import ServiceCard from "../../components/ServiceCard";
+import CustomerCard from "../../components/CustomerCard";
 import React from "react";
 import axios from 'axios';
 import calendarRepository from "../../repositories/calendarRepository";
-import { useNavigate } from 'react-router-dom';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
-import Dropzone from "dropzone";
-import { CheckboxToggle } from "react-rainbow-components";
-import { Phone } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 import { RootState } from "../../stores/store";
 import moment from "moment";
-import { setScheduleData } from '../../stores/appoinmentSlice';
 import customerRepository from "../../repositories/customerRepository";
+import { logError } from "../../constant/log-error";
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -63,7 +58,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
     const dispatch = useDispatch()
     const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
-    const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -102,18 +96,15 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         console.log('lấy thông tin của redux',selectedServices);
       }, [selectedServices]);
     
-    
     const calculateTotal = () => {
         if (!selectedServices || selectedServices.length === 0) {
           return 0; // Return 0 if selectedServices is null, undefined, or empty
         }
-      
         return selectedServices.reduce((total: any, service: { Price: any; }) => {
           const price = service.Price || 0; // Default to 0 if Price is null or undefined
           return total + price;
         }, 0);
       };
-      
       
     const openSearchClient = async () => {
         // Reset the selected customer when opening the search client
@@ -274,16 +265,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           SMSConsent: true,
         };
       
-        const apiURL = "https://beautyapi.vdit.co.uk/v1/AddCustomer";
-      
-        const headers = {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa('testvdit:testvdit')}`
-        };
-      
-        axios.post(apiURL, requestBody, { headers })
-          .then(response => {
-            console.log(response.data); // Handle success response
+        customerRepository.addCustomer(requestBody).then(response => {
             setSelectedCustomer(response.data);
 
             // Show success toast
@@ -295,7 +277,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             setMobileNumber("")
           })
           .catch(error => {
-            console.error('Error adding client:', error);
+            logError('Error adding client: ' + `${error}`);
             // Handle error
           });
       };
@@ -410,7 +392,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                             Search service
                             </h2>
                             <Button className="border-none shadow-none" onClick={closeServicesList}>
-                                    <Lucide icon="ArrowLeft"/>
+                              <Lucide icon="ArrowLeft"/>
                             </Button>
                         </Slideover.Title>
                         <Slideover.Description className="text-center">
@@ -437,11 +419,10 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                 )}
                             </div>
                             </div>
-                            {serviceData.Services && serviceData.Services
+                            {serviceData && serviceData
                             .filter((service: { ProductName: string }) =>
                                 service.ProductName.toLowerCase().startsWith(searchValueService.toLowerCase())
                             )
-                            .slice(0, 5) // Display only the first 5 results
                             .map((service: { ProductID: string }) => (
                                 <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
                             ))}
