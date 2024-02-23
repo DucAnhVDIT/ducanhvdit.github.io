@@ -9,50 +9,25 @@ import { CalendarOptions } from "@fullcalendar/common";
 import {
   PreviewComponent,
   Preview,
-  Source,
-  Highlight,
 } from "../../base-components/PreviewComponent";
 import { useState, useRef, SetStateAction, useEffect, JSXElementConstructor, ReactElement, ReactNode, useCallback } from "react";
-import { DatePicker, ButtonGroupPicker, ButtonOption, Input, ButtonMenu, Picklist, CounterInput, Textarea, WeekDayPicker, CheckboxToggle, Application } from 'react-rainbow-components';
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
-import { Menu, Slideover, Dialog } from "../../base-components/Headless";
-import {
-  FormLabel,
-  FormSwitch,
-  FormInput,
-  FormSelect,
-} from "../../base-components/Form";
 import moment from 'moment';
-import dayjs from "dayjs";
-import RequireLocks from "../../components/RequireLocks";
-import AppointmentStatus from "../../components/Status";
-import FloatingActionButtons from "../../components/FloatingButtons";
-import TippyContent from "../../base-components/TippyContent";
 import { FaSleigh, FaStar } from "react-icons/fa";
 import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "./sideSlide";
-import DatePickerMUI from "../../components/DatePicker";
 import CustomDatePicker from "../../components/DatePicker";
-import ExistingInfo from "../../components/ExistingInfo";
+import ExistingInfo from "./existingInfo";
 import "./styles.css"
 import ReactDOM from "react-dom";
 import calendarRepository from "../../repositories/calendarRepository";
-import axios from "axios";
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setScheduleData } from '../../stores/appoinmentSlice';
 import eposRepository from "../../repositories/eposRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 
-
-
-interface Staff {
-  StaffID: number;
-  StaffName: string;
-  StaffColour: string | null;
-}
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -60,12 +35,9 @@ function Main() {
   const [existingInformationSlide, setExistingInformationSlide] = useState(false);
   const [selectedTime, setSelectedTime] = useState("");
   const calendarRef = useRef<FullCalendar | null>(null);
-  const [counter, setCounter] = useState<number | undefined>(undefined);
   const [resourceTitle, setResourceTitle] = useState("");
   const [resourceID, setResourceID] = useState("");
-  const [calendarEvents, setCalendarEvents] = useState<any[]>([]);
   const [staffData, setStaffData] = useState([]);
-  // const [scheduleData, setScheduleData] = useState<any[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false)
@@ -98,16 +70,11 @@ function Main() {
     setSlotSlideoverPreview(true);
   };
 
-  const handleCancel = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    setSlotSlideoverPreview(false)
-  }
-
   const handleEventClick = async (info: { event: any }) => {
     try {
       const appointmentID = info.event.extendedProps.ID; // Replace 'id' with the actual property name
-      await calendarRepository.getAppointment(appointmentID).then((res: any) => {
-        setSelectedAppointment(res.data);
+      await calendarRepository.getSingleAppointment(appointmentID).then((res: any) => {
+        setSelectedAppointment(res.data.Appointment);
         setExistingInformationSlide(true);
       })
     } catch (error) {
@@ -119,7 +86,7 @@ function Main() {
       try {
         const data = date ? Math.floor(date.getTime() / 1000) : null
         await calendarRepository.getAppointment(data).then((res: any) => {
-          const appointmentsArray = res.Appointments || [];
+          const appointmentsArray = res.data.Appointments || [];
           if (appointmentsArray.length > 0) {
             setScheduleData(appointmentsArray);
             dispatch(setScheduleData(appointmentsArray));
@@ -251,7 +218,6 @@ function Main() {
           // Extracting relevant data for the request
           const appointmentData = {
               ID: info.event.extendedProps.ID,
-              business_id: "20160908110055249272",
               FirstName: info.event.extendedProps.firstName,
               LastName: info.event.extendedProps.lastName,
               Mobile: info.event.extendedProps.Mobile,
@@ -292,20 +258,19 @@ function Main() {
 
         // Extracting relevant data for the request
         const appointmentData = {
-          "ID": info.event.extendedProps.ID,
-          "business_id": "20160908110055249272",
-          "FirstName": info.event.extendedProps.firstName,
-          "LastName": info.event.extendedProps.lastName,
-          "Mobile": info.event.extendedProps.Mobile,
-          "Email": "",
-          "BookDate": info.event.extendedProps.bookDate,
-          "StartTime": newStartTime,
-          "ServiceID": info.event.extendedProps.serviceID,
-          "StaffID": info.event.extendedProps.resourceId,
-          "Islocked": false,
-          "CustomerNote": "",
-          "GuestNotes": null,
-          "Duration": newDurationInMinutes,
+          ID: info.event.extendedProps.ID,
+          FirstName: info.event.extendedProps.firstName,
+          LastName: info.event.extendedProps.lastName,
+          Mobile: info.event.extendedProps.Mobile,
+          Email: "",
+          BookDate: info.event.extendedProps.bookDate,
+          StartTime: newStartTime,
+          ServiceID: info.event.extendedProps.serviceID,
+          StaffID: info.event.extendedProps.resourceId,
+          Islocked: false,
+          CustomerNote: "",
+          GuestNotes: null,
+          Duration: newDurationInMinutes,
         };
         calendarRepository.updateAppointment(appointmentData).then(response => {
           if (response.status === 200) {

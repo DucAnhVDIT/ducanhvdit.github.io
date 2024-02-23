@@ -3,6 +3,7 @@ import { useAuth } from '../services/AuthContext'
 import { dataUser } from '../types/user'
 
 const getAppointment = '/GetAppointments'
+const getSingleAppointment = '/GetAppointment'
 const addNew = '/AddNewAppointment'
 const updateAppointment = '/UpdateAppointment'
 const getStaff = '/GetStaff'
@@ -17,12 +18,19 @@ export default {
     })
   },
 
+  getSingleAppointment(payload: any) {
+    return Repository.post(`${getSingleAppointment}`, {
+      business_id: fakeID,
+      id: payload,
+    })
+  },
+
   addAppointment(payload: any) {
-    return Repository.post(`${addNew}`, payload)
+    return Repository.post(`${addNew}`, { ...payload, business_id: fakeID })
   },
 
   updateAppointment(payload: any) {
-    return Repository.post(`${updateAppointment}`, payload)
+    return Repository.post(`${updateAppointment}`, { ...payload, business_id: fakeID })
   },
 
   getStaff(payload: any) {

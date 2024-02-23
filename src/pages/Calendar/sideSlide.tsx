@@ -156,7 +156,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
       };
 
       const newAppointmentRequest = {
-        business_id: "20160908110055249272",
         FirstName: selectedCustomer?.FirstName || "",
         LastName: selectedCustomer?.LastName || "",
         Mobile: selectedCustomer?.Mobile || "",
@@ -254,7 +253,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           }
 
         const requestBody = {
-          business_id: "20160908110055249272",
           FirstName: firstName,
           LastName: lastName,
           Mobile: mobileNumber,
@@ -308,7 +306,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                   <Slideover.Description>
 
                     {/* Begin Add Client Button */}
-                    <Button className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
+                    <div className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
                         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y border-2 border-black rounded-lg w-full ">
                             <div
                             className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
@@ -339,10 +337,10 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                             </div>
                         </div>
                     </div>
-                    </Button>
+                    </div>
                     
                     {/* Begin Add Services */}
-                    <Button className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
+                    <div className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
                         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
                             <div
                             className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
@@ -365,7 +363,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                             </div>
                         </div>
                     </div>
-                    </Button>
+                    </div>
 
                     <div className="selected-services">
                     <div className="selected-services">
@@ -419,7 +417,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                             </div>
                             {serviceData && serviceData
                             .filter((service: { ProductName: string }) =>
-                                service.ProductName.toLowerCase().startsWith(searchValueService.toLowerCase())
+                                service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
                             )
                             .map((service: { ProductID: string }) => (
                                 <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
@@ -468,7 +466,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                 </div>
 
                                 <div className="mt-3">
-                                    <Button className="items-center justify-center text-center border-none shadow-none">
+                                    <div className="items-center justify-center text-center border-none shadow-none">
                                         <Button onClick={handleOpenAddClient} className="items-center justify-center text-center border-none shadow-none">
                                         <Lucide
                                             icon="PlusCircle"
@@ -476,7 +474,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                         />
                                         <h1>Add new client</h1>
                                         </Button>
-                                    </Button>
+                                    </div>
 
                                     {/* Display the list of customers based on search criteria */}
                                     {filteredCustomers.slice(0, visibleCustomers).map((customer: { CustomerID: Key | null | undefined; }) => (

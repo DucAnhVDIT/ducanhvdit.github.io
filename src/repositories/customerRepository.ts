@@ -20,6 +20,6 @@ export default {
   },
 
   addCustomer(payload: any) {
-    return Repository.post(`${addCustomer}`, payload)
+    return Repository.post(`${addCustomer}`, { ...payload, business_id: businessID })
   },
 }

@@ -5,12 +5,14 @@ import Lucide from "../../base-components/Lucide";
 import 'flatpickr/dist/themes/dark.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import React from 'react'
-import ServiceCard from "../ServiceCard";
-import CustomerCard from "../CustomerCard";
+import ServiceCard from "../../components/ServiceCard";
+import CustomerCard from "../../components/CustomerCard";
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteAppointment } from '../../stores/appoinmentSlice';
 import axios from "axios";
 import { toast } from "react-toastify";
+import calendarRepository from "../../repositories/calendarRepository";
+import { logError, logSuccess } from "../../constant/log-error";
 
 
 interface SlideOverPanelProps {
@@ -24,8 +26,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
 
   const dispatch = useDispatch();
 
-  console.log('appointment Data', appointmentData)
-
   const scheduleData = useSelector((state: any) => state.scheduleData);
 
   const handleDeleteAppointment = () => {
@@ -35,39 +35,16 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
     console.log(appointmentData.StatusID)
 
     const deleteAppointmentBody = {
-      "ID": appointmentData.ID,
-      "business_id": "20160908110055249272",
-      "StatusID": 6
+      ID: appointmentData.ID,
+      StatusID: 6
     }
-
-    axios.post("https://beautyapi.vdit.co.uk/v1/UpdateAppointment", deleteAppointmentBody, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${btoa('testvdit:testvdit')}`
-      }
-    })
-    .then(res => {
+    calendarRepository.updateAppointment(deleteAppointmentBody).then(res => {
       if (res.status === 200) {
         console.log("Deleted appointment")
         onClose()
-        toast.success('Deleted appointment', {
-          position: "top-center",
-          autoClose: 3000, // Auto close the toast after 3 seconds
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        logSuccess('Deleted appointment')
       } else {
-        console.error("Error updating  Server returned:", res.status, res.statusText);
-        toast.error('Can not delete appointment', {
-          position: "top-center",
-          autoClose: 3000, // Auto close the toast after 3 seconds
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        logError('Can not delete appointment')
       }
     })
     .catch(err => {
