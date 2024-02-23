@@ -77,12 +77,12 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             );
           })
         : [];
+
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         // setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
         console.log('add service vào redux',selectedServices)
         dispatch(addService(selectedService))
-
         setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
         setServiceSlideoverOpen(false);
     };
@@ -156,12 +156,12 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
       };
 
       const newAppointmentRequest = {
-        "business_id": "20160908110055249272",
-        "FirstName": selectedCustomer?.FirstName || "",
-        "LastName": selectedCustomer?.LastName || "",
-        "Mobile": selectedCustomer?.Mobile || "",
-        "Email": selectedCustomer?.Email || "",
-        "Appointments": [] as Appointment[],
+        business_id: "20160908110055249272",
+        FirstName: selectedCustomer?.FirstName || "",
+        LastName: selectedCustomer?.LastName || "",
+        Mobile: selectedCustomer?.Mobile || "",
+        Email: selectedCustomer?.Email || "",
+        Appointments: [] as Appointment[],
       };
       interface Appointment {
         BookDate: string;
@@ -181,15 +181,15 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
 
             const newAppointment : Appointment = {
-                "BookDate": date,
-                "StartTime": previousEndTime, // Use the end time of the previous service
-                "EndTime": serviceEndTime,
-                "ServiceID": service.ProductID,
-                "StaffID": resourceID,
-                "Deposit": 0,
-                "Islocked": false,
-                "CustomerNote": "",
-                "CompanyNote": null,
+                BookDate: date,
+                StartTime: previousEndTime, // Use the end time of the previous service
+                EndTime: serviceEndTime,
+                ServiceID: service.ProductID,
+                StaffID: resourceID,
+                Deposit: 0,
+                Islocked: false,
+                CustomerNote: "",
+                CompanyNote: null,
             };
 
             newAppointmentRequest.Appointments.push(newAppointment);
@@ -221,7 +221,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           
             calendarRepository.addAppointment(newAppointmentRequest)
               .then((res) => {
-                console.log(res);
                 showAppointmentToast('Appointment added successfully');
                 handleAppoinmentChange(prev => !prev);
                 onClose();
@@ -267,7 +266,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
       
         customerRepository.addCustomer(requestBody).then(response => {
             setSelectedCustomer(response.data);
-
             // Show success toast
             showAppointmentToast('Client added successfully');
             setAddCustomerSlideOpen(false)

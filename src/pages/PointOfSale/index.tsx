@@ -34,48 +34,34 @@ function Main() {
   const createTicketRef = useRef(null);
   const addItemRef = useRef(null);
   
+  // open page, show list of Staffs
+  useEffect(() => {
+    getStaff()
+  }, [])
+
   const getStaff = () => {
     eposRepository.getStaff().then((res: any) => {
       setStaff(res.data.Staffs)
     })
   }
 
-  const getServicesCategory = async () => {
-    try {
-      await eposRepository.getServicesCategory().then((res: any) => {
-        setServicesCategory(res.data.Categories)
-      })
-    } catch (err) {
-
-    }
-  }
-
-  const getFullServices = async (staffID: number, catID: number) => {
-    try {
-      await eposRepository.getServices(staffID, catID).then((res: any) => {
-        setFullServices(res.data.Services)
-      })
-    } catch (err) {
-
-    }
-  }
-
-  const getServices = (CatID: number) => {
-    setCategoryHidden(true)
-    setServiceHidden(false)
-    const sameCat = fullServices.filter((item: any) => item.CategoryID === CatID)
-    setServices(sameCat)
-  }
-
+  // call API list what Staff can do and show them
   const getListStaffService = async (staffID: number) => {
     try {
       await getServicesCategory()
       await getFullServices(staffID, 0)
-    } catch (err) {
-
-    }
+    } catch (err) {}
   }
 
+  // come back to list Staffs
+  const clickStaffButton = () => {
+    setStaffHidden(false)
+    setListHidden(true)
+    setCategoryHidden(true)
+    setServiceHidden(true)
+  }
+
+  // filter category have in service list, map and display when fullService being called
   useEffect(() => {
     if (fullServices !== null && servicesCategory !== null) {
       const commonServices = servicesCategory.filter((category: any) =>
@@ -88,13 +74,31 @@ function Main() {
     showListCat()
   }, [fullServices]);
 
-  useEffect(() => {
-    const filtered = fullServices.filter((service: any) =>
-      service.ProductName.toLowerCase().includes(searchValue.toLowerCase())
-    );
-  setFullServices(filtered)
-  }, [searchValue])
+  //get list Category
+  const getServicesCategory = async () => {
+    try {
+      await eposRepository.getServicesCategory().then((res: any) => {
+        setServicesCategory(res.data.Categories)
+      })
+    } catch (err) {}
+  }
+  // get list Full service
+  const getFullServices = async (staffID: number, catID: number) => {
+    try {
+      await eposRepository.getServices(staffID, catID).then((res: any) => {
+        setFullServices(res.data.Services)
+      })
+    } catch (err) {}
+  }
+  // get service from Category without need to call API
+  const getServices = (CatID: number) => {
+    setCategoryHidden(true)
+    setServiceHidden(false)
+    const sameCat = fullServices.filter((item: any) => item.CategoryID === CatID)
+    setServices(sameCat)
+  }
 
+  // show list Category else show list Staff
   const showListCat = () => {
     if (servicesCategory.length > 0) {
       setStaffHidden(true)
@@ -108,34 +112,42 @@ function Main() {
       setServiceHidden(true)
     }
   }
-
-  const clickStaffButton = () => {
-    setStaffHidden(false)
-    setListHidden(true)
-    setCategoryHidden(true)
-    setServiceHidden(true)
-  }
-
+  // back button to show list Category
   const clickBackButton = () => {
     setCategoryHidden(false)
     setServiceHidden(true)
   }
 
+  // display search value when typing in search box
   useEffect(() => {
-    getStaff()
-  }, [])
+    // if there word in search box
+    if (searchValue.length > 0) {
+      const filtered = fullServices.filter((service: any) =>
+        service.ProductName.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setServices(filtered)
+      setCategoryHidden(true)
+      setServiceHidden(false)
+      // else display Category again
+    } else {
+      const commonServices = servicesCategory.filter((category: any) =>
+        fullServices.some((service: any) => service.CategoryID === category.CategoryID)
+      )
+      setServicesCategory(commonServices)
+      showListCat()
+    }
+  }, [searchValue])
   
+  // display ticket bill details using redux
   const billDetails = useSelector((state: any) => state.bill.billItems)
-
   const totalPrice = useSelector((state: any) => state.bill.totalPrice)
-  
+  // add item to bill with redux
   const addItem = (data: any) => {
     dispatch(addToBill(data))
   }
-
+  // clear the bill
   const handleNewOrderClick = (event: React.MouseEvent) => {
     event.preventDefault();
-    // setNewOrderModal(true);
     dispatch(clearBill())
   }
 
