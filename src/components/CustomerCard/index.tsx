@@ -37,13 +37,13 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
                 <div className="p-1 ml-auto">
                 <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-white bg-primary ${backgroundColor}`}>
                     {/* Display the initial in the center of the circle */}
-                    <span className="text-lg">{getInitials(customer.FirstName)}</span>
+                    <span className="text-lg">{getInitials(customer.FirstName || customer.CustomerName)}</span>
                     </div>
                 </div>
 
                 {/* Customer details on the right (moved to the far right) */}
                 <div className="p-1 ml-3 flex flex-col items-start">
-                    <h1 className="text-sm font-bold">{customer.FirstName} <span>- {customer.Mobile}</span></h1>
+                    <h1 className="text-sm font-bold">{customer.FirstName || customer.CustomerName} <span>- {customer.Mobile}</span></h1>
                     <div className='flex flex-row justify-between'>
                       {/* <p className="text-xs">{customer.Mobile}</p> */}
                       <p className="text-xs">{customer.Email}</p>

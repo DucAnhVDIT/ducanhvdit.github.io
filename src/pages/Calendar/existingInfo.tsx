@@ -4,7 +4,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import 'flatpickr/dist/themes/dark.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import React, { useState } from 'react'
+import React, { Key, useState } from 'react'
 import ServiceCard from "../../components/ServiceCard";
 import CustomerCard from "../../components/CustomerCard";
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import calendarRepository from "../../repositories/calendarRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 import StatusButtons from "../../components/StatusButton";
+import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 
 
 interface SlideOverPanelProps {
@@ -29,6 +30,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   const dispatch = useDispatch();
 
   const scheduleData = useSelector((state: any) => state.scheduleData);
+  const selectedServices = useSelector((state: any) => state.serviceListState.selectedServices);
 
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
@@ -80,6 +82,11 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
   }
 
+  const handleServiceDelete = (selectedService: any) => {
+    dispatch(deleteService(selectedService.ProductID));
+    console.log("deleted")
+};
+
 
   if (!appointmentData) {
     // Handle the case when appointmentData is null
@@ -117,18 +124,60 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-                      <div
+                      {/* <div
                           style={{
                               backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
-                              padding: '30px',
+                              padding: '20px',
+                              borderRadius:"20px"
                           }}
                           className="flex justify-between p-0"
                       >
                           <h1 className="text-2xl text-white">{appointmentData.StatusName}</h1>
                           <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
+                      </div> */}
+
+                      <Button className="border-none bg-transparent w-full shadow-none cursor-pointer-none">
+                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
+                        <div
+                          className="col-span-12 sm:col-span-4 2xl:col-span-3 box zoom-in"
+                          style={{ position: 'relative', zIndex: 1 }}
+                        >
+                          <div
+                              style={{
+                                  backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
+                                  padding: '20px',
+                                  borderRadius:"20px"
+                              }}
+                              className="flex justify-between p-0"
+                          >
+                              <h1 className="text-2xl text-white">{appointmentData.StatusName}</h1>
+                              <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
+                          </div>
+                        </div>
                       </div>
+                    </Button>
 
                     {/* <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p> */}
+
+                    <div className="">
+
+                      {/* <p>{`Customer Name: ${appointmentData.ServiceName !== null ? appointmentData.ServiceName : 'null'}`}</p>
+                      <p>{`Customer Name: ${appointmentData.Duration !== null ? appointmentData.Duration : 'null'}`}</p> */}
+
+                      <CustomerCard customer={appointmentData} onClick={() => {}}/>
+                      <ServiceCard
+                            service={appointmentData}
+                            onSelect={handleServiceDelete}
+                      />
+                    
+                    {/* {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
+                        <ServiceCard
+                            key={selectedService.ProductID}
+                            service={selectedService}
+                            onSelect={handleServiceDelete}
+                        />
+                    ))} */}
+                    </div>
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}

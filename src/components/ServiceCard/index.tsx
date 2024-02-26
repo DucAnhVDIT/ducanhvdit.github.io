@@ -17,7 +17,7 @@ const ServiceCard = ({ service, onSelect }: { service: any, onSelect: (service: 
             <div className="p-1 flex justify-between items-start">
               <div className="flex flex-start">
                 <div className="p-2 flex flex-col">
-                  <h1 className="text-sm leading-tight text-left">{`${service.ProductName || 'Loading...'}`}</h1>
+                  <h1 className="text-sm leading-tight text-left">{`${service.ProductName || service.ServiceName}`}</h1>
                   <h1 className="text-xs item text-left text-silver">{`${service.Duration || 'Loading...'} mins`}</h1>
                   <h1 className="text-xs item text-left text-silver">{`${service.Description || ''} `}</h1>
                 </div>

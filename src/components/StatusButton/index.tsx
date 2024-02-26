@@ -19,7 +19,7 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
   ];
 
   return (
-    <div className="relative inline-block">
+    <div>
     {/* <select
       value={selectedStatus}
       placeholder='Change status'
@@ -33,7 +33,6 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
         </option>
       ))}
     </select> */}
-
     <Select
           value={null}
           options={statusOptions}
@@ -42,7 +41,8 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
           styles={{
             control: (provided) => ({
               ...provided,
-              border:'none',
+              border:'0',
+              boxShadow: 'none',
               backgroundColor: 'var(--primary)',
               // paddingRight: '8px', // Adjust the paddingRight to reduce space
             }),
@@ -53,6 +53,7 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
               ':hover': {
                 backgroundColor: 'lightgrey', 
               },
+              zIndex: 2
             }),
             placeholder: (provided: any) => ({
               ...provided,
@@ -70,8 +71,7 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
           }}
           isSearchable={false}
         />
-
-  </div>
+   </div>
 
   );
 };
