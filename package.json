@@ -53,6 +53,7 @@
     "react-rainbow-components": "^1.32.0",
     "react-redux": "^9.0.4",
     "react-router-dom": "6",
+    "react-select": "^5.8.0",
     "react-spring": "^9.7.3",
     "react-toastify": "^10.0.1",
     "react-transition-group": "^4.4.5",

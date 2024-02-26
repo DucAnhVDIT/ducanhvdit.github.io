@@ -1,4 +1,6 @@
+
 import React, { useState } from 'react';
+import Select from 'react-select';
 
 interface StatusButtonsProps {
     selectedStatus: number; 
@@ -7,36 +9,69 @@ interface StatusButtonsProps {
 
 const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectStatus }) => {
   const statusOptions = [
-    // { id: 0, label: 'Not Confirmed' },
-    { id: 1, label: 'Confirmed' },
-    // { id: 2, label: 'Left Message' },
-    // { id: 3, label: 'No Answer' },
-    // { id: 4, label: 'Wrong Number' },
-    { id: 5, label: 'Late' },
-    { id: 6, label: 'Canceled' },
-    { id: 7, label: 'No Show' },
-    { id: 8, label: 'Arrive' },
-    { id: 9, label: 'Served' },
-    { id: 10, label: 'Done' },
-    // { id: 11, label: 'Canceled2' },
+    { value: 1, label: 'Confirmed' },
+    { value: 5, label: 'Late' },
+    { value: 6, label: 'Canceled' },
+    { value: 7, label: 'No Show' },
+    { value: 8, label: 'Arrive' },
+    { value: 9, label: 'Served' },
+    { value: 10, label: 'Done' },
   ];
 
   return (
-    <div className="relative inline-block w-40">
-    <select
-        value={selectedStatus}
-        placeholder='Change status'
-        onChange={(e) => onSelectStatus(Number(e.target.value))}
-        className="block appearance-none w-full bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 leading-tight focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+    <div className="relative inline-block">
+    {/* <select
+      value={selectedStatus}
+      placeholder='Change status'
+      onChange={(e) => onSelectStatus(Number(e.target.value))}
+      className="block appearance-none w-full bg-white border border-gray-300 rounded-md py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-primary focus:ring focus:ring-primary"
     >
-        <option value="" disabled hidden>Change status</option>
-        {statusOptions.map((status) => (
-            <option key={status.id} value={status.id}>
-                {status.label}
-            </option>
-        ))}
-    </select>
-</div>
+      <option value="" disabled hidden>Change status</option>
+      {statusOptions.map((status) => (
+        <option key={status.id} value={status.id} className="bg-white text-gray-800">
+          {status.label}
+        </option>
+      ))}
+    </select> */}
+
+    <Select
+          value={null}
+          options={statusOptions}
+          placeholder="Change status"
+          onChange={(selectedOption) => onSelectStatus(selectedOption?.value ?? 0)}
+          styles={{
+            control: (provided) => ({
+              ...provided,
+              border:'none',
+              backgroundColor: 'var(--primary)',
+              // paddingRight: '8px', // Adjust the paddingRight to reduce space
+            }),
+            option: (provided, state) => ({
+              ...provided,
+              backgroundColor: state.isSelected ? 'var(--primary-light)' : 'white',
+              color: state.isSelected ? 'grey' : 'var(--text-color)',
+              ':hover': {
+                backgroundColor: 'lightgrey', 
+              },
+            }),
+            placeholder: (provided: any) => ({
+              ...provided,
+              color: 'white',
+              fontSize:16
+            }),
+            dropdownIndicator: (provided) => ({
+              ...provided,
+              color: 'white',
+              // paddingRight: "20px"
+            }),
+            indicatorSeparator: () => ({
+              display: 'none', 
+            }),
+          }}
+          isSearchable={false}
+        />
+
+  </div>
 
   );
 };
