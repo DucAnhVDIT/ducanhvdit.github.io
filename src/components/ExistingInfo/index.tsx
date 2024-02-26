@@ -113,8 +113,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
                   <Slideover.Description>
                     <CustomerCard key={appointmentData.CustomerID} customer={appointmentData} onClick={() =>{}} />
                     {/* <ServiceCard key={serviceData.ProductID} service={service} onSelect={handleServiceSelect}/> */}
-                    <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p>
-                    <p>{`Service Name: ${appointmentData.ServiceName !== null ? appointmentData.ServiceName : 'null'}`}</p>
+                    {/* <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p>
+                    <p>{`Service Name: ${appointmentData.ServiceName !== null ? appointmentData.ServiceName : 'null'}`}</p> */}
+                    <p>{`Status: hello`}</p>
 
                   </Slideover.Description>
                   {/* END: Slide Over Body */}

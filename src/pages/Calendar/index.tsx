@@ -41,17 +41,31 @@ function Main() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false)
+  const [selectedStaff, setSelectedStaff] = useState(null); // Initially, no staff is selected
+
 
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchAppoinmentApiData(date);  
+    fetchAppoinmentApiData(date);
   }, [appoinmentChange]);
 
   const handleAppoinmentChange = (value: boolean | ((prevState: boolean) => boolean)) => {
     setAppointmentChange(value);
   };
+
+  const handleStaffChange = (event: { target: { value: any; }; }) => {
+    const selectedStaffId = event.target.value;
+    setSelectedStaff(selectedStaffId);
+    console.log("sau khi chon tho",selectedStaff)
+  };
+
+  useEffect(() => {
+    // console.log('Selected Staff:', selectedStaff);
+    // ... rest of the useEffect logic
+  }, [selectedStaff, staffData, scheduleData]);
+  
 
   useEffect(() => {
     fetchStaffApiData();
@@ -90,6 +104,7 @@ function Main() {
           if (appointmentsArray.length > 0) {
             setScheduleData(appointmentsArray);
             dispatch(setScheduleData(appointmentsArray));
+            console.log("Thong tin cuoc hen ban dau",appointmentsArray)
           }
         })
       } catch (error) {
@@ -102,6 +117,7 @@ function Main() {
       try {
         await calendarRepository.getStaff(Math.floor(date.getTime() / 1000)).then((res: any) => {
           setStaffData(res.data.Staffs)
+          console.log(res.data.Staffs)
         })
       } catch (error) {
         // console.error('Error fetching the API:', error.message);
@@ -169,27 +185,33 @@ function Main() {
     contentHeight: 'auto',
     selectable: true,
     nowIndicator:true,
-    events: scheduleData
-    ? scheduleData.map((appointment: any) => ({
-        title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
-        start: (appointment as { StartTime: Date }).StartTime,
-        end: (appointment as { EndTime: Date }).EndTime,
-        resourceId: (appointment as { StaffID: string }).StaffID,
-        color: (appointment as { Colour: string }).Colour,
-        extendedProps: {
-          ID: (appointment as { ID: string }).ID,
+  events: scheduleData
+    ? scheduleData
+        .filter(
+          (appointment: any) =>
+            !selectedStaff || // Display all events if no staff is selected
+            String(appointment.resourceId) === String(selectedStaff)
+        )
+        .map((appointment: any) => ({
+          title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
+          start: (appointment as { StartTime: Date }).StartTime,
+          end: (appointment as { EndTime: Date }).EndTime,
           resourceId: (appointment as { StaffID: string }).StaffID,
-          firstName : (appointment as { FirstName: string }).FirstName,
-          lastName : (appointment as { LastName: string }).LastName,
-          Mobile : (appointment as { Mobile: string }).Mobile,
-          Duration : (appointment as { Duration: any }).Duration,
-          bookDate: (appointment as { BookDate: Date }).BookDate,
-          serviceName: (appointment as { ServiceName: string }).ServiceName,
-          serviceID: (appointment as { ServiceID: string }).ServiceID,
-          IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
-          IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
-        },
-      }))
+          color: (appointment as { Colour: string }).Colour,
+          extendedProps: {
+            ID: (appointment as { ID: string }).ID,
+            resourceId: (appointment as { StaffID: string }).StaffID,
+            firstName : (appointment as { FirstName: string }).FirstName,
+            lastName : (appointment as { LastName: string }).LastName,
+            Mobile : (appointment as { Mobile: string }).Mobile,
+            Duration : (appointment as { Duration: any }).Duration,
+            bookDate: (appointment as { BookDate: Date }).BookDate,
+            serviceName: (appointment as { ServiceName: string }).ServiceName,
+            serviceID: (appointment as { ServiceID: string }).ServiceID,
+            IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
+            IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
+          },
+        }))
     : [],
     eventDidMount: ({ el, event }) => {
       const iconContainer = document.createElement('div');
@@ -293,6 +315,8 @@ function Main() {
         staffColor: (staff as { StaffColour: string }).StaffColour || '', // Use staff color if available
       }))
     : [],
+    resourcesInitiallyExpanded: false,
+
     select: handleSlotClicked
   }
 
@@ -373,11 +397,30 @@ function Main() {
               </>
             )}
       </PreviewComponent>
+      <div>
+        <label htmlFor="staffDropdown">Select Staff:</label>
+        <select
+          id="staffDropdown"
+          onChange={handleStaffChange}
+          value={selectedStaff || ''}
+        >
+          <option value="">All Staff</option>
+          {staffData &&
+            staffData.map((staff) => (
+              <option
+                key={(staff as { StaffID: number }).StaffID}
+                value={String((staff as { StaffID: number }).StaffID)}
+              >
+                {(staff as { StaffName: string }).StaffName}
+              </option>
+            ))}
+        </select>
+      </div>
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
-      {existingInformationSlide && (<ExistingInfo  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
+      {existingInformationSlide && (<ExistingInfo handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
         position="top-center" 
         autoClose={3000} 

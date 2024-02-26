@@ -4,25 +4,27 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import 'flatpickr/dist/themes/dark.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import React from 'react'
+import React, { useState } from 'react'
 import ServiceCard from "../../components/ServiceCard";
 import CustomerCard from "../../components/CustomerCard";
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteAppointment } from '../../stores/appoinmentSlice';
+import { deleteAppointment, updateStatus } from '../../stores/appoinmentSlice';
 import axios from "axios";
 import { toast } from "react-toastify";
 import calendarRepository from "../../repositories/calendarRepository";
 import { logError, logSuccess } from "../../constant/log-error";
+import StatusButtons from "../../components/StatusButton";
 
 
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;
   appointmentData: any, 
+  handleAppoinmentChange: (value: boolean) => void;
 }
 
 
-function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps) {
+function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
 
@@ -31,8 +33,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
     dispatch(deleteAppointment(appointmentId));
-
-    console.log(appointmentData.StatusID)
 
     const deleteAppointmentBody = {
       ID: appointmentData.ID,
@@ -51,6 +51,35 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
       console.log(err)
     })
   }
+
+  const handleChangeStatus = (statusId: number) => {
+
+    const changeStatusBody = {
+      ID: appointmentData.ID,
+      StatusID: statusId
+    }
+
+    calendarRepository.updateAppointment(changeStatusBody).then(res => {
+      if (res.status === 200) {
+        console.log('API Response after update status', res);
+        onClose()
+        logSuccess('Updated status')
+            dispatch(updateStatus({
+                appointmentId: appointmentData.ID,
+                statusId,
+                color: appointmentData.Colour,
+            }));
+        handleAppoinmentChange(prev => !prev);
+      } else {
+        logError('Can not update appointment status')
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+
+  }
+
 
   if (!appointmentData) {
     // Handle the case when appointmentData is null
@@ -90,8 +119,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
                   <Slideover.Description>
                     <CustomerCard key={appointmentData.CustomerID} customer={appointmentData} onClick={() =>{}} />
                     {/* <ServiceCard key={serviceData.ProductID} service={service} onSelect={handleServiceSelect}/> */}
-                    <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p>
-                    <p>{`Service Name: ${appointmentData.ServiceName !== null ? appointmentData.ServiceName : 'null'}`}</p>
+                      <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p>
+                      <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
+                      {/* <p>{`Status: ${selectedStatus !== null ? selectedStatus : 'null'}`}</p> */}
 
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
