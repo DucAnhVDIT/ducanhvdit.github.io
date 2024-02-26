@@ -117,12 +117,18 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-                    <CustomerCard key={appointmentData.CustomerID} customer={appointmentData} onClick={() =>{}} />
-                    {/* <ServiceCard key={serviceData.ProductID} service={service} onSelect={handleServiceSelect}/> */}
-                      <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p>
-                      <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
-                      {/* <p>{`Status: ${selectedStatus !== null ? selectedStatus : 'null'}`}</p> */}
+                      <div
+                          style={{
+                              backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
+                              padding: '30px',
+                          }}
+                          className="flex justify-between p-0"
+                      >
+                          <h1 className="text-2xl text-white">{appointmentData.StatusName}</h1>
+                          <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
+                      </div>
 
+                    {/* <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p> */}
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}

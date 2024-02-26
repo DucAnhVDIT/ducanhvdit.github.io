@@ -26,15 +26,13 @@ const appointmentSlice = createSlice({
                     return {
                         ...appointment,
                         StatusID: statusId,
-                        Colour: color, // Include the color information in the state
+                        Colour: color,
                     };
                 }
                 return appointment;
             });
         
             console.log('Updated state:', state.scheduleData);
-        
-            // Return the updated state
         },
     }
 })
