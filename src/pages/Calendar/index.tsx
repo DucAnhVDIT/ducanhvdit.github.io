@@ -375,7 +375,7 @@ function Main() {
       <PreviewComponent className="mt-5 intro-y bg-transparent">
             {({ toggle }) => (
               <>
-                <div className="p-5">
+                <div className="">
                 <Preview>
                   <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
                     <Button className="text-sm sm:text-base text-white border-none shadow-none" onClick={prevDay}>

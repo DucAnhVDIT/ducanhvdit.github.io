@@ -15,6 +15,7 @@ import calendarRepository from "../../repositories/calendarRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 import StatusButtons from "../../components/StatusButton";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
+import { FormInput } from "../../base-components/Form";
 
 
 interface SlideOverPanelProps {
@@ -31,6 +32,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
   const scheduleData = useSelector((state: any) => state.scheduleData);
   const selectedServices = useSelector((state: any) => state.serviceListState.selectedServices);
+  const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
+  const [searchValueService, setSearchValueService] = useState("");
 
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
@@ -85,7 +88,14 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   const handleServiceDelete = (selectedService: any) => {
     dispatch(deleteService(selectedService.ProductID));
     console.log("deleted")
-};
+  };
+
+  const closeServicesList = () => {
+    setServiceSlideoverOpen(false)
+  }
+
+
+  
 
 
   if (!appointmentData) {
@@ -136,7 +146,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                           <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
                       </div> */}
 
-                      <Button className="border-none bg-transparent w-full shadow-none cursor-pointer-none">
+                     
                         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
                         <div
                           className="col-span-12 sm:col-span-4 2xl:col-span-3 box zoom-in"
@@ -150,12 +160,12 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                               }}
                               className="flex justify-between p-0"
                           >
-                              <h1 className="text-2xl text-white">{appointmentData.StatusName}</h1>
+                              <h1 className="text-2xl text-white mt-1">{appointmentData.StatusName}</h1>
                               <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
                           </div>
                         </div>
                       </div>
-                    </Button>
+
 
                     {/* <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p> */}
 
@@ -165,10 +175,73 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                       <p>{`Customer Name: ${appointmentData.Duration !== null ? appointmentData.Duration : 'null'}`}</p> */}
 
                       <CustomerCard customer={appointmentData} onClick={() => {}}/>
+
                       <ServiceCard
                             service={appointmentData}
                             onSelect={handleServiceDelete}
                       />
+                      <div className="items-center justify-center text-center border-none shadow-none">
+                          <Button onClick={() => {}} className="items-center justify-center text-center border-none shadow-none">
+                            <Lucide
+                              icon="PlusCircle"
+                                className="text-primary text-lg round mr-1"
+                            />
+                          <h1>Add more services</h1>
+                        </Button>
+                      </div>
+
+                      {/* Begin Service List */}
+                    {isServiceSlideoverOpen && (
+                    <Slideover open={isServiceSlideoverOpen} onClose={closeServicesList}>
+                        <Slideover.Panel>
+                        <Slideover.Title className="p-5">
+                            <h2 className="mr-auto font-bold text-2xl">
+                            Search service
+                            </h2>
+                            <Button className="border-none shadow-none" onClick={closeServicesList}>
+                              <Lucide icon="ArrowLeft"/>
+                            </Button>
+                        </Slideover.Title>
+                        <Slideover.Description className="text-center">
+                            <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
+                            <div className="relative text-slate-500">
+                                <FormInput
+                                type="text"
+                                className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                placeholder="Search by service name"
+                                value={searchValueService}
+                                onChange={(e) => setSearchValueService(e.target.value)}
+                                />
+                                {searchValueService ? (
+                                <Lucide
+                                    icon="XCircle"
+                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                    onClick={() => setSearchValueService("")}
+                                />
+                                ) : (
+                                <Lucide
+                                    icon="Search"
+                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                />
+                                )}
+                            </div>
+                            </div>
+                            {/* {serviceData && serviceData
+                            .filter((service: { ProductName: string }) =>
+                                service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
+                            )
+                            .map((service: { ProductID: string }) => (
+                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
+                            ))} */}
+                        </Slideover.Description>
+                        </Slideover.Panel>
+                    </Slideover>
+                    )}
+
+                    {/* End Service List */}
+
+
+
                     
                     {/* {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
                         <ServiceCard
@@ -184,6 +257,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                   <Slideover.Footer>
                     <Button className=" bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
+                    </Button>
+                    <Button className=" bg-primary text-white ml-3" onClick={()=>{}}>
+                      Submit
                     </Button>
                   </Slideover.Footer>
               </Slideover.Panel>
