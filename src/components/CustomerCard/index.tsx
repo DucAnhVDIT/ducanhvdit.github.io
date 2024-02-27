@@ -20,7 +20,7 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
     return names.map((name: string) => name[0]).join('');
   };
 
-  const borderColor = customer.CustomerCardID ? '#00A36D' : '#1E40AF';
+  const borderColor = customer.CustomerCardID || customer.CustomerName ? '#00A36D' : '#1E40AF';
   const backgroundColor = customer.CustomerCardID ? 'bg-[#00A36D]' : 'bg-primary';
 
   return (

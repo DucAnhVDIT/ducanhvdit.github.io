@@ -316,7 +316,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                 {selectedCustomer && selectedCustomer.FirstName ? (
                                 <div className="w-14 h-14 rounded-full p-3 bg-primary text-white flex items-center justify-center">
                                     <span className="text-lg">{getInitials(selectedCustomer.FirstName)}</span>
-                                </div>
+                                </div> 
                                 ) : (
                                 <Lucide icon="User" className="w-14 h-14 rounded-full p-3 bg-primary text-white" />
                                 )}

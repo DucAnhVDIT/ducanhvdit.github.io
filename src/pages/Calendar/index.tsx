@@ -24,7 +24,7 @@ import "./styles.css"
 import ReactDOM from "react-dom";
 import calendarRepository from "../../repositories/calendarRepository";
 import { useSelector, useDispatch } from 'react-redux';
-import { setScheduleData } from '../../stores/appoinmentSlice';
+import { setScheduleData, setAppointmentToCustomer } from '../../stores/appoinmentSlice';
 import eposRepository from "../../repositories/eposRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 
@@ -45,6 +45,7 @@ function Main() {
 
 
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
+  const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -102,9 +103,24 @@ function Main() {
         await calendarRepository.getAppointment(data).then((res: any) => {
           const appointmentsArray = res.data.Appointments || [];
           if (appointmentsArray.length > 0) {
-            setScheduleData(appointmentsArray);
+            // Organize appointments by customerID
+            const appointmentsByCustomer: Record<string, any[]> = {};
+    
+            appointmentsArray.forEach((appointment: any) => {
+              const customerID = appointment.CustomerID;
+    
+              if (!appointmentsByCustomer[customerID]) {
+                appointmentsByCustomer[customerID] = [];
+              }
+    
+              appointmentsByCustomer[customerID].push(appointment);
+            });
+    
+            // setScheduleData(appointmentsArray);
             dispatch(setScheduleData(appointmentsArray));
-            console.log("Thong tin cuoc hen ban dau",appointmentsArray)
+            // console.log("Thong tin cuoc hen ban dau", appointmentsArray)
+            dispatch(setAppointmentToCustomer(appointmentsByCustomer));
+            console.log("Thong tin cuoc hen by ID", appointmentsByCustomer)
           }
         })
       } catch (error) {

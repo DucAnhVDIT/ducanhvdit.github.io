@@ -32,6 +32,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
   const scheduleData = useSelector((state: any) => state.scheduleData);
   const selectedServices = useSelector((state: any) => state.serviceListState.selectedServices);
+  const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
+
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
   const [searchValueService, setSearchValueService] = useState("");
 
@@ -66,7 +68,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
     calendarRepository.updateAppointment(changeStatusBody).then(res => {
       if (res.status === 200) {
-        console.log('API Response after update status', res);
+        // console.log('API Response after update status', res);
         onClose()
         logSuccess('Updated status')
             dispatch(updateStatus({
@@ -94,8 +96,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     setServiceSlideoverOpen(false)
   }
 
-
-  
 
 
   if (!appointmentData) {
@@ -176,10 +176,19 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
                       <CustomerCard customer={appointmentData} onClick={() => {}}/>
 
-                      <ServiceCard
-                            service={appointmentData}
+                      {/* <ServiceCard
+                            service={singleCustomerAppointment}
                             onSelect={handleServiceDelete}
-                      />
+                      /> */}
+                      <div>
+                      {singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => (
+                        <div key={appointment.ID}>
+                          <ServiceCard key={appointment.ID} service={appointment} onSelect={handleServiceDelete} />
+                        </div>
+                      ))}
+                    </div>
+
+                      
                       <div className="items-center justify-center text-center border-none shadow-none">
                           <Button onClick={() => {}} className="items-center justify-center text-center border-none shadow-none">
                             <Lucide
