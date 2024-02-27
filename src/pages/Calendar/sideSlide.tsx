@@ -55,6 +55,11 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [mobileNumber, setMobileNumber] = useState('');
     const [email, setEmail] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
+    const [activeTab, setActiveTab] = useState('info');
+
+    const handleTabChange = (tab: React.SetStateAction<string>) => {
+        setActiveTab(tab);
+    };
 
     const dispatch = useDispatch()
     const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
@@ -214,8 +219,10 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           
             if (!selectedCustomer || selectedCustomer.length === 0) {
               // No services selected, show warning and return
-              showAppointmentToast('Please select a client', 'warning');
-              return;
+              const walkInCustomer = {
+                FirstName: 'Walk-in',
+              };
+              setSelectedCustomer(walkInCustomer)
             }
           
             calendarRepository.addAppointment(newAppointmentRequest)
@@ -306,315 +313,338 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-
-                    {/* Begin Add Client Button */}
-                    <div className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
-                            <div
-                            className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
-                            >
-                            <div className="p-3">
-                                <div className="flex">
-                                {selectedCustomer && selectedCustomer.FirstName ? (
-                                <div className="w-14 h-14 rounded-full p-2 bg-primary text-white flex items-center justify-center">
-                                    <span className="text-lg">{getInitials(selectedCustomer.FirstName)}</span>
-                                </div> 
-                                ) : (
-                                <Lucide icon="User" className="w-14 h-14 rounded-full p-3 bg-primary text-white" />
-                                )}
-                                <div className={`${selectedCustomer ? 'mt-2 ml-3' : 'mt-4 ml-3'}`}>
-                                    <h1 className="text-lg text-left">{selectedCustomer ? selectedCustomer.FirstName : 'Select a client'}</h1>
-                                    <h1 className="text-sm">{selectedCustomer ? selectedCustomer.Mobile : ''}</h1>
-                                </div>
-                                    <div className="ml-auto">
-                                    <Button className="border-none shadow-none cursor-pointer ">
-                                        {selectedCustomer && selectedCustomer.FirstName ? (
-                                        <Lucide icon="Edit" className="w-12 h-12 p-3 text-primary text-lg" />
-                                        ) : (
-                                        <Lucide icon="Plus" className="w-12 h-12 p-3 text-primary text-lg" />
-                                        )}
-                                    </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                    
-                    {/* Begin Add Services */}
-                    <div className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
-                            <div
-                            className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
-                            >
-                            <div className="p-1">
-                                <div className="flex">
-                                <div className=" mt-4 ml-3">
-                                    <h1 className="text-lg">Add services</h1>
-                                    {/* <h2>Leave empty for walkins</h2> */}
-                                </div>
-                                <div className="ml-auto">
-                                    <Button className="border-none shadow-none cursor-pointer ">
-                                    <Lucide
-                                        icon="ChevronRight"
-                                        className="w-12 h-12 p-3 text-primary text-lg"
-                                    />
-                                    </Button>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {/* Tab Navigation */}
+                    <div className="flex justify-start mb-5">
+                        <Button
+                            variant="outline-secondary"
+                            type="button"
+                            className={`cursor-pointer p-3 mx-2 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            onClick={() => handleTabChange('info')}
+                        >
+                            Info
+                        </Button>
+                        <Button
+                            variant="outline-secondary"
+                            type="button"
+                            className={`cursor-pointer p-3 mx-2 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            onClick={() => handleTabChange('notes')}
+                        >
+                            Notes
+                        </Button>
                     </div>
 
-                    <div className="selected-services">
-                    <div className="selected-services">
-                    {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
-                        <ServiceCard
-                            key={selectedService.ProductID}
-                            service={selectedService}
-                            onSelect={handleServiceDelete}
-                        />
-                    ))}
-                    </div>
-
-                    </div>
-                    {/* End Add Services */}
-                      
-                    {/* Begin Service List */}
-                    {isServiceSlideoverOpen && (
-                    <Slideover open={isServiceSlideoverOpen} onClose={closeServicesList}>
-                        <Slideover.Panel>
-                        <Slideover.Title className="p-5">
-                            <h2 className="mr-auto font-bold text-2xl">
-                            Search service
-                            </h2>
-                            <Button className="border-none shadow-none" onClick={closeServicesList}>
-                              <Lucide icon="ArrowLeft"/>
-                            </Button>
-                        </Slideover.Title>
-                        <Slideover.Description className="text-center">
-                            <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-                            <div className="relative text-slate-500">
-                                <FormInput
-                                type="text"
-                                className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                                placeholder="Search by service name"
-                                value={searchValueService}
-                                onChange={(e) => setSearchValueService(e.target.value)}
-                                />
-                                {searchValueService ? (
-                                <Lucide
-                                    icon="XCircle"
-                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                    onClick={() => setSearchValueService("")}
-                                />
-                                ) : (
-                                <Lucide
-                                    icon="Search"
-                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-                                />
-                                )}
-                            </div>
-                            </div>
-                            {serviceData && serviceData
-                            .filter((service: { ProductName: string }) =>
-                                service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
-                            )
-                            .map((service: { ProductID: string }) => (
-                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
-                            ))}
-                        </Slideover.Description>
-                        </Slideover.Panel>
-                    </Slideover>
+                    {activeTab === 'info' && (
+                    <>
+                       {/* Begin Add Client Button */}
+                       <div className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
+                           <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
+                               <div
+                               className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
+                               >
+                               <div className="p-3">
+                                   <div className="flex">
+                                   {selectedCustomer && selectedCustomer.FirstName ? (
+                                   <div className="w-14 h-14 rounded-full p-2 bg-primary text-white flex items-center justify-center">
+                                       <span className="text-lg">{getInitials(selectedCustomer.FirstName)}</span>
+                                   </div> 
+                                   ) : (
+                                   <Lucide icon="User" className="w-14 h-14 rounded-full p-3 bg-primary text-white" />
+                                   )}
+                                   <div className={`${selectedCustomer ? 'mt-2 ml-3' : 'mt-4 ml-3'}`}>
+                                       <h1 className="text-lg text-left">{selectedCustomer ? selectedCustomer.FirstName : 'Select a client'}</h1>
+                                       <h1 className="text-sm">{selectedCustomer ? selectedCustomer.Mobile : ''}</h1>
+                                   </div>
+                                       <div className="ml-auto">
+                                       <Button className="border-none shadow-none cursor-pointer ">
+                                           {selectedCustomer && selectedCustomer.FirstName ? (
+                                           <Lucide icon="Edit" className="w-12 h-12 p-3 text-primary text-lg" />
+                                           ) : (
+                                           <Lucide icon="Plus" className="w-12 h-12 p-3 text-primary text-lg" />
+                                           )}
+                                       </Button>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       </div>
+                       
+                       {/* Begin Add Services */}
+                       <div className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
+                           <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
+                               <div
+                               className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
+                               >
+                               <div className="p-1">
+                                   <div className="flex">
+                                   <div className=" mt-4 ml-3">
+                                       <h1 className="text-lg">Add services</h1>
+                                       {/* <h2>Leave empty for walkins</h2> */}
+                                   </div>
+                                   <div className="ml-auto">
+                                       <Button className="border-none shadow-none cursor-pointer ">
+                                       <Lucide
+                                           icon="ChevronRight"
+                                           className="w-12 h-12 p-3 text-primary text-lg"
+                                       />
+                                       </Button>
+                                   </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                       </div>
+   
+                       <div className="selected-services">
+                       <div className="selected-services">
+                       {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
+                           <ServiceCard
+                               key={selectedService.ProductID}
+                               service={selectedService}
+                               onSelect={handleServiceDelete}
+                           />
+                       ))}
+                       </div>
+   
+                       </div>
+                       {/* End Add Services */}
+                         
+                       {/* Begin Service List */}
+                       {isServiceSlideoverOpen && (
+                       <Slideover open={isServiceSlideoverOpen} onClose={closeServicesList}>
+                           <Slideover.Panel>
+                           <Slideover.Title className="p-5">
+                               <h2 className="mr-auto font-bold text-2xl">
+                               Search service
+                               </h2>
+                               <Button className="border-none shadow-none" onClick={closeServicesList}>
+                                 <Lucide icon="ArrowLeft"/>
+                               </Button>
+                           </Slideover.Title>
+                           <Slideover.Description className="text-center">
+                               <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
+                               <div className="relative text-slate-500">
+                                   <FormInput
+                                   type="text"
+                                   className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                   placeholder="Search by service name"
+                                   value={searchValueService}
+                                   onChange={(e) => setSearchValueService(e.target.value)}
+                                   />
+                                   {searchValueService ? (
+                                   <Lucide
+                                       icon="XCircle"
+                                       className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                       onClick={() => setSearchValueService("")}
+                                   />
+                                   ) : (
+                                   <Lucide
+                                       icon="Search"
+                                       className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                   />
+                                   )}
+                               </div>
+                               </div>
+                               {serviceData && serviceData
+                               .filter((service: { ProductName: string }) =>
+                                   service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
+                               )
+                               .map((service: { ProductID: string }) => (
+                                   <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
+                               ))}
+                           </Slideover.Description>
+                           </Slideover.Panel>
+                       </Slideover>
+                       )}
+   
+                       {/* End Service List */}                     
+   
+                       {isSecondSlideoverOpen && (
+                           <Slideover open={isSecondSlideoverOpen} onClose={closeSearchClient}>
+                           <Slideover.Panel>
+                               <Slideover.Title className="p-5">
+                                   <h2 className="mr-auto font-bold text-2xl">
+                                       Search Client
+                                   </h2>
+                                   <Button className="border-none shadow-none" onClick={closeSearchClient}>
+                                       <Lucide icon="ArrowLeft"/>
+                                   </Button>
+                               </Slideover.Title>
+                               <Slideover.Description className="text-center">
+                                   <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
+                                       <div className="relative text-slate-500">
+                                       <FormInput
+                                           type="text"
+                                           className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                           placeholder="Search by client name"
+                                           value={searchValueClient}
+                                           onChange={(e) => setSearchValueClient(e.target.value)}
+                                       />
+                                       {searchValueClient ? (
+                                           <Lucide
+                                           icon="XCircle"
+                                           className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                           onClick={() => setSearchValueClient("")}
+                                           />
+                                       ) : (
+                                           <Lucide
+                                           icon="Search"
+                                           className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                           />
+                                       )}
+                                       </div>
+                                   </div>
+   
+                                   <div className="mt-3">
+                                       <div className="items-center justify-center text-center border-none shadow-none">
+                                           <Button onClick={handleOpenAddClient} className="items-center justify-center text-center border-none shadow-none">
+                                           <Lucide
+                                               icon="PlusCircle"
+                                               className="text-primary text-lg round mr-1"
+                                           />
+                                           <h1>Add new client</h1>
+                                           </Button>
+                                       </div>
+   
+                                       {filteredCustomers.slice(0, visibleCustomers).map((customer: { CustomerID: Key | null | undefined; }) => (
+                                           <CustomerCard key={customer.CustomerID} customer={customer} onClick={() => selectCustomer(customer) } />
+                                       ))}
+   
+                                       {visibleCustomers < totalCustomers && (
+                                           <button onClick={loadMoreCustomers} className=" mt-2 text-primary cursor-pointer">
+                                           Load More
+                                           </button>
+                                       )}
+   
+                                   </div>
+                                   </Slideover.Description>
+   
+                           </Slideover.Panel>
+                       </Slideover>
+                       )}
+   
+                       {/* Begin Add Customer */}
+                       {isAddCustomerSlideOpen && (
+                           <Slideover open={isAddCustomerSlideOpen} onClose={handleCloseAddCustomer}>
+                           <Slideover.Panel>
+                               <Slideover.Title className="p-5">
+                                   <h2 className="mr-auto font-bold text-2xl">
+                                       Add Client
+                                   </h2>
+                                   <Button className="border-none shadow-none" onClick={handleCloseAddCustomer}>
+                                       <Lucide icon="ArrowLeft"/>
+                                   </Button>
+                               </Slideover.Title>
+                               <Slideover.Description className="text-center">
+                                   <div className="input-form flex flex-col w-full">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           First Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter First Name"
+                                               className="w-full"
+                                               value={firstName}
+                                               onChange={(event) => setFirstName(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Last Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter Last Name"
+                                               className="w-full"
+                                               value={lastName}
+                                               onChange={(event) => setLastName(event.target.value)}
+                                           />
+                                       </div>                                
+                                   </div>
+                                   <div className="input-form flex flex-col w-full mt-3">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Email
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="email"
+                                               name="name"
+                                               placeholder="Enter Email"
+                                               className="w-full"
+                                               value={email}
+                                               onChange={(event) => setEmail(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Phone Number
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="number"
+                                               name="name"
+                                               placeholder="Enter Phone Number"
+                                               className="w-full"
+                                               value={mobileNumber}
+                                               onChange={(event) => setMobileNumber(event.target.value)}                                        />
+                                       </div>                                
+                                   </div>
+                                   <div className="mt-3 input-form w-full">
+                                               <FormLabel
+                                               htmlFor="validation-form-4"
+                                               className="flex flex-col w-full sm:flex-row"
+                                               >
+                                               Birth Date
+                                               </FormLabel>
+                                               <Flatpickr
+                                                   className='w-full rounded-xl'
+                                                   options={{
+                                                       altInput: true,
+                                                       altFormat: "F j, Y",
+                                                       dateFormat: "Y-m-d",
+                                                   }}
+                                                   placeholder="Choose Birth Date"
+                                               />
+                                           </div>
+                                           <div className='md:w-1/3'>
+   
+                               </div>                        
+                               </Slideover.Description>
+                               <Slideover.Footer>
+                                   <Button
+                                       variant="primary"
+                                       type="button"
+                                       className="w-32"
+                                       onClick={handleAddNewClient}
+                                   >
+                                       Add
+                                   </Button>
+                               </Slideover.Footer>
+                           </Slideover.Panel>
+                           </Slideover>
+                       )}
+                       {/* End Add Customer */}
+                    </>
                     )}
 
-                    {/* End Service List */}                     
-
-                    {isSecondSlideoverOpen && (
-                        <Slideover open={isSecondSlideoverOpen} onClose={closeSearchClient}>
-                        <Slideover.Panel>
-                            <Slideover.Title className="p-5">
-                                <h2 className="mr-auto font-bold text-2xl">
-                                    Search Client
-                                </h2>
-                                <Button className="border-none shadow-none" onClick={closeSearchClient}>
-                                    <Lucide icon="ArrowLeft"/>
-                                </Button>
-                            </Slideover.Title>
-                            <Slideover.Description className="text-center">
-                                <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-                                    <div className="relative text-slate-500">
-                                    <FormInput
-                                        type="text"
-                                        className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                                        placeholder="Search by client name"
-                                        value={searchValueClient}
-                                        onChange={(e) => setSearchValueClient(e.target.value)}
-                                    />
-                                    {searchValueClient ? (
-                                        <Lucide
-                                        icon="XCircle"
-                                        className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                        onClick={() => setSearchValueClient("")}
-                                        />
-                                    ) : (
-                                        <Lucide
-                                        icon="Search"
-                                        className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-                                        />
-                                    )}
-                                    </div>
-                                </div>
-
-                                <div className="mt-3">
-                                    <div className="items-center justify-center text-center border-none shadow-none">
-                                        <Button onClick={handleOpenAddClient} className="items-center justify-center text-center border-none shadow-none">
-                                        <Lucide
-                                            icon="PlusCircle"
-                                            className="text-primary text-lg round mr-1"
-                                        />
-                                        <h1>Add new client</h1>
-                                        </Button>
-                                    </div>
-
-                                    {/* Display the list of customers based on search criteria */}
-                                    {filteredCustomers.slice(0, visibleCustomers).map((customer: { CustomerID: Key | null | undefined; }) => (
-                                        <CustomerCard key={customer.CustomerID} customer={customer} onClick={() => selectCustomer(customer)} />
-                                    ))}
-
-                                    {visibleCustomers < totalCustomers && (
-                                        <button onClick={loadMoreCustomers} className=" mt-2 text-primary cursor-pointer">
-                                        Load More
-                                        </button>
-                                    )}
-
-                                </div>
-                                </Slideover.Description>
-
-                        </Slideover.Panel>
-                    </Slideover>
-                    )}
-
-                    {/* Begin Add Customer */}
-                    {isAddCustomerSlideOpen && (
-                        <Slideover open={isAddCustomerSlideOpen} onClose={handleCloseAddCustomer}>
-                        <Slideover.Panel>
-                            <Slideover.Title className="p-5">
-                                <h2 className="mr-auto font-bold text-2xl">
-                                    Add Client
-                                </h2>
-                                <Button className="border-none shadow-none" onClick={handleCloseAddCustomer}>
-                                    <Lucide icon="ArrowLeft"/>
-                                </Button>
-                            </Slideover.Title>
-                            <Slideover.Description className="text-center">
-                                <div className="input-form flex flex-col w-full">
-                                    <div className='flex flex-col justify-between w-full mr-4'>
-                                        <FormLabel
-                                            htmlFor="validation-form-1"
-                                            className="flex flex-col w-full sm:flex-row"
-                                        >
-                                        First Name
-                                        </FormLabel>
-                                        <FormInput
-                                            id="validation-form-1"
-                                            type="text"
-                                            name="name"
-                                            placeholder="Enter First Name"
-                                            className="w-full"
-                                            value={firstName}
-                                            onChange={(event) => setFirstName(event.target.value)}
-                                        />
-                                    </div>
-                                    <div className='flex flex-col w-full mt-2'>
-                                        <FormLabel
-                                            htmlFor="validation-form-1"
-                                            className="flex flex-col w-full sm:flex-row"
-                                        >
-                                        Last Name
-                                        </FormLabel>
-                                        <FormInput
-                                            id="validation-form-1"
-                                            type="text"
-                                            name="name"
-                                            placeholder="Enter Last Name"
-                                            className="w-full"
-                                            value={lastName}
-                                            onChange={(event) => setLastName(event.target.value)}
-                                        />
-                                    </div>                                
-                                </div>
-                                <div className="input-form flex flex-col w-full mt-3">
-                                    <div className='flex flex-col justify-between w-full mr-4'>
-                                        <FormLabel
-                                            htmlFor="validation-form-1"
-                                            className="flex flex-col w-full sm:flex-row"
-                                        >
-                                        Email
-                                        </FormLabel>
-                                        <FormInput
-                                            id="validation-form-1"
-                                            type="email"
-                                            name="name"
-                                            placeholder="Enter Email"
-                                            className="w-full"
-                                            value={email}
-                                            onChange={(event) => setEmail(event.target.value)}
-                                        />
-                                    </div>
-                                    <div className='flex flex-col w-full mt-2'>
-                                        <FormLabel
-                                            htmlFor="validation-form-1"
-                                            className="flex flex-col w-full sm:flex-row"
-                                        >
-                                        Phone Number
-                                        </FormLabel>
-                                        <FormInput
-                                            id="validation-form-1"
-                                            type="number"
-                                            name="name"
-                                            placeholder="Enter Phone Number"
-                                            className="w-full"
-                                            value={mobileNumber}
-                                            onChange={(event) => setMobileNumber(event.target.value)}                                        />
-                                    </div>                                
-                                </div>
-                                <div className="mt-3 input-form w-full">
-                                            <FormLabel
-                                            htmlFor="validation-form-4"
-                                            className="flex flex-col w-full sm:flex-row"
-                                            >
-                                            Birth Date
-                                            </FormLabel>
-                                            <Flatpickr
-                                                className='w-full rounded-xl'
-                                                options={{
-                                                    altInput: true,
-                                                    altFormat: "F j, Y",
-                                                    dateFormat: "Y-m-d",
-                                                }}
-                                                placeholder="Choose Birth Date"
-                                            />
-                                        </div>
-                                        <div className='md:w-1/3'>
-
-                            </div>                        
-                            </Slideover.Description>
-                            <Slideover.Footer>
-                                <Button
-                                    variant="primary"
-                                    type="button"
-                                    className="w-32"
-                                    onClick={handleAddNewClient}
-                                >
-                                    Add
-                                </Button>
-                            </Slideover.Footer>
-                        </Slideover.Panel>
-                        </Slideover>
-                    )}
-                    {/* End Add Customer */}
                     <div className="flex flex-row mt-5">
                        
                     </div>

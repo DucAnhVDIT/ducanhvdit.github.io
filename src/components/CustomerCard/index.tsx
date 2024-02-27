@@ -43,7 +43,7 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
 
                 {/* Customer details on the right (moved to the far right) */}
                 <div className="p-1 ml-3 flex flex-col items-start">
-                    <h1 className="text-lg font-bold">{customer.FirstName || customer.CustomerName} <span>- {customer.Mobile}</span></h1>
+                    <h1 className="text-lg">{customer.FirstName || customer.CustomerName} <span>- {customer.Mobile}</span></h1>
                     <div className='flex flex-row justify-between'>
                       {/* <p className="text-xs">{customer.Mobile}</p> */}
                       <p className="text-xs">{customer.Email}</p>
