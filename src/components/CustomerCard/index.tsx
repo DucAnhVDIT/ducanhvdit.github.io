@@ -26,9 +26,9 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
   return (
     <div>
       <Button className=" py-1 border-none bg-transparent w-full shadow-none" onClick={onClick}>
-        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
+        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
           <div
-            className="col-span-12 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
+            className="col-span-12 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400 "
             style={{ borderRight: `7px solid ${borderColor}` }}
           >
             <div className="p-1 flex justify-between items-start">

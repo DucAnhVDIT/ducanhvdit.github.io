@@ -307,9 +307,9 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
                     {/* Begin Add Client Button */}
                     <div className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y border-2 border-black rounded-lg w-full ">
+                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
                             <div
-                            className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
+                            className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
                             >
                             <div className="p-3">
                                 <div className="flex">
@@ -341,9 +341,9 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     
                     {/* Begin Add Services */}
                     <div className="border-none bg-transparent w-full shadow-none mt-3 -z-10" onClick={openServicesList}>
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full border-2 border-1E40AF">
+                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
                             <div
-                            className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
+                            className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
                             >
                             <div className="p-1">
                                 <div className="flex">

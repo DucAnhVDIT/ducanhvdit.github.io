@@ -16,6 +16,7 @@ import { logError, logSuccess } from "../../constant/log-error";
 import StatusButtons from "../../components/StatusButton";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 import { FormInput } from "../../base-components/Form";
+import CustomDatePicker from "../../components/DatePicker";
 
 
 interface SlideOverPanelProps {
@@ -36,7 +37,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
   const [searchValueService, setSearchValueService] = useState("");
-
+  const [date, setDate] = useState(new Date());
+  
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
     dispatch(deleteAppointment(appointmentId));
@@ -111,7 +113,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   }
 
 
-
   if (!appointmentData) {
     // Handle the case when appointmentData is null
     return (
@@ -124,6 +125,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   }
   return (
     <div>
+      
           <Slideover
               staticBackdrop
               open={isOpen}
@@ -182,12 +184,16 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
                     {/* <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p> */}
 
-                    <div className="">
+                    <div className="mt-3">
 
                       {/* <p>{`Customer Name: ${appointmentData.ServiceName !== null ? appointmentData.ServiceName : 'null'}`}</p>
                       <p>{`Customer Name: ${appointmentData.Duration !== null ? appointmentData.Duration : 'null'}`}</p> */}
 
                       <CustomerCard customer={appointmentData} onClick={() => {}}/>
+                      
+                      <div className="ml-5 m-3 w-full">
+                        <CustomDatePicker date={new Date(appointmentData.BookDate)} goToDate={()=> {}}/>
+                      </div>
 
                       {/* <ServiceCard
                             service={singleCustomerAppointment}
@@ -199,9 +205,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                           <ServiceCard key={appointment.ID} service={appointment} onSelect={handleServiceDelete} />
                         </div>
                       ))}
-                    </div>
 
-                      
                       <div className="items-center justify-center text-center border-none shadow-none">
                           <Button onClick={() => {}} className="items-center justify-center text-center border-none shadow-none">
                             <Lucide
@@ -210,7 +214,10 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                             />
                           <h1>Add more services</h1>
                         </Button>
-                      </div>
+                      </div>      
+                    </div>
+
+                      
 
                       {/* Begin Service List */}
                     {isServiceSlideoverOpen && (
