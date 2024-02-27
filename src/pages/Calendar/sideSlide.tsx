@@ -278,20 +278,22 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           });
       };
 
+    const closeSlideOver = () => {
+        dispatch(resetSelectedServices())
+        onClose()
+    }
+
   return (
     <div>
           <Slideover
               staticBackdrop
               open={isOpen}
-              onClose={onClose}
+              onClose={closeSlideOver}
           >
               {/* BEGIN: Slide Over Header */}
               <Slideover.Panel>
                   <Button
-                      onClick={(event: React.MouseEvent) => {
-                          event.preventDefault();
-                          onClose()
-                      } }
+                      onClick={closeSlideOver}
                       className="absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
                   >
                       <Lucide icon="X" className="w-8 h-8 text-black" />
@@ -309,12 +311,12 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     <div className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
                         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
                             <div
-                            className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
+                            className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
                             >
                             <div className="p-3">
                                 <div className="flex">
                                 {selectedCustomer && selectedCustomer.FirstName ? (
-                                <div className="w-14 h-14 rounded-full p-3 bg-primary text-white flex items-center justify-center">
+                                <div className="w-14 h-14 rounded-full p-2 bg-primary text-white flex items-center justify-center">
                                     <span className="text-lg">{getInitials(selectedCustomer.FirstName)}</span>
                                 </div> 
                                 ) : (
@@ -627,8 +629,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                       <Button
                           variant="outline-secondary"
                           type="button"
-                          onClick={() => {
-                            onClose() }}
+                          onClick={closeSlideOver}
                           className="w-32 mr-3"
                       >
                           Cancel

@@ -8,7 +8,7 @@ const ServiceCard = ({ service, onSelect }: { service: any, onSelect: (service: 
   };
   return (
     <div>
-      <Button className="border-none bg-transparent w-full shadow-none" onClick={handleClick} >
+      <Button className=" mt-3 p-0 border-none bg-transparent w-full shadow-none" onClick={handleClick} >
         <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
           <div
             className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
@@ -16,14 +16,14 @@ const ServiceCard = ({ service, onSelect }: { service: any, onSelect: (service: 
           >
             <div className="p-1 flex justify-between items-start">
               <div className="flex flex-start">
-                <div className="p-2 flex flex-col">
-                  <h1 className="text-sm leading-tight text-left">{`${service.ProductName || service.ServiceName}`}</h1>
-                  <h1 className="text-xs item text-left text-silver">{`${service.Duration || 'Loading...'} mins`}</h1>
-                  <h1 className="text-xs item text-left text-silver">{`${service.Description || ''} `}</h1>
+                <div className="p-1 flex flex-col">
+                  <h1 className="text-lg leading-tight text-left">{`${service.ProductName || service.ServiceName}`}</h1>
+                  <h1 className="text-md item text-left text-silver">{`${service.Duration || 'Loading...'} mins`}</h1>
+                  <h1 className="text-md item text-left text-silver">{`${service.Description || ''} `}</h1>
                 </div>
               </div>
               <div className="p-2">
-                <h1 className="text-sm">{`£${service.Price !== undefined ? service.Price : 'Loading...'}`}</h1>
+                <h1 className="text-lg">{`£${service.Price !== undefined ? service.Price : 'Loading...'}`}</h1>
               </div>
             </div>
           </div>
