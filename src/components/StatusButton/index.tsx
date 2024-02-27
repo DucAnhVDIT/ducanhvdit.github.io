@@ -38,6 +38,7 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
           options={statusOptions}
           placeholder="Change status"
           onChange={(selectedOption) => onSelectStatus(selectedOption?.value ?? 0)}
+          menuPortalTarget={document.body} 
           styles={{
             control: (provided) => ({
               ...provided,
@@ -68,6 +69,7 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
             indicatorSeparator: () => ({
               display: 'none', 
             }),
+            menuPortal: base => ({ ...base, zIndex: 9999 })
           }}
           isSearchable={false}
         />

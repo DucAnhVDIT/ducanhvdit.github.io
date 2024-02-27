@@ -161,10 +161,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                       </div> */}
 
                      
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
+                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full relative">
                         <div
                           className="col-span-12 sm:col-span-4 2xl:col-span-3 box zoom-in"
-                          style={{ position: 'relative', zIndex: 1 }}
                         >
                           <div
                               style={{
