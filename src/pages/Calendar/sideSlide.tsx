@@ -228,7 +228,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
             calendarRepository.addAppointment(newAppointmentRequest)
               .then((res) => {
                 showAppointmentToast('Appointment added successfully');
-                handleAppoinmentChange(prev => !prev);
+                handleAppoinmentChange(true);
                 onClose();
                 dispatch(resetSelectedServices());
               })

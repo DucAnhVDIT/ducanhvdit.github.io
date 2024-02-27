@@ -1,19 +1,19 @@
-// CustomDatePicker.tsx
+
 import { Calendar } from 'lucide-react';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
-import { useRef } from 'react';
-
 import Lucide from '../../base-components/Lucide';
 import Button from '../../base-components/Button';
+import { useRef } from 'react';
 
 
-interface CustomDatePickerProps {
+
+interface ExistingDatePickerProps {
   date: Date;
   goToDate: (date: Date) => void;
 }
 
-const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ date, goToDate }) => {
+const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate }) => {
   const handleDateChange = (dates: Date[]) => {
     goToDate(dates[0]);
   };
@@ -25,19 +25,21 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ date, goToDate }) =
     flatpickrRef.current?.flatpickr.open();
   };
 
+
+
   return (
     <div className='flex flex-row'>
-      <Button className='flex flex-row w-full border-none shadow-none p-0'>
+      <Button className='flex flex-row w-full'>
         <Flatpickr
           ref={flatpickrRef}
           value={date}
           onChange={handleDateChange}
           options={{ dateFormat: 'D j F, Y' }}
-          className="font-normal p-0 cursor-pointer pl-4 border-none bg-primary text-sm rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          className="pl-4 border-none bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent"
         />
         <Lucide
-          icon="Calendar"
-          className="w-4 h-4 text-white text-sm mr-3 cursor-pointer"
+          icon="ChevronDown"
+          className="w-6 h-6 text-black text-sm mt-1 mr-3 cursor-pointer"
           onClick={handleIconClick}
         />
       </Button>
@@ -45,4 +47,4 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ date, goToDate }) =
   );
 };
 
-export default CustomDatePicker;
+export default ExistingDatePicker;

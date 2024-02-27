@@ -16,8 +16,7 @@ import { logError, logSuccess } from "../../constant/log-error";
 import StatusButtons from "../../components/StatusButton";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 import { FormInput } from "../../base-components/Form";
-import CustomDatePicker from "../../components/DatePicker";
-import FullCalendar from "@fullcalendar/react";
+import ExistingDatePicker from "../../components/DatePicker/existingAppointmentPicker";
 
 
 
@@ -94,8 +93,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
             color: appointmentData.Colour,
           }));
         });
-  
-        handleAppoinmentChange(prev => !prev);
+        handleAppoinmentChange(true);
       } else {
         logError('Some appointments failed to update');
       }
@@ -195,8 +193,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
                       <CustomerCard customer={appointmentData} onClick={() => {}}/>
                       
-                      <div className="ml-5 m-3 w-full">
-                        <CustomDatePicker date={new Date(appointmentData.BookDate)} goToDate={handleDateChange}/>
+                      <div className="mt-3 w-full">
+                        <ExistingDatePicker date={new Date(appointmentData.BookDate)} goToDate={handleDateChange}/>
                       </div>
 
                       {/* <ServiceCard

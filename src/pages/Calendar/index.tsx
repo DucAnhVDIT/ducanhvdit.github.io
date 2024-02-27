@@ -53,7 +53,7 @@ function Main() {
   }, [appoinmentChange]);
 
   const handleAppoinmentChange = (value: boolean | ((prevState: boolean) => boolean)) => {
-    setAppointmentChange(value);
+    setAppointmentChange((prev) => !prev);
   };
 
   const handleStaffChange = (event: { target: { value: any; }; }) => {
@@ -458,7 +458,7 @@ function Main() {
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
-      {existingInformationSlide && (<ExistingInfo handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
+      {existingInformationSlide && (<ExistingInfo handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
         position="top-center" 
         autoClose={3000} 
