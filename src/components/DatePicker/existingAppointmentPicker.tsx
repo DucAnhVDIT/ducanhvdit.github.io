@@ -4,7 +4,7 @@ import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import Lucide from '../../base-components/Lucide';
 import Button from '../../base-components/Button';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 
 
@@ -14,9 +14,13 @@ interface ExistingDatePickerProps {
 }
 
 const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate }) => {
+  const [flatpickrValue, setFlatpickrValue] = useState(date);
+  
   const handleDateChange = (dates: Date[]) => {
     goToDate(dates[0]);
+    setFlatpickrValue(dates[0]);
   };
+  
 
   const flatpickrRef = useRef<Flatpickr | null>(null);
 
@@ -29,10 +33,10 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate 
 
   return (
     <div className='flex flex-row'>
-      <Button className='flex flex-row w-full'>
+      <Button className='flex flex-row w-full zoom-in'>
         <Flatpickr
           ref={flatpickrRef}
-          value={date}
+          value={flatpickrValue}
           onChange={handleDateChange}
           options={{ dateFormat: 'D j F, Y' }}
           className="pl-4 border-none bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent"
