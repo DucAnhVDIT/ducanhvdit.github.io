@@ -358,7 +358,6 @@ function Main() {
 
     select: handleSlotClicked
   }
-
   const handleDateChange = (date: Date) => {
     setDate(date);
     // Use calendarRef to access FullCalendar instance and navigate to the selected date

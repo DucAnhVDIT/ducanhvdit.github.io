@@ -4,7 +4,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import 'flatpickr/dist/themes/dark.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import React, { Key, useState } from 'react'
+import React, { Key, useRef, useState } from 'react'
 import ServiceCard from "../../components/ServiceCard";
 import CustomerCard from "../../components/CustomerCard";
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +17,8 @@ import StatusButtons from "../../components/StatusButton";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 import { FormInput } from "../../base-components/Form";
 import CustomDatePicker from "../../components/DatePicker";
+import FullCalendar from "@fullcalendar/react";
+
 
 
 interface SlideOverPanelProps {
@@ -24,10 +26,11 @@ interface SlideOverPanelProps {
   onClose: () => void;
   appointmentData: any, 
   handleAppoinmentChange: (value: boolean) => void;
+  handleDateChange: (value: Date) => void;
 }
 
 
-function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange }: SlideOverPanelProps) {
+function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
 
@@ -101,6 +104,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
       logError('Failed to update appointments');
     });
   }
+
   
 
   const handleServiceDelete = (selectedService: any) => {
@@ -125,8 +129,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   }
   return (
     <div>
-      
           <Slideover
+              className=""
               staticBackdrop
               open={isOpen}
               onClose={onClose}
@@ -192,7 +196,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                       <CustomerCard customer={appointmentData} onClick={() => {}}/>
                       
                       <div className="ml-5 m-3 w-full">
-                        <CustomDatePicker date={new Date(appointmentData.BookDate)} goToDate={()=> {}}/>
+                        <CustomDatePicker date={new Date(appointmentData.BookDate)} goToDate={handleDateChange}/>
                       </div>
 
                       {/* <ServiceCard

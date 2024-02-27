@@ -77,11 +77,11 @@ Slideover.Panel = ({
         as="div"
         enter="ease-in-out duration-500"
         enterFrom="opacity-0"
-        enterTo="opacity-100"
+        enterTo="opacity-20"
         leave="ease-in-out duration-[400ms]"
-        leaveFrom="opacity-100"
+        leaveFrom="opacity-20"
         leaveTo="opacity-0"
-        className="fixed inset-0 bg-black/60"
+        className="fixed inset-0 bg-black/60 shadow-md border-2 border-black"
         aria-hidden="true"
       />
       <Transition.Child
