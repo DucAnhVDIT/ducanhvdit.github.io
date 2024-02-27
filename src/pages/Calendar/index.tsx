@@ -112,9 +112,32 @@ function Main() {
               if (!appointmentsByCustomer[customerID]) {
                 appointmentsByCustomer[customerID] = [];
               }
-    
-              appointmentsByCustomer[customerID].push(appointment);
+
+              const previousAppointments = appointmentsByCustomer[customerID];
+              let isSeparateAppointment = true;
+
+          
+              // Iterate through previous appointments
+              for (const lastAppointment of previousAppointments.reverse()) {
+                const timeDifference = appointment.StartTime - lastAppointment.EndTime;
+
+          
+                // If the time difference is within the threshold, consider it part of the same appointment
+                const timeThreshold = 60 * 30; // Adjust this threshold as needed (e.g., 30 minutes)
+                if (timeDifference <= timeThreshold) {
+                  lastAppointment.EndTime = appointment.EndTime; // Update the end time
+                  lastAppointment.Services.push(...appointment.Services); // Combine services
+                  isSeparateAppointment = false;
+                  break; // Exit the loop if combined with a previous appointment
+                }
+              }
+          
+              // If it's a new appointment, add it separately
+              if (isSeparateAppointment) {
+                appointmentsByCustomer[customerID].push(appointment);
+              }
             });
+
     
             // setScheduleData(appointmentsArray);
             dispatch(setScheduleData(appointmentsArray));

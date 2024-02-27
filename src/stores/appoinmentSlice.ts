@@ -17,27 +17,21 @@ const appointmentSlice = createSlice({
             const appointmentId = action.payload;
             state.scheduleData = state.scheduleData.filter((appointment: { ID: string; }) => appointment.ID !== appointmentId);
         },
-        updateStatus: (state, action: PayloadAction<{ appointmentId: string; statusId: number; color: string }>) => {
-            const { appointmentId, statusId, color } = action.payload;
-        
-            // console.log('Updating status for appointmentId:', appointmentId);
-            // console.log('New statusId:', statusId);
-            // console.log('New color:', color);
-        
-            state.scheduleData = state.scheduleData.map((appointment: { ID: string; StatusID: number; Colour: string }) => {
-                if (appointment.ID === appointmentId) {
-                    // console.log('Updating status for appointment:', appointment);
-                    return {
-                        ...appointment,
-                        StatusID: statusId,
-                        Colour: color,
-                    };
-                }
-                return appointment;
+        updateStatus: (state, action: PayloadAction<{ customerID: string; statusId: number; color: string }>) => {
+            const { customerID, statusId, color } = action.payload;
+          
+            state.scheduleData = state.scheduleData.map((appointment: { ID: string; CustomerID: string; StatusID: number; Colour: string }) => {
+              if (appointment.CustomerID === customerID) {
+                return {
+                  ...appointment,
+                  StatusID: statusId,
+                  Colour: color,
+                };
+              }
+              return appointment;
             });
-        
-            // console.log('Updated state:', state.scheduleData);
-        },
+          }
+          
     }
 })
 

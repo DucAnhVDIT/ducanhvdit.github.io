@@ -61,31 +61,45 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
   const handleChangeStatus = (statusId: number) => {
 
-    const changeStatusBody = {
-      ID: appointmentData.ID,
+    const appointmentsToUpdate = singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => ({
+      ID: appointment.ID,
       StatusID: statusId
+    }));
+  
+    console.log("thong tin cuoc hen can update", appointmentsToUpdate);
+  
+    if (!appointmentsToUpdate || appointmentsToUpdate.length === 0) {
+      logError('No appointments to update');
+      return;
     }
-
-    calendarRepository.updateAppointment(changeStatusBody).then(res => {
-      if (res.status === 200) {
-        // console.log('API Response after update status', res);
-        onClose()
-        logSuccess('Updated status')
-            dispatch(updateStatus({
-                appointmentId: appointmentData.ID,
-                statusId,
-                color: appointmentData.Colour,
-            }));
+  
+    Promise.all(appointmentsToUpdate.map((appointmentToUpdate: any) => {
+      return calendarRepository.updateAppointment(appointmentToUpdate);
+    })).then((responses) => {
+      const allSuccess = responses.every((res) => res.status === 200);
+  
+      if (allSuccess) {
+        onClose();
+        logSuccess('Updated status');
+  
+        appointmentsToUpdate.forEach((appointmentToUpdate: any) => {
+          dispatch(updateStatus({
+            customerID: appointmentData.CustomerID,
+            statusId: appointmentToUpdate.StatusID,
+            color: appointmentData.Colour,
+          }));
+        });
+  
         handleAppoinmentChange(prev => !prev);
       } else {
-        logError('Can not update appointment status')
+        logError('Some appointments failed to update');
       }
-    })
-    .catch(err => {
-      console.log(err)
-    })
-
+    }).catch(err => {
+      console.log(err);
+      logError('Failed to update appointments');
+    });
   }
+  
 
   const handleServiceDelete = (selectedService: any) => {
     dispatch(deleteService(selectedService.ProductID));

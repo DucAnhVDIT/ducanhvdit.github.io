@@ -81,7 +81,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     // Function to handle service selection
     const handleServiceSelect = (selectedService: { ProductID: any; }) => {
         // setSelectedServices((prevSelected: any) => [...(prevSelected || []), selectedService]);
-        console.log('add service vào redux',selectedServices)
+        // console.log('add service vào redux',selectedServices)
         dispatch(addService(selectedService))
         setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
         setServiceSlideoverOpen(false);
@@ -93,7 +93,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     };
 
     useEffect(() => {
-        console.log('lấy thông tin của redux',selectedServices);
+        // console.log('lấy thông tin của redux',selectedServices);
       }, [selectedServices]);
     
     const calculateTotal = () => {
@@ -115,7 +115,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
     const selectCustomer = (customer: any) => {
         // Set the selected customer when a customer is clicked
-        console.log('selected customer', customer)
+        // console.log('selected customer', customer)
  
         setSelectedCustomer(customer);
         // Close the search client slideover if needed
@@ -138,7 +138,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         try {
             await customerRepository.getCustomer().then((res: any) => {
                 if (res.data !== null) {
-                    console.log(res.data)
+                    // console.log(res.data)
                     setCustomersList(res.data);
                 }
             })
