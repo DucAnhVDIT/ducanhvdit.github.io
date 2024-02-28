@@ -65,9 +65,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   };
   
 
-  useEffect(() => {
-    console.log("Body thay doi nay",changeDateBody)
-  },[changeDateBody])
+  // useEffect(() => {
+  //   console.log("Body thay doi nay",changeDateBody)
+  // },[changeDateBody])
   
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
@@ -135,8 +135,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     calendarRepository.updateAppointment(changeDateBody).then(response => {
       if (response.status === 200) {
           logSuccess('Appointment rescheduled successfully')
-          // setAppointmentChange(prev => !prev)
-          console.log("da chuyen sang ngay", new Date(appointmentData.BookDate))
+          handleAppoinmentChange(true)
       } else {
           logError('Error updating appointment. Please try again.')
       }
