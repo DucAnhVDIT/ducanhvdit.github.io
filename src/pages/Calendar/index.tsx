@@ -98,59 +98,61 @@ function Main() {
   };
 
   const fetchAppoinmentApiData = async (date: { getTime: () => number; } | undefined) => {
-      try {
-        const data = date ? Math.floor(date.getTime() / 1000) : null
-        await calendarRepository.getAppointment(data).then((res: any) => {
-          const appointmentsArray = res.data.Appointments || [];
-          if (appointmentsArray.length > 0) {
-            // Organize appointments by customerID
-            const appointmentsByCustomer: Record<string, any[]> = {};
-    
-            appointmentsArray.forEach((appointment: any) => {
-              const customerID = appointment.CustomerID;
-    
-              if (!appointmentsByCustomer[customerID]) {
-                appointmentsByCustomer[customerID] = [];
-              }
-
-              const previousAppointments = appointmentsByCustomer[customerID];
-              let isSeparateAppointment = true;
-
-          
-              // Iterate through previous appointments
-              for (const lastAppointment of previousAppointments.reverse()) {
-                const timeDifference = appointment.StartTime - lastAppointment.EndTime;
-
-          
-                // If the time difference is within the threshold, consider it part of the same appointment
-                const timeThreshold = 60 * 30; // Adjust this threshold as needed (e.g., 30 minutes)
-                if (timeDifference <= timeThreshold) {
-                  lastAppointment.EndTime = appointment.EndTime; // Update the end time
-                  lastAppointment.Services.push(...appointment.Services); // Combine services
-                  isSeparateAppointment = false;
-                  break; // Exit the loop if combined with a previous appointment
-                }
-              }
-          
-              // If it's a new appointment, add it separately
-              if (isSeparateAppointment) {
-                appointmentsByCustomer[customerID].push(appointment);
-              }
-            });
-
-    
-            // setScheduleData(appointmentsArray);
-            dispatch(setScheduleData(appointmentsArray));
-            // console.log("Thong tin cuoc hen ban dau", appointmentsArray)
-            dispatch(setAppointmentToCustomer(appointmentsByCustomer));
-            console.log("Thong tin cuoc hen by ID", appointmentsByCustomer)
+    try {
+      const data = date ? Math.floor(date.getTime() / 1000) : null;
+      const res = await calendarRepository.getAppointment(data);
+      const appointmentsArray = res.data.Appointments || [];
+  
+      if (appointmentsArray.length > 0) {
+        // Organize appointments by customerID
+        const appointmentsByCustomer: Record<string, any[]> = {};
+  
+        appointmentsArray.forEach((appointment: any) => {
+          const customerID = appointment.CustomerID;
+  
+          if (!appointmentsByCustomer[customerID]) {
+            appointmentsByCustomer[customerID] = [];
           }
-        })
-      } catch (error) {
-        console.error('Error fetching the API:', (error as Error).message);
-        return null;
+  
+          const previousAppointments = appointmentsByCustomer[customerID];
+          let isSeparateAppointment = true;
+  
+          // Only perform mapping if existingInformationSlide is false
+          if (!existingInformationSlide) {
+            // Iterate through previous appointments
+            for (const lastAppointment of previousAppointments.reverse()) {
+              const timeDifference = appointment.StartTime - lastAppointment.EndTime;
+  
+              // If the time difference is within the threshold, consider it part of the same appointment
+              const timeThreshold = 60 * 30; // Adjust this threshold as needed (e.g., 30 minutes)
+              if (timeDifference <= timeThreshold) {
+                lastAppointment.EndTime = appointment.EndTime; // Update the end time
+                lastAppointment.Services.push(...appointment.Services); // Combine services
+                isSeparateAppointment = false;
+                break; // Exit the loop if combined with a previous appointment
+              }
+            }
+          }
+  
+          if (isSeparateAppointment) {
+            appointmentsByCustomer[customerID].push(appointment);
+          }
+        });
+  
+        // setScheduleData(appointmentsArray);
+        dispatch(setScheduleData(appointmentsArray));
+        if (!existingInformationSlide) {
+          dispatch(setAppointmentToCustomer(appointmentsByCustomer));
+        }
+        console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
+        console.log(appointmentsArray);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching the API:', (error as Error).message);
+      return null;
+    }
+  };
+  
 
   const fetchStaffApiData = async () => {
       try {
@@ -224,7 +226,7 @@ function Main() {
     contentHeight: 'auto',
     selectable: true,
     nowIndicator:true,
-  events: scheduleData
+    events: scheduleData
     ? scheduleData
         .filter(
           (appointment: any) =>
@@ -456,8 +458,9 @@ function Main() {
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
+
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
-      {existingInformationSlide && (<ExistingInfo handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
+      {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
       <ToastContainer
         position="top-center" 
         autoClose={3000} 

@@ -26,10 +26,11 @@ interface SlideOverPanelProps {
   appointmentData: any, 
   handleAppoinmentChange: (value: boolean) => void;
   handleDateChange: (value: Date) => void;
+  fetchAppoinmentApiData: (value: Date) => void
 }
 
 
-function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange }: SlideOverPanelProps) {
+function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
 
@@ -130,7 +131,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
       logError('Failed to update appointments');
     });
   }
-
   const handleUpdateBookingDate = () => {
     calendarRepository.updateAppointment(changeDateBody).then(response => {
       if (response.status === 200) {
@@ -239,6 +239,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                           goToDate={handleDateChange} 
                           updateChangeDateBody={(newDate, newStartTime) => updateChangeDateBody(newDate, newStartTime)}
                           startTime={appointmentData.StartTime}
+                          fetchAppoinmentApiData={fetchAppoinmentApiData}
                         />
                       </div>
 
@@ -252,6 +253,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                           <ServiceCard key={appointment.ID} service={appointment} onSelect={handleServiceDelete} />
                         </div>
                       ))}
+                       {/* <ServiceCard key={appointmentData.ID} service={appointmentData} onSelect={handleServiceDelete} /> */}
 
                       <div className="items-center justify-center text-center border-none shadow-none">
                           <Button onClick={() => {}} className="items-center justify-center text-center border-none shadow-none">

@@ -13,14 +13,14 @@ interface ExistingDatePickerProps {
   date: Date;
   goToDate: (date: Date) => void;
   updateChangeDateBody: (newDate: Date, newStartTime: Date) => void;
-  startTime : Date
+  startTime : Date,
+  fetchAppoinmentApiData: (value: Date) => void;
 }
 
-const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate, updateChangeDateBody, startTime }) => {
+const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate, updateChangeDateBody, startTime, fetchAppoinmentApiData }) => {
   const [flatpickrValue, setFlatpickrValue] = useState(date);
   const dispatch = useDispatch();
-  // const selectedDate = useSelector((state: any) => state.date.selectedDate);
-  
+  // const selectedDate = useSelector((state: any) => state.date.selectedDate); 
   const handleDateChange = (dates: Date[]) => {
     const selectedDate = dates[0];
 
@@ -33,6 +33,7 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate,
     goToDate(selectedDate);
     updateChangeDateBody(selectedDate, updatedStartTime)
     setFlatpickrValue(selectedDate);
+    fetchAppoinmentApiData(selectedDate)
   };
   
   
