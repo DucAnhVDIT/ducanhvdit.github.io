@@ -145,7 +145,7 @@ function Main() {
           dispatch(setAppointmentToCustomer(appointmentsByCustomer));
         }
         console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
-        // console.log(appointmentsArray);
+        console.log(appointmentsArray);
       }
     } catch (error) {
       console.error('Error fetching the API:', (error as Error).message);
@@ -268,6 +268,7 @@ function Main() {
     },
     longPressDelay:1,
     eventClick: handleEventClick,
+    eventOverlap:false,
     eventDrop: function (info) {
 
       if (!confirm("Are you sure you want to change?")) {
