@@ -363,7 +363,6 @@ function Main() {
     // Use calendarRef to access FullCalendar instance and navigate to the selected date
     if (calendarRef.current) {
       calendarRef.current.getApi().gotoDate(date);
-      // setDate(selectedDate)
     }
     fetchAppoinmentApiData(date)
   };

@@ -5,22 +5,39 @@ import 'flatpickr/dist/themes/dark.css';
 import Lucide from '../../base-components/Lucide';
 import Button from '../../base-components/Button';
 import { useEffect, useRef, useState } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
+// import { setSelectedDate } from '../../stores/dateSlice';
 
 
 interface ExistingDatePickerProps {
   date: Date;
   goToDate: (date: Date) => void;
+  updateChangeDateBody: (newDate: Date, newStartTime: Date) => void;
+  startTime : Date
 }
 
-const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate }) => {
+const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate, updateChangeDateBody, startTime }) => {
   const [flatpickrValue, setFlatpickrValue] = useState(date);
+  const dispatch = useDispatch();
+  // const selectedDate = useSelector((state: any) => state.date.selectedDate);
   
   const handleDateChange = (dates: Date[]) => {
-    goToDate(dates[0]);
-    setFlatpickrValue(dates[0]);
+    const selectedDate = dates[0];
+
+    const startTimeDD = new Date(startTime);
+    const existingTime = startTimeDD.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+
+    const updatedStartTime = new Date(selectedDate.toDateString() + ' ' + existingTime);
+  
+    goToDate(selectedDate);
+    updateChangeDateBody(selectedDate, updatedStartTime)
+    setFlatpickrValue(selectedDate);
   };
   
+  
+  
+
 
   const flatpickrRef = useRef<Flatpickr | null>(null);
 

@@ -4,7 +4,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import 'flatpickr/dist/themes/dark.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import React, { Key, useRef, useState } from 'react'
+import React, { Key, useEffect, useRef, useState } from 'react'
 import ServiceCard from "../../components/ServiceCard";
 import CustomerCard from "../../components/CustomerCard";
 import { useSelector, useDispatch } from 'react-redux';
@@ -40,6 +40,34 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
   const [searchValueService, setSearchValueService] = useState("");
   const [date, setDate] = useState(new Date());
+
+  const [changeDateBody, setChangeDateBody] = useState({
+    ID: appointmentData.ID,
+    FirstName: appointmentData.FirstName ,
+    LastName: appointmentData.LastName,
+    Mobile: appointmentData.Mobile,
+    Email: appointmentData.Email,
+    BookDate: appointmentData.BookDate,
+    StartTime: appointmentData.StartTime,
+    ServiceID: appointmentData.ServiceID,
+    StaffID: appointmentData.StaffID,
+    Islocked: false,
+    CustomerNote: "",
+    GuestNotes: null,
+  });
+
+  const updateChangeDateBody = (newDate: Date, newStartTime: Date) => {
+    setChangeDateBody((prev) => ({
+      ...prev,
+      BookDate: newDate,
+      StartTime: newStartTime,
+    }));
+  };
+  
+
+  useEffect(() => {
+    console.log("Body thay doi nay",changeDateBody)
+  },[changeDateBody])
   
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
@@ -103,7 +131,20 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     });
   }
 
-  
+  const handleUpdateBookingDate = () => {
+    calendarRepository.updateAppointment(changeDateBody).then(response => {
+      if (response.status === 200) {
+          logSuccess('Appointment rescheduled successfully')
+          // setAppointmentChange(prev => !prev)
+          console.log("da chuyen sang ngay", new Date(appointmentData.BookDate))
+      } else {
+          logError('Error updating appointment. Please try again.')
+      }
+    })
+    .catch(error => {
+      logError('An unexpected error occurred. Please try again later.')
+    });
+  }
 
   const handleServiceDelete = (selectedService: any) => {
     dispatch(deleteService(selectedService.ProductID));
@@ -194,7 +235,12 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                       <CustomerCard customer={appointmentData} onClick={() => {}}/>
                       
                       <div className="mt-3 w-full">
-                        <ExistingDatePicker date={new Date(appointmentData.BookDate)} goToDate={handleDateChange}/>
+                        <ExistingDatePicker 
+                          date={new Date(appointmentData.BookDate)} 
+                          goToDate={handleDateChange} 
+                          updateChangeDateBody={(newDate, newStartTime) => updateChangeDateBody(newDate, newStartTime)}
+                          startTime={appointmentData.StartTime}
+                        />
                       </div>
 
                       {/* <ServiceCard
@@ -269,11 +315,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                     </Slideover>
                     )}
 
-                    {/* End Service List */}
-
-
-
-                    
+                    {/* End Service List */}     
                     {/* {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
                         <ServiceCard
                             key={selectedService.ProductID}
@@ -289,7 +331,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                     <Button className=" bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
                     </Button>
-                    <Button className=" bg-primary text-white ml-3" onClick={()=>{}}>
+                    <Button className=" bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
                       Submit
                     </Button>
                   </Slideover.Footer>

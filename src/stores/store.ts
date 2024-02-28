@@ -8,6 +8,7 @@ import authReducer from './userSlice'
 import billReducer from './billSlice'
 import serviceListReducer from './serviceListSlice'
 import appointmentReducer from './appoinmentSlice'
+// import dateReducer from './dateSlice';
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     bill: billReducer,
     serviceListState: serviceListReducer,
     appointment : appointmentReducer,
+    // date: dateReducer,
   },
 })
 
