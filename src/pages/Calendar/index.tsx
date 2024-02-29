@@ -39,7 +39,7 @@ function Main() {
   const [resourceID, setResourceID] = useState("");
   const [staffData, setStaffData] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [serviceData, setServiceData] = useState(null);
+  const [serviceData, setServiceData] = useState<string[] | null>(null);
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false)
   const [selectedStaff, setSelectedStaff] = useState(null); // Initially, no staff is selected
 
@@ -269,44 +269,62 @@ function Main() {
     longPressDelay:1,
     eventClick: handleEventClick,
     eventOverlap:false,
+    slotEventOverlap:false,
     eventDrop: function (info) {
+      const canResourceHandleService = (resourceID: any, serviceID: any) => {
+        const stafID = info.event.extendedProps.resourceId;
+    
+        return serviceData?.includes(serviceID)
+      } 
 
       if (!confirm("Are you sure you want to change?")) {
           info.revert();
       } else {
+          const serviceID = info.event.extendedProps.serviceID;
+          
           if (info.event.extendedProps.requirelock) {
               alert("This appointment is locked, unable to make any changes.");
               info.revert();
-          }
+          } else if (info.newResource) {
+              const newResourceID = info.newResource._resource.id;
   
-          // Extracting relevant data for the request
-          const appointmentData = {
-              ID: info.event.extendedProps.ID,
-              FirstName: info.event.extendedProps.firstName,
-              LastName: info.event.extendedProps.lastName,
-              Mobile: info.event.extendedProps.Mobile,
-              Email: "",
-              BookDate: info.event.extendedProps.bookDate,
-              StartTime: info.event.start,
-              ServiceID: info.event.extendedProps.serviceID,
-              StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
-              Islocked: false,
-              CustomerNote: "",
-              GuestNotes: null,
-          };
-          calendarRepository.updateAppointment(appointmentData).then(response => {
-            if (response.status === 200) {
-                logSuccess('Appointment rescheduled successfully')
-                setAppointmentChange(prev => !prev)
-            } else {
-                logError('Error updating appointment. Please try again.')
-            }
-        })
-        .catch(error => {
-          logError('An unexpected error occurred. Please try again later.')
-        });
+              // Check if the newResource can handle the specified ServiceID
+              if (!canResourceHandleService(newResourceID, serviceID)) {
+                  alert("The selected resource cannot handle the service for this appointment.");
+                  info.revert();
+                  return;
+              }
+  
+              // Extract relevant data for the request
+              const appointmentData = {
+                  ID: info.event.extendedProps.ID,
+                  FirstName: info.event.extendedProps.firstName,
+                  LastName: info.event.extendedProps.lastName,
+                  Mobile: info.event.extendedProps.Mobile,
+                  Email: "",
+                  BookDate: info.event.extendedProps.bookDate,
+                  StartTime: info.event.start,
+                  ServiceID: serviceID,
+                  StaffID: newResourceID,
+                  Islocked: false,
+                  CustomerNote: "",
+                  GuestNotes: null,
+              };
+  
+              calendarRepository.updateAppointment(appointmentData).then(response => {
+                  if (response.status === 200) {
+                      logSuccess('Appointment rescheduled successfully');
+                      setAppointmentChange(prev => !prev);
+                  } else {
+                      logError('Error updating appointment. Please try again.');
+                  }
+              }).catch(error => {
+                  logError('An unexpected error occurred. Please try again later.');
+              });
+          }
       }
-    },
+  },
+  
     eventResize: function (info) {
       if (!confirm("Are you sure you want to change?")) {
         info.revert();
