@@ -13,17 +13,18 @@ import { Menu, Tab, Dialog } from "../../base-components/Headless";
 import eposRepository from "../../repositories/eposRepository";
 import { useDispatch, useSelector } from "react-redux";
 import { addToBill, clearBill, clearItem } from "../../stores/billSlice";
+import Breadcrumb from "../../base-components/Breadcrumb";
 
 function Main() {
   const dispatch = useDispatch();
 
   const [newOrderModal, setNewOrderModal] = useState(false);
   const [addItemModal, setAddItemModal] = useState(false);
-  const [staffHidden, setStaffHidden] = useState(false)
-  const [listHidden, setListHidden] = useState(true)
-  const [categoryHidden, setCategoryHidden] = useState(true)
-  const [serviceHidden, setServiceHidden] = useState(true)
 
+  const [staffName, setStaffName] = useState('')
+  const [categoryName, setCategoryName] = useState('')
+
+  const [showComponent, setShowComponent] = useState('')
   const [searchValue, setSearchValue] = useState("");
   
   const [staffs, setStaff] = useState<any>([])
@@ -36,13 +37,22 @@ function Main() {
   
   // open page, show list of Staffs
   useEffect(() => {
-    getStaff()
+    dispatch(clearBill())
   }, [])
 
   const getStaff = () => {
     eposRepository.getStaff().then((res: any) => {
-      setStaff(res.data.Staffs)
+      if(res.data.Staffs !== null) {
+        setStaff(res.data.Staffs)
+      } else {
+        console.log('this')
+      }
     })
+  }
+
+  const handleGetStaff = () => {
+    getStaff()
+    setShowComponent('staff')
   }
 
   // call API list what Staff can do and show them
@@ -53,12 +63,24 @@ function Main() {
     } catch (err) {}
   }
 
-  // come back to list Staffs
-  const clickStaffButton = () => {
-    setStaffHidden(false)
-    setListHidden(true)
-    setCategoryHidden(true)
-    setServiceHidden(true)
+  const handleHold = () => {
+    console.log('click Hold')
+    console.log(billDetails)
+  }
+
+  const handleRecall = () => {
+    console.log('click Recall')
+  }
+
+  const handleGetServices = async () => {
+    try {
+      if (staffName === '') {
+        await getServicesCategory()
+        await getFullServices(0, 0)
+      } else {
+        setShowComponent('categories')
+      }
+    } catch (er) {}
   }
 
   // filter category have in service list, map and display when fullService being called
@@ -71,7 +93,7 @@ function Main() {
     } else {
       setServicesCategory([])
     }
-    showListCat()
+    setShowComponent('categories')
   }, [fullServices]);
 
   //get list Category
@@ -86,36 +108,17 @@ function Main() {
   const getFullServices = async (staffID: number, catID: number) => {
     try {
       await eposRepository.getServices(staffID, catID).then((res: any) => {
-        setFullServices(res.data.Services)
+        if (res.data.Services !== null) {
+          setFullServices(res.data.Services)
+        }
       })
     } catch (err) {}
   }
   // get service from Category without need to call API
-  const getServices = (CatID: number) => {
-    setCategoryHidden(true)
-    setServiceHidden(false)
+  const getServicesList = (CatID: number) => {
     const sameCat = fullServices.filter((item: any) => item.CategoryID === CatID)
     setServices(sameCat)
-  }
-
-  // show list Category else show list Staff
-  const showListCat = () => {
-    if (servicesCategory.length > 0) {
-      setStaffHidden(true)
-      setListHidden(false)
-      setCategoryHidden(false)
-      setServiceHidden(true)
-    } else {
-      setStaffHidden(false)
-      setListHidden(true)
-      setCategoryHidden(true)
-      setServiceHidden(true)
-    }
-  }
-  // back button to show list Category
-  const clickBackButton = () => {
-    setCategoryHidden(false)
-    setServiceHidden(true)
+    setShowComponent('services')
   }
 
   // display search value when typing in search box
@@ -123,18 +126,18 @@ function Main() {
     // if there word in search box
     if (searchValue.length > 0) {
       const filtered = fullServices.filter((service: any) =>
-        service.ProductName.toLowerCase().includes(searchValue.toLowerCase())
+        service.ProductName.toLowerCase().includes(searchValue.toLowerCase()) 
       );
       setServices(filtered)
-      setCategoryHidden(true)
-      setServiceHidden(false)
+      setCategoryName('Search')
+      setShowComponent('services')
       // else display Category again
     } else {
       const commonServices = servicesCategory.filter((category: any) =>
         fullServices.some((service: any) => service.CategoryID === category.CategoryID)
       )
       setServicesCategory(commonServices)
-      showListCat()
+      setShowComponent('categories')
     }
   }, [searchValue])
   
@@ -143,17 +146,23 @@ function Main() {
   const totalPrice = useSelector((state: any) => state.bill.totalPrice)
   // add item to bill with redux
   const addItem = (data: any) => {
-    dispatch(addToBill(data))
+    const pushdata = { ...data, staffName} 
+    dispatch(addToBill(pushdata))
   }
   // clear the bill
   const handleNewOrderClick = (event: React.MouseEvent) => {
     event.preventDefault();
+    setNewOrderModal(true)
+    dispatch(clearBill())
+  }
+
+  const handleClearItems = () => {
     dispatch(clearBill())
   }
 
   return (
     <>
-      <div className="flex flex-col items-center mt-8 intro-y sm:flex-row">
+      <div className="flex flex-col items-center mt-4 intro-y sm:flex-row">
         <h2 className="mr-auto text-lg font-medium">Point of Sale</h2>
         <div className="flex w-full mt-4 sm:w-auto sm:mt-0">
           <Button
@@ -167,28 +176,10 @@ function Main() {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-12 gap-5 mt-5 intro-y">
+      <div className="grid grid-cols-12 gap-4 mt-4 intro-y">
         {/* BEGIN: Staff List */}       
         <div className="col-span-12 intro-y lg:col-span-8">
-        {
-          !staffHidden && (
-          <div className="grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto">
-            {staffs.map((staff: any, StaffID: number) => (
-            <div  key={StaffID} 
-                  onClick={(event) => {
-                    event.preventDefault();
-                    getListStaffService(staff.StaffID)
-                  }}
-                  className="col-span-12 p-5 cursor-pointer border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white sm:col-span-4 2xl:col-span-3 box zoom-in">
-                <div className="text-base font-medium">{staff.StaffName}</div>
-            </div>
-            ))}
-          </div>
-          )
-        }
         {/* END: Staff List */} 
-        {
-          !listHidden && (
             <div className="lg:flex intro-y">
             <div className="relative">
               <FormInput
@@ -203,28 +194,10 @@ function Main() {
                 className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 text-slate-500"
               />
             </div>
-            {
-              !serviceHidden &&  
-              <Button 
-                onClick={(e: React.MouseEvent) => {
-                  e.preventDefault()
-                  clickBackButton()
-                }}
-                className="mx-2 shadow-md"
-              >
-                Back
-              </Button>
-            }
-           
-            <Button 
-              onClick={(e: React.MouseEvent) => {
-                e.preventDefault()
-                clickStaffButton()
-              }}
-              className="mx-2 shadow-md"
-            >
-              Staff
-            </Button>
+            <Breadcrumb className="hidden mr-auto -intro-x sm:flex p-3">
+              <Breadcrumb.Link active>{staffName}</Breadcrumb.Link>
+              <Breadcrumb.Link active className={`${showComponent === 'services'? '' : 'hidden'}`}>{categoryName}</Breadcrumb.Link>
+            </Breadcrumb>
             <FormSelect className="w-full px-4 py-3 mt-3 ml-auto !box lg:w-auto lg:mt-0">
               <option>Sort By</option>
               <option>A to Z</option>
@@ -233,31 +206,62 @@ function Main() {
               <option>Highest Price</option>
             </FormSelect>
           </div>
-          )
-        }
+        <div className="grid grid-cols-12 gap-5 mt-5">
+          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+            <div className="text-base font-medium"
+                  onClick={handleHold}>Hold</div>
+          </div>
+          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+            <div className="text-base font-medium"
+                  onClick={handleRecall}>Recall Order</div>
+          </div>
+          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+            <div className="text-base font-medium">Product</div>
+          </div>
+          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in active:bg-blue-700 active:text-white">
+            <div className="text-base font-medium"
+                  onClick={handleGetStaff}>Staff</div>
+          </div>
+          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+            <div className="text-base font-medium"
+                  onClick={handleGetServices}>Service</div>
+          </div>
+          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+            <div className="text-base font-medium">Misc</div>
+          </div>
+        </div>
+          <div className={`grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto border-t ${showComponent === 'staff'? '' : 'hidden'}`}>
+            {staffs.map((staff: any, StaffID: number) => (
+            <div  key={StaffID} 
+                  onClick={(event) => {
+                    event.preventDefault();
+                    getListStaffService(staff.StaffID)
+                    setStaffName(staff.StaffName)
+                  }}
+                  className="intro-y col-span-12 p-5 cursor-pointer border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white sm:col-span-4 2xl:col-span-3 box zoom-in">
+
+                <div className="text-base font-medium">{staff.StaffName}</div>
+            </div>
+            ))}
+          </div>
           {/*BEGIN: Display list Category*/}
-          {
-            !categoryHidden && (
-            <div className="grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto">
+            <div className={`grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto border-t ${showComponent === 'categories'? '' : 'hidden'}`}>
               {servicesCategory.map((category: any, CategoryID: number) => (
               <div  key={CategoryID} 
                     onClick={(event) => {
                       event.preventDefault();
-                      getServices(category.CategoryID)
+                      getServicesList(category.CategoryID)
+                      setCategoryName(category.CategoryName)
                     }}
                     className="intro-y col-span-12 p-5 cursor-pointer border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white sm:col-span-4 2xl:col-span-3 box zoom-in">
                   <div className="text-base font-medium truncate">{category.CategoryName}</div>
               </div>
               ))}
             </div>
-            )
-          }
           {/*END: Display list Category*/}
 
           {/*BEGIN: Display list Services*/}
-          {
-            !serviceHidden && 
-            <div className="grid grid-cols-12 gap-5 p-4 mt-5 border-t max-h-[70vh] overflow-y-auto">
+            <div className={`grid grid-cols-12 gap-5 p-4 mt-5 border-t max-h-[70vh] overflow-y-auto ${showComponent === 'services'? '' : 'hidden'}`}>
             {services.map((service: any, ProductID: number) => (
               <a
                 key={ProductID}
@@ -275,8 +279,7 @@ function Main() {
                 </div>
               </a>
             ))}
-          </div>
-          }    
+          </div>   
           {/*END: Display list Services*/}
         </div>
         {/* END: Item List */}
@@ -312,6 +315,7 @@ function Main() {
                         {bill.ProductName}
                       </div>
                       <div className="text-slate-500">x {bill.quantity}</div>
+                      <div className="text-slate-500"> - {bill.staffName}</div>
                       <Lucide
                         icon="Trash2"
                         onClick={(event: React.MouseEvent) => {
@@ -330,15 +334,35 @@ function Main() {
                   <div className="p-2 mt-5 box text-center">Your bill is empty. Add items to your order.</div>
                 )
               }
-              <div className="flex p-5 mt-5 box">
-                <FormInput
-                  type="text"
-                  className="w-full px-4 py-3 pr-10 bg-slate-100 border-slate-200/60"
-                  placeholder="Use coupon code..."
-                />
-                <Button variant="primary" className="ml-2">
-                  Apply
-                </Button>
+              <div className="p-5 mt-5 box">
+                <div className="flex">
+                  <FormInput
+                    type="text"
+                    className="w-full px-4 py-3 pr-10 bg-slate-100 border-slate-200/60"
+                    placeholder="Use coupon code..."
+                  />
+                  <Button variant="primary" className="ml-2">
+                    Apply
+                  </Button>
+                </div>
+                <div className="flex mt-4">
+                  <div className="mt-4 box text-center">
+                    Discount
+                  </div>
+                  <Button data-tw-merge data-placement="top" title="Discount by amount" className="ml-2">
+                    £
+                  </Button>
+                  <Button data-tw-merge data-placement="top" title="Discount by percentage" className="mx-2">
+                    %
+                  </Button>
+                  <FormInput
+                    type="text"
+                    className="w-full px-4 py-3 bg-slate-100 border-slate-200/60"
+                    placeholder="Discount bill"
+                    // value={discountNumber}
+                  />
+                </div>
+                
               </div>
               <div className="p-5 mt-5 box">
                 <div className="flex">
@@ -361,26 +385,17 @@ function Main() {
                 </div>
               </div>
               <div className="flex mt-5">
-                <Button className="w-32 border-slate-300 dark:border-darkmode-400 text-slate-500">
+                <Button className="w-32 border-slate-300 dark:border-darkmode-400 text-slate-500" 
+                        onClick={handleClearItems}>
                   Clear Items
                 </Button>
                 <Button variant="primary" className="w-32 ml-auto shadow-md">
-                  Charge
+                  Pay
                 </Button>
               </div>
             </Tab.Panel>
             <Tab.Panel>
               <div className="p-5 mt-5 box">
-                <div className="flex items-center pb-5 border-b border-slate-200 dark:border-darkmode-400">
-                  <div>
-                    <div className="text-slate-500">Time</div>
-                    <div className="mt-1">02/06/20 02:10 PM</div>
-                  </div>
-                  <Lucide
-                    icon="Clock"
-                    className="w-4 h-4 ml-auto text-slate-500"
-                  />
-                </div>
                 <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
                   <div>
                     <div className="text-slate-500">Customer</div>
@@ -393,21 +408,11 @@ function Main() {
                 </div>
                 <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
                   <div>
-                    <div className="text-slate-500">People</div>
+                    <div className="text-slate-500">Mobile</div>
                     <div className="mt-1">3</div>
                   </div>
                   <Lucide
                     icon="Users"
-                    className="w-4 h-4 ml-auto text-slate-500"
-                  />
-                </div>
-                <div className="flex items-center pt-5">
-                  <div>
-                    <div className="text-slate-500">Table</div>
-                    <div className="mt-1">21</div>
-                  </div>
-                  <Lucide
-                    icon="Mic"
                     className="w-4 h-4 ml-auto text-slate-500"
                   />
                 </div>
@@ -440,21 +445,21 @@ function Main() {
               />
             </div>
             <div className="col-span-12">
-              <FormLabel htmlFor="pos-form-2">Table</FormLabel>
+              <FormLabel htmlFor="pos-form-2">Mobile</FormLabel>
               <FormInput
                 id="pos-form-2"
                 type="text"
                 className="flex-1"
-                placeholder="Customer table"
+                placeholder="Mobile"
               />
             </div>
             <div className="col-span-12">
-              <FormLabel htmlFor="pos-form-3">Number of People</FormLabel>
+              <FormLabel htmlFor="pos-form-3">Email</FormLabel>
               <FormInput
                 id="pos-form-3"
                 type="text"
                 className="flex-1"
-                placeholder="People"
+                placeholder="Email"
               />
             </div>
           </Dialog.Description>
@@ -481,79 +486,6 @@ function Main() {
         </Dialog.Panel>
       </Dialog>
       {/* END: New Order Modal */}
-      {/* BEGIN: Add Item Modal */}
-      <Dialog
-        open={addItemModal}
-        onClose={() => {
-          setAddItemModal(false);
-        }}
-        initialFocus={addItemRef}
-      >
-        <Dialog.Panel>
-          <Dialog.Title>
-            <h2 className="mr-auto text-base font-medium">
-              {fakerData[0].foods[0].name}
-            </h2>
-          </Dialog.Title>
-          <Dialog.Description className="grid grid-cols-12 gap-4 gap-y-3">
-            <div className="col-span-12">
-              <FormLabel htmlFor="pos-form-4" className="form-label">
-                Quantity
-              </FormLabel>
-              <div className="flex flex-1">
-                <Button
-                  type="button"
-                  className="w-12 mr-1 border-slate-200 bg-slate-100 dark:bg-darkmode-700 dark:border-darkmode-500 text-slate-500"
-                >
-                  -
-                </Button>
-                <FormInput
-                  id="pos-form-4"
-                  type="text"
-                  className="w-24 text-center"
-                  placeholder="Item quantity"
-                  value="2"
-                  onChange={() => {}}
-                />
-                <Button
-                  type="button"
-                  className="w-12 ml-1 border-slate-200 bg-slate-100 dark:bg-darkmode-700 dark:border-darkmode-500 text-slate-500"
-                >
-                  +
-                </Button>
-              </div>
-            </div>
-            <div className="col-span-12">
-              <FormLabel htmlFor="pos-form-5">Notes</FormLabel>
-              <FormTextarea
-                id="pos-form-5"
-                placeholder="Item notes"
-              ></FormTextarea>
-            </div>
-          </Dialog.Description>
-          <Dialog.Footer className="text-right">
-            <Button
-              variant="outline-secondary"
-              type="button"
-              onClick={() => {
-                setAddItemModal(false);
-              }}
-              className="w-24 mr-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              type="button"
-              className="w-24"
-              ref={addItemRef}
-            >
-              Add Item
-            </Button>
-          </Dialog.Footer>
-        </Dialog.Panel>
-      </Dialog>
-      {/* END: Add Item Modal */}
     </>
   );
 }

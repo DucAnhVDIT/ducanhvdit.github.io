@@ -10,7 +10,9 @@ const basketSlice = createSlice({
   reducers: {
     addToBill: (state, action) => {
       // compare new value to existing array if have same ID
-      const existingItem = state.billItems.find((item: any) => item.ProductID === action.payload.ProductID)
+      const existingItem = state.billItems.find(
+        (item: any) => item.ProductID === action.payload.ProductID && item.staffName === action.payload.staffName
+      )
       // if ID the same
       if (existingItem) {
         // add extra quantity
