@@ -14,13 +14,11 @@ import { toast } from "react-toastify";
 import calendarRepository from "../../repositories/calendarRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 
-
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;
   appointmentData: any, 
 }
-
 
 function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps) {
 

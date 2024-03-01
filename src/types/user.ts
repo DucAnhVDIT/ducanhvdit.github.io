@@ -1,4 +1,4 @@
-import { IRegister, IUser } from './types'
+import { INewOrder, IRegister, IUser } from './types'
 
 export const dataUser: IUser = JSON.parse(sessionStorage.getItem('user')!)
 
@@ -18,4 +18,11 @@ export const registerData: IRegister = {
   county: '',
   postcode: '',
   country: '',
+}
+
+export const customerData: INewOrder = {
+  CustomerID: 0,
+  CustomerName: '',
+  Mobile: 0,
+  Email: '',
 }

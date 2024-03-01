@@ -14,12 +14,12 @@ import eposRepository from "../../repositories/eposRepository";
 import { useDispatch, useSelector } from "react-redux";
 import { addToBill, clearBill, clearItem } from "../../stores/billSlice";
 import Breadcrumb from "../../base-components/Breadcrumb";
+import NewOrder from "./newOrder";
 
 function Main() {
   const dispatch = useDispatch();
 
   const [newOrderModal, setNewOrderModal] = useState(false);
-  const [addItemModal, setAddItemModal] = useState(false);
 
   const [buttonDiscount, setButtonDiscount] = useState('')
   const [discountNumber, setDiscountNumber] = useState<any>('')
@@ -36,7 +36,7 @@ function Main() {
   const [services, setServices] = useState<any>([])
   const [fullServices, setFullServices] = useState<any>([])
 
-  const createTicketRef = useRef(null);
+  // const createTicketRef = useRef(null);
   const addItemRef = useRef(null);
   
   // open page, show list of Staffs
@@ -155,7 +155,6 @@ function Main() {
   const handleNewOrderClick = (event: React.MouseEvent) => {
     event.preventDefault();
     setNewOrderModal(true)
-    dispatch(clearBill())
   }
 
   const handleDiscount = (data: any) => {
@@ -199,7 +198,9 @@ function Main() {
   const handleClearItems = () => {
     dispatch(clearBill())
   }
-
+  const handleCloseOrder = () => {
+    setNewOrderModal(false)
+  }
   return (
     <>
       <div className="flex flex-col items-center mt-4 intro-y sm:flex-row">
@@ -258,7 +259,7 @@ function Main() {
           <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
             <div className="text-base font-medium">Product</div>
           </div>
-          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in active:bg-blue-700 active:text-white">
+          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
             <div className="text-base font-medium"
                   onClick={handleGetStaff}>Staff</div>
           </div>
@@ -330,7 +331,7 @@ function Main() {
               <Tab.List variant="pills">
                 <Tab>
                   <Tab.Button as="button" className="w-full py-2">
-                    Ticket
+                    Orders
                   </Tab.Button>
                 </Tab>
                 <Tab>
@@ -479,68 +480,7 @@ function Main() {
         {/* END: Ticket */}
       </div>
       {/* BEGIN: New Order Modal */}
-      <Dialog
-        open={newOrderModal}
-        onClose={() => {
-          setNewOrderModal(false);
-        }}
-        initialFocus={createTicketRef}
-      >
-        <Dialog.Panel>
-          <Dialog.Title>
-            <h2 className="mr-auto text-base font-medium">New Order</h2>
-          </Dialog.Title>
-          <Dialog.Description className="grid grid-cols-12 gap-4 gap-y-3">
-            <div className="col-span-12">
-              <FormLabel htmlFor="pos-form-1">Name</FormLabel>
-              <FormInput
-                id="pos-form-1"
-                type="text"
-                className="flex-1"
-                placeholder="Customer name"
-              />
-            </div>
-            <div className="col-span-12">
-              <FormLabel htmlFor="pos-form-2">Mobile</FormLabel>
-              <FormInput
-                id="pos-form-2"
-                type="text"
-                className="flex-1"
-                placeholder="Mobile"
-              />
-            </div>
-            <div className="col-span-12">
-              <FormLabel htmlFor="pos-form-3">Email</FormLabel>
-              <FormInput
-                id="pos-form-3"
-                type="text"
-                className="flex-1"
-                placeholder="Email"
-              />
-            </div>
-          </Dialog.Description>
-          <Dialog.Footer className="text-right">
-            <Button
-              variant="outline-secondary"
-              type="button"
-              onClick={() => {
-                setNewOrderModal(false);
-              }}
-              className="w-32 mr-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              type="button"
-              className="w-32"
-              ref={createTicketRef}
-            >
-              Create Order
-            </Button>
-          </Dialog.Footer>
-        </Dialog.Panel>
-      </Dialog>
+      {newOrderModal && (<NewOrder openModal={newOrderModal} onClose={handleCloseOrder}/> )}
       {/* END: New Order Modal */}
     </>
   );

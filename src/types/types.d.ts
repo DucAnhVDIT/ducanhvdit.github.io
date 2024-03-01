@@ -42,8 +42,8 @@ export interface ICategory {
 }
 
 export interface INewOrder {
+  CustomerID: number
   CustomerName: string
   Mobile: number
   Email: string
-  Bill: []
 }
