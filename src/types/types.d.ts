@@ -40,3 +40,10 @@ export interface ICategory {
   CategoryImage: string
   OrderNo: number
 }
+
+export interface INewOrder {
+  CustomerName: string
+  Mobile: number
+  Email: string
+  Bill: []
+}

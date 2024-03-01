@@ -21,6 +21,10 @@ function Main() {
   const [newOrderModal, setNewOrderModal] = useState(false);
   const [addItemModal, setAddItemModal] = useState(false);
 
+  const [buttonDiscount, setButtonDiscount] = useState('')
+  const [discountNumber, setDiscountNumber] = useState<any>('')
+  const [discountAmount, setDiscountAmount] = useState<number>(0)
+  const [finalPrice, setFinalPrice] = useState<any>('')
   const [staffName, setStaffName] = useState('')
   const [categoryName, setCategoryName] = useState('')
 
@@ -44,9 +48,7 @@ function Main() {
     eposRepository.getStaff().then((res: any) => {
       if(res.data.Staffs !== null) {
         setStaff(res.data.Staffs)
-      } else {
-        console.log('this')
-      }
+      } 
     })
   }
 
@@ -155,6 +157,44 @@ function Main() {
     setNewOrderModal(true)
     dispatch(clearBill())
   }
+
+  const handleDiscount = (data: any) => {
+    setButtonDiscount((prev) => (prev === data ? '0' : data))
+  }
+
+  const handleNumberDiscount = (e: any) => {
+    let value = e.target.value;
+    //validate with number and 1 dots only
+    let newValue = value.replace(/[^0-9,.]/g, '').replace(/,/g, '.').replace(/^0+/, "0");
+    // Replace any additional dots with an empty string
+    const dotIndex = newValue.indexOf('.');
+    if (dotIndex !== -1 && newValue.indexOf('.', dotIndex + 1) !== -1) {
+      newValue = newValue.replace(/\./g, (match: any, index: any) => {
+        return index === dotIndex ? '.' : '';
+      });
+    }
+    setDiscountNumber(newValue)
+  }
+
+  useEffect(() => {
+    if (billDetails.length !== 0) {
+      let totalPriceAfterDiscount = totalPrice;
+      if (buttonDiscount === '£') {
+        totalPriceAfterDiscount -= discountNumber;
+        setDiscountAmount(discountNumber)
+      } else if (buttonDiscount === '%') {
+        const discountAmount = (totalPrice * discountNumber) / 100;
+        setDiscountAmount(discountAmount)
+        totalPriceAfterDiscount -= discountAmount;
+      } else {
+        setDiscountAmount(0)
+      }
+      setFinalPrice(totalPriceAfterDiscount);
+    } else {
+      setDiscountAmount(0)
+      setFinalPrice(0)
+    }
+  }, [discountNumber, buttonDiscount, billDetails, totalPrice]);
 
   const handleClearItems = () => {
     dispatch(clearBill())
@@ -315,7 +355,7 @@ function Main() {
                         {bill.ProductName}
                       </div>
                       <div className="text-slate-500">x {bill.quantity}</div>
-                      <div className="text-slate-500"> - {bill.staffName}</div>
+                      <div className={`text-slate-500 ${bill.staffName !== '' ? '' : 'hidden' }`}>- {bill.staffName}</div>
                       <Lucide
                         icon="Trash2"
                         onClick={(event: React.MouseEvent) => {
@@ -349,20 +389,26 @@ function Main() {
                   <div className="mt-4 box text-center">
                     Discount
                   </div>
-                  <Button data-tw-merge data-placement="top" title="Discount by amount" className="ml-2">
+                  <Button data-tw-merge data-placement="top" 
+                          title="Discount by amount" 
+                          className={`ml-2 hover:bg-blue-700 hover:text-white  ${buttonDiscount === '£' ? 'bg-blue-700 text-white' : ''}`} 
+                          onClick={() => handleDiscount('£')}>
                     £
                   </Button>
-                  <Button data-tw-merge data-placement="top" title="Discount by percentage" className="mx-2">
+                  <Button data-tw-merge data-placement="top" 
+                          title="Discount by percentage" 
+                          className={`mx-2 hover:bg-blue-700 hover:text-white  ${buttonDiscount === '%' ? 'bg-blue-700 text-white' : ''}`} 
+                          onClick={() => handleDiscount('%')}>
                     %
                   </Button>
                   <FormInput
                     type="text"
                     className="w-full px-4 py-3 bg-slate-100 border-slate-200/60"
                     placeholder="Discount bill"
-                    // value={discountNumber}
+                    value={discountNumber}
+                    onChange={(e) => {handleNumberDiscount(e)}}
                   />
-                </div>
-                
+                </div>                
               </div>
               <div className="p-5 mt-5 box">
                 <div className="flex">
@@ -371,7 +417,7 @@ function Main() {
                 </div>
                 <div className="flex mt-4">
                   <div className="mr-auto">Discount</div>
-                  <div className="font-medium text-danger"></div>
+                  <div className={`font-medium text-danger ${discountAmount !== 0  ? '':'hidden'}`}>-£{discountAmount}</div>
                 </div>
                 <div className="flex mt-4">
                   <div className="mr-auto">Tax</div>
@@ -381,7 +427,7 @@ function Main() {
                   <div className="mr-auto text-base font-medium">
                     Total Charge
                   </div>
-                  <div className="text-base font-medium">£{totalPrice}</div>
+                  <div className="text-base font-medium">£{finalPrice}</div>
                 </div>
               </div>
               <div className="flex mt-5">
@@ -409,6 +455,16 @@ function Main() {
                 <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
                   <div>
                     <div className="text-slate-500">Mobile</div>
+                    <div className="mt-1">3</div>
+                  </div>
+                  <Lucide
+                    icon="Users"
+                    className="w-4 h-4 ml-auto text-slate-500"
+                  />
+                </div>
+                <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
+                  <div>
+                    <div className="text-slate-500">Email</div>
                     <div className="mt-1">3</div>
                   </div>
                   <Lucide
@@ -480,7 +536,7 @@ function Main() {
               className="w-32"
               ref={createTicketRef}
             >
-              Create Ticket
+              Create Order
             </Button>
           </Dialog.Footer>
         </Dialog.Panel>
