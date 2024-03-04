@@ -27,10 +27,11 @@ interface SlideOverPanelProps {
   handleAppoinmentChange: (value: boolean) => void;
   handleDateChange: (value: Date) => void;
   fetchAppoinmentApiData: (value: Date) => void
+  serviceData: any
 }
 
 
-function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData }: SlideOverPanelProps) {
+function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
 
@@ -65,7 +66,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     }));
   };
   
-
   // useEffect(() => {
   //   console.log("Body thay doi nay",changeDateBody)
   // },[changeDateBody])
@@ -256,7 +256,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                        {/* <ServiceCard key={appointmentData.ID} service={appointmentData} onSelect={handleServiceDelete} /> */}
 
                       <div className="items-center justify-center text-center border-none shadow-none">
-                          <Button onClick={() => {}} className="items-center justify-center text-center border-none shadow-none">
+                          <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">
                             <Lucide
                               icon="PlusCircle"
                                 className="text-primary text-lg round mr-1"
@@ -304,26 +304,19 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                                 )}
                             </div>
                             </div>
-                            {/* {serviceData && serviceData
+                            {serviceData && serviceData
                             .filter((service: { ProductName: string }) =>
                                 service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
                             )
                             .map((service: { ProductID: string }) => (
-                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
-                            ))} */}
+                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceDelete}/>
+                            ))}
                         </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
                     )}
 
                     {/* End Service List */}     
-                    {/* {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
-                        <ServiceCard
-                            key={selectedService.ProductID}
-                            service={selectedService}
-                            onSelect={handleServiceDelete}
-                        />
-                    ))} */}
                     </div>
                   </Slideover.Description>
                   {/* END: Slide Over Body */}

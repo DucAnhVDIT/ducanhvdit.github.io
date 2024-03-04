@@ -56,10 +56,13 @@ function Main() {
     setAppointmentChange((prev) => !prev);
   };
 
+  useEffect(() => {
+    console.log("sau khi chon tho",selectedStaff)
+  },[selectedStaff])
+  
   const handleStaffChange = (event: { target: { value: any; }; }) => {
     const selectedStaffId = event.target.value;
     setSelectedStaff(selectedStaffId);
-    console.log("sau khi chon tho",selectedStaff)
   };
 
   useEffect(() => {
@@ -87,7 +90,8 @@ function Main() {
 
   const handleEventClick = async (info: { event: any }) => {
     try {
-      const appointmentID = info.event.extendedProps.ID; // Replace 'id' with the actual property name
+      const appointmentID = info.event.extendedProps.ID;
+      fetchServiceApiData(info.event.extendedProps.resourceId)
       await calendarRepository.getSingleAppointment(appointmentID).then((res: any) => {
         setSelectedAppointment(res.data.Appointment);
         setExistingInformationSlide(true);
@@ -351,13 +355,19 @@ function Main() {
     },
     
     resources: staffData
-    ? staffData.map((staff) => ({
+  ? staffData
+      .filter((staff) => {
+        const staffID = String((staff as { StaffID: number }).StaffID);
+        return !selectedStaff || staffID === selectedStaff;
+      })
+      .map((staff) => ({
         id: String((staff as { StaffID: number }).StaffID),
         title: (staff as { StaffName: string }).StaffName || '',
         staffColor: (staff as { StaffColour: string }).StaffColour || '', // Use staff color if available
       }))
-    : [],
-    resourcesInitiallyExpanded: false,
+  : [],
+resourcesInitiallyExpanded: false,
+
 
     select: handleSlotClicked
   }
@@ -461,7 +471,7 @@ function Main() {
 
 
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
-      {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment}/>)}
+      {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
       <ToastContainer
         position="top-center" 
         autoClose={3000} 
