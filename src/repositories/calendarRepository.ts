@@ -8,7 +8,7 @@ const addNew = '/AddNewAppointment'
 const updateAppointment = '/UpdateAppointment'
 const getStaff = '/GetStaff'
 const fakeID = '20160908110055249272'
-const businessID = !dataUser ? '' : dataUser.BusinessModel[0].BusinessID
+// const businessID = !dataUser ? '' : dataUser.BusinessModel[0].BusinessID
 
 export default {
   getAppointment(payload: any) {
