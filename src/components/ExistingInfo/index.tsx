@@ -51,7 +51,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
         console.log("Deleted appointment")
         onClose()
         toast.success('Deleted appointment', {
-          position: "top-center",
+          position: "top-right",
           autoClose: 3000, // Auto close the toast after 3 seconds
           hideProgressBar: true,
           closeOnClick: true,
@@ -61,7 +61,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData }: SlideOverPanelProps)
       } else {
         console.error("Error updating  Server returned:", res.status, res.statusText);
         toast.error('Can not delete appointment', {
-          position: "top-center",
+          position: "top-right",
           autoClose: 3000, // Auto close the toast after 3 seconds
           hideProgressBar: true,
           closeOnClick: true,

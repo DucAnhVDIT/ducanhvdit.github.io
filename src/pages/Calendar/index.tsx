@@ -58,9 +58,6 @@ function Main() {
     setAppointmentChange((prev) => !prev);
   };
 
-  useEffect(() => {
-    console.log("sau khi chon tho",selectedStaff)
-  },[selectedStaff])
   
   const handleStaffChange = (selectedOption: any) => {
     const selectedStaffId = selectedOption.value;
@@ -456,7 +453,7 @@ function Main() {
               )}
         </PreviewComponent>
 
-        <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+        <SelectView  switchToWeek={switchToWeek} switchToDay={switchToDay} />
         
       </div>
 

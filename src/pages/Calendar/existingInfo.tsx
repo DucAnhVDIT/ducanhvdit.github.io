@@ -66,10 +66,17 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     }));
   };
   
-  // useEffect(() => {
-  //   console.log("Body thay doi nay",changeDateBody)
-  // },[changeDateBody])
+  useEffect(() => {
+    console.log("dich vu moi nay",selectedServices)
+  },[selectedServices])
   
+  const handleServiceSelect = (selectedService: { ProductID: any; }) => {
+
+    dispatch(addService(selectedService))
+    // setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
+    setServiceSlideoverOpen(false);
+  };
+
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
     dispatch(deleteAppointment(appointmentId));
@@ -99,7 +106,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
       StatusID: statusId
     }));
   
-    console.log("thong tin cuoc hen can update", appointmentsToUpdate);
   
     if (!appointmentsToUpdate || appointmentsToUpdate.length === 0) {
       logError('No appointments to update');
@@ -253,6 +259,13 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                           <ServiceCard key={appointment.ID} service={appointment} onSelect={handleServiceDelete} />
                         </div>
                       ))}
+                      {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
+                           <ServiceCard
+                               key={selectedService.ProductID}
+                               service={selectedService}
+                               onSelect={handleServiceDelete}
+                           />
+                       ))}
                        {/* <ServiceCard key={appointmentData.ID} service={appointmentData} onSelect={handleServiceDelete} /> */}
 
                       <div className="items-center justify-center text-center border-none shadow-none">
@@ -309,7 +322,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                                 service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
                             )
                             .map((service: { ProductID: string }) => (
-                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceDelete}/>
+                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
                             ))}
                         </Slideover.Description>
                         </Slideover.Panel>
@@ -322,11 +335,14 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}
                   <Slideover.Footer>
-                    <Button className=" bg-red-600 text-white" onClick={handleDeleteAppointment}>
+                    <Button className=" px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
                     </Button>
-                    <Button className=" bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
+                    <Button className=" px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
                       Submit
+                    </Button>
+                    <Button className=" px-6 bg-primary text-white ml-3" onClick={() => {}}>
+                      Pay
                     </Button>
                   </Slideover.Footer>
               </Slideover.Panel>
