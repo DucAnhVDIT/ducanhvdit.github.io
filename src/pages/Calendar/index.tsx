@@ -27,7 +27,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setScheduleData, setAppointmentToCustomer } from '../../stores/appoinmentSlice';
 import eposRepository from "../../repositories/eposRepository";
 import { logError, logSuccess } from "../../constant/log-error";
-
+import Select from 'react-select';
+import SelectStaff from "../../components/SelectStaffButton";
+import React from "react";
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -41,9 +43,8 @@ function Main() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false)
-  const [selectedStaff, setSelectedStaff] = useState(null); // Initially, no staff is selected
-
-
+  const [selectedStaff, setSelectedStaff] = React.useState<string | null>(null);
+  
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
   const dispatch = useDispatch();
@@ -60,11 +61,11 @@ function Main() {
     console.log("sau khi chon tho",selectedStaff)
   },[selectedStaff])
   
-  const handleStaffChange = (event: { target: { value: any; }; }) => {
-    const selectedStaffId = event.target.value;
+  const handleStaffChange = (selectedOption: any) => {
+    const selectedStaffId = selectedOption.value;
     setSelectedStaff(selectedStaffId);
   };
-
+  
   useEffect(() => {
     // console.log('Selected Staff:', selectedStaff);
     // ... rest of the useEffect logic
@@ -416,51 +417,37 @@ function Main() {
 
   return (
     <div  className="full-calendar">
-      {/* BEGIN: Input Group */}
-      <PreviewComponent className="mt-5 intro-y bg-transparent">
-            {({ toggle }) => (
-              <>
-                <div className="">
-                <Preview>
-                  <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
-                    <Button className="text-sm sm:text-base text-white border-none shadow-none" onClick={prevDay}>
-                      <Lucide icon="ChevronLeft" className="w-4 h-4 sm:w-6 sm:h-6" />
-                    </Button>
-                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                    <Button className="text-sm font-normal bg-primary text-white border-none shadow-none" onClick={todayDate}>
-                      Today
-                    </Button>
-                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                    <CustomDatePicker date={date} goToDate={handleDateChange}/>
-                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                    <Button className="text-xs sm:text-base text-white border-none shadow-none" onClick={nextDay}>
-                      <Lucide icon="ChevronRight" className="w-4 h-4 sm:w-6 sm:h-6" />
-                    </Button>
+      <div className="flex mt-2 mb-3">
+        <SelectStaff staffData={staffData} selectedStaff={selectedStaff} handleStaffChange={handleStaffChange} />   
+        {/* BEGIN: Input Group */}
+        <PreviewComponent className="intro-y bg-transparent ml-96">
+              {({ toggle }) => (
+                <>
+                  <div className="">
+                  <Preview>
+                    <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
+                      <Button className="text-sm sm:text-base text-white border-none shadow-none" onClick={prevDay}>
+                        <Lucide icon="ChevronLeft" className="w-4 h-4 sm:w-6 sm:h-6" />
+                      </Button>
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                      <Button className="text-sm font-normal bg-primary text-white border-none shadow-none" onClick={todayDate}>
+                        Today
+                      </Button>
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                      <CustomDatePicker date={date} goToDate={handleDateChange}/>
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                      <Button className="text-xs sm:text-base text-white border-none shadow-none" onClick={nextDay}>
+                        <Lucide icon="ChevronRight" className="w-4 h-4 sm:w-6 sm:h-6" />
+                      </Button>
+                    </div>
+                    </Preview>
                   </div>
-                  </Preview>
-                </div>
-              </>
-            )}
-      </PreviewComponent>
-      <div>
-        <label htmlFor="staffDropdown">Select Staff:</label>
-        <select
-          id="staffDropdown"
-          onChange={handleStaffChange}
-          value={selectedStaff || ''}
-        >
-          <option value="">All Staff</option>
-          {staffData &&
-            staffData.map((staff) => (
-              <option
-                key={(staff as { StaffID: number }).StaffID}
-                value={String((staff as { StaffID: number }).StaffID)}
-              >
-                {(staff as { StaffName: string }).StaffName}
-              </option>
-            ))}
-        </select>
+                </>
+              )}
+        </PreviewComponent>
       </div>
+
+
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
