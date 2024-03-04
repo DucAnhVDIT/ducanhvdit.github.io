@@ -28,6 +28,7 @@ import { RootState } from "../../stores/store";
 import moment from "moment";
 import { setScheduleData } from '../../stores/appoinmentSlice';
 import customerRepository from "../../repositories/customerRepository";
+import { truncate } from "lodash";
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -232,7 +233,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
               .then((res) => {
                 console.log(res);
                 showAppointmentToast('Appointment added successfully');
-                handleAppoinmentChange(prev => !prev);
+                handleAppoinmentChange(true);
                 onClose();
                 dispatch(resetSelectedServices());
               })

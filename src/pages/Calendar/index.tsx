@@ -30,6 +30,7 @@ import { logError, logSuccess } from "../../constant/log-error";
 import Select from 'react-select';
 import SelectStaff from "../../components/SelectStaffButton";
 import React from "react";
+import SelectView from "../../components/SelectViewButton";
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -376,6 +377,15 @@ function Main() {
     fetchAppoinmentApiData(date)
   };
 
+  const switchToWeek = () => {
+      calendarRef.current?.getApi().changeView('resourceTimeGridWeek')
+  }
+
+  const switchToDay = () => {
+    calendarRef.current?.getApi().changeView('resourceTimeGridDay')
+  }
+
+
   const nextDay = () => {
     if (calendarRef.current) {
       calendarRef.current.getApi().next();
@@ -417,10 +427,10 @@ function Main() {
 
   return (
     <div  className="full-calendar">
-      <div className="flex mt-2 mb-3">
+      <div className="flex mt-3 mb-3 justify-evenly">
         <SelectStaff staffData={staffData} selectedStaff={selectedStaff} handleStaffChange={handleStaffChange} />   
         {/* BEGIN: Input Group */}
-        <PreviewComponent className="intro-y bg-transparent ml-96">
+        <PreviewComponent className="intro-y bg-transparent ml-28">
               {({ toggle }) => (
                 <>
                   <div className="">
@@ -445,6 +455,9 @@ function Main() {
                 </>
               )}
         </PreviewComponent>
+
+        <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+        
       </div>
 
 

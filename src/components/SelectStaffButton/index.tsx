@@ -18,12 +18,13 @@ interface SelectStaffProps {
 
   return (
     <Select
+      className='intro-y'
       options={options}
       value={options.find((option) => option.value === selectedStaff)}
       onChange={handleStaffChange}
       isSearchable={false}
       menuPortalTarget={document.body} 
-      placeholder="Select Staff"
+      placeholder="Staff"
       styles={{
         control: (provided) => ({
             ...provided,
@@ -31,7 +32,9 @@ interface SelectStaffProps {
             boxShadow: 'none',
             width:'130px',
             backgroundColor:'#1E40AF',
-            color:'white'
+            color:'white',
+            borderRadius: '9999px',
+            paddingLeft: '10px'
           }),
         option: (provided, state) => ({
           ...provided,
@@ -44,7 +47,7 @@ interface SelectStaffProps {
         placeholder: (provided: any) => ({
             ...provided,
            color:'white',
-            fontSize:13
+            fontSize:15,
           }),
           dropdownIndicator: (provided) => ({
             ...provided,
@@ -52,13 +55,13 @@ interface SelectStaffProps {
             // paddingRight: "20px"
           }),
           indicatorSeparator: () => ({
-            display: 'none', 
+            display: 'none',
           }),
           singleValue: (provided, state) => ({
             ...provided,
             color: 'white',
           }),
-        menuPortal: base => ({ ...base, zIndex: 9999, width:"100px" })
+        menuPortal: base => ({ ...base, zIndex: 9999, width:"130px" })
     }}
     />
   );
