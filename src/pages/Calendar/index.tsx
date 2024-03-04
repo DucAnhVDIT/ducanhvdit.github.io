@@ -232,11 +232,6 @@ function Main() {
     nowIndicator:true,
     events: scheduleData
     ? scheduleData
-        .filter(
-          (appointment: any) =>
-            !selectedStaff || // Display all events if no staff is selected
-            String(appointment.resourceId) === String(selectedStaff)
-        )
         .map((appointment: any) => ({
           title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
           start: (appointment as { StartTime: Date }).StartTime,
@@ -363,10 +358,10 @@ function Main() {
       .map((staff) => ({
         id: String((staff as { StaffID: number }).StaffID),
         title: (staff as { StaffName: string }).StaffName || '',
-        staffColor: (staff as { StaffColour: string }).StaffColour || '', // Use staff color if available
+        staffColor: (staff as { StaffColour: string }).StaffColour || '',
       }))
   : [],
-resourcesInitiallyExpanded: false,
+  resourcesInitiallyExpanded: false,
 
 
     select: handleSlotClicked
