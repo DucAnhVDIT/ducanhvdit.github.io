@@ -33,17 +33,19 @@ interface SelectStaffProps {
             width:'130px',
             backgroundColor:'#1E40AF',
             color:'white',
-            borderRadius: '9999px',
-            paddingLeft: '10px'
+            paddingLeft: '10px',
+            borderRadius:"9999px"
           }),
-        option: (provided, state) => ({
-          ...provided,
-          backgroundColor: state.isSelected ? 'var(--primary-light)' : 'white',
-          color: state.isSelected ? 'grey' : 'var(--text-color)',
-          ':hover': {
-            backgroundColor: 'lightgrey', 
-          },
-        }),
+          option: (provided, state) => ({
+            ...provided,
+            borderBottom: state.label === 'All Staff' ? '1px solid grey' : 'none', // Add border to "All Staff"
+            backgroundColor: state.isSelected ? 'var(--primary-light)' : 'white',
+            color: state.isSelected ? 'grey' : 'var(--text-color)',
+            ':hover': {
+              backgroundColor: 'lightgrey',
+            },
+
+          }),
         placeholder: (provided: any) => ({
             ...provided,
            color:'white',
@@ -61,7 +63,7 @@ interface SelectStaffProps {
             ...provided,
             color: 'white',
           }),
-        menuPortal: base => ({ ...base, zIndex: 9999, width:"130px" })
+        menuPortal: base => ({ ...base, zIndex: 9999, width:"130px", padding:"0px" })
     }}
     />
   );

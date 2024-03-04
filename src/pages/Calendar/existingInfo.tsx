@@ -99,6 +99,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     })
   }
 
+  console.log("Note nay cu ", appointmentData.CompanyNotes)
+
   const handleChangeStatus = (statusId: number) => {
 
     const appointmentsToUpdate = singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => ({
@@ -278,7 +280,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                         </Button>
                       </div>      
                     </div>
-
+                    
+                    <h1>{appointmentData.CompanyNotes}</h1>
                       
 
                       {/* Begin Service List */}

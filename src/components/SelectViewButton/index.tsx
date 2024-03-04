@@ -49,6 +49,7 @@ const SelectView: React.FC<SelectViewProps> = ({ switchToWeek, switchToDay }) =>
         }),
         option: (provided, state) => ({
           ...provided,
+          borderBottom: state.label === 'All Staff' ? '2px solid black' : 'none', // Add border to "All Staff"
           backgroundColor: state.isSelected ? 'var(--primary-light)' : 'white',
           color: state.isSelected ? 'grey' : 'var(--text-color)',
           ':hover': {

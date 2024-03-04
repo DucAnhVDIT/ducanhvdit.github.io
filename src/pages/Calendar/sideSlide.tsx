@@ -23,6 +23,7 @@ import { RootState } from "../../stores/store";
 import moment from "moment";
 import customerRepository from "../../repositories/customerRepository";
 import { logError } from "../../constant/log-error";
+import ClassicEditor from "../../base-components/Ckeditor/ClassicEditor";
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -56,6 +57,16 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [email, setEmail] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [activeTab, setActiveTab] = useState('info');
+    const [editorData, setEditorData] = useState("");
+
+    const editorConfig = {
+        toolbar: {
+          items: ["bold", "italic", "link"],
+        },
+      };
+
+    
+
 
     const handleTabChange = (tab: React.SetStateAction<string>) => {
         setActiveTab(tab);
@@ -176,7 +187,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         Deposit: number;
         Islocked: boolean;
         CustomerNote: string;
-        CompanyNote: null;
+        CompanyNote: string;
     }
         let previousEndTime = selectedTime; 
 
@@ -193,7 +204,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                 Deposit: 0,
                 Islocked: false,
                 CustomerNote: "",
-                CompanyNote: null,
+                CompanyNote: editorData,
             };
 
             newAppointmentRequest.Appointments.push(newAppointment);
@@ -290,6 +301,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
         onClose()
     }
 
+    
+
   return (
     <div>
           <Slideover
@@ -331,6 +344,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                         >
                             Notes
                         </Button>
+
                     </div>
 
                     {activeTab === 'info' && (
@@ -643,6 +657,18 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                        )}
                        {/* End Add Customer */}
                     </>
+                    )}
+
+                    {activeTab === 'notes' && (
+                        <>
+                            <div className="mt-2">
+                                <ClassicEditor
+                                    value={editorData}
+                                    onChange={setEditorData}
+                                    config={editorConfig}
+                                />
+                            </div>
+                        </>
                     )}
 
                     <div className="flex flex-row mt-5">
