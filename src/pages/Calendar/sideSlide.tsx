@@ -333,7 +333,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                         <Button
                             variant="outline-secondary"
                             type="button"
-                            className={`cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`w-28 cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('info')}
                         >
                             Info
@@ -341,7 +341,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                         <Button
                             variant="outline-secondary"
                             type="button"
-                            className={`cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`w-28 cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('notes')}
                         >
                             Notes

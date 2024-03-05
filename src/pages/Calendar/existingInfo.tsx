@@ -18,6 +18,7 @@ import { addService, deleteService, resetSelectedServices  } from "../../stores/
 import { FormInput } from "../../base-components/Form";
 import ExistingDatePicker from "../../components/DatePicker/existingAppointmentPicker";
 import { setCompanyNotes, setCustomerNotes, selectNotes } from '../../stores/notesSlide';
+import SelectStaff from "../../components/SelectStaffButton";
 
 
 interface SlideOverPanelProps {
@@ -204,6 +205,10 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                       <h1 className="mr-auto font-bold text-2xl">
                           Edit Appoinment
                       </h1>
+
+                      {/* <SelectStaff staffData={undefined} selectedStaff={undefined} handleStaffChange={function (selectedOption: any): void {
+                        throw new Error("Function not implemented.");
+                      } }  /> */}
                   </Slideover.Title>
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
@@ -213,7 +218,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                         <Button
                             variant="outline-secondary"
                             type="button"
-                            className={`cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={` w-28 cursor-pointer rounded-full ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('info')}
                         >
                             Info
@@ -221,7 +226,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                         <Button
                             variant="outline-secondary"
                             type="button"
-                            className={`cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`w-28  cursor-pointer ml-3 rounded-full ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('notes')}
                         >
                             Notes
@@ -324,10 +329,18 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                                 )}
                             </div>
                             </div>
+                            {serviceData && serviceData
+                              .filter((service: { ProductName: string }) =>
+                                  service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
+                              )
+                              .map((service: { ProductID: string }) => (
+                                  <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
+                            ))}
                         </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
                     )}
+
 
                   {activeTab === 'notes' && (
                           <div className="flex flex-col">

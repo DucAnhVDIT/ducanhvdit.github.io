@@ -268,47 +268,69 @@ function Main() {
     eventClick: handleEventClick,
     eventOverlap:false,
     eventDrop: function (info) {
-
-      if (!confirm("Are you sure you want to change?")) {
-          info.revert();
-      } else {
-          if (info.event.extendedProps.requirelock) {
-              alert("This appointment is locked, unable to make any changes.");
-              info.revert();
-          }
-  
-          // Extracting relevant data for the request
-          const appointmentData = {
-              ID: info.event.extendedProps.ID,
-              FirstName: info.event.extendedProps.firstName,
-              LastName: info.event.extendedProps.lastName,
-              Mobile: info.event.extendedProps.Mobile,
-              Email: "",
-              BookDate: info.event.extendedProps.bookDate,
-              StartTime: info.event.start,
-              ServiceID: info.event.extendedProps.serviceID,
-              StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
-              Islocked: false,
-              CustomerNote: "",
-              GuestNotes: null,
-          };
-          calendarRepository.updateAppointment(appointmentData).then(response => {
-            if (response.status === 200) {
-                logSuccess('Appointment rescheduled successfully')
-                setAppointmentChange(prev => !prev)
-            } else {
-                logError('Error updating appointment. Please try again.')
-            }
-        })
-        .catch(error => {
-          logError('An unexpected error occurred. Please try again later.')
-        });
-      }
-    },
-    eventResize: function (info) {
-      if (!confirm("Are you sure you want to change?")) {
+      if (info.event.extendedProps.requirelock) {
+        alert("This appointment is locked, unable to make any changes.");
         info.revert();
       } else {
+        // Optimistic update
+        // const oldStart = new Date(info.event.start.getTime());
+        // const oldEnd = info.event.end ? new Date(info.event.end.getTime()) : null;
+    
+        // info.event.setStart(info.event.start);
+        // if (info.event.end) {
+        //   info.event.setEnd(info.event.end);
+        // }
+    
+        // Extracting relevant data for the request
+        const appointmentData = {
+          ID: info.event.extendedProps.ID,
+          FirstName: info.event.extendedProps.firstName,
+          LastName: info.event.extendedProps.lastName,
+          Mobile: info.event.extendedProps.Mobile,
+          Email: "",
+          BookDate: info.event.extendedProps.bookDate,
+          StartTime: info.event.start,
+          ServiceID: info.event.extendedProps.serviceID,
+          StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
+          Islocked: false,
+          CustomerNote: "",
+          GuestNotes: null,
+        };
+    
+        // Make the updateAppointment API call
+        calendarRepository.updateAppointment(appointmentData)
+          .then(response => {
+            if (response.status === 200) {
+              logSuccess('Appointment rescheduled successfully');
+
+              fetchAppoinmentApiData(date)
+            } else {
+              logError('Error updating appointment. Please try again.');
+              // Revert the UI if the API call fails
+              info.revert();
+            }
+          })
+          .catch(error => {
+            logError('An unexpected error occurred. Please try again later.');
+            // Revert the UI if there's an API call error
+            info.revert();
+          })
+          // .finally(() => {
+          //   // Reset the UI to the original state if needed (e.g., in case of API call failure)
+          //   if (info.revert) {
+          //     info.event.setStart(oldStart);
+          //     if (oldEnd) {
+          //       info.event.setEnd(oldEnd);
+          //     }
+          //   }
+          // });
+      }
+    },
+    
+    eventResize: function (info) {
+      // if (!confirm("Are you sure you want to change?")) {
+      //   info.revert();
+      // } else {
         if (info.event.extendedProps.requirelock) {
           alert("This appointment is locked, unable to make any changes.");
           info.revert();
@@ -337,7 +359,7 @@ function Main() {
         calendarRepository.updateAppointment(appointmentData).then(response => {
           if (response.status === 200) {
             logSuccess('Appointment updated successfully')
-            setAppointmentChange(prev => !prev)
+            fetchAppoinmentApiData(date)
           } else {
             logError('Error updating appointment. Please try again.')
           }
@@ -345,7 +367,7 @@ function Main() {
         .catch(error => {
           logError('An unexpected error occurred. Please try again later.')
         });
-      }
+      // }
     },
     
     resources: staffData
@@ -424,10 +446,10 @@ function Main() {
 
   return (
     <div  className="full-calendar">
-      <div className="flex mt-3 mb-3 justify-evenly">
+      <div className="flex mt-3 mb-3 justify-between">
         <SelectStaff staffData={staffData} selectedStaff={selectedStaff} handleStaffChange={handleStaffChange} />   
         {/* BEGIN: Input Group */}
-        <PreviewComponent className="intro-y bg-transparent ml-28">
+        <PreviewComponent className="intro-y bg-transparent">
               {({ toggle }) => (
                 <>
                   <div className="">
