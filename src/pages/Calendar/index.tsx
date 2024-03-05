@@ -272,16 +272,6 @@ function Main() {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
       } else {
-        // Optimistic update
-        // const oldStart = new Date(info.event.start.getTime());
-        // const oldEnd = info.event.end ? new Date(info.event.end.getTime()) : null;
-    
-        // info.event.setStart(info.event.start);
-        // if (info.event.end) {
-        //   info.event.setEnd(info.event.end);
-        // }
-    
-        // Extracting relevant data for the request
         const appointmentData = {
           ID: info.event.extendedProps.ID,
           FirstName: info.event.extendedProps.firstName,
@@ -306,24 +296,14 @@ function Main() {
               fetchAppoinmentApiData(date)
             } else {
               logError('Error updating appointment. Please try again.');
-              // Revert the UI if the API call fails
               info.revert();
             }
           })
           .catch(error => {
             logError('An unexpected error occurred. Please try again later.');
-            // Revert the UI if there's an API call error
             info.revert();
           })
-          // .finally(() => {
-          //   // Reset the UI to the original state if needed (e.g., in case of API call failure)
-          //   if (info.revert) {
-          //     info.event.setStart(oldStart);
-          //     if (oldEnd) {
-          //       info.event.setEnd(oldEnd);
-          //     }
-          //   }
-          // });
+
       }
     },
     
