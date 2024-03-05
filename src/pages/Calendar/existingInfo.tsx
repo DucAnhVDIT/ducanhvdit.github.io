@@ -17,7 +17,7 @@ import StatusButtons from "../../components/StatusButton";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
 import { FormInput } from "../../base-components/Form";
 import ExistingDatePicker from "../../components/DatePicker/existingAppointmentPicker";
-
+import { setCompanyNotes, setCustomerNotes, selectNotes } from '../../stores/notesSlide';
 
 
 interface SlideOverPanelProps {
@@ -34,6 +34,7 @@ interface SlideOverPanelProps {
 function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
+  const { companyNotes, customerNotes } = useSelector(selectNotes);
 
   const scheduleData = useSelector((state: any) => state.scheduleData);
   const selectedServices = useSelector((state: any) => state.serviceListState.selectedServices);
@@ -70,6 +71,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   useEffect(() => {
     console.log("dich vu moi nay",selectedServices)
   },[selectedServices])
+
+  
   
   const handleServiceSelect = (selectedService: { ProductID: any; }) => {
 
@@ -333,7 +336,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                             <p className="text-lg font-semibold mb-2">Company Notes</p>
                             <textarea
                               className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
-                              // value={companyNotes}
+                              value={appointmentData.CompanyNotes}
                               // onChange={handleCompanyNotesChange}
                               placeholder="Enter company notes here..."
                             />
@@ -344,7 +347,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                             <p className="text-lg font-semibold mb-2">Customer Notes</p>
                             <textarea
                               className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
-                              // value={customerNotes}
+                              value={appointmentData.CustomerNote}
                               // onChange={handleCustomerNotesChange}
                               placeholder="Enter customer notes here..."
                             />

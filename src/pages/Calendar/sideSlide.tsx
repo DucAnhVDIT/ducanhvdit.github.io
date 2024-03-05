@@ -23,8 +23,7 @@ import { RootState } from "../../stores/store";
 import moment from "moment";
 import customerRepository from "../../repositories/customerRepository";
 import { logError } from "../../constant/log-error";
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+import { setCompanyNotes, setCustomerNotes, selectNotes } from '../../stores/notesSlide';
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -67,6 +66,16 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
     const dispatch = useDispatch()
     const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
+    const { companyNotes, customerNotes } = useSelector(selectNotes);
+    
+
+    const handleCompanyNotesChange = (event: { target: { value: any; }; }) => {
+        dispatch(setCompanyNotes(event.target.value));
+      };
+    
+    const handleCustomerNotesChange = (event: { target: { value: any; }; }) => {
+        dispatch(setCustomerNotes(event.target.value));
+    };
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -196,8 +205,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                 StaffID: resourceID,
                 Deposit: 0,
                 Islocked: false,
-                CustomerNote: "",
-                CompanyNote: editorData,
+                CustomerNote: customerNotes,
+                CompanyNote: companyNotes,
             };
 
             newAppointmentRequest.Appointments.push(newAppointment);
@@ -659,8 +668,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                           <p className="text-lg font-semibold mb-2">Company Notes</p>
                           <textarea
                             className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
-                            // value={companyNotes}
-                            // onChange={handleCompanyNotesChange}
+                            value={companyNotes}
+                            onChange={handleCompanyNotesChange}
                             placeholder="Enter company notes here..."
                           />
                         </div>
@@ -670,8 +679,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                           <p className="text-lg font-semibold mb-2">Customer Notes</p>
                           <textarea
                             className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
-                            // value={customerNotes}
-                            // onChange={handleCustomerNotesChange}
+                            value={customerNotes}
+                            onChange={handleCustomerNotesChange}
                             placeholder="Enter customer notes here..."
                           />
                         </div>
