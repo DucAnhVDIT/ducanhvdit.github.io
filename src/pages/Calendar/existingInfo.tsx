@@ -42,6 +42,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
   const [searchValueService, setSearchValueService] = useState("");
   const [date, setDate] = useState(new Date());
+  const [activeTab, setActiveTab] = useState('info');
 
   const [changeDateBody, setChangeDateBody] = useState({
     ID: appointmentData.ID,
@@ -162,6 +163,10 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     setServiceSlideoverOpen(false)
   }
 
+    const handleTabChange = (tab: React.SetStateAction<string>) => {
+        setActiveTab(tab);
+    };
+
 
   if (!appointmentData) {
     // Handle the case when appointmentData is null
@@ -200,89 +205,85 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                   {/* END: Slide Over Header */}
                   {/* BEGIN: Slide Over Body */}
                   <Slideover.Description>
-                      {/* <div
-                          style={{
-                              backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
-                              padding: '20px',
-                              borderRadius:"20px"
-                          }}
-                          className="flex justify-between p-0"
-                      >
-                          <h1 className="text-2xl text-white">{appointmentData.StatusName}</h1>
-                          <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
-                      </div> */}
-
-                     
-                        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full relative">
-                        <div
-                          className="col-span-12 sm:col-span-4 2xl:col-span-3 box zoom-in"
+                      {/* Tab Navigation */}
+                    <div className="flex justify-start mb-5">
+                        <Button
+                            variant="outline-secondary"
+                            type="button"
+                            className={`cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            onClick={() => handleTabChange('info')}
                         >
-                          <div
-                              style={{
-                                  backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
-                                  padding: '20px',
-                                  borderRadius:"20px"
-                              }}
-                              className="flex justify-between p-0"
-                          >
-                              <h1 className="text-2xl text-white mt-1">{appointmentData.StatusName}</h1>
-                              <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
-                          </div>
-                        </div>
-                      </div>
-
-
-                    {/* <p>{`Customer Name: ${appointmentData.CustomerName !== null ? appointmentData.CustomerName : 'null'}`}</p> */}
-
-                    <div className="mt-3">
-
-                      {/* <p>{`Customer Name: ${appointmentData.ServiceName !== null ? appointmentData.ServiceName : 'null'}`}</p>
-                      <p>{`Customer Name: ${appointmentData.Duration !== null ? appointmentData.Duration : 'null'}`}</p> */}
-
-                      <CustomerCard customer={appointmentData} onClick={() => {}}/>
-                      
-                      <div className="mt-3 w-full">
-                        <ExistingDatePicker 
-                          date={new Date(appointmentData.BookDate)} 
-                          goToDate={handleDateChange} 
-                          updateChangeDateBody={(newDate, newStartTime) => updateChangeDateBody(newDate, newStartTime)}
-                          startTime={appointmentData.StartTime}
-                          fetchAppoinmentApiData={fetchAppoinmentApiData}
-                        />
-                      </div>
-
-                      {/* <ServiceCard
-                            service={singleCustomerAppointment}
-                            onSelect={handleServiceDelete}
-                      /> */}
-                      <div>
-                      {singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => (
-                        <div key={appointment.ID}>
-                          <ServiceCard key={appointment.ID} service={appointment} onSelect={handleServiceDelete} />
-                        </div>
-                      ))}
-                      {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
-                           <ServiceCard
-                               key={selectedService.ProductID}
-                               service={selectedService}
-                               onSelect={handleServiceDelete}
-                           />
-                       ))}
-                       {/* <ServiceCard key={appointmentData.ID} service={appointmentData} onSelect={handleServiceDelete} /> */}
-
-                      <div className="items-center justify-center text-center border-none shadow-none">
-                          <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">
-                            <Lucide
-                              icon="PlusCircle"
-                                className="text-primary text-lg round mr-1"
-                            />
-                          <h1>Add more services</h1>
+                            Info
                         </Button>
-                      </div>      
+                        <Button
+                            variant="outline-secondary"
+                            type="button"
+                            className={`cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            onClick={() => handleTabChange('notes')}
+                        >
+                            Notes
+                        </Button>
+
                     </div>
-                    
-                    <h1>{appointmentData.CompanyNotes}</h1>
+
+                      {activeTab === 'info' && (
+                        <>
+                          <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full relative">
+                            <div
+                              className="col-span-12 sm:col-span-4 2xl:col-span-3 box zoom-in"
+                            >
+                              <div
+                                  style={{
+                                      backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
+                                      padding: '20px',
+                                      borderRadius:"20px"
+                                  }}
+                                  className="flex justify-between p-0"
+                              >
+                                  <h1 className="text-2xl text-white mt-1">{appointmentData.StatusName}</h1>
+                                  <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <CustomerCard customer={appointmentData} onClick={() => {}}/>
                       
+                          <div className="mt-3 w-full">
+                            <ExistingDatePicker 
+                              date={new Date(appointmentData.BookDate)} 
+                              goToDate={handleDateChange} 
+                              updateChangeDateBody={(newDate, newStartTime) => updateChangeDateBody(newDate, newStartTime)}
+                              startTime={appointmentData.StartTime}
+                              fetchAppoinmentApiData={fetchAppoinmentApiData}
+                            />
+                          </div>
+
+                          {singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => (
+                            <div key={appointment.ID}>
+                              <ServiceCard key={appointment.ID} service={appointment} onSelect={handleServiceDelete} />
+                            </div>
+                          ))}
+                          {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
+                              <ServiceCard
+                                  key={selectedService.ProductID}
+                                  service={selectedService}
+                                  onSelect={handleServiceDelete}
+                              />
+                          ))}
+
+                          <div className="items-center justify-center text-center border-none shadow-none">
+                            <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">
+                              <Lucide
+                                icon="PlusCircle"
+                                  className="text-primary text-lg round mr-1"
+                              />
+                            <h1>Add more services</h1>
+                          </Button>
+                        </div>      
+                          
+                        </>
+                      )}
 
                       {/* Begin Service List */}
                     {isServiceSlideoverOpen && (
@@ -320,20 +321,37 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                                 )}
                             </div>
                             </div>
-                            {serviceData && serviceData
-                            .filter((service: { ProductName: string }) =>
-                                service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
-                            )
-                            .map((service: { ProductID: string }) => (
-                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
-                            ))}
                         </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
                     )}
 
-                    {/* End Service List */}     
-                    </div>
+                  {activeTab === 'notes' && (
+                          <div className="flex flex-col">
+                          {/* Company Notes */}
+                          <div className="">
+                            <p className="text-lg font-semibold mb-2">Company Notes</p>
+                            <textarea
+                              className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                              // value={companyNotes}
+                              // onChange={handleCompanyNotesChange}
+                              placeholder="Enter company notes here..."
+                            />
+                          </div>
+                      
+                          {/* Customer Notes */}
+                          <div className="mt-3">
+                            <p className="text-lg font-semibold mb-2">Customer Notes</p>
+                            <textarea
+                              className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                              // value={customerNotes}
+                              // onChange={handleCustomerNotesChange}
+                              placeholder="Enter customer notes here..."
+                            />
+                          </div>
+                        </div>
+                      )}                  
+
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}
