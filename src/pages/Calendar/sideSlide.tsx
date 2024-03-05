@@ -23,7 +23,8 @@ import { RootState } from "../../stores/store";
 import moment from "moment";
 import customerRepository from "../../repositories/customerRepository";
 import { logError } from "../../constant/log-error";
-import ClassicEditor from "../../base-components/Ckeditor/ClassicEditor";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -58,14 +59,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [activeTab, setActiveTab] = useState('info');
     const [editorData, setEditorData] = useState("");
-
-    const editorConfig = {
-        toolbar: {
-          items: ["bold", "italic", "link"],
-        },
-      };
-
-    
 
 
     const handleTabChange = (tab: React.SetStateAction<string>) => {
@@ -660,15 +653,29 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     )}
 
                     {activeTab === 'notes' && (
-                        <>
-                            <div className="mt-2">
-                                <ClassicEditor
-                                    value={editorData}
-                                    onChange={setEditorData}
-                                    config={editorConfig}
-                                />
-                            </div>
-                        </>
+                        <div className="flex flex-col">
+                        {/* Company Notes */}
+                        <div className="">
+                          <p className="text-lg font-semibold mb-2">Company Notes</p>
+                          <textarea
+                            className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                            // value={companyNotes}
+                            // onChange={handleCompanyNotesChange}
+                            placeholder="Enter company notes here..."
+                          />
+                        </div>
+                    
+                        {/* Customer Notes */}
+                        <div className="mt-3">
+                          <p className="text-lg font-semibold mb-2">Customer Notes</p>
+                          <textarea
+                            className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                            // value={customerNotes}
+                            // onChange={handleCustomerNotesChange}
+                            placeholder="Enter customer notes here..."
+                          />
+                        </div>
+                      </div>
                     )}
 
                     <div className="flex flex-row mt-5">
@@ -709,6 +716,3 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
 export default SlideOverPanel
 
-function showAppointmentToast(arg0: string, arg1: string) {
-    throw new Error("Function not implemented.");
-}
