@@ -171,6 +171,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
         setActiveTab(tab);
     };
 
+  
 
   if (!appointmentData) {
     // Handle the case when appointmentData is null
@@ -182,6 +183,22 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
       </Slideover>
     );
   }
+
+  const calculateTotal = () => {
+    if (!singleCustomerAppointment[appointmentData.CustomerID]) {
+      return 0; 
+    }
+
+    return singleCustomerAppointment[appointmentData.CustomerID].reduce(
+      (total, appointment) => {
+        const price = appointment.Price || 0; 
+        return total + price;
+      },
+      0
+    );
+  };
+  
+
   return (
     <div>
           <Slideover
@@ -372,13 +389,18 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                   {/* END: Slide Over Body */}
                   {/* BEGIN: Slide Over Footer */}
                   <Slideover.Footer>
-                    <Button className=" px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
+                    <div className="flex flex-row justify-between mb-9">
+                        <h1 className="text-2xl"> Total</h1>
+                        <h1 className="text-xl">{`£${calculateTotal()}`}</h1>
+                    </div>
+
+                    <Button className=" w-32 px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
                     </Button>
-                    <Button className=" px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
                       Submit
                     </Button>
-                    <Button className=" px-6 bg-primary text-white ml-3" onClick={() => {}}>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={() => {}}>
                       Pay
                     </Button>
                   </Slideover.Footer>

@@ -51,7 +51,7 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate,
 
   const flatpickrRef = useRef<Flatpickr | null>(null);
 
-  const handleIconClick = () => {
+  const handleIconClickCalendar = () => {
     // Open/close Flatpickr when the icon is clicked
     flatpickrRef.current?.flatpickr.open();
   };
@@ -71,19 +71,14 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({ date, goToDate,
         <Lucide
           icon="ChevronDown"
           className="w-6 h-6 text-black text-sm mt-1 mr-3 cursor-pointer"
-          onClick={handleIconClick}
+          onClick={handleIconClickCalendar}
         />
       </Button>
 
       <Button className='flex flex-row w-full zoom-in'>
         <Flatpickr 
-          className="border-none w-20 bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent" 
+          className="border-none w-20 bg-white text-lg rounded-md text-black" 
           options={options} 
-        />
-        <Lucide
-          icon="ChevronDown"
-          className="w-6 h-6 text-black text-sm mt-1 mr-3 cursor-pointer"
-          // onClick={handleIconClick}
         />
       </Button>
 
