@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import Dialog from '../../base-components/Headless/Dialog';
 import Button from '../../base-components/Button';
 import Lucide from "../../base-components/Lucide";
+import BlockTimePopup from './blockTime';
 
 interface AppointmentPopupProps {
     slotClickModal: any
     setSlotClickModal: (value : boolean) => void
     addNewAppointment: (info: any) => Promise<void>
     selectedSlotInfo : any
+    blockTimeClicked: () => void
 }
 
-const AppointmentPopup = ({slotClickModal, setSlotClickModal, addNewAppointment, selectedSlotInfo}: AppointmentPopupProps) => {
-    console.log(selectedSlotInfo)
+const AppointmentPopup = ({slotClickModal, setSlotClickModal, addNewAppointment, selectedSlotInfo, blockTimeClicked}: AppointmentPopupProps) => {
     return (
         <>
             <Dialog
@@ -20,7 +21,7 @@ const AppointmentPopup = ({slotClickModal, setSlotClickModal, addNewAppointment,
                     setSlotClickModal(false);
                 }}
             >
-           <Dialog.Panel className="p-10 flex flex-col items-center justify-center relative my-60">
+           <Dialog.Panel className="p-6 flex flex-col items-center justify-center relative my-48">
                 <div className="absolute top-2 right-2">
                     <Button onClick={() => {
                         setSlotClickModal(false)
@@ -29,15 +30,15 @@ const AppointmentPopup = ({slotClickModal, setSlotClickModal, addNewAppointment,
                     </Button>
                 </div>
 
-                <div className="absolute top-2 left-2 text-sm text-slate-400">
+                <div className="absolute top-2 left-2 text-xl text-black font-bold">
                     {selectedSlotInfo && (
-                    <span>{`Selected Time: ${selectedSlotInfo.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</span>
+                    <span>{`${selectedSlotInfo.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</span>
                     )}
                 </div>
 
                 <div className="mt-4">
                     <Button onClick={addNewAppointment} className='w-32 px-6 bg-primary text-white ml-3'>Add New Appointment</Button>
-                    <Button className='w-32 px-6 bg-primary text-white ml-3'>Add Block Time</Button>
+                    <Button onClick={blockTimeClicked} className='w-32 px-6 bg-primary text-white ml-3'>Add Block Time</Button>
                 </div>
             </Dialog.Panel>
 

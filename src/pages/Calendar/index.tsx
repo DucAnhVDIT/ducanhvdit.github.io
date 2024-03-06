@@ -32,6 +32,7 @@ import SelectStaff from "../../components/SelectStaffButton";
 import React from "react";
 import SelectView from "../../components/SelectViewButton";
 import AppointmentPopup from "../../components/Modal";
+import BlockTimePopup from "../../components/Modal/blockTime";
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -49,6 +50,7 @@ function Main() {
   const [SlotClickModal, setSlotClickModal] = useState(false);
   const [selectAddNew, setSelectAddNew] = useState(false)
   const [selectedSlotInfo, setSelectedSlotInfo] = useState<any | null>(null);
+  const [blockTimePop, setBlockTimePop] = useState<any | null>(null);
 
   
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
@@ -83,6 +85,11 @@ function Main() {
     setSlotClickModal(true)
     setSelectedSlotInfo(info)
   };
+
+  const blockTimeClicked = () => {
+    setBlockTimePop(true)
+    setSlotClickModal(false)
+  }
 
   const addNewAppointment = async () => {
     if (selectedSlotInfo) {
@@ -282,7 +289,7 @@ function Main() {
       }
       el.appendChild(iconContainer);
     },
-    longPressDelay:1,
+    selectLongPressDelay:500,
     eventClick: handleEventClick,
     eventOverlap:false,
     eventDrop: function (info) {
@@ -310,7 +317,6 @@ function Main() {
           .then(response => {
             if (response.status === 200) {
               logSuccess('Appointment rescheduled successfully');
-
               fetchAppoinmentApiData(date)
             } else {
               logError('Error updating appointment. Please try again.');
@@ -484,7 +490,8 @@ function Main() {
 
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
-      {SlotClickModal && (<AppointmentPopup slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} />)}
+      {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
+      {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)}
       <ToastContainer
         position="top-center" 
         autoClose={3000} 
