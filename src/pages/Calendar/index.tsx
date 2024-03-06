@@ -31,6 +31,7 @@ import Select from 'react-select';
 import SelectStaff from "../../components/SelectStaffButton";
 import React from "react";
 import SelectView from "../../components/SelectViewButton";
+import AppointmentPopup from "../../components/Modal";
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -45,6 +46,10 @@ function Main() {
   const [serviceData, setServiceData] = useState(null);
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false)
   const [selectedStaff, setSelectedStaff] = React.useState<string | null>(null);
+  const [SlotClickModal, setSlotClickModal] = useState(false);
+  const [selectAddNew, setSelectAddNew] = useState(false)
+  const [selectedSlotInfo, setSelectedSlotInfo] = useState<any | null>(null);
+
   
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
@@ -74,17 +79,25 @@ function Main() {
     fetchStaffApiData();
   }, []);
   
-  const handleSlotClicked = async (info: any) => {
-    const startTime = moment(info.start).format('HH:mm');
-    setDate(info.start);
-    setSelectedTime(startTime);
-    const staffTitle = info.resource.title;
-    const staffID = info.resource.id;
-    setResourceTitle(staffTitle);
-    setResourceID(staffID);
-  
-    fetchServiceApiData(staffID);
-    setSlotSlideoverPreview(true);
+  const handleSlotClicked = (info: any) => {
+    setSlotClickModal(true)
+    setSelectedSlotInfo(info)
+  };
+
+  const addNewAppointment = async () => {
+    if (selectedSlotInfo) {
+      setSlotClickModal(false)
+      const startTime = moment(selectedSlotInfo.start).format('HH:mm');
+      setDate(selectedSlotInfo.start);
+      setSelectedTime(startTime);
+      const staffTitle = selectedSlotInfo.resource.title;
+      const staffID = selectedSlotInfo.resource.id;
+      setResourceTitle(staffTitle);
+      setResourceID(staffID);
+
+      fetchServiceApiData(staffID);
+      setSlotSlideoverPreview(true);
+    }
   };
 
   const handleEventClick = async (info: { event: any }) => {
@@ -100,14 +113,13 @@ function Main() {
     }
   };
 
-  const fetchAppoinmentApiData = async (date: { getTime: () => number; } | undefined) => {
+  const fetchAppoinmentApiData = async (date: { getTime: () => number } | undefined): Promise<any[]> => {
     try {
       const data = date ? Math.floor(date.getTime() / 1000) : null;
       const res = await calendarRepository.getAppointment(data);
       const appointmentsArray = res.data.Appointments || [];
   
       if (appointmentsArray.length > 0) {
-        // Organize appointments by customerID
         const appointmentsByCustomer: Record<string, any[]> = {};
   
         appointmentsArray.forEach((appointment: any) => {
@@ -120,19 +132,17 @@ function Main() {
           const previousAppointments = appointmentsByCustomer[customerID];
           let isSeparateAppointment = true;
   
-          // Only perform mapping if existingInformationSlide is false
           if (!existingInformationSlide) {
-            // Iterate through previous appointments
             for (const lastAppointment of previousAppointments.reverse()) {
               const timeDifference = appointment.StartTime - lastAppointment.EndTime;
   
-              // If the time difference is within the threshold, consider it part of the same appointment
-              const timeThreshold = 60 * 30; // Adjust this threshold as needed (e.g., 30 minutes)
+              const timeThreshold = 60 * 30;
+  
               if (timeDifference <= timeThreshold) {
-                lastAppointment.EndTime = appointment.EndTime; // Update the end time
-                lastAppointment.Services.push(...appointment.Services); // Combine services
+                lastAppointment.EndTime = appointment.EndTime;
+                lastAppointment.Services.push(...appointment.Services);
                 isSeparateAppointment = false;
-                break; // Exit the loop if combined with a previous appointment
+                break;
               }
             }
           }
@@ -142,19 +152,27 @@ function Main() {
           }
         });
   
-        // setScheduleData(appointmentsArray);
         dispatch(setScheduleData(appointmentsArray));
         if (!existingInformationSlide) {
           dispatch(setAppointmentToCustomer(appointmentsByCustomer));
         }
         console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
         console.log(appointmentsArray);
+  
+        // Return the appointmentsArray or the processed data if needed
+        return appointmentsArray;
+      } else {
+        // If there are no appointments, return an empty array or handle accordingly
+        return [];
       }
     } catch (error) {
       console.error('Error fetching the API:', (error as Error).message);
-      return null;
+      
+      // If there's an error, throw it to indicate a failure in fetching data
+      throw error;
     }
   };
+  
   
 
   const fetchStaffApiData = async () => {
@@ -459,13 +477,14 @@ function Main() {
         
       </div>
 
-
+      {}
       
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
 
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
+      {SlotClickModal && (<AppointmentPopup slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} />)}
       <ToastContainer
         position="top-center" 
         autoClose={3000} 
@@ -480,6 +499,7 @@ function Main() {
        transition={Flip}
       />
     </div>
+
   );
 }
 

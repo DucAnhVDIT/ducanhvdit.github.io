@@ -104,7 +104,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     })
   }
 
-  console.log("Note nay cu ", appointmentData.CompanyNotes)
+
 
   const handleChangeStatus = (statusId: number) => {
 
@@ -146,7 +146,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   }
   const handleUpdateBookingDate = () => {
     calendarRepository.updateAppointment(changeDateBody).then(response => {
-      if (response.status === 200) {
+      
+      if (response.status === 200 && changeDateBody.StartTime !== appointmentData.StartTime) {
           logSuccess('Appointment rescheduled successfully')
           handleAppoinmentChange(true)
       } else {
@@ -190,7 +191,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     }
 
     return singleCustomerAppointment[appointmentData.CustomerID].reduce(
-      (total, appointment) => {
+      (total: any, appointment: { Price: number; }) => {
         const price = appointment.Price || 0; 
         return total + price;
       },
