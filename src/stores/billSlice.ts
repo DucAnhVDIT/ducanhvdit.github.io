@@ -9,12 +9,13 @@ const basketSlice = createSlice({
   },
   reducers: {
     addToBill: (state, action) => {
+      console.log(action.payload);
       // compare new value to existing array if have same ID
       const existingItem = state.billItems.find(
         (item: any) =>
           item.ProductID === action.payload.ProductID &&
           item.staffName === action.payload.staffName &&
-          item.CategoryID === action.payload.CategoryID
+          action.payload.CategoryID !== -1
       );
       // if ID the same
       if (existingItem) {
@@ -22,6 +23,7 @@ const basketSlice = createSlice({
         existingItem.quantity += 1;
         // recalculate the price with add quantity
         existingItem.quantityPrice = existingItem.Price * existingItem.quantity;
+        console.log(existingItem.quantityPrice);
       } else {
         // if not then just add to the object
         state.billItems.push({
@@ -29,9 +31,11 @@ const basketSlice = createSlice({
           quantity: 1,
           quantityPrice: action.payload.Price,
         });
+        console.log(state.billItems);
       }
       // calculate total price
       state.totalPrice = state.totalPrice + action.payload.Price;
+      console.log(state.totalPrice);
     },
     clearBill: (state) => {
       state.billItems = [];

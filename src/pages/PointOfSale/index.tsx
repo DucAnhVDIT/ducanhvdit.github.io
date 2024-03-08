@@ -67,6 +67,7 @@ function Main() {
     } catch (err) {}
   }
 
+  //**HANDLE HOLD & RECALL */
   const handleHold = () => {
     console.log('click Hold')
     console.log(billDetails)
@@ -75,13 +76,18 @@ function Main() {
   const handleRecall = () => {
     console.log('click Recall')
   }
+  //**END HANLDE HOLD & RECALL */
 
+  //**HANDLE SHOW CATEGORIES & SERVICES */
   const handleGetServices = async () => {
     try {
+      //if doesnt have staff name
       if (staffName === '') {
+        // get full service and full category
         await getServicesCategory()
         await getFullServices(0, 0)
       } else {
+        
         setShowComponent('categories')
       }
     } catch (er) {}
@@ -98,6 +104,7 @@ function Main() {
       setServicesCategory([])
     }
     setShowComponent('categories')
+    //
   }, [fullServices]);
 
   //get list Category
@@ -142,7 +149,9 @@ function Main() {
     setServices(sameCat)
     setShowComponent('services')
   }
+  //**END HANDLE CATEGORIES & SERVICES */
   
+  //* HANDLE MISC ITEM */
   const handleMisc = async () => {
     try {
       const miscData = fullServices.filter((item: any) => item.CategoryID === -1)
@@ -158,6 +167,7 @@ function Main() {
     }
     setPriceModal(false)
   }
+  //**END HANDLE MISC ITEM */
 
   // display search value when typing in search box
   useEffect(() => {
@@ -219,24 +229,34 @@ function Main() {
     setDiscountNumber(newValue)
   }
 
+  //change and recalculate discount base on change in varius field
   useEffect(() => {
+    //check have bill in it
     if (billDetails.length !== 0) {
       let totalPriceAfterDiscount = totalPrice;
+      //check discount by £
       if (buttonDiscount === '£') {
+        //minus direct to total bill
         totalPriceAfterDiscount -= discountNumber;
         setDiscountAmount(discountNumber)
+        //else discount by %
       } else if (buttonDiscount === '%') {
+        //calculate amount and discount from price
         const discountAmount = (totalPrice * discountNumber) / 100;
         setDiscountAmount(discountAmount)
         totalPriceAfterDiscount -= discountAmount;
       } else {
+        //else change bill but no discount detect
         setDiscountAmount(0)
       }
+      //set final price after discount
       setFinalPrice(totalPriceAfterDiscount);
     } else {
+      //else there no bill detect set everything = 0
       setDiscountAmount(0)
       setFinalPrice(0)
     }
+    //watch/check what field change affect this function
   }, [discountNumber, buttonDiscount, billDetails, totalPrice]);
 
   const handleClearItems = () => {
