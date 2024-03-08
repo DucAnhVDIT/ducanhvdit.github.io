@@ -15,11 +15,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToBill, clearBill, clearItem } from "../../stores/billSlice";
 import Breadcrumb from "../../base-components/Breadcrumb";
 import NewOrder from "./newOrder";
+import MiscModal from "./miscModal";
 
 function Main() {
   const dispatch = useDispatch();
 
   const [newOrderModal, setNewOrderModal] = useState(false);
+  const [priceModal, setPriceModal] = useState(false)
 
   const [buttonDiscount, setButtonDiscount] = useState('')
   const [discountNumber, setDiscountNumber] = useState<any>('')
@@ -36,8 +38,8 @@ function Main() {
   const [services, setServices] = useState<any>([])
   const [fullServices, setFullServices] = useState<any>([])
 
-  // const createTicketRef = useRef(null);
-  const addItemRef = useRef(null);
+  const [customerData, setCustomerData] = useState<any>([])
+  const [modalPriceData, setModalPrice] = useState<any>([])
   
   // open page, show list of Staffs
   useEffect(() => {
@@ -111,7 +113,25 @@ function Main() {
     try {
       await eposRepository.getServices(staffID, catID).then((res: any) => {
         if (res.data.Services !== null) {
-          setFullServices(res.data.Services)
+          let misc = {
+            CategoryID: -1,
+            CategoryName: 'Misc',
+            CompanyID: "20160908110055249272",
+            Description: "",
+            Price: 0,
+            ProductID: 77777,
+            ProductName: "Extra Services"
+          }
+          let misc2={
+            CategoryID: -1,
+            CategoryName: 'Misc',
+            CompanyID: "20160908110055249272",
+            Description: "",
+            Price: 0,
+            ProductID: 77778,
+            ProductName: "Design"
+          }
+          setFullServices([...res.data.Services, misc2])
         }
       })
     } catch (err) {}
@@ -121,6 +141,22 @@ function Main() {
     const sameCat = fullServices.filter((item: any) => item.CategoryID === CatID)
     setServices(sameCat)
     setShowComponent('services')
+  }
+  
+  const handleMisc = async () => {
+    try {
+      const miscData = fullServices.filter((item: any) => item.CategoryID === -1)
+      setServices(miscData)
+      setShowComponent('misc')
+    } catch {}  
+  }
+
+  const closeModalPrice = (data: any) => {
+    if (data !== '') {
+      const pushdata = {...data, staffName}
+      dispatch(addToBill(pushdata))
+    }
+    setPriceModal(false)
   }
 
   // display search value when typing in search box
@@ -146,11 +182,19 @@ function Main() {
   // display ticket bill details using redux
   const billDetails = useSelector((state: any) => state.bill.billItems)
   const totalPrice = useSelector((state: any) => state.bill.totalPrice)
+
   // add item to bill with redux
   const addItem = (data: any) => {
-    const pushdata = { ...data, staffName} 
-    dispatch(addToBill(pushdata))
+    if (data.CategoryID !== -1) {
+      const pushdata = { ...data, staffName} 
+      dispatch(addToBill(pushdata))
+    } else {
+      setPriceModal(true)
+      console.log(data)
+      setModalPrice(data)
+    }
   }
+
   // clear the bill
   const handleNewOrderClick = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -198,7 +242,8 @@ function Main() {
   const handleClearItems = () => {
     dispatch(clearBill())
   }
-  const handleCloseOrder = () => {
+  const handleCloseOrder = (data: any) => {
+    setCustomerData(data)
     setNewOrderModal(false)
   }
   return (
@@ -238,6 +283,7 @@ function Main() {
             <Breadcrumb className="hidden mr-auto -intro-x sm:flex p-3">
               <Breadcrumb.Link active>{staffName}</Breadcrumb.Link>
               <Breadcrumb.Link active className={`${showComponent === 'services'? '' : 'hidden'}`}>{categoryName}</Breadcrumb.Link>
+              <Breadcrumb.Link active className={`${showComponent === 'misc'? '' : 'hidden'}`}>Misc</Breadcrumb.Link>
             </Breadcrumb>
             <FormSelect className="w-full px-4 py-3 mt-3 ml-auto !box lg:w-auto lg:mt-0">
               <option>Sort By</option>
@@ -268,7 +314,8 @@ function Main() {
                   onClick={handleGetServices}>Service</div>
           </div>
           <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-            <div className="text-base font-medium">Misc</div>
+            <div className="text-base font-medium"
+                  onClick={handleMisc}>Misc</div>
           </div>
         </div>
           <div className={`grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto border-t ${showComponent === 'staff'? '' : 'hidden'}`}>
@@ -300,9 +347,8 @@ function Main() {
               ))}
             </div>
           {/*END: Display list Category*/}
-
           {/*BEGIN: Display list Services*/}
-            <div className={`grid grid-cols-12 gap-5 p-4 mt-5 border-t max-h-[70vh] overflow-y-auto ${showComponent === 'services'? '' : 'hidden'}`}>
+            <div className={`grid grid-cols-12 gap-5 p-4 mt-5 border-t max-h-[70vh] overflow-y-auto ${showComponent === 'services' || showComponent === 'misc' ? '' : 'hidden'}`}>
             {services.map((service: any, ProductID: number) => (
               <a
                 key={ProductID}
@@ -446,7 +492,7 @@ function Main() {
                 <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
                   <div>
                     <div className="text-slate-500">Customer</div>
-                    <div className="mt-1">{fakerData[0].users[0].name}</div>
+                    <div className="mt-1">{customerData.FirstName} {customerData.LastName}</div>
                   </div>
                   <Lucide
                     icon="User"
@@ -456,20 +502,20 @@ function Main() {
                 <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
                   <div>
                     <div className="text-slate-500">Mobile</div>
-                    <div className="mt-1">3</div>
+                    <div className="mt-1">{customerData.Mobile}</div>
                   </div>
                   <Lucide
-                    icon="Users"
+                    icon="Smartphone"
                     className="w-4 h-4 ml-auto text-slate-500"
                   />
                 </div>
                 <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
                   <div>
                     <div className="text-slate-500">Email</div>
-                    <div className="mt-1">3</div>
+                    <div className="mt-1">{customerData.Email}</div>
                   </div>
                   <Lucide
-                    icon="Users"
+                    icon="Mail"
                     className="w-4 h-4 ml-auto text-slate-500"
                   />
                 </div>
@@ -479,8 +525,10 @@ function Main() {
         </Tab.Group>
         {/* END: Ticket */}
       </div>
+
+      {priceModal && (<MiscModal miscData={modalPriceData} priceModal={priceModal} handleClose={closeModalPrice} />)}
       {/* BEGIN: New Order Modal */}
-      {newOrderModal && (<NewOrder openModal={newOrderModal} onClose={handleCloseOrder}/> )}
+      {newOrderModal && (<NewOrder customer={customerData} openModal={newOrderModal} handleClose={handleCloseOrder}/> )}
       {/* END: New Order Modal */}
     </>
   );
