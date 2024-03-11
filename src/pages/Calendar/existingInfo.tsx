@@ -21,6 +21,7 @@ import { setCompanyNotes, setCustomerNotes, selectNotes } from '../../stores/not
 import SelectStaff from "../../components/SelectStaffButton";
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
+import moment from "moment";
 
 
 interface SlideOverPanelProps {
@@ -114,8 +115,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     })
   }
 
-
-
   const handleChangeStatus = (statusId: number) => {
 
     const appointmentsToUpdate = singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => ({
@@ -166,6 +165,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     .catch(error => {
       logError('An unexpected error occurred. Please try again later.')
     });
+    handleUpdateAppointment()
   }
 
   const handleServiceDelete = (selectedService: any) => {
@@ -177,9 +177,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     setServiceSlideoverOpen(false)
   }
 
-    const handleTabChange = (tab: React.SetStateAction<string>) => {
+  const handleTabChange = (tab: React.SetStateAction<string>) => {
         setActiveTab(tab);
-    };
+  };
 
   
 
@@ -208,54 +208,69 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     );
   };
   
-//   const updateAppointmentRequest = {
-//     FirstName: selectedCustomer?.FirstName || "",
-//     LastName: selectedCustomer?.LastName || "",
-//     Mobile: selectedCustomer?.Mobile || "",
-//     Email: selectedCustomer?.Email || "",
-//     Appointments: [] as Appointment[],
-//   };
-//   interface Appointment {
-//     BookDate: string;
-//     StartTime: string;
-//     EndTime: string;
-//     ServiceID: string;
-//     StaffID: string;
-//     Deposit: number;
-//     Islocked: boolean;
-//     CustomerNote: string;
-//     CompanyNote: string;
-// }
-//     let previousEndTime = selectedTime; 
+  const updateAppointmentRequest = {
+    ID: appointmentData.ID,
+    CustomerID: appointmentData.CustomerID,
+    Appointments: appointmentData,
+  };
+  interface Appointment {
+    BookDate: string;
+    StartTime: string;
+    EndTime: string;
+    ServiceID: string;
+    StaffID: string;
+    Deposit: number;
+    Islocked: boolean;
+    CustomerNote: string;
+    CompanyNote: string;
+}
+    let previousEndTime = appointmentData.EndTime; 
 
-//     selectedServices.forEach((service: { Duration: any; ProductID: any; }) => {
-//         // Calculate end time based on start time and service duration
-//         const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
+    selectedServices.forEach((service: { Duration: any; ProductID: any; }) => {
+        // Calculate end time based on start time and service duration
+        const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
 
-//         const newAppointment : Appointment = {
-//             BookDate: date,
-//             StartTime: previousEndTime, // Use the end time of the previous service
-//             EndTime: serviceEndTime,
-//             ServiceID: service.ProductID,
-//             StaffID: resourceID,
-//             Deposit: 0,
-//             Islocked: false,
-//             CustomerNote: customerNotes,
-//             CompanyNote: companyNotes,
-//         };
+        const updateAppointment : Appointment = {
+            BookDate: appointmentData.BookDate,
+            StartTime: previousEndTime, // Use the end time of the previous service
+            EndTime: serviceEndTime,
+            ServiceID: service.ProductID,
+            StaffID: appointmentData.StaffID,
+            Deposit: 0,
+            Islocked: false,
+            CustomerNote: appointmentData.CustomerNotes,
+            CompanyNote: appointmentData.CompanyNotes,
+        };
 
-//         newAppointmentRequest.Appointments.push(newAppointment);
+        updateAppointmentRequest.Appointments.push(updateAppointment);
 
-//         // Update previousEndTime for the next iteration
-//         previousEndTime = serviceEndTime;
-//     });
+        // Update previousEndTime for the next iteration
+        previousEndTime = serviceEndTime;
+    });
 
-//     // Function to calculate end time based on start time and duration
-//     function calculateEndTime(startTime: string, duration: number): string {
-//         const startMoment = moment(startTime, 'HH:mm');
-//         const endMoment = startMoment.clone().add(duration, 'minutes');
-//         return endMoment.format('HH:mm');
-//     }
+    // Function to calculate end time based on start time and duration
+    function calculateEndTime(startTime: string, duration: number): string {
+        const startMoment = moment(startTime, 'HH:mm');
+        const endMoment = startMoment.clone().add(duration, 'minutes');
+        return endMoment.format('HH:mm');
+    }
+
+    const handleUpdateAppointment = () => {
+        calendarRepository.addAppointment(updateAppointmentRequest)
+              .then((res) => {
+                // showAppointmentToast('Appointment added successfully');
+                console.log(res.data)
+                handleAppoinmentChange(true);
+                onClose();
+                dispatch(resetSelectedServices());
+              })
+              .catch((error) => {
+                console.error('Error adding appointment:', error);
+                // showAppointmentToast('Error adding appointment', 'error');
+              });
+          
+            // setSecondSlideoverOpen(false);
+  }
 
   return (
     <div>
