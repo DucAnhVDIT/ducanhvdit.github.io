@@ -15,10 +15,12 @@ import calendarRepository from "../../repositories/calendarRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 import StatusButtons from "../../components/StatusButton";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
-import { FormInput } from "../../base-components/Form";
+import { FormInput, FormLabel } from "../../base-components/Form";
 import ExistingDatePicker from "../../components/DatePicker/existingAppointmentPicker";
 import { setCompanyNotes, setCustomerNotes, selectNotes } from '../../stores/notesSlide';
 import SelectStaff from "../../components/SelectStaffButton";
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/dark.css';
 
 
 interface SlideOverPanelProps {
@@ -45,6 +47,12 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   const [searchValueService, setSearchValueService] = useState("");
   const [date, setDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('info');
+  const [updateCustomerSlideOpen, setUpdateCustomerSlide] = useState(false)
+
+  const handleCloseUpdateCustomer = () => {
+    setUpdateCustomerSlide(false)
+  }
+
 
   const [changeDateBody, setChangeDateBody] = useState({
     ID: appointmentData.ID,
@@ -68,6 +76,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
       StartTime: newStartTime,
     }));
   };
+
   
   useEffect(() => {
     console.log("dich vu moi nay",selectedServices)
@@ -146,7 +155,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   }
   const handleUpdateBookingDate = () => {
     calendarRepository.updateAppointment(changeDateBody).then(res => {
-      console.log(res.data)
       if (res.data) {
           logSuccess('Appointment rescheduled successfully')
           handleAppoinmentChange(true)
@@ -273,7 +281,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                           </div>
 
 
-                          <CustomerCard customer={appointmentData} onClick={() => {}}/>
+                          <CustomerCard customer={appointmentData} onClick={() => {setUpdateCustomerSlide(true)}}/>
                       
                           <div className="mt-3 w-full">
                             <ExistingDatePicker 
@@ -384,7 +392,126 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                             />
                           </div>
                         </div>
-                      )}                  
+                      )}
+
+                  {updateCustomerSlideOpen && (
+                           <Slideover open={updateCustomerSlideOpen} onClose={handleCloseUpdateCustomer}>
+                           <Slideover.Panel>
+                               <Slideover.Title className="p-5">
+                                   <h2 className="mr-auto font-bold text-2xl">
+                                       Update Client
+                                   </h2>
+                                   <Button className="border-none shadow-none" onClick={handleCloseUpdateCustomer}>
+                                       <Lucide icon="ArrowLeft"/>
+                                   </Button>
+                               </Slideover.Title>
+                               <Slideover.Description className="text-center">
+                                   <div className="input-form flex flex-col w-full">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           First Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter First Name"
+                                               className="w-full"
+                                               value={appointmentData.CustomerName}
+                                              //  onChange={(event) => setFirstName(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Last Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter Last Name"
+                                               className="w-full"
+                                              //  value={lastName}
+                                              //  onChange={(event) => setLastName(event.target.value)}
+                                           />
+                                       </div>                                
+                                   </div>
+                                   <div className="input-form flex flex-col w-full mt-3">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Email
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="email"
+                                               name="name"
+                                               placeholder="Enter Email"
+                                               className="w-full"
+                                               value={appointmentData.Email}
+                                              //  onChange={(event) => setEmail(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Phone Number
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="number"
+                                               name="name"
+                                               placeholder="Enter Phone Number"
+                                               className="w-full"
+                                               value={appointmentData.Mobile}
+                                              //  onChange={(event) => setMobileNumber(event.target.value)}
+                                            />
+                                       </div>                                
+                                   </div>
+                                   <div className="mt-3 input-form w-full">
+                                               <FormLabel
+                                               htmlFor="validation-form-4"
+                                               className="flex flex-col w-full sm:flex-row"
+                                               >
+                                               Birth Date
+                                               </FormLabel>
+                                               <Flatpickr
+                                                   className='w-full rounded-xl'
+                                                   options={{
+                                                       altInput: true,
+                                                       altFormat: "F j, Y",
+                                                       dateFormat: "Y-m-d",
+                                                   }}
+                                                   placeholder="Choose Birth Date"
+                                               />
+                                           </div>
+                                           <div className='md:w-1/3'>
+   
+                               </div>                        
+                               </Slideover.Description>
+                               <Slideover.Footer>
+                                   <Button
+                                       variant="primary"
+                                       type="button"
+                                       className="w-32"
+                                      //  onClick={handleAddNewClient}
+                                   >
+                                       Update
+                                   </Button>
+                               </Slideover.Footer>
+                           </Slideover.Panel>
+                           </Slideover>
+                       )}                
 
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
@@ -409,7 +536,10 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
               {/* END: Slide Over Footer */}
           </Slideover>
           {/* END: Slide Over Content */}
+
     </div>
+
+    
   )
 }
 

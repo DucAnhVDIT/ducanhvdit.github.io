@@ -10,7 +10,7 @@ import Breadcrumb from "../../base-components/Breadcrumb";
 import { FormInput } from "../../base-components/Form";
 import { Menu, Popover } from "../../base-components/Headless";
 import { Transition } from "@headlessui/react";
-import logoUrl from "../../assets/images/logo.svg";
+import logoUrl from "../../assets/images/vditheader.png";
 import clsx from "clsx";
 import MobileMenu from "../../components/MobileMenu";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
