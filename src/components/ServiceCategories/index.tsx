@@ -32,7 +32,7 @@ const ServiceCategories = ({ services }: { services: { CategoryName: string }[] 
               {services
                 .filter((service) => service.CategoryName === category)
                 .map((service) => (
-                    <ServiceCard key={""} service={service} />
+                    <ServiceCard key={""} service={service} onSelect={()=>{}} />
                 ))}
             </ul>
             )}

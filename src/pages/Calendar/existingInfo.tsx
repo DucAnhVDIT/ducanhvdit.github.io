@@ -91,6 +91,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     setServiceSlideoverOpen(false);
   };
 
+
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
     dispatch(deleteAppointment(appointmentId));
@@ -207,6 +208,54 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     );
   };
   
+//   const updateAppointmentRequest = {
+//     FirstName: selectedCustomer?.FirstName || "",
+//     LastName: selectedCustomer?.LastName || "",
+//     Mobile: selectedCustomer?.Mobile || "",
+//     Email: selectedCustomer?.Email || "",
+//     Appointments: [] as Appointment[],
+//   };
+//   interface Appointment {
+//     BookDate: string;
+//     StartTime: string;
+//     EndTime: string;
+//     ServiceID: string;
+//     StaffID: string;
+//     Deposit: number;
+//     Islocked: boolean;
+//     CustomerNote: string;
+//     CompanyNote: string;
+// }
+//     let previousEndTime = selectedTime; 
+
+//     selectedServices.forEach((service: { Duration: any; ProductID: any; }) => {
+//         // Calculate end time based on start time and service duration
+//         const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
+
+//         const newAppointment : Appointment = {
+//             BookDate: date,
+//             StartTime: previousEndTime, // Use the end time of the previous service
+//             EndTime: serviceEndTime,
+//             ServiceID: service.ProductID,
+//             StaffID: resourceID,
+//             Deposit: 0,
+//             Islocked: false,
+//             CustomerNote: customerNotes,
+//             CompanyNote: companyNotes,
+//         };
+
+//         newAppointmentRequest.Appointments.push(newAppointment);
+
+//         // Update previousEndTime for the next iteration
+//         previousEndTime = serviceEndTime;
+//     });
+
+//     // Function to calculate end time based on start time and duration
+//     function calculateEndTime(startTime: string, duration: number): string {
+//         const startMoment = moment(startTime, 'HH:mm');
+//         const endMoment = startMoment.clone().add(duration, 'minutes');
+//         return endMoment.format('HH:mm');
+//     }
 
   return (
     <div>
