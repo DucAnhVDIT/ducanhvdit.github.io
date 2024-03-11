@@ -145,13 +145,13 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     });
   }
   const handleUpdateBookingDate = () => {
-    calendarRepository.updateAppointment(changeDateBody).then(response => {
-      
-      if (response.status === 200 && changeDateBody.StartTime !== appointmentData.StartTime) {
+    calendarRepository.updateAppointment(changeDateBody).then(res => {
+      console.log(res.data)
+      if (res.data) {
           logSuccess('Appointment rescheduled successfully')
           handleAppoinmentChange(true)
       } else {
-          logError('Error updating appointment. Please try again.')
+          logError('Error updating appointment. Slot not available')
       }
     })
     .catch(error => {
