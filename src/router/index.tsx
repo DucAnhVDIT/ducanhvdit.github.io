@@ -36,26 +36,26 @@ function Router() {
           path: "/",
           element: <Calendar />,
         },
-        {
-          path: "/clients",
-          element: <RegularTable />,
-        },
-        {
-          path: "/marketing",
-          element: <Post />,
-        },
+        // {
+        //   path: "/clients",
+        //   element: <RegularTable />,
+        // },
+        // {
+        //   path: "/marketing",
+        //   element: <Post />,
+        // },
         {
           path: "/purchase",
           element: <PointOfSales />,
         },
-        {
-          path: "/manager",
-          element: <DashboardOverview2 />,
-        },
-        {
-          path: "/clients/add",
-          element: <AddClient />,
-        },
+        // {
+        //   path: "/manager",
+        //   element: <DashboardOverview2 />,
+        // },
+        // {
+        //   path: "/clients/add",
+        //   element: <AddClient />,
+        // },
       ],
     },
     {
