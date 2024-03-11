@@ -9,6 +9,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
+  "homepage": "http://testappv2.vdit.co.uk/",
   "dependencies": {
     "@ckeditor/ckeditor5-build-balloon": "^35.1.0",
     "@ckeditor/ckeditor5-build-balloon-block": "^35.1.0",
