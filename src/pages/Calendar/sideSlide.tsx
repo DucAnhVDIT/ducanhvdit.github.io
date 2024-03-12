@@ -330,17 +330,17 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     {/* Tab Navigation */}
                     <div className="flex justify-start mb-5">
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={`w-28 cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`border-none w-28 cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('info')}
                         >
                             Info
                         </Button>
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={`w-28 cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`w-28 border-none cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('notes')}
                         >
                             Notes
@@ -351,7 +351,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     {activeTab === 'info' && (
                     <>
                        {/* Begin Add Client Button */}
-                       <div className="border-none bg-transparent shadow-none" onClick={openSearchClient}>
+                       <div className=" border-none bg-transparent shadow-none" onClick={openSearchClient}>
                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
                                <div
                                className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"

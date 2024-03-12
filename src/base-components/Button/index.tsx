@@ -132,7 +132,7 @@ const Button: ButtonComponent = forwardRef(
     const outlineSecondary = [
       "border-secondary text-slate-500", // Default
       "dark:border-darkmode-100/40 dark:text-slate-300", // Dark mode
-      "[&:hover:not(:disabled)]:bg-secondary/20", // On hover and not disabled
+      "[&:hover:not(:disabled)]:bg-secondary/100", // On hover and not disabled
       "[&:hover:not(:disabled)]:dark:bg-darkmode-100/10", // On hover and not disabled in dark mode
     ];
     const outlineSuccess = [

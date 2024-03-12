@@ -82,31 +82,38 @@ function Main() {
     fetchStaffApiData();
   }, []);
   
-  const handleSlotClicked = (info: any) => {
-    setSlotClickModal(true)
-    setSelectedSlotInfo(info)
+  const handleSlotClicked = async (info: any) => {
+    const startTime = moment(info.start).format('HH:mm');
+    setDate(info.start);
+    setSelectedTime(startTime);
+    const staffTitle = info.resource.title;
+    const staffID = info.resource.id;
+    setResourceTitle(staffTitle);
+    setResourceID(staffID);
+  
+    fetchServiceApiData(staffID);
+    setSlotSlideoverPreview(true);
   };
+  // const blockTimeClicked = () => {
+  //   setBlockTimePop(true)
+  //   setSlotClickModal(false)
+  // }
 
-  const blockTimeClicked = () => {
-    setBlockTimePop(true)
-    setSlotClickModal(false)
-  }
+  // const addNewAppointment = async () => {
+  //   if (selectedSlotInfo) {
+  //     setSlotClickModal(false)
+  //     const startTime = moment(selectedSlotInfo.start).format('HH:mm');
+  //     setDate(selectedSlotInfo.start);
+  //     setSelectedTime(startTime);
+  //     const staffTitle = selectedSlotInfo.resource.title;
+  //     const staffID = selectedSlotInfo.resource.id;
+  //     setResourceTitle(staffTitle);
+  //     setResourceID(staffID);
 
-  const addNewAppointment = async () => {
-    if (selectedSlotInfo) {
-      setSlotClickModal(false)
-      const startTime = moment(selectedSlotInfo.start).format('HH:mm');
-      setDate(selectedSlotInfo.start);
-      setSelectedTime(startTime);
-      const staffTitle = selectedSlotInfo.resource.title;
-      const staffID = selectedSlotInfo.resource.id;
-      setResourceTitle(staffTitle);
-      setResourceID(staffID);
-
-      fetchServiceApiData(staffID);
-      setSlotSlideoverPreview(true);
-    }
-  };
+  //     fetchServiceApiData(staffID);
+  //     setSlotSlideoverPreview(true);
+  //   }
+  // };
 
   const handleEventClick = async (info: { event: any }) => {
     try {
@@ -510,8 +517,8 @@ function Main() {
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
       {drawerIsOpen && (<ExistingDrawer  fetchAppoinmentApiData={fetchAppoinmentApiData} drawerIsOpen={drawerIsOpen} setDrawerIsOpen={setDrawerIsOpen} appointmentData={selectedAppointment} handleAppoinmentChange={handleAppoinmentChange} handleDateChange={handleDateChange} serviceData={serviceData} />)}
-      {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
-      {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)}
+      {/* {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
+      {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)} */}
       
       <ToastContainer
         position="top-center" 

@@ -307,7 +307,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                                             )
                                             .map((service: { ProductID: string }) => (
                                                 <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
-                                                ))}
+                                            ))}
                                         </div>
                                     </div>
                                 </Paper>
