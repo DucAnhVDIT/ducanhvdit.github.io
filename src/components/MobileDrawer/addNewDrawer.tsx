@@ -9,6 +9,10 @@ import { RootState } from '../../stores/store';
 import { addService, deleteService } from '../../stores/serviceListSlice';
 import FormInput from '../../base-components/Form/FormInput';
 import CustomerCard from '../CustomerCard';
+import FormLabel from '../../base-components/Form/FormLabel';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/dark.css';
+
 
 
 interface AddNewDrawerProps {
@@ -36,8 +40,18 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
     const [selectedServiceIDs, setSelectedServiceIDs] = useState<any[]>([]);
     const [searchValueClient, setSearchValueClient] = useState("");
 
+    const [isAddCustomerSlideOpen, setAddCustomerSlideOpen] = useState(false)
+
     const [visibleCustomers, setVisibleCustomers] = useState(10);
     const totalCustomers = customersList?.Customers?.length || 0;
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [mobileNumber, setMobileNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+
+
     const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
     const dispatch = useDispatch()
 
@@ -87,7 +101,7 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
     };
 
     const handleOpenAddClient = () => {
-        // setAddCustomerSlideOpen(true)
+        setAddCustomerSlideOpen(true)
         setClienSlideoverOpen(false)
     }
 
@@ -362,6 +376,130 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
    
                                    </div>
                                 </div>
+                            
+                                {isAddCustomerSlideOpen && (
+                                    <Drawer className=' z-50' anchor="bottom" open={isAddCustomerSlideOpen} onClose={() => setAddCustomerSlideOpen(false)}>
+                                    <Paper
+                                        sx={{
+                                            height: '100vh', 
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                        }}
+                                    >
+                                        <div className='flex m-3'>
+                                           <h2 className="mr-auto font-bold text-2xl">
+                                               Add Client
+                                           </h2>
+                                           <Button className="border-none shadow-none" onClick={() => setAddCustomerSlideOpen(false)}>
+                                               <Lucide icon="ArrowLeft"/>
+                                           </Button>
+                                        </div>
+                                       
+                                        <div className='m-3'>
+                                        <div className="input-form flex flex-col w-full">
+                                               <div className='flex flex-col justify-between w-full mr-4'>
+                                                   <FormLabel
+                                                       htmlFor="validation-form-1"
+                                                       className="flex flex-col w-full sm:flex-row"
+                                                   >
+                                                   First Name
+                                                   </FormLabel>
+                                                   <FormInput
+                                                       id="validation-form-1"
+                                                       type="text"
+                                                       name="name"
+                                                       placeholder="Enter First Name"
+                                                       className="w-full"
+                                                       value={firstName}
+                                                       onChange={(event) => setFirstName(event.target.value)}
+                                                   />
+                                               </div>
+                                               <div className='flex flex-col w-full mt-2'>
+                                                   <FormLabel
+                                                       htmlFor="validation-form-1"
+                                                       className="flex flex-col w-full sm:flex-row"
+                                                   >
+                                                   Last Name
+                                                   </FormLabel>
+                                                   <FormInput
+                                                       id="validation-form-1"
+                                                       type="text"
+                                                       name="name"
+                                                       placeholder="Enter Last Name"
+                                                       className="w-full"
+                                                       value={lastName}
+                                                       onChange={(event) => setLastName(event.target.value)}
+                                                   />
+                                               </div>                                
+                                           </div>
+                                           <div className="input-form flex flex-col w-full mt-3">
+                                               <div className='flex flex-col justify-between w-full mr-4'>
+                                                   <FormLabel
+                                                       htmlFor="validation-form-1"
+                                                       className="flex flex-col w-full sm:flex-row"
+                                                   >
+                                                   Email
+                                                   </FormLabel>
+                                                   <FormInput
+                                                       id="validation-form-1"
+                                                       type="email"
+                                                       name="name"
+                                                       placeholder="Enter Email"
+                                                       className="w-full"
+                                                       value={email}
+                                                       onChange={(event) => setEmail(event.target.value)}
+                                                   />
+                                               </div>
+                                               <div className='flex flex-col w-full mt-2'>
+                                                   <FormLabel
+                                                       htmlFor="validation-form-1"
+                                                       className="flex flex-col w-full sm:flex-row"
+                                                   >
+                                                   Phone Number
+                                                   </FormLabel>
+                                                   <FormInput
+                                                       id="validation-form-1"
+                                                       type="number"
+                                                       name="name"
+                                                       placeholder="Enter Phone Number"
+                                                       className="w-full"
+                                                       value={mobileNumber}
+                                                       onChange={(event) => setMobileNumber(event.target.value)}
+                                                    />
+                                               </div>                                
+                                           </div>
+                                           <div className="mt-3 input-form w-full">
+                                                       <FormLabel
+                                                       htmlFor="validation-form-4"
+                                                       className="flex flex-col w-full sm:flex-row"
+                                                       >
+                                                       Birth Date
+                                                       </FormLabel>
+                                                       <Flatpickr
+                                                           className='w-full rounded-xl'
+                                                           options={{
+                                                               altInput: true,
+                                                               altFormat: "F j, Y",
+                                                               dateFormat: "Y-m-d",
+                                                           }}
+                                                           placeholder="Choose Birth Date"
+                                                       />
+                                            </div>
+                                        </div>
+                                        <div className="mt-auto p-3 flex justify-end">
+                                            <Button
+                                                variant="primary"
+                                                type="button"
+                                                className="w-32"
+                                                // onClick={handleAddNewClient}
+                                            >
+                                                Add
+                                            </Button>      
+                                        </div>
+                                    </Paper>
+                                </Drawer>
+                                )}
+                                
                                 </Paper>
                          </Drawer>
                         {/* End Client List */}
