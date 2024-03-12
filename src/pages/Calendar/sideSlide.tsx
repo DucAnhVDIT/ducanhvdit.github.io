@@ -308,6 +308,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
   return (
     <div>
           <Slideover
+              className="hidden sm:block"
               open={isOpen}
               onClose={closeSlideOver}
           >
@@ -410,7 +411,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                        </div>
                        </div>
    
-                       <div className="selected-services">
+
                        <div className="selected-services">
                        {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
                            <ServiceCard
@@ -419,8 +420,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                onSelect={handleServiceDelete}
                            />
                        ))}
-                       </div>
-   
                        </div>
                        {/* End Add Services */}
                          

@@ -34,6 +34,7 @@ import SelectView from "../../components/SelectViewButton";
 import AppointmentPopup from "../../components/Modal";
 import BlockTimePopup from "../../components/Modal/blockTime";
 import ExistingDrawer from "../../components/MobileDrawer/existingDrawer";
+import AddNewDrawer from "../../components/MobileDrawer/addNewDrawer";
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -53,6 +54,7 @@ function Main() {
   const [selectedSlotInfo, setSelectedSlotInfo] = useState<any | null>(null);
   const [blockTimePop, setBlockTimePop] = useState<any | null>(null);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+  const [addNewDrawerOpen, setAddNewDrawerOpen] = useState(false);
   
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
@@ -93,6 +95,7 @@ function Main() {
   
     fetchServiceApiData(staffID);
     setSlotSlideoverPreview(true);
+    setAddNewDrawerOpen(true)
   };
   // const blockTimeClicked = () => {
   //   setBlockTimePop(true)
@@ -517,6 +520,7 @@ function Main() {
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
       {drawerIsOpen && (<ExistingDrawer  fetchAppoinmentApiData={fetchAppoinmentApiData} drawerIsOpen={drawerIsOpen} setDrawerIsOpen={setDrawerIsOpen} appointmentData={selectedAppointment} handleAppoinmentChange={handleAppoinmentChange} handleDateChange={handleDateChange} serviceData={serviceData} />)}
+      {addNewDrawerOpen && (<AddNewDrawer addNewDrawerOpen={addNewDrawerOpen} setAddNewDrawerOpen={setAddNewDrawerOpen}  handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast}  serviceData={serviceData} selectedTime={selectedTime} />)}
       {/* {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
       {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)} */}
       

@@ -167,10 +167,10 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
             >
              <Paper
                 sx={{
-                height: '100vh', // Set the height to cover the whole screen
+                height: '100vh',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between', // Adjust as needed
+                justifyContent: 'space-between',
                 }}
             >
 
@@ -187,17 +187,17 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                {/* Tab Navigation */}
                <div className="flex justify-start mb-5 mt-3">
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={` w-28 cursor-pointer rounded-full ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={` w-28 border-none cursor-pointer rounded-full ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('info')}
                         >
                             Info
                         </Button>
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={`w-28  cursor-pointer ml-3 rounded-full ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`w-28 border-none cursor-pointer ml-3 rounded-full ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('notes')}
                         >
                             Notes
@@ -264,10 +264,10 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                             <Drawer className=' z-30' anchor="bottom" open={isServiceSlideoverOpen} onClose={() => setServiceSlideoverOpen(false)}>
                                 <Paper
                                     sx={{
-                                        height: '100vh', // Set the height to cover the whole screen
+                                        height: '100vh', 
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        justifyContent: 'space-between', // Adjust as needed
+                                        justifyContent: 'space-between', 
                                     }}>
                                     <div className='flex m-3'>
                                         <h2 className="mr-auto font-bold text-2xl">
