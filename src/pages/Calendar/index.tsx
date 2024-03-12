@@ -450,8 +450,24 @@ function Main() {
 
   return (
     <div  className="full-calendar">
-      <div className="flex mt-3 mb-3 justify-between">
-        <SelectStaff staffData={staffData} selectedStaff={selectedStaff} handleStaffChange={handleStaffChange} />   
+      {/* Mobile Select Staff and View */}
+
+      <div className="flex mt-3 justify-between sm:hidden">
+        <div className="">
+            <SelectStaff staffData={staffData} selectedStaff={selectedStaff} handleStaffChange={handleStaffChange} />   
+        </div>
+
+        <div className="">
+          <SelectView  switchToWeek={switchToWeek} switchToDay={switchToDay} />
+        </div>
+      </div>
+
+      {/* Mobile Select Staff and View */}
+
+      <div className="flex flex-col sm:flex-row mt-3 mb-3 justify-between">
+        <div className="hidden sm:block">
+          <SelectStaff staffData={staffData} selectedStaff={selectedStaff} handleStaffChange={handleStaffChange} />   
+        </div>
         {/* BEGIN: Input Group */}
         <PreviewComponent className="intro-y bg-transparent">
               {({ toggle }) => (
@@ -478,8 +494,9 @@ function Main() {
                 </>
               )}
         </PreviewComponent>
-
-        <SelectView  switchToWeek={switchToWeek} switchToDay={switchToDay} />
+        <div className="hidden sm:block">
+          <SelectView  switchToWeek={switchToWeek} switchToDay={switchToDay} />
+        </div>
         
       </div>
 

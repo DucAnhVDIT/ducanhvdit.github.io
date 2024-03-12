@@ -165,8 +165,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     .catch(error => {
       logError('An unexpected error occurred. Please try again later.')
     });
-    handleUpdateAppointment()
   }
+
 
   const handleServiceDelete = (selectedService: any) => {
     dispatch(deleteService(selectedService.ProductID));
@@ -209,9 +209,8 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   };
   
   const updateAppointmentRequest = {
-    ID: appointmentData.ID,
     CustomerID: appointmentData.CustomerID,
-    Appointments: appointmentData,
+    Appointments: [] as Appointment[],
   };
   interface Appointment {
     BookDate: string;
@@ -276,7 +275,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     <div>
           <Slideover
               className=""
-              staticBackdrop
               open={isOpen}
               onClose={onClose}
           >
@@ -326,23 +324,18 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
                       {activeTab === 'info' && (
                         <>
-                          <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full relative">
-                            <div
-                              className="col-span-12 sm:col-span-4 2xl:col-span-3 box zoom-in"
-                            >
+                          
                               <div
                                   style={{
                                       backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
                                       padding: '20px',
-                                      borderRadius:"20px"
+                                      borderRadius:"20px",
                                   }}
                                   className="flex justify-between p-0"
                               >
                                   <h1 className="text-2xl text-white mt-1">{appointmentData.StatusName}</h1>
                                   <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
                               </div>
-                            </div>
-                          </div>
 
 
                           <CustomerCard customer={appointmentData} onClick={() => {setUpdateCustomerSlide(true)}}/>
@@ -589,7 +582,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                     <Button className=" w-32 px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
                     </Button>
-                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateAppointment}>
                       Submit
                     </Button>
                     <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={() => {}}>

@@ -32,7 +32,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ date, goToDate }) =
           ref={flatpickrRef}
           value={date}
           onChange={handleDateChange}
-          options={{ dateFormat: 'D j M Y' }}
+          options={{ dateFormat: 'D j M Y', disableMobile:true }}
           className=" w-32 font-normal p-0 cursor-pointer pl-4 border-none bg-primary text-sm rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
         <Lucide

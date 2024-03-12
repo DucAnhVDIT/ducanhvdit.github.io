@@ -308,7 +308,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
   return (
     <div>
           <Slideover
-              staticBackdrop
               open={isOpen}
               onClose={closeSlideOver}
           >
@@ -316,7 +315,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
               <Slideover.Panel>
                   <Button
                       onClick={closeSlideOver}
-                      className="absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
+                      className="hidden sm:block absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
                   >
                       <Lucide icon="X" className="w-8 h-8 text-black" />
                   </Button>
@@ -352,7 +351,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     {activeTab === 'info' && (
                     <>
                        {/* Begin Add Client Button */}
-                       <div className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
+                       <div className="border-none bg-transparent shadow-none" onClick={openSearchClient}>
                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
                                <div
                                className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
