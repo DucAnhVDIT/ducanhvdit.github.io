@@ -33,6 +33,7 @@ import React from "react";
 import SelectView from "../../components/SelectViewButton";
 import AppointmentPopup from "../../components/Modal";
 import BlockTimePopup from "../../components/Modal/blockTime";
+import ExistingDrawer from "../../components/MobileDrawer/existingDrawer";
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -51,7 +52,7 @@ function Main() {
   const [selectAddNew, setSelectAddNew] = useState(false)
   const [selectedSlotInfo, setSelectedSlotInfo] = useState<any | null>(null);
   const [blockTimePop, setBlockTimePop] = useState<any | null>(null);
-
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
@@ -114,6 +115,7 @@ function Main() {
       await calendarRepository.getSingleAppointment(appointmentID).then((res: any) => {
         setSelectedAppointment(res.data.Appointment);
         setExistingInformationSlide(true);
+        setDrawerIsOpen(true)
       })
     } catch (error) {
       // console.error('Error fetching appointment information:', error.message);
@@ -509,6 +511,7 @@ function Main() {
       {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
       {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
       {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)}
+      {drawerIsOpen && (<ExistingDrawer drawerIsOpen={drawerIsOpen} setDrawerIsOpen={setDrawerIsOpen} />)}
       <ToastContainer
         position="top-center" 
         autoClose={3000} 

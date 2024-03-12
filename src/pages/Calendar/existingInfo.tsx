@@ -22,6 +22,7 @@ import SelectStaff from "../../components/SelectStaffButton";
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import moment from "moment";
+import { Drawer, List, ListItem, ListItemButton, ListItemText, Divider } from '@mui/material';
 
 
 interface SlideOverPanelProps {
@@ -32,10 +33,11 @@ interface SlideOverPanelProps {
   handleDateChange: (value: Date) => void;
   fetchAppoinmentApiData: (value: Date) => void
   serviceData: any
+
 }
 
 
-function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
+function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
   const { companyNotes, customerNotes } = useSelector(selectNotes);
@@ -49,6 +51,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   const [date, setDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('info');
   const [updateCustomerSlideOpen, setUpdateCustomerSlide] = useState(false)
+ 
 
   const handleCloseUpdateCustomer = () => {
     setUpdateCustomerSlide(false)
@@ -274,7 +277,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   return (
     <div>
           <Slideover
-              className=""
+              className="hidden sm:block"
               open={isOpen}
               onClose={onClose}
           >
