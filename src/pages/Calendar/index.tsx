@@ -162,7 +162,7 @@ function Main() {
         });
   
         dispatch(setScheduleData(appointmentsArray));
-        if (!existingInformationSlide) {
+        if (!existingInformationSlide && !drawerIsOpen) {
           dispatch(setAppointmentToCustomer(appointmentsByCustomer));
         }
         console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
@@ -509,9 +509,10 @@ function Main() {
 
       {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
       {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
-      {drawerIsOpen && (<ExistingDrawer  fetchAppoinmentApiData={fetchAppoinmentApiData} drawerIsOpen={drawerIsOpen} setDrawerIsOpen={setDrawerIsOpen} appointmentData={selectedAppointment} handleAppoinmentChange={handleAppoinmentChange} handleDateChange={handleDateChange} />)}
+      {drawerIsOpen && (<ExistingDrawer  fetchAppoinmentApiData={fetchAppoinmentApiData} drawerIsOpen={drawerIsOpen} setDrawerIsOpen={setDrawerIsOpen} appointmentData={selectedAppointment} handleAppoinmentChange={handleAppoinmentChange} handleDateChange={handleDateChange} serviceData={serviceData} />)}
       {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
       {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)}
+      
       <ToastContainer
         position="top-center" 
         autoClose={3000} 

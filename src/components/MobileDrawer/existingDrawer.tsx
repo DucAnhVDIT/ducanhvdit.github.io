@@ -8,9 +8,14 @@ import ServiceCard from '../ServiceCard';
 import Lucide from '../../base-components/Lucide';
 import calendarRepository from '../../repositories/calendarRepository';
 import { logError, logSuccess } from '../../constant/log-error';
-import { updateStatus } from '../../stores/appoinmentSlice';
+import { deleteAppointment, updateStatus } from '../../stores/appoinmentSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteService } from '../../stores/serviceListSlice';
+import { addService, deleteService } from '../../stores/serviceListSlice';
+import FormInput from '../../base-components/Form/FormInput';
+import FormLabel from '../../base-components/Form/FormLabel';
+import Slideover from '../../base-components/Headless/Slideover';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/dark.css';
 
 
 interface ExistingDrawerProps {
@@ -20,15 +25,18 @@ interface ExistingDrawerProps {
     handleDateChange: (value: Date) => void;
     handleAppoinmentChange: (value: boolean) => void;
     fetchAppoinmentApiData: (value: Date) => void
+    serviceData: any
 }
 
-function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData}: ExistingDrawerProps) {
+function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: ExistingDrawerProps) {
 
     const [activeTab, setActiveTab] = useState('info');
-    const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const dispatch = useDispatch();
     const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
     const selectedServices = useSelector((state: any) => state.serviceListState.selectedServices);
+    const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
+    const [searchValueService, setSearchValueService] = useState("");
+    const [updateCustomerSlideOpen, setUpdateCustomerSlide] = useState(false)
 
     const handleTabChange = (tab: React.SetStateAction<string>) => {
         setActiveTab(tab);
@@ -96,12 +104,58 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
         }));
       };
 
+      const handleUpdateBookingDate = () => {
+        calendarRepository.updateAppointment(changeDateBody).then(res => {
+          if (res.data) {
+              logSuccess('Appointment rescheduled successfully')
+              handleAppoinmentChange(true)
+              setDrawerIsOpen(false)
+          } else {
+              logError('Error updating appointment. Slot not available')
+          }
+        })
+        .catch(error => {
+          logError('An unexpected error occurred. Please try again later.')
+        });
+      }
+
       const handleServiceDelete = (selectedService: any) => {
         dispatch(deleteService(selectedService.ProductID));
         console.log("deleted")
       };
       
+      const handleServiceSelect = (selectedService: { ProductID: any; }) => {
 
+        dispatch(addService(selectedService))
+        setServiceSlideoverOpen(false);
+      };
+
+      const handleCloseUpdateCustomer = () => {
+        setUpdateCustomerSlide(false)
+      }
+
+      const handleDeleteAppointment = () => {
+        const appointmentId = appointmentData.ID;
+        dispatch(deleteAppointment(appointmentId));
+    
+        const deleteAppointmentBody = {
+          ID: appointmentData.ID,
+          StatusID: 6
+        }
+        calendarRepository.updateAppointment(deleteAppointmentBody).then(res => {
+          if (res.status === 200) {
+            console.log("Deleted appointment")
+            setDrawerIsOpen(false)
+            logSuccess('Deleted appointment')
+          } else {
+            logError('Can not delete appointment')
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    
   return (
     <div>
         <Drawer
@@ -167,7 +221,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                               </div>
 
 
-                          <CustomerCard customer={appointmentData} onClick={() => {}}/>
+                          <CustomerCard customer={appointmentData} onClick={() => {setUpdateCustomerSlide(true)}}/>
                       
                           <div className="mt-3 w-full">
                             <ExistingDatePicker 
@@ -193,7 +247,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                           ))}
 
                           <div className="items-center justify-center text-center border-none shadow-none">
-                            <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">
+                            <Button onClick={() => setServiceSlideoverOpen(true) } className="items-center justify-center text-center border-none shadow-none">
                               <Lucide
                                 icon="PlusCircle"
                                   className="text-primary text-lg round mr-1"
@@ -204,8 +258,229 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                           
                         </>
                       )}
+
+                {isServiceSlideoverOpen && (
+                        <div className='m-3'>
+                            <Drawer className=' z-30' anchor="bottom" open={isServiceSlideoverOpen} onClose={() => setServiceSlideoverOpen(false)}>
+                                <Paper
+                                    sx={{
+                                        height: '100vh', // Set the height to cover the whole screen
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between', // Adjust as needed
+                                    }}>
+                                    <div className='flex m-3'>
+                                        <h2 className="mr-auto font-bold text-2xl">
+                                            Search service
+                                        </h2>
+                                        <Button className="border-none shadow-none" onClick={() => setServiceSlideoverOpen(false)}>
+                                            <Lucide icon="ArrowLeft"/>
+                                        </Button>
+                                    </div>
+
+                                    <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0" style={{ overflowY: 'auto', flex: 1 }}>
+                                        <div className="relative text-slate-500 m-3" style={{ position: 'sticky', top: 0, zIndex: 1, background: '#fff' }}>
+                                            <FormInput
+                                                    type="text"
+                                                    className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                                    placeholder="Search by service name"
+                                                    value={searchValueService}
+                                                    onChange={(e) => setSearchValueService(e.target.value)}
+                                                />
+                                            {searchValueService ? (
+                                            <Lucide
+                                                icon="XCircle"
+                                                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                                onClick={() => setSearchValueService("")}
+                                            />
+                                            ) : (
+                                            <Lucide
+                                                icon="Search"
+                                                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                            />
+                                            )}
+                                        </div>
+                                        <div className='m-3 overflow-auto'>
+                                            {serviceData && serviceData
+                                            .filter((service: { ProductName: string }) =>
+                                            service.ProductName.toLowerCase().includes(searchValueService.toLowerCase())
+                                            )
+                                            .map((service: { ProductID: string }) => (
+                                                <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
+                                                ))}
+                                        </div>
+                                    </div>
+                                </Paper>
+                        </Drawer>
+                        </div>
+                    )}
+                    
+                    {activeTab === 'notes' && (
+                          <div className="flex flex-col">
+                          {/* Company Notes */}
+                          <div className="">
+                            <p className="text-lg font-semibold mb-2">Company Notes</p>
+                            <textarea
+                              className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                              value={appointmentData.CompanyNotes}
+                              // onChange={handleCompanyNotesChange}
+                              placeholder="Enter company notes here..."
+                            />
+                          </div>
+                      
+                          {/* Customer Notes */}
+                          <div className="mt-3">
+                            <p className="text-lg font-semibold mb-2">Customer Notes</p>
+                            <textarea
+                              className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                              value={appointmentData.CustomerNote}
+                              // onChange={handleCustomerNotesChange}
+                              placeholder="Enter customer notes here..."
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                    {updateCustomerSlideOpen && (
+
+                        <Drawer className=' z-40' anchor="bottom" open={updateCustomerSlideOpen} onClose={() => setUpdateCustomerSlide(false)}>
+                            <Paper
+                                sx={{
+                                    height: '100vh', 
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}
+                            >
+                                <div className='flex m-3'>
+                                   <h2 className="mr-auto font-bold text-2xl">
+                                       Update Client
+                                   </h2>
+                                   <Button className="border-none shadow-none" onClick={handleCloseUpdateCustomer}>
+                                       <Lucide icon="ArrowLeft"/>
+                                   </Button>
+                                </div>
+                               
+                                <div className='m-3'>
+                                <div className="input-form flex flex-col w-full">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           First Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter First Name"
+                                               className="w-full"
+                                               value={appointmentData.CustomerName}
+                                              //  onChange={(event) => setFirstName(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Last Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter Last Name"
+                                               className="w-full"
+                                              //  value={lastName}
+                                              //  onChange={(event) => setLastName(event.target.value)}
+                                           />
+                                       </div>                                
+                                   </div>
+                                   <div className="input-form flex flex-col w-full mt-3">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Email
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="email"
+                                               name="name"
+                                               placeholder="Enter Email"
+                                               className="w-full"
+                                               value={appointmentData.Email}
+                                              //  onChange={(event) => setEmail(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Phone Number
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="number"
+                                               name="name"
+                                               placeholder="Enter Phone Number"
+                                               className="w-full"
+                                               value={appointmentData.Mobile}
+                                              //  onChange={(event) => setMobileNumber(event.target.value)}
+                                            />
+                                       </div>                                
+                                   </div>
+                                   <div className="mt-3 input-form w-full">
+                                               <FormLabel
+                                               htmlFor="validation-form-4"
+                                               className="flex flex-col w-full sm:flex-row"
+                                               >
+                                               Birth Date
+                                               </FormLabel>
+                                               <Flatpickr
+                                                   className='w-full rounded-xl'
+                                                   options={{
+                                                       altInput: true,
+                                                       altFormat: "F j, Y",
+                                                       dateFormat: "Y-m-d",
+                                                   }}
+                                                   placeholder="Choose Birth Date"
+                                               />
+                                    </div>
+                                </div>
+                                <div className="mt-auto p-3 flex justify-end">
+                                    <Button
+                                        variant="primary"
+                                        type="button"
+                                        className="w-32"
+                                        // onClick={handleAddNewClient}
+                                    >
+                                        Update
+                                    </Button>      
+                                </div>
+                            </Paper>
+                        </Drawer>
+
+                       )}         
+
                 </div>
+
+                <div className="mt-auto p-3 flex justify-end">
+                    <Button className=" w-32 px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
+                      Delete
+                    </Button>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
+                      Submit
+                    </Button>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={() => {}}>
+                      Pay
+                    </Button>      
+            </div>
             </Paper>
+            
         </Drawer>
 
     </div>
