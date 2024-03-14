@@ -23,7 +23,6 @@ const basketSlice = createSlice({
         existingItem.quantity += 1;
         // recalculate the price with add quantity
         existingItem.quantityPrice = existingItem.Price * existingItem.quantity;
-        console.log(existingItem.quantityPrice);
       } else {
         // if not then just add to the object
         state.billItems.push({
@@ -31,11 +30,9 @@ const basketSlice = createSlice({
           quantity: 1,
           quantityPrice: action.payload.Price,
         });
-        console.log(state.billItems);
       }
       // calculate total price
       state.totalPrice = state.totalPrice + action.payload.Price;
-      console.log(state.totalPrice);
     },
     clearBill: (state) => {
       state.billItems = [];

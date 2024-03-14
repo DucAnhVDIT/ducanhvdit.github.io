@@ -18,7 +18,7 @@ export default function miscModal ({miscData, priceModal, handleClose} : IMiscMo
   const handleChangePrice = (e: any) => {
     const { name, value } = e.target
     const trimmedValue = value.replace(/^£0*(?=\d)|^£/, '£')
-    const validatedValue = trimmedValue.replace(/[^0-9.]/g, '');
+    const validatedValue = parseFloat(trimmedValue.replace(/[^0-9.]/g, ''))
     if (!isNaN(validatedValue)) {
     setModalPriceData((data: any) => ({ ...data, [name]: validatedValue}))
     }

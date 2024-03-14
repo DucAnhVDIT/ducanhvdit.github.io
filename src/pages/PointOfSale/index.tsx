@@ -8,6 +8,8 @@ import {
   FormSelect,
   FormTextarea,
 } from "../../base-components/Form";
+import ServiceCard from "../../components/ServiceCard";
+import CustomerCard from "../../components/CustomerCard";
 import Lucide from "../../base-components/Lucide";
 import { Menu, Tab, Dialog } from "../../base-components/Headless";
 import eposRepository from "../../repositories/eposRepository";
@@ -16,12 +18,18 @@ import { addToBill, clearBill, clearItem } from "../../stores/billSlice";
 import Breadcrumb from "../../base-components/Breadcrumb";
 import NewOrder from "./newOrder";
 import MiscModal from "./miscModal";
+import ReceiptSVG from "../../assets/images/receipt.svg"
+import Cash from '../../assets/images/cash.png'
+import Card from '../../assets/images/payment.png'
+import GiftCard from '../../assets/images/gift-card.png'
+import "./pos.css"
 
 function Main() {
   const dispatch = useDispatch();
 
   const [newOrderModal, setNewOrderModal] = useState(false);
   const [priceModal, setPriceModal] = useState(false)
+  const [paymentModal, setPaymentModal] = useState(false)
 
   const [buttonDiscount, setButtonDiscount] = useState('')
   const [discountNumber, setDiscountNumber] = useState<any>('')
@@ -86,8 +94,8 @@ function Main() {
         // get full service and full category
         await getServicesCategory()
         await getFullServices(0, 0)
+        setShowComponent('categories')
       } else {
-        
         setShowComponent('categories')
       }
     } catch (er) {}
@@ -95,15 +103,19 @@ function Main() {
 
   // filter category have in service list, map and display when fullService being called
   useEffect(() => {
-    if (fullServices !== null && servicesCategory !== null) {
-      const commonServices = servicesCategory.filter((category: any) =>
-      fullServices.some((service: any) => service.CategoryID === category.CategoryID)
-    )
-      setServicesCategory(commonServices)
+    if (showComponent !== 'misc'){
+      if (fullServices !== null && servicesCategory !== null) {
+        const commonServices = servicesCategory.filter((category: any) =>
+        fullServices.some((service: any) => service.CategoryID === category.CategoryID)
+      )
+        setServicesCategory(commonServices)
+      } else {
+        setServicesCategory([])
+      }
+      setShowComponent('categories')
     } else {
-      setServicesCategory([])
+    
     }
-    setShowComponent('categories')
     //
   }, [fullServices]);
 
@@ -120,7 +132,7 @@ function Main() {
     try {
       await eposRepository.getServices(staffID, catID).then((res: any) => {
         if (res.data.Services !== null) {
-          let misc = {
+          let misc = [{
             CategoryID: -1,
             CategoryName: 'Misc',
             CompanyID: "20160908110055249272",
@@ -128,8 +140,7 @@ function Main() {
             Price: 0,
             ProductID: 77777,
             ProductName: "Extra Services"
-          }
-          let misc2={
+          },{
             CategoryID: -1,
             CategoryName: 'Misc',
             CompanyID: "20160908110055249272",
@@ -137,8 +148,9 @@ function Main() {
             Price: 0,
             ProductID: 77778,
             ProductName: "Design"
-          }
-          setFullServices([...res.data.Services, misc2])
+          }]
+          let fulldata = res.data.Services.concat(misc)
+          setFullServices(fulldata)
         }
       })
     } catch (err) {}
@@ -154,6 +166,7 @@ function Main() {
   //* HANDLE MISC ITEM */
   const handleMisc = async () => {
     try {
+      await getFullServices(0, 0)
       const miscData = fullServices.filter((item: any) => item.CategoryID === -1)
       setServices(miscData)
       setShowComponent('misc')
@@ -200,14 +213,18 @@ function Main() {
       dispatch(addToBill(pushdata))
     } else {
       setPriceModal(true)
-      console.log(data)
       setModalPrice(data)
     }
   }
 
-  // clear the bill
   const handleNewOrderClick = (event: React.MouseEvent) => {
+    console.log('this?')
     event.preventDefault();
+    setNewOrderModal(true)
+  }
+
+  const selectCustomer = () => {
+    console.log('select customer')
     setNewOrderModal(true)
   }
 
@@ -266,6 +283,13 @@ function Main() {
     setCustomerData(data)
     setNewOrderModal(false)
   }
+
+  //**OPEN PAYMENT PAGE */
+  const openPaymentPage = () => {
+    window.scrollTo(0, 0)
+    setPaymentModal(!paymentModal)
+  }
+  //**END PAYMENT PAGE */
   return (
     <>
       <div className="flex flex-col items-center mt-4 intro-y sm:flex-row">
@@ -283,76 +307,76 @@ function Main() {
         </div>
       </div>
       <div className="grid grid-cols-12 gap-4 mt-4 intro-y">
-        {/* BEGIN: Staff List */}       
-        <div className="col-span-12 intro-y lg:col-span-8">
-        {/* END: Staff List */} 
+        {
+          !paymentModal && (
+          <div className="col-span-12 intro-y lg:col-span-8">
             <div className="lg:flex intro-y">
-            <div className="relative">
-              <FormInput
-                type="text"
-                className="w-full px-4 py-3 pr-10 lg:w-64 !box"
-                placeholder="Search item by code or name..."
-                value={searchValue}
-                onChange={(e) => {setSearchValue(e.target.value)}}
-              />
-              <Lucide
-                icon="Search"
-                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 text-slate-500"
-              />
+              <div className="relative">
+                <FormInput
+                  type="text"
+                  className="w-full px-4 py-3 pr-10 lg:w-64 !box"
+                  placeholder="Search item by code or name..."
+                  value={searchValue}
+                  onChange={(e) => {setSearchValue(e.target.value)}}
+                />
+                <Lucide
+                  icon="Search"
+                  className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 text-slate-500"
+                />
+              </div>
+              <Breadcrumb className="hidden mr-auto -intro-x sm:flex p-3">
+                <Breadcrumb.Link active>{staffName}</Breadcrumb.Link>
+                <Breadcrumb.Link active className={`${showComponent === 'services'? '' : 'hidden'}`}>{categoryName}</Breadcrumb.Link>
+                <Breadcrumb.Link active className={`${showComponent === 'misc'? '' : 'hidden'}`}>Misc</Breadcrumb.Link>
+              </Breadcrumb>
+              {/* <FormSelect className="w-full px-4 py-3 mt-3 ml-auto !box lg:w-auto lg:mt-0">
+                <option>Sort By</option>
+                <option>A to Z</option>
+                <option>Z to A</option>
+                <option>Lowest Price</option>
+                <option>Highest Price</option>
+              </FormSelect> */}
             </div>
-            <Breadcrumb className="hidden mr-auto -intro-x sm:flex p-3">
-              <Breadcrumb.Link active>{staffName}</Breadcrumb.Link>
-              <Breadcrumb.Link active className={`${showComponent === 'services'? '' : 'hidden'}`}>{categoryName}</Breadcrumb.Link>
-              <Breadcrumb.Link active className={`${showComponent === 'misc'? '' : 'hidden'}`}>Misc</Breadcrumb.Link>
-            </Breadcrumb>
-            <FormSelect className="w-full px-4 py-3 mt-3 ml-auto !box lg:w-auto lg:mt-0">
-              <option>Sort By</option>
-              <option>A to Z</option>
-              <option>Z to A</option>
-              <option>Lowest Price</option>
-              <option>Highest Price</option>
-            </FormSelect>
-          </div>
-        <div className="grid grid-cols-12 gap-5 mt-5">
-          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-            <div className="text-base font-medium"
-                  onClick={handleHold}>Hold</div>
-          </div>
-          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-            <div className="text-base font-medium"
-                  onClick={handleRecall}>Recall Order</div>
-          </div>
-          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-            <div className="text-base font-medium">Product</div>
-          </div>
-          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-            <div className="text-base font-medium"
-                  onClick={handleGetStaff}>Staff</div>
-          </div>
-          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-            <div className="text-base font-medium"
-                  onClick={handleGetServices}>Service</div>
-          </div>
-          <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
-            <div className="text-base font-medium"
-                  onClick={handleMisc}>Misc</div>
-          </div>
-        </div>
-          <div className={`grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto border-t ${showComponent === 'staff'? '' : 'hidden'}`}>
-            {staffs.map((staff: any, StaffID: number) => (
-            <div  key={StaffID} 
-                  onClick={(event) => {
-                    event.preventDefault();
-                    getListStaffService(staff.StaffID)
-                    setStaffName(staff.StaffName)
-                  }}
-                  className="intro-y col-span-12 p-5 cursor-pointer border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white sm:col-span-4 2xl:col-span-3 box zoom-in">
+            <div className="grid grid-cols-12 gap-5 mt-5">
+              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+                <div className="text-base font-medium"
+                      onClick={handleHold}>Hold</div>
+              </div>
+              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+                <div className="text-base font-medium"
+                      onClick={handleRecall}>Recall Order</div>
+              </div>
+              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+                <div className="text-base font-medium">Product</div>
+              </div>
+              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+                <div className="text-base font-medium"
+                      onClick={handleGetStaff}>Staff</div>
+              </div>
+              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+                <div className="text-base font-medium"
+                      onClick={handleGetServices}>Service</div>
+              </div>
+              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+                <div className="text-base font-medium"
+                      onClick={handleMisc}>Misc</div>
+              </div>
+            </div>
+            <div className={`grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto border-t ${showComponent === 'staff'? '' : 'hidden'}`}>
+              {staffs.map((staff: any, StaffID: number) => (
+              <div  key={StaffID} 
+                    onClick={(event) => {
+                      event.preventDefault();
+                      getListStaffService(staff.StaffID)
+                      setStaffName(staff.StaffName)
+                    }}
+                    className="intro-y col-span-12 p-5 cursor-pointer border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white sm:col-span-4 2xl:col-span-3 box zoom-in">
 
-                <div className="text-base font-medium">{staff.StaffName}</div>
+                  <div className="text-base font-medium">{staff.StaffName}</div>
+              </div>
+              ))}
             </div>
-            ))}
-          </div>
-          {/*BEGIN: Display list Category*/}
+            {/*BEGIN: Display list Category*/}
             <div className={`grid grid-cols-12 gap-5 mt-5 p-2 overflow-y-auto border-t ${showComponent === 'categories'? '' : 'hidden'}`}>
               {servicesCategory.map((category: any, CategoryID: number) => (
               <div  key={CategoryID} 
@@ -366,33 +390,71 @@ function Main() {
               </div>
               ))}
             </div>
-          {/*END: Display list Category*/}
-          {/*BEGIN: Display list Services*/}
+            {/*END: Display list Category*/}
+            {/*BEGIN: Display list Services*/}
             <div className={`grid grid-cols-12 gap-5 p-4 mt-5 border-t max-h-[70vh] overflow-y-auto ${showComponent === 'services' || showComponent === 'misc' ? '' : 'hidden'}`}>
-            {services.map((service: any, ProductID: number) => (
-              <a
-                key={ProductID}
-                href="#"
-                onClick={(event) => {
-                  event.preventDefault();
-                  addItem(service)
-                }}
-                className="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3 "
-              >
-                <div className="relative p-3 rounded-md box zoom-in border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white">
-                  <div className="block font-medium text-center truncate  ">
-                    {service.ProductName}
+              {services.map((service: any, ProductID: number) => (
+                <a
+                  key={ProductID}
+                  href="#"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    addItem(service)
+                  }}
+                  className="block col-span-12 intro-y sm:col-span-4 2xl:col-span-3 "
+                >
+                  <div className="relative p-3 rounded-md box zoom-in border-2 border-blue-700/75 hover:bg-blue-700 hover:text-white">
+                    <div className="block font-medium text-center truncate  ">
+                      {service.ProductName}
+                    </div>
                   </div>
-                </div>
-              </a>
-            ))}
-          </div>   
-          {/*END: Display list Services*/}
-        </div>
+                </a>
+              ))}
+            </div>   
+            {/*END: Display list Services*/}
+          </div>
+          )
+        }    
+        
         {/* END: Item List */}
+        {/*Start Page Payment */}
+        {
+          paymentModal && (
+            <div className="col-span-12 intro-x ml-5 lg:col-span-8">
+              <h3 className="mr-auto text-lg font-medium">Select Payment</h3>
+              <div>
+              <div className="flex justify-center gap-4 mt-5">
+                <button className="payment-button">
+                  <img
+                    alt="VDIT Solutions"
+                    src={Cash}
+                  />
+                  Cash
+                </button>
+                <button className="payment-button">
+                  <img
+                    alt="VDIT Solutions"
+                    src={Card}
+                  />
+                  Card
+                </button>
+                <button className="payment-button">
+                  <img
+                    alt="VDIT Solutions"
+                    src={GiftCard}
+                  />
+                  Gift Card
+                </button>
+              </div>
+              </div>
+              
+            </div>
+          )
+        }
+        {/*END Page Payment */}
         {/* BEGIN: Ticket */}
         <Tab.Group className="col-span-12 lg:col-span-4">
-          <div className="pr-1 intro-y">
+          {/* <div className="pr-1 intro-y">
             <div className="p-2 box">
               <Tab.List variant="pills">
                 <Tab>
@@ -407,12 +469,13 @@ function Main() {
                 </Tab>
               </Tab.List>
             </div>
-          </div>
+          </div> */}
+          <CustomerCard key={customerData.CustomerID} customer={customerData} onClick={() => selectCustomer()}></CustomerCard>
           <Tab.Panels>
             {/* Show list bill */}
             <Tab.Panel>
               {billDetails.length !== 0 ? (
-                <div className="p-2 mt-5 box">
+                <div className="p-2 mt-5 box h-[30vh] overflow-auto">
                   {billDetails.map((bill: any, ProductID: number) => (
                     <a
                       key={ProductID}
@@ -438,7 +501,16 @@ function Main() {
                   ))}
                 </div>
                 ) : (
-                  <div className="p-2 mt-5 box text-center">Your bill is empty. Add items to your order.</div>
+                  <div className="p-2 mt-5 box flex items-center justify-center h-[30vh]">
+                    <div className="-intro-x">
+                      <img
+                        alt="VDIT Solutions"
+                        className="w-10 h-10"
+                        src={ReceiptSVG}
+                      />
+                    </div>
+                    Your bill is empty. Add items to your order.
+                  </div>
                 )
               }
               <div className="p-5 mt-5 box">
@@ -502,7 +574,8 @@ function Main() {
                         onClick={handleClearItems}>
                   Clear Items
                 </Button>
-                <Button variant="primary" className="w-32 ml-auto shadow-md">
+                <Button variant="primary" className="w-32 ml-auto shadow-md"
+                        onClick={openPaymentPage}>
                   Pay
                 </Button>
               </div>
