@@ -246,7 +246,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                               />
                           ))}
 
-                          <div className="items-center justify-center text-center border-none shadow-none">
+                          {/* <div className="items-center justify-center text-center border-none shadow-none">
                             <Button onClick={() => setServiceSlideoverOpen(true) } className="items-center justify-center text-center border-none shadow-none">
                               <Lucide
                                 icon="PlusCircle"
@@ -254,7 +254,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                               />
                             <h1>Add more services</h1>
                           </Button>
-                        </div>      
+                        </div>       */}
                           
                         </>
                       )}
@@ -478,7 +478,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                     <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={() => {}}>
                       Pay
                     </Button>      
-            </div>
+              </div>
             </Paper>
             
         </Drawer>

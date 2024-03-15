@@ -159,6 +159,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
       if (res.data) {
           logSuccess('Appointment rescheduled successfully')
           handleAppoinmentChange(true)
+          onClose()
       } else {
           logError('Error updating appointment. Slot not available')
       }
@@ -364,7 +365,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                               />
                           ))}
 
-                          <div className="items-center justify-center text-center border-none shadow-none">
+                          {/* <div className="items-center justify-center text-center border-none shadow-none">
                             <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">
                               <Lucide
                                 icon="PlusCircle"
@@ -372,7 +373,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                               />
                             <h1>Add more services</h1>
                           </Button>
-                        </div>      
+                        </div>       */}
                           
                         </>
                       )}
@@ -583,7 +584,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                     <Button className=" w-32 px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
                     </Button>
-                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateAppointment}>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
                       Submit
                     </Button>
                     <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={() => {}}>
