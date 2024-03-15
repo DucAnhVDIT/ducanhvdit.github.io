@@ -6,12 +6,16 @@ import customerRepository from '../../repositories/customerRepository';
 import ServiceCard from '../ServiceCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../stores/store';
-import { addService, deleteService } from '../../stores/serviceListSlice';
+import { addService, deleteService, resetSelectedServices } from '../../stores/serviceListSlice';
 import FormInput from '../../base-components/Form/FormInput';
 import CustomerCard from '../CustomerCard';
 import FormLabel from '../../base-components/Form/FormLabel';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
+import { selectNotes, setCompanyNotes, setCustomerNotes } from '../../stores/notesSlide';
+import calendarRepository from '../../repositories/calendarRepository';
+import moment from 'moment';
+import { logError } from '../../constant/log-error';
 
 
 
@@ -45,6 +49,8 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
     const [visibleCustomers, setVisibleCustomers] = useState(10);
     const totalCustomers = customersList?.Customers?.length || 0;
 
+    const { companyNotes, customerNotes } = useSelector(selectNotes);
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
@@ -69,6 +75,25 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
         } catch (error) {
         }
     };
+
+    const handleCompanyNotesChange = (event: { target: { value: any; }; }) => {
+        dispatch(setCompanyNotes(event.target.value));
+    };
+
+    const handleCustomerNotesChange = (event: { target: { value: any; }; }) => {
+        dispatch(setCustomerNotes(event.target.value));
+    };
+
+    const calculateTotal = () => {
+        if (!selectedServices || selectedServices.length === 0) {
+          return 0; // Return 0 if selectedServices is null, undefined, or empty
+        }
+        return selectedServices.reduce((total: any, service: { Price: any; }) => {
+          const price = service.Price || 0; // Default to 0 if Price is null or undefined
+          return total + price;
+        }, 0);
+      };
+    
 
     const openSearchClient = async () => {
         setSelectedCustomer(null);
@@ -104,7 +129,11 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
         setAddCustomerSlideOpen(true)
         setClienSlideoverOpen(false)
     }
-
+    
+    const closeSlideOver = () => {
+        dispatch(resetSelectedServices())
+        setAddNewDrawerOpen(false)
+    }
 
     const loadMoreCustomers = () => {
         // Increase the number of visible customers by 10 or until reaching the total number of customers
@@ -133,6 +162,120 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
             // Close the search client slideover if needed
         setClienSlideoverOpen(false);
     }
+
+    const newAppointmentRequest = {
+        FirstName: selectedCustomer?.FirstName || "",
+        LastName: selectedCustomer?.LastName || "",
+        Mobile: selectedCustomer?.Mobile || "",
+        Email: selectedCustomer?.Email || "",
+        Appointments: [] as Appointment[],
+      };
+      interface Appointment {
+        BookDate: string;
+        StartTime: string;
+        EndTime: string;
+        ServiceID: string;
+        StaffID: string;
+        Deposit: number;
+        Islocked: boolean;
+        CustomerNote: string;
+        CompanyNote: string;
+    }
+        let previousEndTime = selectedTime; 
+
+        selectedServices.forEach((service: { Duration: any; ProductID: any; }) => {
+            // Calculate end time based on start time and service duration
+            const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
+
+            const newAppointment : Appointment = {
+                BookDate: date,
+                StartTime: previousEndTime, // Use the end time of the previous service
+                EndTime: serviceEndTime,
+                ServiceID: service.ProductID,
+                StaffID: resourceID,
+                Deposit: 0,
+                Islocked: false,
+                CustomerNote: customerNotes,
+                CompanyNote: companyNotes,
+            };
+
+            newAppointmentRequest.Appointments.push(newAppointment);
+
+            // Update previousEndTime for the next iteration
+            previousEndTime = serviceEndTime;
+        });
+
+        // Function to calculate end time based on start time and duration
+        function calculateEndTime(startTime: string, duration: number): string {
+            const startMoment = moment(startTime, 'HH:mm');
+            const endMoment = startMoment.clone().add(duration, 'minutes');
+            return endMoment.format('HH:mm');
+        }
+    
+        const handleAddNewClient = () => {
+
+            if (!mobileNumber) {
+                // Show toast for missing phone number
+                showAppointmentToast('Phone number is required', 'error');
+                return;
+              }
+    
+            const requestBody = {
+              FirstName: firstName,
+              LastName: lastName,
+              Mobile: mobileNumber,
+              Email: email,
+              DateOfBirth: dateOfBirth || null,
+              EmailConsent: true,
+              SMSConsent: true,
+            };
+          
+            customerRepository.addCustomer(requestBody).then(response => {
+                setSelectedCustomer(response.data);
+                // Show success toast
+                showAppointmentToast('Client added successfully');
+                setAddCustomerSlideOpen(false)
+                setFirstName("")
+                setLastName("")
+                setEmail("")
+                setMobileNumber("")
+              })
+              .catch(error => {
+                logError('Error adding client: ' + `${error}`);
+                // Handle error
+              });
+          };
+
+
+    const handleAddNewAppointment = () => {
+        if (!selectedServices || selectedServices.length === 0) {
+          // No services selected, show warning and return
+          showAppointmentToast('Please select at least one service', 'warning');
+          return;
+        }
+      
+        if (!selectedCustomer || selectedCustomer.length === 0) {
+          // No services selected, show warning and return
+          const walkInCustomer = {
+            FirstName: 'Walk-in',
+          };
+          setSelectedCustomer(walkInCustomer)
+        }
+      
+        calendarRepository.addAppointment(newAppointmentRequest)
+          .then((res) => {
+            showAppointmentToast('Appointment added successfully');
+            handleAppoinmentChange(true);
+            setAddCustomerSlideOpen(false)
+            dispatch(resetSelectedServices());
+          })
+          .catch((error) => {
+            console.error('Error adding appointment:', error);
+            showAppointmentToast('Error adding appointment', 'error');
+          });
+      
+          setAddNewDrawerOpen(false)
+      };
     
     return (
     <div>
@@ -491,7 +634,7 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
                                                 variant="primary"
                                                 type="button"
                                                 className="w-32"
-                                                // onClick={handleAddNewClient}
+                                                onClick={handleAddNewClient}
                                             >
                                                 Add
                                             </Button>      
@@ -499,14 +642,66 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
                                     </Paper>
                                 </Drawer>
                                 )}
+
+                                
                                 
                                 </Paper>
                          </Drawer>
                         {/* End Client List */}
 
                 </>)}
-            </div>
 
+                {activeTab === 'notes' && (
+                        <div className="flex flex-col">
+                        {/* Company Notes */}
+                        <div className="">
+                          <p className="text-lg font-semibold mb-2">Company Notes</p>
+                          <textarea
+                            className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                            value={companyNotes}
+                            onChange={handleCompanyNotesChange}
+                            placeholder="Enter company notes here..."
+                          />
+                        </div>
+                    
+                        {/* Customer Notes */}
+                        <div className="mt-3">
+                          <p className="text-lg font-semibold mb-2">Customer Notes</p>
+                          <textarea
+                            className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                            value={customerNotes}
+                            onChange={handleCustomerNotesChange}
+                            placeholder="Enter customer notes here..."
+                          />
+                        </div>
+                      </div>
+                    )}
+            </div>
+            <div className="mt-auto p-3 flex flex-col justify-end">
+                <div className="flex flex-row justify-between mb-9">
+                        <h1 className="text-2xl"> Total</h1>
+                        <h1 className="text-xl">{`£${calculateTotal()}`}</h1>
+                    </div>
+
+                    <div className='flex justify-between'>
+                      <Button
+                          variant="instagram"
+                          type="button"
+                          onClick={closeSlideOver}
+                          className=" border-none w-32  px-6 bg-gray-400 text-white ml-3"
+                      >
+                          Cancel
+                      </Button>
+                      <Button
+                          variant="primary"
+                          type="button"
+                          className="w-32"
+                          onClick={handleAddNewAppointment}
+                      >
+                          Add
+                      </Button>
+                    </div>
+              </div>
             
            </Paper>
         </Drawer>
