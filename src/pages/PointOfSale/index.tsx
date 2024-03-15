@@ -19,6 +19,7 @@ import Breadcrumb from "../../base-components/Breadcrumb";
 import { ICustomerData } from "../../types/user";
 import NewOrder from "./newOrder";
 import MiscModal from "./miscModal";
+import PaymentModal from "./paymentModal"
 
 import ReceiptSVG from "../../assets/images/receipt.svg"
 import Cash from '../../assets/images/cash.png'
@@ -223,6 +224,7 @@ function Main() {
 
   const handleNewOrderClick = (event: React.MouseEvent) => {
     event.preventDefault();
+    setCustomerData(ICustomerData)
     setNewOrderModal(true)
   }
 
@@ -282,7 +284,11 @@ function Main() {
     dispatch(clearBill())
   }
   const handleCloseOrder = (data: any) => {
-    setCustomerData(data)
+    if (data !== '') {
+      setCustomerData(data)
+    } else {
+      setCustomerData(ICustomerData)
+    }
     setNewOrderModal(false)
   }
 
@@ -295,17 +301,22 @@ function Main() {
 
   const handlePayment = (options: string) => {
     if (options === 'cash'){
-      console.log('cash click')
+      setPaymentModal(true)
     } else if (options === 'card'){
       console.log('card click')
     } else {
       console.log('gift card')
     }
   }
+
+  const handleClosePayment = () => {
+    console.log('close payment')
+    setPaymentModal(false)
+  }
   //**END PAYMENT PAGE */
   return (
     <>
-      <div className="flex flex-col items-center mt-4 intro-y sm:flex-row">
+      {/* <div className="flex flex-col items-center mt-4 intro-y sm:flex-row">
         <h2 className="mr-auto text-lg font-medium">Point of Sale</h2>
         <div className="flex w-full mt-4 sm:w-auto sm:mt-0">
           <Button
@@ -318,7 +329,7 @@ function Main() {
             New Order
           </Button>
         </div>
-      </div>
+      </div> */}
       <div className="grid grid-cols-12 gap-4 mt-4 intro-y">
         {
           !paymentPage && (
@@ -342,13 +353,6 @@ function Main() {
                 <Breadcrumb.Link active className={`${showComponent === 'services'? '' : 'hidden'}`}>{categoryName}</Breadcrumb.Link>
                 <Breadcrumb.Link active className={`${showComponent === 'misc'? '' : 'hidden'}`}>Misc</Breadcrumb.Link>
               </Breadcrumb>
-              {/* <FormSelect className="w-full px-4 py-3 mt-3 ml-auto !box lg:w-auto lg:mt-0">
-                <option>Sort By</option>
-                <option>A to Z</option>
-                <option>Z to A</option>
-                <option>Lowest Price</option>
-                <option>Highest Price</option>
-              </FormSelect> */}
             </div>
             <div className="grid grid-cols-12 gap-5 mt-5">
               <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in hover:border-blue-700">
@@ -478,17 +482,20 @@ function Main() {
             {/* Show list bill */}
             <Tab.Panel>
               {billDetails.length !== 0 ? (
-                <div className="p-2 mt-3 box h-[30vh] overflow-auto">
+                <div className="p-2 mt-1 box h-[30vh] overflow-auto">
                   {billDetails.map((bill: any, ProductID: number) => (
                     <a
                       key={ProductID}
-                      className="flex items-center p-3 transition duration-300 ease-in-out bg-white rounded-md dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400"
+                      className="flex items-center p-2 transition duration-300 ease-in-out bg-white rounded-md dark:bg-darkmode-600 hover:bg-slate-100 dark:hover:bg-darkmode-400"
                     >
+                      <div className="text-slate-500">{bill.quantity} x </div>
                       <div className="max-w-[50%] truncate mr-1">
-                        {bill.ProductName}
+                      &nbsp; {bill.ProductName}
                       </div>
-                      <div className="text-slate-500">x {bill.quantity}</div>
                       <div className={`text-slate-500 ${bill.staffName !== '' ? '' : 'hidden' }`}>- {bill.staffName}</div>
+                      <div className="ml-auto font-medium">
+                        £{bill.quantityPrice}
+                      </div>
                       <Lucide
                         icon="Trash2"
                         onClick={(event: React.MouseEvent) => {
@@ -497,9 +504,6 @@ function Main() {
                         }}
                         className="w-4 h-4 ml-2 text-slate-500 cursor-pointer"
                       />
-                      <div className="ml-auto font-medium">
-                        £{bill.quantityPrice}
-                      </div>
                     </a>
                   ))}
                 </div>
@@ -561,10 +565,6 @@ function Main() {
                   <div className="mr-auto">Discount</div>
                   <div className={`font-medium text-danger ${discountAmount !== 0  ? '':'hidden'}`}>-£{discountAmount}</div>
                 </div>
-                <div className="flex mt-4">
-                  <div className="mr-auto">Tax</div>
-                  <div className="font-medium"></div>
-                </div>
                 <div className="flex pt-4 mt-4 border-t border-slate-200/60 dark:border-darkmode-400">
                   <div className="mr-auto text-base font-medium">
                     Total Charge
@@ -575,7 +575,7 @@ function Main() {
               <div className="flex mt-5">
                 <Button className="w-32 border-slate-300 dark:border-darkmode-400 text-slate-500" 
                         onClick={handleClearItems}>
-                  Clear Items
+                  Clear Bills
                 </Button>
                 <Button variant="primary" className="w-32 ml-auto shadow-md"
                         onClick={openPaymentPage}>
@@ -592,6 +592,7 @@ function Main() {
       {/* BEGIN: New Order Modal */}
       {newOrderModal && (<NewOrder customer={customerData} openModal={newOrderModal} handleClose={handleCloseOrder}/> )}
       {/* END: New Order Modal */}
+      {paymentModal && (<PaymentModal paymentData={totalPrice} paymentModal={paymentModal} handleClose={handleClosePayment} />)}
     </>
   );
 }

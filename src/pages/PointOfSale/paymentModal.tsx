@@ -13,14 +13,14 @@ interface IPaymentModal {
 }
 
 export default function paymentModal ({paymentData, paymentModal, handleClose} : IPaymentModal) {
-  const [modalPriceData, setModalPriceData] = useState(paymentData)
+  const [priceData, setPriceData] = useState(paymentData)
 
   const handleChangePrice = (e: any) => {
     const { name, value } = e.target
     const trimmedValue = value.replace(/^£0*(?=\d)|^£/, '£')
     const validatedValue = parseFloat(trimmedValue.replace(/[^0-9.]/g, ''))
     if (!isNaN(validatedValue)) {
-    setModalPriceData((data: any) => ({ ...data, [name]: validatedValue}))
+    setPriceData((data: any) => ({ ...data, [name]: validatedValue}))
     }
   }
 
@@ -28,7 +28,7 @@ export default function paymentModal ({paymentData, paymentModal, handleClose} :
     if (action === 'close') {
       handleClose('')
     } else {
-      handleClose(modalPriceData)
+      handleClose(priceData)
     }
   }
 
@@ -41,7 +41,7 @@ export default function paymentModal ({paymentData, paymentModal, handleClose} :
         <Dialog.Panel>
           <Dialog.Title>
             <h2 className="mr-auto text-base font-medium">
-              {modalPriceData.ProductName}
+              {priceData.ProductName}
             </h2>
           </Dialog.Title>
           <Dialog.Description className="grid grid-cols-12 gap-4 gap-y-3">
@@ -56,7 +56,7 @@ export default function paymentModal ({paymentData, paymentModal, handleClose} :
                   className="w-24 text-center"
                   placeholder="Item Price"
                   name='Price'
-                  value={`£${modalPriceData.Price}`}
+                  value={`£${paymentData}`}
                   onChange={handleChangePrice}
                 />
               </div>
