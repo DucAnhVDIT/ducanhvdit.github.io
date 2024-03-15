@@ -24,7 +24,6 @@ import 'flatpickr/dist/themes/dark.css';
 import moment from "moment";
 import { Drawer, List, ListItem, ListItemButton, ListItemText, Divider } from '@mui/material';
 
-
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;

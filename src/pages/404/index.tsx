@@ -12,7 +12,7 @@ function Main() {
           <div className="flex flex-col items-center justify-center h-screen text-center error-page lg:flex-row lg:text-left">
             <div className="-intro-x lg:mr-20">
               <img
-                alt="Midone Tailwind HTML Admin Template"
+                alt="VDIT Solutions"
                 className="w-[450px] h-48 lg:h-auto"
                 src={errorIllustration}
               />

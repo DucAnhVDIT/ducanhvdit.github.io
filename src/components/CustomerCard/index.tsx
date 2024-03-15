@@ -1,6 +1,5 @@
 import React from 'react';
 import Button from '../../base-components/Button';
-import Lucide from '../../base-components/Lucide';
 
 interface CustomerCardProps {
   customer: any;
