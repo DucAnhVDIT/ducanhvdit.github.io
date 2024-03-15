@@ -15,6 +15,7 @@ interface INewOrder {
 
 export default function newOrder ({customer, openModal, handleClose} : INewOrder) {
 
+const [searchList, setSearchList] = useState(false) 
 const [customerInput, setCustomerInput] = useState(customer)
 const [customers, setCustomers] = useState<any>([])
 const [filterName, setFilterName] = useState<any>([])
@@ -23,6 +24,7 @@ const [filterMobile, setFilterMobile] = useState<any>([])
 const handleInput = (e: any) => {
   const { name, value } = e.target
   setCustomerInput((data: any) => ({ ...data, [name]: value}))
+  setSearchList(true)
 }
 
 const getCustomers = () => {
@@ -54,7 +56,7 @@ useEffect(() => {
 },[customerInput.CustomerName, customerInput.Mobile])
 
 const handleSelectedCustomer = (customer: any) => {
-  console.log(customer)
+  setSearchList(false)
   setCustomerInput({ ...customer, CustomerName: `${customer.FirstName} ${customer.LastName}` })
 }
 
@@ -91,7 +93,7 @@ return (
               onChange={handleInput}
             />
           </div>
-          {filterName !== '' && (
+          {searchList && (
             <ul className="dropdown-menu col-span-12 max-h-40 overflow-y-auto w-full">
               {filterName.map((customer: any) => (
                 <li key={customer.CustomerID} 

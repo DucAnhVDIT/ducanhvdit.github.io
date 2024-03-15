@@ -9,15 +9,17 @@ import {
   FormTextarea,
 } from "../../base-components/Form";
 import ServiceCard from "../../components/ServiceCard";
-import CustomerCard from "../../components/CustomerCard";
+import CustomerCard from "./CustomerCard";
 import Lucide from "../../base-components/Lucide";
 import { Menu, Tab, Dialog } from "../../base-components/Headless";
 import eposRepository from "../../repositories/eposRepository";
 import { useDispatch, useSelector } from "react-redux";
 import { addToBill, clearBill, clearItem } from "../../stores/billSlice";
 import Breadcrumb from "../../base-components/Breadcrumb";
+import { ICustomerData } from "../../types/user";
 import NewOrder from "./newOrder";
 import MiscModal from "./miscModal";
+
 import ReceiptSVG from "../../assets/images/receipt.svg"
 import Cash from '../../assets/images/cash.png'
 import Card from '../../assets/images/payment.png'
@@ -29,6 +31,7 @@ function Main() {
 
   const [newOrderModal, setNewOrderModal] = useState(false);
   const [priceModal, setPriceModal] = useState(false)
+  const [paymentPage, setPaymentPage] = useState(false)
   const [paymentModal, setPaymentModal] = useState(false)
 
   const [buttonDiscount, setButtonDiscount] = useState('')
@@ -46,12 +49,13 @@ function Main() {
   const [services, setServices] = useState<any>([])
   const [fullServices, setFullServices] = useState<any>([])
 
-  const [customerData, setCustomerData] = useState<any>([])
+  const [customerData, setCustomerData] = useState(ICustomerData)
   const [modalPriceData, setModalPrice] = useState<any>([])
   
   // open page, show list of Staffs
   useEffect(() => {
     dispatch(clearBill())
+    getFullServices(0,0)
   }, [])
 
   const getStaff = () => {
@@ -218,13 +222,11 @@ function Main() {
   }
 
   const handleNewOrderClick = (event: React.MouseEvent) => {
-    console.log('this?')
     event.preventDefault();
     setNewOrderModal(true)
   }
 
   const selectCustomer = () => {
-    console.log('select customer')
     setNewOrderModal(true)
   }
 
@@ -286,8 +288,19 @@ function Main() {
 
   //**OPEN PAYMENT PAGE */
   const openPaymentPage = () => {
+    // scroll to top for mobile screen to payment options
     window.scrollTo(0, 0)
-    setPaymentModal(!paymentModal)
+    setPaymentPage(!paymentPage)
+  }
+
+  const handlePayment = (options: string) => {
+    if (options === 'cash'){
+      console.log('cash click')
+    } else if (options === 'card'){
+      console.log('card click')
+    } else {
+      console.log('gift card')
+    }
   }
   //**END PAYMENT PAGE */
   return (
@@ -308,7 +321,7 @@ function Main() {
       </div>
       <div className="grid grid-cols-12 gap-4 mt-4 intro-y">
         {
-          !paymentModal && (
+          !paymentPage && (
           <div className="col-span-12 intro-y lg:col-span-8">
             <div className="lg:flex intro-y">
               <div className="relative">
@@ -338,7 +351,7 @@ function Main() {
               </FormSelect> */}
             </div>
             <div className="grid grid-cols-12 gap-5 mt-5">
-              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in">
+              <div className="col-span-12 p-5 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in hover:border-blue-700">
                 <div className="text-base font-medium"
                       onClick={handleHold}>Hold</div>
               </div>
@@ -419,28 +432,34 @@ function Main() {
         {/* END: Item List */}
         {/*Start Page Payment */}
         {
-          paymentModal && (
+          paymentPage && (
             <div className="col-span-12 intro-x ml-5 lg:col-span-8">
               <h3 className="mr-auto text-lg font-medium">Select Payment</h3>
               <div>
               <div className="flex justify-center gap-4 mt-5">
-                <button className="payment-button">
+                <button className="flex-1 items-center justify-center py-4 rounded-lg text-lg font-medium h-40 box zoom-in"
+                        onClick={() => handlePayment('cash')}>
                   <img
                     alt="VDIT Solutions"
+                    className="block mx-auto mb-1 w-10 h-10"
                     src={Cash}
                   />
                   Cash
                 </button>
-                <button className="payment-button">
+                <button className="flex-1 items-center justify-center py-4 rounded-lg text-lg font-medium h-40 box zoom-in"
+                        onClick={() => handlePayment('card')}>
                   <img
                     alt="VDIT Solutions"
+                    className="block mx-auto mb-1 w-10 h-10"
                     src={Card}
                   />
                   Card
                 </button>
-                <button className="payment-button">
+                <button className="flex-1 items-center justify-center py-4 rounded-lg text-lg font-medium h-40 box zoom-in"
+                        onClick={() => handlePayment('gift')}>
                   <img
                     alt="VDIT Solutions"
+                    className="block mx-auto mb-1 w-10 h-10"
                     src={GiftCard}
                   />
                   Gift Card
@@ -454,28 +473,12 @@ function Main() {
         {/*END Page Payment */}
         {/* BEGIN: Ticket */}
         <Tab.Group className="col-span-12 lg:col-span-4">
-          {/* <div className="pr-1 intro-y">
-            <div className="p-2 box">
-              <Tab.List variant="pills">
-                <Tab>
-                  <Tab.Button as="button" className="w-full py-2">
-                    Orders
-                  </Tab.Button>
-                </Tab>
-                <Tab>
-                  <Tab.Button as="button" className="w-full py-2">
-                    Details
-                  </Tab.Button>
-                </Tab>
-              </Tab.List>
-            </div>
-          </div> */}
           <CustomerCard key={customerData.CustomerID} customer={customerData} onClick={() => selectCustomer()}></CustomerCard>
           <Tab.Panels>
             {/* Show list bill */}
             <Tab.Panel>
               {billDetails.length !== 0 ? (
-                <div className="p-2 mt-5 box h-[30vh] overflow-auto">
+                <div className="p-2 mt-3 box h-[30vh] overflow-auto">
                   {billDetails.map((bill: any, ProductID: number) => (
                     <a
                       key={ProductID}
@@ -501,7 +504,7 @@ function Main() {
                   ))}
                 </div>
                 ) : (
-                  <div className="p-2 mt-5 box flex items-center justify-center h-[30vh]">
+                  <div className="p-2 mt-3 box flex items-center justify-center h-[30vh]">
                     <div className="-intro-x">
                       <img
                         alt="VDIT Solutions"
@@ -578,40 +581,6 @@ function Main() {
                         onClick={openPaymentPage}>
                   Pay
                 </Button>
-              </div>
-            </Tab.Panel>
-            <Tab.Panel>
-              <div className="p-5 mt-5 box">
-                <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
-                  <div>
-                    <div className="text-slate-500">Customer</div>
-                    <div className="mt-1">{customerData.FirstName} {customerData.LastName}</div>
-                  </div>
-                  <Lucide
-                    icon="User"
-                    className="w-4 h-4 ml-auto text-slate-500"
-                  />
-                </div>
-                <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
-                  <div>
-                    <div className="text-slate-500">Mobile</div>
-                    <div className="mt-1">{customerData.Mobile}</div>
-                  </div>
-                  <Lucide
-                    icon="Smartphone"
-                    className="w-4 h-4 ml-auto text-slate-500"
-                  />
-                </div>
-                <div className="flex items-center py-5 border-b border-slate-200 dark:border-darkmode-400">
-                  <div>
-                    <div className="text-slate-500">Email</div>
-                    <div className="mt-1">{customerData.Email}</div>
-                  </div>
-                  <Lucide
-                    icon="Mail"
-                    className="w-4 h-4 ml-auto text-slate-500"
-                  />
-                </div>
               </div>
             </Tab.Panel>
           </Tab.Panels>
