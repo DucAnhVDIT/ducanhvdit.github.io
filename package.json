@@ -5,8 +5,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run dist",
+    "deploy": "gh-pages -d dist"
   },
+  "homepage": "http://testappv2.vdit.co.uk/",
   "dependencies": {
     "@ckeditor/ckeditor5-build-balloon": "^35.1.0",
     "@ckeditor/ckeditor5-build-balloon-block": "^35.1.0",
@@ -14,7 +17,7 @@
     "@ckeditor/ckeditor5-build-decoupled-document": "^35.1.0",
     "@ckeditor/ckeditor5-build-inline": "^35.1.0",
     "@ckeditor/ckeditor5-react": "^6.2.0",
-    "@emotion/react": "^11.11.1",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fullcalendar/daygrid": "^5.11.3",
     "@fullcalendar/interaction": "^5.11.3",
@@ -28,7 +31,7 @@
     "@hookform/resolvers": "^2.9.10",
     "@left4code/tw-starter": "^3.1.36",
     "@mui/lab": "^5.0.0-alpha.156",
-    "@mui/material": "^5.15.0",
+    "@mui/material": "^5.15.12",
     "@mui/x-date-pickers": "^6.18.5",
     "@reduxjs/toolkit": "^1.8.5",
     "axios": "^1.6.5",
@@ -55,6 +58,7 @@
     "react-redux": "^9.0.4",
     "react-router-dom": "6",
     "react-select": "^5.8.0",
+    "react-sliding-pane": "^7.3.0",
     "react-spring": "^9.7.3",
     "react-toastify": "^10.0.1",
     "react-transition-group": "^4.4.5",
@@ -87,6 +91,7 @@
     "@vitejs/plugin-react": "^2.0.1",
     "autoprefixer": "^10.4.8",
     "clsx": "^1.2.1",
+    "gh-pages": "^6.1.1",
     "lodash": "^4.17.21",
     "postcss": "^8.4.16",
     "postcss-advanced-variables": "^3.0.1",

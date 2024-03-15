@@ -6,7 +6,6 @@ import Button from "../../base-components/Button";
 import { FormInput, FormLabel, FormSwitch } from "../../base-components/Form";
 import Lucide from "../../base-components/Lucide";
 import Tippy from "../../base-components/Tippy";
-import Litepicker from "../../base-components/Litepicker";
 import TomSelect from "../../base-components/TomSelect";
 import { ClassicEditor } from "../../base-components/Ckeditor";
 import { Menu, Tab } from "../../base-components/Headless";
@@ -262,7 +261,7 @@ function Main() {
             </div>
             <div className="mt-3">
               <FormLabel htmlFor="post-form-2">Post Date</FormLabel>
-              <Litepicker
+              {/* <Litepicker
                 value={salesReportFilter}
                 onChange={setSalesReportFilter}
                 options={{
@@ -275,7 +274,7 @@ function Main() {
                     years: true,
                   },
                 }}
-              />
+              /> */}
             </div>
             <div className="mt-3">
               <FormLabel htmlFor="post-form-3">Categories</FormLabel>

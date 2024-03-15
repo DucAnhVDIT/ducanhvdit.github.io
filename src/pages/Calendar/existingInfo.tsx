@@ -15,10 +15,14 @@ import calendarRepository from "../../repositories/calendarRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 import StatusButtons from "../../components/StatusButton";
 import { addService, deleteService, resetSelectedServices  } from "../../stores/serviceListSlice";
-import { FormInput } from "../../base-components/Form";
+import { FormInput, FormLabel } from "../../base-components/Form";
 import ExistingDatePicker from "../../components/DatePicker/existingAppointmentPicker";
 import { setCompanyNotes, setCustomerNotes, selectNotes } from '../../stores/notesSlide';
 import SelectStaff from "../../components/SelectStaffButton";
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/dark.css';
+import moment from "moment";
+import { Drawer, List, ListItem, ListItemButton, ListItemText, Divider } from '@mui/material';
 
 
 interface SlideOverPanelProps {
@@ -29,10 +33,11 @@ interface SlideOverPanelProps {
   handleDateChange: (value: Date) => void;
   fetchAppoinmentApiData: (value: Date) => void
   serviceData: any
+
 }
 
 
-function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
+function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
   const { companyNotes, customerNotes } = useSelector(selectNotes);
@@ -45,6 +50,13 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
   const [searchValueService, setSearchValueService] = useState("");
   const [date, setDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState('info');
+  const [updateCustomerSlideOpen, setUpdateCustomerSlide] = useState(false)
+ 
+
+  const handleCloseUpdateCustomer = () => {
+    setUpdateCustomerSlide(false)
+  }
+
 
   const [changeDateBody, setChangeDateBody] = useState({
     ID: appointmentData.ID,
@@ -68,6 +80,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
       StartTime: newStartTime,
     }));
   };
+
   
   useEffect(() => {
     console.log("dich vu moi nay",selectedServices)
@@ -81,6 +94,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     // setSelectedServiceIDs((prevSelectedServiceIDs) => [...prevSelectedServiceIDs, selectedService.ProductID]);
     setServiceSlideoverOpen(false);
   };
+
 
   const handleDeleteAppointment = () => {
     const appointmentId = appointmentData.ID;
@@ -103,8 +117,6 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
       console.log(err)
     })
   }
-
-
 
   const handleChangeStatus = (statusId: number) => {
 
@@ -145,19 +157,19 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     });
   }
   const handleUpdateBookingDate = () => {
-    calendarRepository.updateAppointment(changeDateBody).then(response => {
-      
-      if (response.status === 200 && changeDateBody.StartTime !== appointmentData.StartTime) {
+    calendarRepository.updateAppointment(changeDateBody).then(res => {
+      if (res.data) {
           logSuccess('Appointment rescheduled successfully')
           handleAppoinmentChange(true)
       } else {
-          logError('Error updating appointment. Please try again.')
+          logError('Error updating appointment. Slot not available')
       }
     })
     .catch(error => {
       logError('An unexpected error occurred. Please try again later.')
     });
   }
+
 
   const handleServiceDelete = (selectedService: any) => {
     dispatch(deleteService(selectedService.ProductID));
@@ -168,9 +180,9 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     setServiceSlideoverOpen(false)
   }
 
-    const handleTabChange = (tab: React.SetStateAction<string>) => {
+  const handleTabChange = (tab: React.SetStateAction<string>) => {
         setActiveTab(tab);
-    };
+  };
 
   
 
@@ -199,12 +211,73 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
     );
   };
   
+  const updateAppointmentRequest = {
+    CustomerID: appointmentData.CustomerID,
+    Appointments: [] as Appointment[],
+  };
+  interface Appointment {
+    BookDate: string;
+    StartTime: string;
+    EndTime: string;
+    ServiceID: string;
+    StaffID: string;
+    Deposit: number;
+    Islocked: boolean;
+    CustomerNote: string;
+    CompanyNote: string;
+}
+    let previousEndTime = appointmentData.EndTime; 
+
+    selectedServices.forEach((service: { Duration: any; ProductID: any; }) => {
+        // Calculate end time based on start time and service duration
+        const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
+
+        const updateAppointment : Appointment = {
+            BookDate: appointmentData.BookDate,
+            StartTime: previousEndTime, // Use the end time of the previous service
+            EndTime: serviceEndTime,
+            ServiceID: service.ProductID,
+            StaffID: appointmentData.StaffID,
+            Deposit: 0,
+            Islocked: false,
+            CustomerNote: appointmentData.CustomerNotes,
+            CompanyNote: appointmentData.CompanyNotes,
+        };
+
+        updateAppointmentRequest.Appointments.push(updateAppointment);
+
+        // Update previousEndTime for the next iteration
+        previousEndTime = serviceEndTime;
+    });
+
+    // Function to calculate end time based on start time and duration
+    function calculateEndTime(startTime: string, duration: number): string {
+        const startMoment = moment(startTime, 'HH:mm');
+        const endMoment = startMoment.clone().add(duration, 'minutes');
+        return endMoment.format('HH:mm');
+    }
+
+    const handleUpdateAppointment = () => {
+        calendarRepository.addAppointment(updateAppointmentRequest)
+              .then((res) => {
+                // showAppointmentToast('Appointment added successfully');
+                console.log(res.data)
+                handleAppoinmentChange(true);
+                onClose();
+                dispatch(resetSelectedServices());
+              })
+              .catch((error) => {
+                console.error('Error adding appointment:', error);
+                // showAppointmentToast('Error adding appointment', 'error');
+              });
+          
+            // setSecondSlideoverOpen(false);
+  }
 
   return (
     <div>
           <Slideover
-              className=""
-              staticBackdrop
+              className="hidden sm:block"
               open={isOpen}
               onClose={onClose}
           >
@@ -234,17 +307,17 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                       {/* Tab Navigation */}
                     <div className="flex justify-start mb-5">
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={` w-28 cursor-pointer rounded-full ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`border-none w-28 cursor-pointer rounded-full ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('info')}
                         >
                             Info
                         </Button>
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={`w-28  cursor-pointer ml-3 rounded-full ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`w-28 border-none cursor-pointer ml-3 rounded-full ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('notes')}
                         >
                             Notes
@@ -254,26 +327,21 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
 
                       {activeTab === 'info' && (
                         <>
-                          <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full relative">
-                            <div
-                              className="col-span-12 sm:col-span-4 2xl:col-span-3 box zoom-in"
-                            >
+                          
                               <div
                                   style={{
                                       backgroundColor: (appointmentData.Colour), // Replace with your color extraction logic
                                       padding: '20px',
-                                      borderRadius:"20px"
+                                      borderRadius:"20px",
                                   }}
                                   className="flex justify-between p-0"
                               >
                                   <h1 className="text-2xl text-white mt-1">{appointmentData.StatusName}</h1>
                                   <StatusButtons selectedStatus={appointmentData.StatusID} onSelectStatus={handleChangeStatus} />
                               </div>
-                            </div>
-                          </div>
 
 
-                          <CustomerCard customer={appointmentData} onClick={() => {}}/>
+                          <CustomerCard customer={appointmentData} onClick={() => {setUpdateCustomerSlide(true)}}/>
                       
                           <div className="mt-3 w-full">
                             <ExistingDatePicker 
@@ -325,27 +393,27 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                         </Slideover.Title>
                         <Slideover.Description className="text-center">
                             <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-                            <div className="relative text-slate-500">
-                                <FormInput
-                                type="text"
-                                className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                                placeholder="Search by service name"
-                                value={searchValueService}
-                                onChange={(e) => setSearchValueService(e.target.value)}
-                                />
-                                {searchValueService ? (
-                                <Lucide
-                                    icon="XCircle"
-                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                    onClick={() => setSearchValueService("")}
-                                />
-                                ) : (
-                                <Lucide
-                                    icon="Search"
-                                    className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-                                />
-                                )}
-                            </div>
+                              <div className="relative text-slate-500">
+                                  <FormInput
+                                  type="text"
+                                  className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                  placeholder="Search by service name"
+                                  value={searchValueService}
+                                  onChange={(e) => setSearchValueService(e.target.value)}
+                                  />
+                                  {searchValueService ? (
+                                  <Lucide
+                                      icon="XCircle"
+                                      className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                      onClick={() => setSearchValueService("")}
+                                  />
+                                  ) : (
+                                  <Lucide
+                                      icon="Search"
+                                      className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                  />
+                                  )}
+                              </div>
                             </div>
                             {serviceData && serviceData
                               .filter((service: { ProductName: string }) =>
@@ -384,7 +452,126 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                             />
                           </div>
                         </div>
-                      )}                  
+                      )}
+
+                  {updateCustomerSlideOpen && (
+                           <Slideover open={updateCustomerSlideOpen} onClose={handleCloseUpdateCustomer}>
+                           <Slideover.Panel>
+                               <Slideover.Title className="p-5">
+                                   <h2 className="mr-auto font-bold text-2xl">
+                                       Update Client
+                                   </h2>
+                                   <Button className="border-none shadow-none" onClick={handleCloseUpdateCustomer}>
+                                       <Lucide icon="ArrowLeft"/>
+                                   </Button>
+                               </Slideover.Title>
+                               <Slideover.Description className="text-center">
+                                   <div className="input-form flex flex-col w-full">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           First Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter First Name"
+                                               className="w-full"
+                                               value={appointmentData.CustomerName}
+                                              //  onChange={(event) => setFirstName(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Last Name
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="text"
+                                               name="name"
+                                               placeholder="Enter Last Name"
+                                               className="w-full"
+                                              //  value={lastName}
+                                              //  onChange={(event) => setLastName(event.target.value)}
+                                           />
+                                       </div>                                
+                                   </div>
+                                   <div className="input-form flex flex-col w-full mt-3">
+                                       <div className='flex flex-col justify-between w-full mr-4'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Email
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="email"
+                                               name="name"
+                                               placeholder="Enter Email"
+                                               className="w-full"
+                                               value={appointmentData.Email}
+                                              //  onChange={(event) => setEmail(event.target.value)}
+                                           />
+                                       </div>
+                                       <div className='flex flex-col w-full mt-2'>
+                                           <FormLabel
+                                               htmlFor="validation-form-1"
+                                               className="flex flex-col w-full sm:flex-row"
+                                           >
+                                           Phone Number
+                                           </FormLabel>
+                                           <FormInput
+                                               id="validation-form-1"
+                                               type="number"
+                                               name="name"
+                                               placeholder="Enter Phone Number"
+                                               className="w-full"
+                                               value={appointmentData.Mobile}
+                                              //  onChange={(event) => setMobileNumber(event.target.value)}
+                                            />
+                                       </div>                                
+                                   </div>
+                                   <div className="mt-3 input-form w-full">
+                                               <FormLabel
+                                               htmlFor="validation-form-4"
+                                               className="flex flex-col w-full sm:flex-row"
+                                               >
+                                               Birth Date
+                                               </FormLabel>
+                                               <Flatpickr
+                                                   className='w-full rounded-xl'
+                                                   options={{
+                                                       altInput: true,
+                                                       altFormat: "F j, Y",
+                                                       dateFormat: "Y-m-d",
+                                                   }}
+                                                   placeholder="Choose Birth Date"
+                                               />
+                                           </div>
+                                           <div className='md:w-1/3'>
+   
+                               </div>                        
+                               </Slideover.Description>
+                               <Slideover.Footer>
+                                   <Button
+                                       variant="primary"
+                                       type="button"
+                                       className="w-32"
+                                      //  onClick={handleAddNewClient}
+                                   >
+                                       Update
+                                   </Button>
+                               </Slideover.Footer>
+                           </Slideover.Panel>
+                           </Slideover>
+                       )}                
 
                   </Slideover.Description>
                   {/* END: Slide Over Body */}
@@ -398,7 +585,7 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
                     <Button className=" w-32 px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
                     </Button>
-                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateAppointment}>
                       Submit
                     </Button>
                     <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={() => {}}>
@@ -409,7 +596,10 @@ function ExistingInfo({ isOpen, onClose, appointmentData, handleAppoinmentChange
               {/* END: Slide Over Footer */}
           </Slideover>
           {/* END: Slide Over Content */}
+
     </div>
+
+    
   )
 }
 

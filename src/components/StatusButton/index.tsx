@@ -20,19 +20,6 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
 
   return (
     <div>
-    {/* <select
-      value={selectedStatus}
-      placeholder='Change status'
-      onChange={(e) => onSelectStatus(Number(e.target.value))}
-      className="block appearance-none w-full bg-white border border-gray-300 rounded-md py-2 px-4 pr-8 leading-tight focus:outline-none focus:border-primary focus:ring focus:ring-primary"
-    >
-      <option value="" disabled hidden>Change status</option>
-      {statusOptions.map((status) => (
-        <option key={status.id} value={status.id} className="bg-white text-gray-800">
-          {status.label}
-        </option>
-      ))}
-    </select> */}
     <Select
           value={null}
           options={statusOptions}
@@ -45,7 +32,6 @@ const StatusButtons: React.FC<StatusButtonsProps> = ({ selectedStatus, onSelectS
               border:'0',
               boxShadow: 'none',
               backgroundColor: 'var(--primary)',
-              // paddingRight: '8px', // Adjust the paddingRight to reduce space
             }),
             option: (provided, state) => ({
               ...provided,

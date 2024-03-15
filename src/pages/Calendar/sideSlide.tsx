@@ -308,7 +308,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
   return (
     <div>
           <Slideover
-              staticBackdrop
+              className="hidden sm:block"
               open={isOpen}
               onClose={closeSlideOver}
           >
@@ -316,7 +316,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
               <Slideover.Panel>
                   <Button
                       onClick={closeSlideOver}
-                      className="absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
+                      className="hidden sm:block absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
                   >
                       <Lucide icon="X" className="w-8 h-8 text-black" />
                   </Button>
@@ -331,17 +331,17 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     {/* Tab Navigation */}
                     <div className="flex justify-start mb-5">
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={`w-28 cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`border-none w-28 cursor-pointer rounded-full px-8 ${activeTab === 'info' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('info')}
                         >
                             Info
                         </Button>
                         <Button
-                            variant="outline-secondary"
+                            variant="instagram"
                             type="button"
-                            className={`w-28 cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
+                            className={`w-28 border-none cursor-pointer ml-3 rounded-full px-8 ${activeTab === 'notes' ? 'bg-primary text-white' : 'bg-gray-200 text-gray-800'}`}
                             onClick={() => handleTabChange('notes')}
                         >
                             Notes
@@ -352,7 +352,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                     {activeTab === 'info' && (
                     <>
                        {/* Begin Add Client Button */}
-                       <div className="border-none bg-transparent w-full shadow-none" onClick={openSearchClient}>
+                       <div className=" border-none bg-transparent shadow-none" onClick={openSearchClient}>
                            <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
                                <div
                                className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400"
@@ -411,7 +411,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                        </div>
                        </div>
    
-                       <div className="selected-services">
+
                        <div className="selected-services">
                        {selectedServices && selectedServices.map((selectedService: { ProductID: Key | null | undefined; }) => (
                            <ServiceCard
@@ -420,8 +420,6 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                onSelect={handleServiceDelete}
                            />
                        ))}
-                       </div>
-   
                        </div>
                        {/* End Add Services */}
                          
@@ -439,27 +437,27 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                            </Slideover.Title>
                            <Slideover.Description className="text-center">
                                <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-                               <div className="relative text-slate-500">
-                                   <FormInput
-                                   type="text"
-                                   className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                                   placeholder="Search by service name"
-                                   value={searchValueService}
-                                   onChange={(e) => setSearchValueService(e.target.value)}
-                                   />
-                                   {searchValueService ? (
-                                   <Lucide
-                                       icon="XCircle"
-                                       className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                       onClick={() => setSearchValueService("")}
-                                   />
-                                   ) : (
-                                   <Lucide
-                                       icon="Search"
-                                       className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-                                   />
-                                   )}
-                               </div>
+                                <div className="relative text-slate-500">
+                                    <FormInput
+                                    type="text"
+                                    className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                    placeholder="Search by service name"
+                                    value={searchValueService}
+                                    onChange={(e) => setSearchValueService(e.target.value)}
+                                    />
+                                    {searchValueService ? (
+                                    <Lucide
+                                        icon="XCircle"
+                                        className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                        onClick={() => setSearchValueService("")}
+                                    />
+                                    ) : (
+                                    <Lucide
+                                        icon="Search"
+                                        className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                    />
+                                    )}
+                                </div>
                                </div>
                                {serviceData && serviceData
                                .filter((service: { ProductName: string }) =>
@@ -511,7 +509,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                                        </div>
                                    </div>
    
-                                   <div className="mt-3">
+                                    <div className="mt-3">
                                        <div className="items-center justify-center text-center border-none shadow-none">
                                            <Button onClick={handleOpenAddClient} className="items-center justify-center text-center border-none shadow-none">
                                            <Lucide

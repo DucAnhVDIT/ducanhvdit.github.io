@@ -36,7 +36,7 @@ function Main() {
   return (
     <>
       {/* BEGIN: Top Bar */}
-      <div className="h-[67px] z-[51] flex items-center relative border-b border-slate-200">
+      <div className="h-[67px] z-[51] items-center relative border-b border-slate-200 hidden sm:flex">
         {/* BEGIN: Breadcrumb */}
         <Breadcrumb className="hidden mr-auto -intro-x sm:flex">
           <Breadcrumb.Link to="/">Application</Breadcrumb.Link>

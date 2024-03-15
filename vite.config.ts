@@ -12,6 +12,7 @@ export default defineConfig({
   optimizeDeps: {
     include: ["tailwind-config"],
   },
+  base: "/",
   plugins: [react()],
   resolve: {
     alias: {
