@@ -14,7 +14,7 @@ import { useState, useRef, SetStateAction, useEffect, JSXElementConstructor, Rea
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import moment from 'moment';
-import { FaSleigh, FaStar } from "react-icons/fa";
+import { FaComment, FaEnvelope, FaStar } from "react-icons/fa";
 import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "./sideSlide";
@@ -313,8 +313,8 @@ function Main() {
           serviceID,
           IsFirstBooking: isFirstBooking,
           IsWebBooking: isWebBooking,
-          CompanyNote: companyNotes !== null && companyNotes !== undefined,
-          CustomerNote: customerNote !== null && customerNote !== undefined,
+          CompanyNote: companyNotes !== '' && companyNotes !== undefined,
+          CustomerNote: customerNote !== '' && customerNote !== undefined,
         },
       };
     })
@@ -324,9 +324,16 @@ function Main() {
       iconContainer.classList.add('event-icon-container');
   
       const isFirstBooking = event.extendedProps?.IsFirstBooking;
+      const hasNotes = event.extendedProps?.CompanyNotes || event.extendedProps?.CustomerNote;
   
       if (isFirstBooking) {
         const IconComponent = FaStar; // Display star icon for first booking
+        ReactDOM.render(<IconComponent size={15} />, iconContainer);
+      }
+
+      if (hasNotes) {
+        // For now, we'll use the same FaStar icon
+        const IconComponent = FaComment;
         ReactDOM.render(<IconComponent size={15} />, iconContainer);
       }
       el.appendChild(iconContainer);

@@ -421,6 +421,18 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                               .map((service: { ProductID: string }) => (
                                   <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
                             ))}
+
+                          {appointmentData.CompanyNotes && (
+                          <div className="">
+                            <p className="text-lg font-semibold mb-2">Company Notes</p>
+                            <textarea
+                              className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                              value={appointmentData.CompanyNotes}
+                              // onChange={handleCompanyNotesChange}
+                              placeholder="Enter company notes here..."
+                            />
+                          </div>
+                        )}
                         </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
