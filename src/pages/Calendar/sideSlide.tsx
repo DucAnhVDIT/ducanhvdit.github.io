@@ -23,7 +23,7 @@ import { RootState } from "../../stores/store";
 import moment from "moment";
 import customerRepository from "../../repositories/customerRepository";
 import { logError } from "../../constant/log-error";
-import { setCompanyNotes, setCustomerNotes, selectNotes } from '../../stores/notesSlide';
+import { setCompanyNotes, setCustomerNotes, selectNotes, resetCompanyNotes, resetCustomerNotes } from '../../stores/notesSlide';
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -244,6 +244,8 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
                 handleAppoinmentChange(true);
                 onClose();
                 dispatch(resetSelectedServices());
+                dispatch(resetCompanyNotes())
+                dispatch(resetCustomerNotes())
               })
               .catch((error) => {
                 console.error('Error adding appointment:', error);

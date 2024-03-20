@@ -267,31 +267,58 @@ function Main() {
     selectable: true,
     nowIndicator:true,
     events: scheduleData
-    ? scheduleData
-        .map((appointment: any) => ({
-          title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName} 
-          / ${(appointment as { CompanyNotes: string }).CompanyNotes} / ${(appointment as { CustomerNote: string }).CustomerNote} `,
-          start: (appointment as { StartTime: Date }).StartTime,
-          end: (appointment as { EndTime: Date }).EndTime,
-          resourceId: (appointment as { StaffID: string }).StaffID,
-          color: (appointment as { Colour: string }).Colour,
-          extendedProps: {
-            ID: (appointment as { ID: string }).ID,
-            resourceId: (appointment as { StaffID: string }).StaffID,
-            firstName : (appointment as { FirstName: string }).FirstName,
-            lastName : (appointment as { LastName: string }).LastName,
-            Mobile : (appointment as { Mobile: string }).Mobile,
-            Duration : (appointment as { Duration: any }).Duration,
-            bookDate: (appointment as { BookDate: Date }).BookDate,
-            serviceName: (appointment as { ServiceName: string }).ServiceName,
-            serviceID: (appointment as { ServiceID: string }).ServiceID,
-            IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
-            IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
-            CompanyNote: (appointment as { CompanyNotes: boolean }).CompanyNotes,
-            CustomerNote: (appointment as { CustomerNote: boolean }).CustomerNote,
-          },
-        }))
-    : [],
+  ? scheduleData.map((appointment: any) => {
+      const customerName = (appointment as { CustomerName: string }).CustomerName;
+      const serviceName = (appointment as { ServiceName: string }).ServiceName;
+      const companyNotes = (appointment as { CompanyNotes: string | null | undefined }).CompanyNotes;
+      const customerNote = (appointment as { CustomerNote: string | null | undefined }).CustomerNote;
+      const startTime = (appointment as { StartTime: Date }).StartTime;
+      const endTime = (appointment as { EndTime: Date }).EndTime;
+      const staffID = (appointment as { StaffID: string }).StaffID;
+      const colour = (appointment as { Colour: string }).Colour;
+      const ID = (appointment as { ID: string }).ID;
+      const firstName = (appointment as { FirstName: string }).FirstName;
+      const lastName = (appointment as { LastName: string }).LastName;
+      const mobile = (appointment as { Mobile: string }).Mobile;
+      const duration = (appointment as { Duration: any }).Duration;
+      const bookDate = (appointment as { BookDate: Date }).BookDate;
+      const serviceID = (appointment as { ServiceID: string }).ServiceID;
+      const isFirstBooking = (appointment as { IsFirstBooking: boolean }).IsFirstBooking;
+      const isWebBooking = (appointment as { IsWebBooking: boolean }).IsWebBooking;
+
+      // Construct the title
+      let title = `${customerName} - ${serviceName}`;
+      if (companyNotes !== '' && companyNotes !== undefined) {
+        title += ` / ${companyNotes}`;
+      }
+      if (customerNote !== '' && customerNote !== undefined) {
+        title += ` / ${customerNote}`;
+      }
+
+      return {
+        title,
+        start: startTime,
+        end: endTime,
+        resourceId: staffID,
+        color: colour,
+        extendedProps: {
+          ID,
+          resourceId: staffID,
+          firstName,
+          lastName,
+          Mobile: mobile,
+          Duration: duration,
+          bookDate,
+          serviceName,
+          serviceID,
+          IsFirstBooking: isFirstBooking,
+          IsWebBooking: isWebBooking,
+          CompanyNote: companyNotes !== null && companyNotes !== undefined,
+          CustomerNote: customerNote !== null && customerNote !== undefined,
+        },
+      };
+    })
+  : [],
     eventDidMount: ({ el, event }) => {
       const iconContainer = document.createElement('div');
       iconContainer.classList.add('event-icon-container');
