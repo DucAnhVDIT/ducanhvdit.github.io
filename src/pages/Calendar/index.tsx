@@ -269,7 +269,8 @@ function Main() {
     events: scheduleData
     ? scheduleData
         .map((appointment: any) => ({
-          title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
+          title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName} 
+          / ${(appointment as { CompanyNotes: string }).CompanyNotes} / ${(appointment as { CustomerNote: string }).CustomerNote} `,
           start: (appointment as { StartTime: Date }).StartTime,
           end: (appointment as { EndTime: Date }).EndTime,
           resourceId: (appointment as { StaffID: string }).StaffID,
@@ -286,6 +287,8 @@ function Main() {
             serviceID: (appointment as { ServiceID: string }).ServiceID,
             IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
             IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
+            CompanyNote: (appointment as { CompanyNotes: boolean }).CompanyNotes,
+            CustomerNote: (appointment as { CustomerNote: boolean }).CustomerNote,
           },
         }))
     : [],

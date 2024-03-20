@@ -479,7 +479,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                                                name="name"
                                                placeholder="Enter First Name"
                                                className="w-full"
-                                               value={appointmentData.CustomerName}
+                                               value={appointmentData.FirstName}
                                               //  onChange={(event) => setFirstName(event.target.value)}
                                            />
                                        </div>
@@ -496,7 +496,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                                                name="name"
                                                placeholder="Enter Last Name"
                                                className="w-full"
-                                              //  value={lastName}
+                                               value={appointmentData.LastName}
                                               //  onChange={(event) => setLastName(event.target.value)}
                                            />
                                        </div>                                
