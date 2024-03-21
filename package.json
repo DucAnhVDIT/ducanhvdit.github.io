@@ -61,6 +61,7 @@
     "react-sliding-pane": "^7.3.0",
     "react-spring": "^9.7.3",
     "react-toastify": "^10.0.1",
+    "react-tooltip": "^5.26.3",
     "react-transition-group": "^4.4.5",
     "simplebar": "^5.3.9",
     "tabulator-tables": "^5.3.4",

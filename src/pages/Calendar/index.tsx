@@ -35,6 +35,7 @@ import AppointmentPopup from "../../components/Modal";
 import BlockTimePopup from "../../components/Modal/blockTime";
 import ExistingDrawer from "../../components/MobileDrawer/existingDrawer";
 import AddNewDrawer from "../../components/MobileDrawer/addNewDrawer";
+import ReactTooltip from 'react-tooltip';
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -55,6 +56,7 @@ function Main() {
   const [blockTimePop, setBlockTimePop] = useState<any | null>(null);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [addNewDrawerOpen, setAddNewDrawerOpen] = useState(false);
+
   
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
@@ -313,31 +315,33 @@ function Main() {
           serviceID,
           IsFirstBooking: isFirstBooking,
           IsWebBooking: isWebBooking,
-          CompanyNote: companyNotes !== '' && companyNotes !== undefined,
+          CompanyNotes: companyNotes !== '' && companyNotes !== undefined,
           CustomerNote: customerNote !== '' && customerNote !== undefined,
         },
       };
     })
   : [],
-    eventDidMount: ({ el, event }) => {
-      const iconContainer = document.createElement('div');
-      iconContainer.classList.add('event-icon-container');
+  eventDidMount: ({ el, event }) => {
+    const iconContainer = document.createElement('div');
+    iconContainer.classList.add('event-icon-container');
   
-      const isFirstBooking = event.extendedProps?.IsFirstBooking;
-      const hasNotes = event.extendedProps?.CompanyNotes || event.extendedProps?.CustomerNote;
+    const isFirstBooking = event.extendedProps?.IsFirstBooking;
+    const hasNotes = event.extendedProps?.CompanyNotes || event.extendedProps?.CustomerNote;
   
-      if (isFirstBooking) {
-        const IconComponent = FaStar; // Display star icon for first booking
-        ReactDOM.render(<IconComponent size={15} />, iconContainer);
-      }
-
-      if (hasNotes) {
-        // For now, we'll use the same FaStar icon
-        const IconComponent = FaComment;
-        ReactDOM.render(<IconComponent size={15} />, iconContainer);
-      }
-      el.appendChild(iconContainer);
-    },
+    if (isFirstBooking) {
+      const IconComponent = FaStar; 
+      ReactDOM.render(<IconComponent size={15} />, iconContainer);
+    }
+  
+    if (hasNotes) {
+      const IconComponent = FaComment;
+      ReactDOM.render(<IconComponent size={15} />, iconContainer);
+    } else {
+      iconContainer.innerHTML = '';
+    }
+    
+    el.appendChild(iconContainer);
+  },  
     selectLongPressDelay:500,
     eventClick: handleEventClick,
     eventOverlap:false,
@@ -357,8 +361,8 @@ function Main() {
           ServiceID: info.event.extendedProps.serviceID,
           StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
           Islocked: false,
-          CustomerNote: "",
-          GuestNotes: null,
+          CustomerNote: info.event.extendedProps.companyNotes,
+          CompanyNotes: info.event.extendedProps.customerNote,
         };
     
         // Make the updateAppointment API call
@@ -405,8 +409,8 @@ function Main() {
           ServiceID: info.event.extendedProps.serviceID,
           StaffID: info.event.extendedProps.resourceId,
           Islocked: false,
-          CustomerNote: "",
-          GuestNotes: null,
+          CustomerNote: info.event.extendedProps.companyNotes,
+          CompanyNotes: info.event.extendedProps.customerNote,
           Duration: newDurationInMinutes,
         };
         calendarRepository.updateAppointment(appointmentData).then(response => {
