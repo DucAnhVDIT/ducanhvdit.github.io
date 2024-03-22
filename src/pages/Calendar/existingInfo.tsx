@@ -38,7 +38,7 @@ interface SlideOverPanelProps {
 function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
-  const { companyNotes, customerNotes } = useSelector(selectNotes);
+  const {hasNotes } = useSelector(selectNotes);
 
   const scheduleData = useSelector((state: any) => state.scheduleData);
   const selectedServices = useSelector((state: any) => state.serviceListState.selectedServices);
@@ -422,7 +422,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                                   <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
                             ))}
 
-                          {appointmentData.CompanyNotes && (
+                          {hasNotes && (
                           <div className="">
                             <p className="text-lg font-semibold mb-2">Company Notes</p>
                             <textarea

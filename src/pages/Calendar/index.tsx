@@ -63,7 +63,12 @@ function Main() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchAppoinmentApiData(date);
+    // const intervalId = setInterval(() => {
+    //   fetchAppoinmentApiData(date);
+    // }, 3000); // Poll every 3 seconds
+    fetchAppoinmentApiData(date); 
+
+    // return () => clearInterval(intervalId); 
   }, [appoinmentChange]);
 
   const handleAppoinmentChange = (value: boolean | ((prevState: boolean) => boolean)) => {
@@ -172,14 +177,15 @@ function Main() {
             appointmentsByCustomer[customerID].push(appointment);
           }
         });
-  
+        console.log('Fetching appointments...');
         dispatch(setScheduleData(appointmentsArray));
         if (!existingInformationSlide && !drawerIsOpen) {
           dispatch(setAppointmentToCustomer(appointmentsByCustomer));
         }
         console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
         console.log(appointmentsArray);
-  
+
+
         // Return the appointmentsArray or the processed data if needed
         return appointmentsArray;
       } else {
@@ -329,19 +335,25 @@ function Main() {
     const hasNotes = event.extendedProps?.CompanyNotes || event.extendedProps?.CustomerNote;
   
     if (isFirstBooking) {
-      const IconComponent = FaStar; 
-      ReactDOM.render(<IconComponent size={15} />, iconContainer);
+      const StarIconComponent = FaStar;
+      const starIcon = document.createElement('div');
+      starIcon.style.marginRight = '5px'; // Add margin between icons
+      ReactDOM.render(<StarIconComponent size={15} />, starIcon);
+      iconContainer.appendChild(starIcon);
     }
   
     if (hasNotes) {
-      const IconComponent = FaComment;
-      ReactDOM.render(<IconComponent size={15} />, iconContainer);
-    } else {
-      iconContainer.innerHTML = '';
+      const CommentIconComponent = FaComment;
+      const commentIcon = document.createElement('div');
+      commentIcon.style.marginRight = '5px';
+      ReactDOM.render(<CommentIconComponent size={15} />, commentIcon);
+      iconContainer.appendChild(commentIcon);
     }
-    
+  
     el.appendChild(iconContainer);
-  },  
+  },
+  
+  
     selectLongPressDelay:500,
     eventClick: handleEventClick,
     eventOverlap:false,

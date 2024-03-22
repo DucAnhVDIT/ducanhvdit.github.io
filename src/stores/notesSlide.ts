@@ -6,6 +6,7 @@ export const notesSlice = createSlice({
   initialState: {
     companyNotes: '',
     customerNotes: '',
+    hasNotes: false
   },
   reducers: {
     setCompanyNotes: (state, action) => {
@@ -20,10 +21,13 @@ export const notesSlice = createSlice({
     resetCustomerNotes: (state) => {
       state.customerNotes = '';
     },
+    setHasNotes: (state, action) => {
+      state.hasNotes = action.payload
+    }
   },
 });
 
-export const { setCompanyNotes, setCustomerNotes, resetCompanyNotes, resetCustomerNotes } = notesSlice.actions;
+export const { setCompanyNotes, setCustomerNotes, resetCompanyNotes, resetCustomerNotes, setHasNotes } = notesSlice.actions;
 export const selectNotes = (state: { notes: any; }) => state.notes;
 
 export default notesSlice.reducer;

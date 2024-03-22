@@ -23,7 +23,8 @@ import { RootState } from "../../stores/store";
 import moment from "moment";
 import customerRepository from "../../repositories/customerRepository";
 import { logError } from "../../constant/log-error";
-import { setCompanyNotes, setCustomerNotes, selectNotes, resetCompanyNotes, resetCustomerNotes } from '../../stores/notesSlide';
+import { setCompanyNotes, setCustomerNotes, selectNotes, resetCompanyNotes, resetCustomerNotes, setHasNotes } from '../../stores/notesSlide';
+import Pusher from 'pusher-js';
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -59,6 +60,19 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [activeTab, setActiveTab] = useState('info');
     const [editorData, setEditorData] = useState("");
 
+    // Pusher
+    const pusher = new Pusher("259f56eb7019fc4b3412", {
+        cluster: "eu",
+    });
+
+    const channel = pusher.subscribe('appointments');
+      
+      channel.bind('new-appointment', (data: { appointment: { title: any; }; }) => {
+        showAppointmentToast(`New appointment created: ${data.appointment.title}`);
+    });
+
+    // Pusher
+
 
     const handleTabChange = (tab: React.SetStateAction<string>) => {
         setActiveTab(tab);
@@ -66,7 +80,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
     const dispatch = useDispatch()
     const selectedServices = useSelector((state: RootState) => state.serviceListState.selectedServices);
-    const { companyNotes, customerNotes } = useSelector(selectNotes);
+    const { companyNotes, customerNotes, hasNotes } = useSelector(selectNotes);
     
 
     const handleCompanyNotesChange = (event: { target: { value: any; }; }) => {
@@ -237,9 +251,18 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
               };
               setSelectedCustomer(walkInCustomer)
             }
+
+            // const hasCustomerNotes = !!customerNotes;
+            // const hasCompanyNotes = !!companyNotes;
+
+            // // Perform action if either of the notes has been added
+            // if (hasCustomerNotes || hasCompanyNotes) {
+            //     dispatch(setHasNotes(true))
+            // }
           
             calendarRepository.addAppointment(newAppointmentRequest)
               .then((res) => {
+                channel.trigger('new-appointment', { appointment: newAppointmentRequest });
                 showAppointmentToast('Appointment added successfully');
                 handleAppoinmentChange(true);
                 onClose();
