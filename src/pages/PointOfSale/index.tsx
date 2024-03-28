@@ -44,6 +44,7 @@ function Main() {
 
   const [showComponent, setShowComponent] = useState('')
   const [searchValue, setSearchValue] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState('')
   
   const [staffs, setStaff] = useState<any>([])
   const [servicesCategory, setServicesCategory] = useState<any>([])
@@ -301,16 +302,20 @@ function Main() {
 
   const handlePayment = (options: string) => {
     if (options === 'cash'){
+      setPaymentMethod('Cash')
       setPaymentModal(true)
     } else if (options === 'card'){
-      console.log('card click')
+      setPaymentMethod('Card')
+      setPaymentModal(true)
     } else {
-      console.log('gift card')
+      setPaymentMethod('Gift Card')
+      setPaymentModal(true)
     }
   }
 
-  const handleClosePayment = () => {
+  const handleClosePayment = (data: any) => {
     console.log('close payment')
+    console.log(data)
     setPaymentModal(false)
   }
   //**END PAYMENT PAGE */
@@ -566,6 +571,12 @@ function Main() {
                   <div className={`font-medium text-danger ${discountAmount !== 0  ? '':'hidden'}`}>-£{discountAmount}</div>
                 </div>
                 <div className="flex pt-4 mt-4 border-t border-slate-200/60 dark:border-darkmode-400">
+                  <div className="mr-auto font-medium">
+                    Cash
+                  </div>
+                  <div className=" font-medium">£{finalPrice}</div>
+                </div>
+                <div className="flex pt-4 mt-4 border-t border-slate-200/60 dark:border-darkmode-400">
                   <div className="mr-auto text-base font-medium">
                     Total Charge
                   </div>
@@ -592,7 +603,7 @@ function Main() {
       {/* BEGIN: New Order Modal */}
       {newOrderModal && (<NewOrder customer={customerData} openModal={newOrderModal} handleClose={handleCloseOrder}/> )}
       {/* END: New Order Modal */}
-      {paymentModal && (<PaymentModal paymentData={totalPrice} paymentModal={paymentModal} handleClose={handleClosePayment} />)}
+      {paymentModal && (<PaymentModal paymentData={totalPrice} paymentModal={paymentModal} paymentMethod={paymentMethod} handleClose={handleClosePayment} />)}
     </>
   );
 }
