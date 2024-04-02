@@ -84,11 +84,11 @@ function ClientsMainPage() {
 
     const rows = customersList.map(customer => ({
         id: customer.CustomerID,
-        CustomerCardID: customer.CustomerCardID,
-        FirstName: customer.FirstName,
-        LastName: customer.LastName,
-        Phone:customer.Mobile,
-        Email:customer.Email,
+        CustomerCardID: customer.CustomerCardID || "-", 
+        FirstName: customer.FirstName || "-",
+        LastName: customer.LastName || "-", 
+        Phone: customer.Mobile || "-", 
+        Email: customer.Email || "-", 
     }));
 
     return (
@@ -98,10 +98,10 @@ function ClientsMainPage() {
                     <CircularProgress />
                 </Box>
             ) : (
-                <div style={{ height: 640, width: '100%' }} className='mt-10'>
-                    <Typography variant='h4' className='mb-2'>
+                <div style={{ height: 640, width: '100%' }} className='mt-3'>
+                    {/* <Typography variant='h4' className='mb-2'>
                         Clients list
-                    </Typography>
+                    </Typography> */}
                     <DataGrid
                         rows={rows}
                         onRowClick={()=> {alert("Hello em")}}
