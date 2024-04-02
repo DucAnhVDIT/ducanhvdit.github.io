@@ -14,6 +14,7 @@ import LoginPage from "../pages/Login"; // Add your login page component
 import Register from "../pages/Register"
 import ForgotPass from "../pages/ForgotPassword"
 import NotFound from "../pages/404"
+import Clients from "../pages/Clients/main"
 import { useAuth } from "../services/AuthContext";
 
 function Router() {
@@ -38,7 +39,7 @@ function Router() {
         },
         {
           path: "/clients",
-          element: <RegularTable />,
+          element: <Clients />,
         },
         {
           path: "/marketing",
