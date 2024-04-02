@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import customerRepository from '../../repositories/customerRepository';
-import {Box, Typography} from '@mui/material'
+import {Box, CircularProgress, Typography} from '@mui/material'
 import './styles.css'
 
 function ClientsMainPage() {
     const [customersList, setCustomersList] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
 
     useEffect(() => {
@@ -16,18 +17,22 @@ function ClientsMainPage() {
 
 
     const fetchCustomerData = async () => {
-        try {
-            const response = await customerRepository.getCustomer();
-            console.log("API Response:", response.data); 
-            if (response.data.Customers && Array.isArray(response.data.Customers)) {
-                console.log("Customer data:", response.data.Customers);
-                setCustomersList(response.data.Customers);
-            } else {
-                console.error("No customer data found in response:", response.data);
+        setTimeout(async () => {
+            try {
+                const response = await customerRepository.getCustomer();
+                console.log("API Response:", response.data);
+                if (response.data.Customers && Array.isArray(response.data.Customers)) {
+                    console.log("Customer data:", response.data.Customers);
+                    setCustomersList(response.data.Customers);
+                } else {
+                    console.error("No customer data found in response:", response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching customer data:', error);
+            } finally {
+                setLoading(false); 
             }
-        } catch (error) {
-            console.error('Error fetching customer data:', error);
-        }
+        }, 1000); 
     };
 
     const getInitials = (name: string | null | undefined) => {
@@ -88,23 +93,29 @@ function ClientsMainPage() {
 
     return (
         <>
-        <div style={{ height: 640, width: '100%' }} className='mt-10'>
-                <Typography variant='h4' className='mb-2'>
-                    Clients list                   
-                </Typography>
-            <DataGrid
-                rows={rows}
-                onRowClick={()=> {alert("Hello em")}}
-                columns={columns}
-                initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 10 },
-                    },
-                  }}
-                  pageSizeOptions={[5, 10]}
-                checkboxSelection
-            />
-        </div>
+        {loading ? ( // Show loading indicator if loading is true
+                <Box display="flex" justifyContent="center" alignItems="center" height={400}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <div style={{ height: 640, width: '100%' }} className='mt-10'>
+                    <Typography variant='h4' className='mb-2'>
+                        Clients list
+                    </Typography>
+                    <DataGrid
+                        rows={rows}
+                        onRowClick={()=> {alert("Hello em")}}
+                        columns={columns}
+                        initialState={{
+                            pagination: {
+                                paginationModel: { page: 0, pageSize: 10 },
+                            },
+                        }}
+                        pageSizeOptions={[5, 10]}
+                        checkboxSelection
+                    />
+                </div>
+            )}
         </>
     );
 }
