@@ -66,6 +66,7 @@ function Main() {
     // const intervalId = setInterval(() => {
     //   fetchAppoinmentApiData(date);
     // }, 3000); // Poll every 3 seconds
+    console.log(date)
     fetchAppoinmentApiData(date); 
 
     // return () => clearInterval(intervalId); 
@@ -243,6 +244,7 @@ function Main() {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
     droppable: true,
     headerToolbar: false,
+    timeZone:'UTC',
     initialView: 'resourceTimeGridDay',
     views: {
         resourceTimeGridTwoDay: {

@@ -22,7 +22,8 @@ import SelectStaff from "../../components/SelectStaffButton";
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import moment from "moment";
-import { Drawer, List, ListItem, ListItemButton, ListItemText, Divider } from '@mui/material';
+
+
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -287,6 +288,7 @@ function ExistingInfo({ setDrawerIsOpen, isOpen, onClose, appointmentData, handl
                       onClick={(event: React.MouseEvent) => {
                           event.preventDefault();
                           onClose()
+                          setDrawerIsOpen(false)
                       } }
                       className="absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
                   >
