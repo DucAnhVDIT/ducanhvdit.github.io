@@ -32,6 +32,7 @@
     "@left4code/tw-starter": "^3.1.36",
     "@mui/lab": "^5.0.0-alpha.156",
     "@mui/material": "^5.15.12",
+    "@mui/x-data-grid": "^7.1.0",
     "@mui/x-date-pickers": "^6.18.5",
     "@reduxjs/toolkit": "^2.2.2",
     "axios": "^1.6.5",

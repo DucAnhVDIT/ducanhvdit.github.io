@@ -244,7 +244,7 @@ function Main() {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
     droppable: true,
     headerToolbar: false,
-    timeZone:'UTC',
+    timeZone:'local',
     initialView: 'resourceTimeGridDay',
     views: {
         resourceTimeGridTwoDay: {
