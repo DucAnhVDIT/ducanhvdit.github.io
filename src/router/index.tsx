@@ -23,9 +23,11 @@ function Router() {
   const sessionUser = sessionStorage.getItem('user')
   //parse data from string back to object
   const isAuthenticated = JSON.parse(sessionUser!)
+
+
   const routes = [
     {
-      path: "/login",
+      path: "/login", 
       element: <LoginPage />,
     },
     {
@@ -73,7 +75,7 @@ function Router() {
     }
   ];
 
-  return useRoutes(routes);
+   return useRoutes(routes);
 }
 
 export default Router;
