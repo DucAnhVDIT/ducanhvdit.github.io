@@ -1,0 +1,9 @@
+.desktop-only {
+    display: table-cell;
+}
+
+@media (max-width: 600px) {
+    .desktop-only {
+        display: none;
+    }
+}

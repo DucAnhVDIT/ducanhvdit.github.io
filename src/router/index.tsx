@@ -6,7 +6,7 @@ import SimpleMenu from "../layouts/SimpleMenu";
 import TopMenu from "../layouts/TopMenu";
 import RegularTable from "../pages/RegularTable";
 import Calendar from "../pages/Calendar";
-import AddClient from "../components/AddClient";
+import AddClient from "../components/AddClient/addClient";
 import PointOfSales from "../pages/PointOfSale";
 import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
