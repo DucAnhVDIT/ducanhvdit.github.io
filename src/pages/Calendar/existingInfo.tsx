@@ -31,11 +31,11 @@ interface SlideOverPanelProps {
   handleDateChange: (value: Date) => void;
   fetchAppoinmentApiData: (value: Date) => void
   serviceData: any
-
+  setDrawerIsOpen: (value: boolean) => void;
 }
 
 
-function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
+function ExistingInfo({ setDrawerIsOpen, isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
   const {hasNotes } = useSelector(selectNotes);
@@ -160,6 +160,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
           logSuccess('Appointment rescheduled successfully')
           handleAppoinmentChange(true)
           onClose()
+          setDrawerIsOpen(false)
       } else {
           logError('Error updating appointment. Slot not available')
       }

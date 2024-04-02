@@ -24,7 +24,7 @@ import moment from "moment";
 import customerRepository from "../../repositories/customerRepository";
 import { logError } from "../../constant/log-error";
 import { setCompanyNotes, setCustomerNotes, selectNotes, resetCompanyNotes, resetCustomerNotes, setHasNotes } from '../../stores/notesSlide';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
   interface SlideOverPanelProps {
@@ -37,8 +37,9 @@ import Pusher from 'pusher-js';
     fetchAppoinmentApiData: (date: Date | undefined) => Promise<any>;
     resourceID : any,
     handleAppoinmentChange: (value: boolean) => void;
+    setAddNewDrawerOpen: (value: boolean) => void;
   }
-function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
+function SlideOverPanel({ setAddNewDrawerOpen, handleAppoinmentChange, isOpen, onClose, serviceData, selectedTime, showAppointmentToast, date, resourceID  }: SlideOverPanelProps) {
     const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
     const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false)
     const [isAddCustomerSlideOpen, setAddCustomerSlideOpen] = useState(false)
@@ -61,15 +62,15 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const [editorData, setEditorData] = useState("");
 
     // Pusher
-    const pusher = new Pusher("259f56eb7019fc4b3412", {
-        cluster: "eu",
-    });
+    // const pusher = new Pusher("259f56eb7019fc4b3412", {
+    //     cluster: "eu",
+    // });
 
-    const channel = pusher.subscribe('appointments');
+    // const channel = pusher.subscribe('appointments');
       
-      channel.bind('new-appointment', (data: { appointment: { title: any; }; }) => {
-        showAppointmentToast(`New appointment created: ${data.appointment.title}`);
-    });
+    //   channel.bind('new-appointment', (data: { appointment: { title: any; }; }) => {
+    //     showAppointmentToast(`New appointment created: ${data.appointment.title}`);
+    // });
 
     // Pusher
 
@@ -262,10 +263,11 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
           
             calendarRepository.addAppointment(newAppointmentRequest)
               .then((res) => {
-                channel.trigger('new-appointment', { appointment: newAppointmentRequest });
+                // channel.trigger('new-appointment', { appointment: newAppointmentRequest });
                 showAppointmentToast('Appointment added successfully');
                 handleAppoinmentChange(true);
                 onClose();
+                setAddNewDrawerOpen(false)
                 dispatch(resetSelectedServices());
                 dispatch(resetCompanyNotes())
                 dispatch(resetCustomerNotes())
@@ -326,6 +328,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
     const closeSlideOver = () => {
         dispatch(resetSelectedServices())
         onClose()
+        setAddNewDrawerOpen(false)
     }
 
     
