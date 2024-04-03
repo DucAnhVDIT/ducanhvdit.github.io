@@ -63,9 +63,9 @@ function Main() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // const intervalId = setInterval(() => {
-    //   fetchAppoinmentApiData(date);
-    // }, 3000); // Poll every 3 seconds
+    const intervalId = setInterval(() => {
+      fetchAppoinmentApiData(date);
+    }, 3000); // Poll every 3 seconds
     console.log(date)
     fetchAppoinmentApiData(date); 
 
@@ -280,8 +280,8 @@ function Main() {
   ? scheduleData.map((appointment: any) => {
       const customerName = (appointment as { CustomerName: string }).CustomerName;
       const serviceName = (appointment as { ServiceName: string }).ServiceName;
-      const companyNotes = (appointment as { CompanyNotes: string | null | undefined }).CompanyNotes;
-      const customerNote = (appointment as { CustomerNote: string | null | undefined }).CustomerNote;
+      const companyNotes = (appointment as { CompanyNotes: string }).CompanyNotes;
+      const customerNote = (appointment as { CustomerNote: string }).CustomerNote;
       const startTime = (appointment as { StartTime: Date }).StartTime;
       const endTime = (appointment as { EndTime: Date }).EndTime;
       const staffID = (appointment as { StaffID: string }).StaffID;
@@ -298,10 +298,12 @@ function Main() {
 
       // Construct the title
       let title = `${customerName} - ${serviceName}`;
-      if (companyNotes !== '' && companyNotes !== undefined) {
+      if (companyNotes && companyNotes !== 'null') {
         title += ` / ${companyNotes}`;
       }
-      if (customerNote !== '' && customerNote !== undefined) {
+
+      // Add customer note to title if available
+      if (customerNote && customerNote !== 'null') {
         title += ` / ${customerNote}`;
       }
 
@@ -334,7 +336,7 @@ function Main() {
     iconContainer.classList.add('event-icon-container');
   
     const isFirstBooking = event.extendedProps?.IsFirstBooking;
-    const hasNotes = event.extendedProps?.CompanyNotes || event.extendedProps?.CustomerNote;
+    const hasNotes = event.extendedProps?.CompanyNotes
   
     if (isFirstBooking) {
       const StarIconComponent = FaStar;
@@ -344,9 +346,9 @@ function Main() {
       iconContainer.appendChild(starIcon);
     }
     
-    console.log(hasNotes)
+    
   
-    if (hasNotes !== null && hasNotes !== '') {
+    if (hasNotes !=='null') {
       const CommentIconComponent = FaComment;
       const commentIcon = document.createElement('div');
       commentIcon.style.marginRight = '5px';
@@ -366,6 +368,10 @@ function Main() {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
       } else {
+        const originalNotes = {
+          CustomerNote: info.event.extendedProps.customerNote,
+          CompanyNotes: info.event.extendedProps.companyNotes
+        };
         const appointmentData = {
           ID: info.event.extendedProps.ID,
           FirstName: info.event.extendedProps.firstName,
@@ -377,8 +383,7 @@ function Main() {
           ServiceID: info.event.extendedProps.serviceID,
           StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
           Islocked: false,
-          CustomerNote: info.event.extendedProps.companyNotes,
-          CompanyNotes: info.event.extendedProps.customerNote,
+          ...originalNotes
         };
     
         // Make the updateAppointment API call

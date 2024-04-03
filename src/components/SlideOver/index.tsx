@@ -260,6 +260,7 @@ function SlideOverPanel({ handleAppoinmentChange, isOpen, onClose, serviceData, 
 
         if (!mobileNumber) {
             // Show toast for missing phone number
+            console.log("trong slide over cu")
             showAppointmentToast('Phone number is required', 'error');
             return;
           }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Lucide from '../../base-components/Lucide';
 import Button from '../../base-components/Button';
 import { FormInput, FormLabel, FormTextarea } from '../../base-components/Form';
@@ -10,6 +10,7 @@ import 'flatpickr/dist/themes/dark.css';
 import Dropzone, { DropzoneElement } from "../../base-components/Dropzone"; 
 import { logError, logSuccess } from '../../constant/log-error';
 import customerRepository from '../../repositories/customerRepository';
+import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 
 const AddClient = () => {
     const [firstName, setFirstName] = useState('');
@@ -24,6 +25,8 @@ const AddClient = () => {
     const [allowEmail, setAllowEmail] = useState(false);
     const [allowMarketingNotification, setAllowMarketingNotification] = useState(false);
 
+    const navigate = useNavigate()
+    
         const addNewClient = () => {
 
             if (!mobileNumber) {
@@ -47,6 +50,9 @@ const AddClient = () => {
                 setLastName("")
                 setEmail("")
                 setMobileNumber("")
+                setTimeout(() => {
+                    navigate('/clients');
+                }, 2000);
               })
               .catch(error => {
                 logError('Error adding client: ' + `${error}`);
@@ -225,6 +231,19 @@ const AddClient = () => {
                       {/* End Consent Form */}
                 </div>
             </div>
+            <ToastContainer
+                position="top-center" 
+                autoClose={3000} 
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                theme="colored"
+                pauseOnHover
+                transition={Flip}
+            />
         </div>
     );
 };

@@ -216,6 +216,7 @@ function AddNewDrawer({addNewDrawerOpen,setAddNewDrawerOpen, handleAppoinmentCha
 
             if (!mobileNumber) {
                 // Show toast for missing phone number
+                console.log("trong add new drawer")
                 showAppointmentToast('Phone number is required', 'error');
                 return;
               }

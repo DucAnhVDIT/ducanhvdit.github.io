@@ -295,6 +295,7 @@ function SlideOverPanel({ setAddNewDrawerOpen, handleAppoinmentChange, isOpen, o
 
         if (!mobileNumber) {
             // Show toast for missing phone number
+            console.log("trong slide over moi")
             showAppointmentToast('Phone number is required', 'error');
             return;
           }

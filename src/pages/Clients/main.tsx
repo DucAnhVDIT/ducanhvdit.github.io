@@ -7,6 +7,7 @@ import Button from '../../base-components/Button';
 import { useNavigate } from 'react-router-dom';
 import FormInput from '../../base-components/Form/FormInput';
 import Lucide from '../../base-components/Lucide';
+import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 
 function ClientsMainPage() {
     const [customersList, setCustomersList] = useState<any[]>([]);
@@ -183,7 +184,21 @@ function ClientsMainPage() {
                 </div>
 
             )}
+            <ToastContainer
+                position="top-center" 
+                autoClose={3000} 
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                theme="colored"
+                pauseOnHover
+                transition={Flip}
+            />
         </>
+        
     );
 }
 
