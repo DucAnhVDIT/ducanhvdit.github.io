@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import customerRepository from '../../repositories/customerRepository';
 import {Box, CircularProgress, Typography} from '@mui/material'
 import './styles.css'
@@ -12,6 +12,7 @@ function ClientsMainPage() {
     const [customersList, setCustomersList] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchValueClient, setSearchValueClient] = useState("");
+    const [selectedRows, setSelectedRows] = React.useState<GridRowSelectionModel>([]);
 
 
     useEffect(() => {
@@ -19,6 +20,9 @@ function ClientsMainPage() {
     }, []);
 
 
+    const handleSelectionChange = (newSelection: string[]) => {
+        setSelectedRows(newSelection);
+    };
 
 
     const fetchCustomerData = async () => {
@@ -137,9 +141,16 @@ function ClientsMainPage() {
                     )}
                 </div>
             </div>
-            <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={handleAddBtn}>
-                Add
-            </Button>
+            <div>
+                <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={handleAddBtn}>
+                    Add
+                </Button>
+                {selectedRows.length > 0 && (
+                    <Button className="w-32 px-6 bg-red-500 text text-white mr-3 mt-2" onClick={()=>{}}>
+                        Delete
+                    </Button>
+                )}
+            </div>
         </div>
 
         {loading ? ( // Show loading indicator if loading is true
@@ -159,6 +170,10 @@ function ClientsMainPage() {
                         }}
                         pageSizeOptions={[5, 10]}
                         checkboxSelection
+                        rowSelectionModel={selectedRows}
+                        onRowSelectionModelChange={(newRowSelectionModel) => {
+                            setSelectedRows(newRowSelectionModel);
+                        }}
                     />
                 </div>
 
