@@ -145,6 +145,11 @@ function ClientsMainPage() {
                 <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={handleAddBtn}>
                     Add
                 </Button>
+                {selectedRows.length === 1 && (
+                    <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={()=>{}}>
+                        Edit
+                    </Button>
+                )}
                 {selectedRows.length > 0 && (
                     <Button className="w-32 px-6 bg-red-500 text text-white mr-3 mt-2" onClick={()=>{}}>
                         Delete

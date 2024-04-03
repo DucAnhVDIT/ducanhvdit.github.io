@@ -24,7 +24,7 @@ const AddClient = () => {
     const [allowEmail, setAllowEmail] = useState(false);
     const [allowMarketingNotification, setAllowMarketingNotification] = useState(false);
 
-        const handleAddNewClient = () => {
+        const addNewClient = () => {
 
             if (!mobileNumber) {
                 logError('Phone number is required');
@@ -61,7 +61,7 @@ const AddClient = () => {
                         <Lucide icon={'X'}></Lucide>
                     </Link>
                     <h1 className="text-xl font-bold">Add Client</h1>
-                    <Button onClick={handleAddNewClient} className="text-lg font-bold text-white bg-primary">Save</Button>
+                    <Button onClick={addNewClient} className="text-lg font-bold text-white bg-primary">Save</Button>
             </div>
             <div className=' md:flex h-full items-start justify-center bg-white shadow'>
                 {/* Begin Basic Info */}
