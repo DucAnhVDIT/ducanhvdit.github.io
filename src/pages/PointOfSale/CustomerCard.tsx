@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../../base-components/Button';
+import Lucide from "../../base-components/Lucide";
 
 interface CustomerCardProps {
   customer: any;
@@ -30,25 +31,49 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
             className="col-span-12 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
             style={{ borderRight: `7px solid ${borderColor}` }}
           >
-            <div className="p-1 flex justify-between items-start">
-              <div className="flex flex-start justify-between items-center">
-                  {/* Circle logo on the right with initial */}
-                <div className="p-1 ml-auto">
-                  <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-white bg-primary ${backgroundColor}`}>
-                    {/* Display the initial in the center of the circle */}
-                    <span className="text-lg">{getInitials(customer.FirstName)}</span>
+            {customer.FirstName !== '' && customer.Mobile !== 0 ?
+              (
+                <div className="p-1 flex justify-between items-start">
+                  <div className="flex flex-start justify-between items-center">
+                      {/* Circle logo on the right with initial */}
+                    <div className="p-1 ml-auto">
+                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-white bg-primary ${backgroundColor}`}>
+                        {/* Display the initial in the center of the circle */}
+                        <span className="text-lg">{getInitials(customer.FirstName)}</span>
+                      </div>
+                    </div>
+                    {/* Customer details on the right (moved to the far right) */}
+                    <div className="p-1 ml-3 flex flex-col items-start">
+                      <h1 className="text-sm font-bold">{customer.FirstName} <span>- {customer.Mobile}</span></h1>
+                      <div className='flex flex-row justify-between'>
+                        {/* <p className="text-xs">{customer.Mobile}</p> */}
+                        <p className="text-xs">{customer.Email}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                {/* Customer details on the right (moved to the far right) */}
-                <div className="p-1 ml-3 flex flex-col items-start">
-                  <h1 className="text-sm font-bold">{customer.FirstName} <span>- {customer.Mobile}</span></h1>
-                  <div className='flex flex-row justify-between'>
-                    {/* <p className="text-xs">{customer.Mobile}</p> */}
-                    <p className="text-xs">{customer.Email}</p>
+              ) : (
+                <div className="p-1 flex justify-between items-start">
+                  <div className="flex flex-start justify-between items-center">
+                    <div className="p-1 ml-auto flex">
+                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center`}>
+                        <Lucide
+                          icon="UserPlus"
+                          className="w-7 h-7 text-slate-500 cursor-pointer"
+                        />
+                      </div>
+                      <div className="p-1 ml-3 flex flex-col items-start">
+                        <h1 className="text-sm font-bold">Add Client</h1>
+                        <div className='flex flex-row justify-between'>
+                          <p className="text-xs">Leave empty for walk-ins</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              )
+            }
+            
           </div>
         </div>
       </Button>
