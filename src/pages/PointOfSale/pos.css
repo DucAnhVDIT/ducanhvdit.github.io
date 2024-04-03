@@ -6,3 +6,7 @@
 .payment-button img {
   @apply block mx-auto mb-1 w-10 h-10;
 } */
+
+.numpad-button {
+  @apply flex-1 items-center justify-center rounded-lg text-lg font-medium mx-1 py-2 px-4 border hover:bg-slate-400 
+}
