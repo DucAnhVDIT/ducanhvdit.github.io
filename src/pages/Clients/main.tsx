@@ -95,7 +95,10 @@ function ClientsMainPage() {
     ? customersList
         .filter(customer =>
             (customer.FirstName || '').toLowerCase().includes(searchValueClient.toLowerCase()) ||
-            (customer.LastName || '').toLowerCase().includes(searchValueClient.toLowerCase())
+            (customer.LastName || '').toLowerCase().includes(searchValueClient.toLowerCase()) ||
+            (customer.Email || '').toLowerCase().includes(searchValueClient.toLowerCase()) ||
+            (customer.Mobile || '').toLowerCase().includes(searchValueClient.toLowerCase()) ||
+            (customer.CustomerCardID || '').toLowerCase().includes(searchValueClient.toLowerCase())
         )
         .map(customer => ({
             id: customer.CustomerID,
@@ -112,28 +115,28 @@ function ClientsMainPage() {
         <>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-                                       <div className="relative text-slate-500">
-                                       <FormInput
-                                           type="text"
-                                           className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                                           placeholder="Search by client name"
-                                           value={searchValueClient}
-                                           onChange={(e) => setSearchValueClient(e.target.value)}
-                                       />
-                                       {searchValueClient ? (
-                                           <Lucide
-                                           icon="XCircle"
-                                           className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                                           onClick={() => setSearchValueClient("")}
-                                           />
-                                       ) : (
-                                           <Lucide
-                                           icon="Search"
-                                           className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-                                           />
-                                       )}
-                                       </div>
-                                   </div>
+            <div className="relative text-slate-500 mt-2">
+                <FormInput
+                    type="text"
+                    className=" w-96 h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                    placeholder="Search client"
+                    value={searchValueClient}
+                    onChange={(e) => setSearchValueClient(e.target.value)}
+                />
+                    {searchValueClient ? (
+                        <Lucide
+                        icon="XCircle"
+                        className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                        onClick={() => setSearchValueClient("")}
+                        />
+                    ) : (
+                        <Lucide
+                            icon="Search"
+                            className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                        />
+                    )}
+                </div>
+            </div>
             <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={handleAddBtn}>
                 Add
             </Button>
