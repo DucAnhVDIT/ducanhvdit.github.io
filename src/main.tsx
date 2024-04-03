@@ -8,6 +8,8 @@ import "./assets/css/app.css";
 import { AuthProvider } from "./services/AuthContext";
 import PrivateRoute from "./router/auth-redirect";
 
+export {}
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
     <AuthProvider>

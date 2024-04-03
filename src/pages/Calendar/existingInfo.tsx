@@ -22,7 +22,8 @@ import SelectStaff from "../../components/SelectStaffButton";
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import moment from "moment";
-import { Drawer, List, ListItem, ListItemButton, ListItemText, Divider } from '@mui/material';
+
+
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,14 +32,14 @@ interface SlideOverPanelProps {
   handleDateChange: (value: Date) => void;
   fetchAppoinmentApiData: (value: Date) => void
   serviceData: any
-
+  setDrawerIsOpen: (value: boolean) => void;
 }
 
 
-function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
+function ExistingInfo({ setDrawerIsOpen, isOpen, onClose, appointmentData, handleAppoinmentChange, handleDateChange, fetchAppoinmentApiData, serviceData }: SlideOverPanelProps) {
 
   const dispatch = useDispatch();
-  const { companyNotes, customerNotes } = useSelector(selectNotes);
+  const {hasNotes } = useSelector(selectNotes);
 
   const scheduleData = useSelector((state: any) => state.scheduleData);
   const selectedServices = useSelector((state: any) => state.serviceListState.selectedServices);
@@ -159,6 +160,8 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
       if (res.data) {
           logSuccess('Appointment rescheduled successfully')
           handleAppoinmentChange(true)
+          onClose()
+          setDrawerIsOpen(false)
       } else {
           logError('Error updating appointment. Slot not available')
       }
@@ -285,6 +288,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                       onClick={(event: React.MouseEvent) => {
                           event.preventDefault();
                           onClose()
+                          setDrawerIsOpen(false)
                       } }
                       className="absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
                   >
@@ -364,7 +368,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                               />
                           ))}
 
-                          <div className="items-center justify-center text-center border-none shadow-none">
+                          {/* <div className="items-center justify-center text-center border-none shadow-none">
                             <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">
                               <Lucide
                                 icon="PlusCircle"
@@ -372,7 +376,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                               />
                             <h1>Add more services</h1>
                           </Button>
-                        </div>      
+                        </div>       */}
                           
                         </>
                       )}
@@ -420,6 +424,18 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                               .map((service: { ProductID: string }) => (
                                   <ServiceCard key={service.ProductID} service={service} onSelect={handleServiceSelect}/>
                             ))}
+
+                          {hasNotes && (
+                          <div className="">
+                            <p className="text-lg font-semibold mb-2">Company Notes</p>
+                            <textarea
+                              className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
+                              value={appointmentData.CompanyNotes}
+                              // onChange={handleCompanyNotesChange}
+                              placeholder="Enter company notes here..."
+                            />
+                          </div>
+                        )}
                         </Slideover.Description>
                         </Slideover.Panel>
                     </Slideover>
@@ -478,7 +494,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                                                name="name"
                                                placeholder="Enter First Name"
                                                className="w-full"
-                                               value={appointmentData.CustomerName}
+                                               value={appointmentData.FirstName}
                                               //  onChange={(event) => setFirstName(event.target.value)}
                                            />
                                        </div>
@@ -495,7 +511,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                                                name="name"
                                                placeholder="Enter Last Name"
                                                className="w-full"
-                                              //  value={lastName}
+                                               value={appointmentData.LastName}
                                               //  onChange={(event) => setLastName(event.target.value)}
                                            />
                                        </div>                                
@@ -583,7 +599,7 @@ function ExistingInfo({isOpen, onClose, appointmentData, handleAppoinmentChange,
                     <Button className=" w-32 px-6 bg-red-600 text-white" onClick={handleDeleteAppointment}>
                       Delete
                     </Button>
-                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateAppointment}>
+                    <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={handleUpdateBookingDate}>
                       Submit
                     </Button>
                     <Button className=" w-32  px-6 bg-primary text-white ml-3" onClick={() => {}}>

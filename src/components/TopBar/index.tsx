@@ -12,7 +12,11 @@ import { useAuth } from "../../services/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { rolesName } from "../../constant/log-roles";
 
-function Main() {
+interface MainProps {
+  location: Location<any>; 
+}
+
+function Main({ location }: MainProps) {
   const [searchDropdown, setSearchDropdown] = useState(false);
   const showSearchDropdown = () => {
     setSearchDropdown(true);
@@ -41,8 +45,10 @@ function Main() {
         <Breadcrumb className="hidden mr-auto -intro-x sm:flex">
           <Breadcrumb.Link to="/">Application</Breadcrumb.Link>
           <Breadcrumb.Link to="/" active={true}>
-            Calendar
+            {location.pathname === "/" ? "Calendar" : 
+            location.pathname.replace(/^\//, '').toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
           </Breadcrumb.Link>
+
         </Breadcrumb>
         {/* END: Breadcrumb */}
         {/* BEGIN: Search */}

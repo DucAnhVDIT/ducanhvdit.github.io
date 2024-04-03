@@ -6,7 +6,7 @@ import SimpleMenu from "../layouts/SimpleMenu";
 import TopMenu from "../layouts/TopMenu";
 import RegularTable from "../pages/RegularTable";
 import Calendar from "../pages/Calendar";
-import AddClient from "../components/AddClient";
+import AddClient from "../components/AddClient/addClient";
 import PointOfSales from "../pages/PointOfSale";
 import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
@@ -14,6 +14,7 @@ import LoginPage from "../pages/Login"; // Add your login page component
 import Register from "../pages/Register"
 import ForgotPass from "../pages/ForgotPassword"
 import NotFound from "../pages/404"
+import Clients from "../pages/Clients/main"
 import { useAuth } from "../services/AuthContext";
 
 function Router() {
@@ -22,9 +23,11 @@ function Router() {
   const sessionUser = sessionStorage.getItem('user')
   //parse data from string back to object
   const isAuthenticated = JSON.parse(sessionUser!)
+
+
   const routes = [
     {
-      path: "/login",
+      path: "/login", 
       element: <LoginPage />,
     },
     {
@@ -38,7 +41,7 @@ function Router() {
         },
         {
           path: "/clients",
-          element: <RegularTable />,
+          element: <Clients />,
         },
         {
           path: "/marketing",
@@ -72,7 +75,7 @@ function Router() {
     }
   ];
 
-  return useRoutes(routes);
+   return useRoutes(routes);
 }
 
 export default Router;

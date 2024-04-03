@@ -14,7 +14,7 @@ import { useState, useRef, SetStateAction, useEffect, JSXElementConstructor, Rea
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import moment from 'moment';
-import { FaSleigh, FaStar } from "react-icons/fa";
+import { FaComment, FaEnvelope, FaStar } from "react-icons/fa";
 import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SlideOverPanel from "./sideSlide";
@@ -35,6 +35,7 @@ import AppointmentPopup from "../../components/Modal";
 import BlockTimePopup from "../../components/Modal/blockTime";
 import ExistingDrawer from "../../components/MobileDrawer/existingDrawer";
 import AddNewDrawer from "../../components/MobileDrawer/addNewDrawer";
+import ReactTooltip from 'react-tooltip';
 
 function Main() {
   const [date, setDate] = useState(new Date());
@@ -55,13 +56,20 @@ function Main() {
   const [blockTimePop, setBlockTimePop] = useState<any | null>(null);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [addNewDrawerOpen, setAddNewDrawerOpen] = useState(false);
+
   
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchAppoinmentApiData(date);
+    // const intervalId = setInterval(() => {
+    //   fetchAppoinmentApiData(date);
+    // }, 3000); // Poll every 3 seconds
+    console.log(date)
+    fetchAppoinmentApiData(date); 
+
+    // return () => clearInterval(intervalId); 
   }, [appoinmentChange]);
 
   const handleAppoinmentChange = (value: boolean | ((prevState: boolean) => boolean)) => {
@@ -170,14 +178,15 @@ function Main() {
             appointmentsByCustomer[customerID].push(appointment);
           }
         });
-  
+        console.log('Fetching appointments...');
         dispatch(setScheduleData(appointmentsArray));
         if (!existingInformationSlide && !drawerIsOpen) {
           dispatch(setAppointmentToCustomer(appointmentsByCustomer));
         }
         console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
         console.log(appointmentsArray);
-  
+
+
         // Return the appointmentsArray or the processed data if needed
         return appointmentsArray;
       } else {
@@ -235,6 +244,7 @@ function Main() {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, resourceTimeGridPlugin],
     droppable: true,
     headerToolbar: false,
+    timeZone:'local',
     initialView: 'resourceTimeGridDay',
     views: {
         resourceTimeGridTwoDay: {
@@ -267,40 +277,85 @@ function Main() {
     selectable: true,
     nowIndicator:true,
     events: scheduleData
-    ? scheduleData
-        .map((appointment: any) => ({
-          title: `${(appointment as { CustomerName: string }).CustomerName} - ${(appointment as { ServiceName: string }).ServiceName}`,
-          start: (appointment as { StartTime: Date }).StartTime,
-          end: (appointment as { EndTime: Date }).EndTime,
-          resourceId: (appointment as { StaffID: string }).StaffID,
-          color: (appointment as { Colour: string }).Colour,
-          extendedProps: {
-            ID: (appointment as { ID: string }).ID,
-            resourceId: (appointment as { StaffID: string }).StaffID,
-            firstName : (appointment as { FirstName: string }).FirstName,
-            lastName : (appointment as { LastName: string }).LastName,
-            Mobile : (appointment as { Mobile: string }).Mobile,
-            Duration : (appointment as { Duration: any }).Duration,
-            bookDate: (appointment as { BookDate: Date }).BookDate,
-            serviceName: (appointment as { ServiceName: string }).ServiceName,
-            serviceID: (appointment as { ServiceID: string }).ServiceID,
-            IsFirstBooking: (appointment as { IsFirstBooking: boolean }).IsFirstBooking,
-            IsWebBooking: (appointment as { IsWebBooking: boolean }).IsWebBooking,
-          },
-        }))
-    : [],
-    eventDidMount: ({ el, event }) => {
-      const iconContainer = document.createElement('div');
-      iconContainer.classList.add('event-icon-container');
-  
-      const isFirstBooking = event.extendedProps?.IsFirstBooking;
-  
-      if (isFirstBooking) {
-        const IconComponent = FaStar; // Display star icon for first booking
-        ReactDOM.render(<IconComponent size={15} />, iconContainer);
+  ? scheduleData.map((appointment: any) => {
+      const customerName = (appointment as { CustomerName: string }).CustomerName;
+      const serviceName = (appointment as { ServiceName: string }).ServiceName;
+      const companyNotes = (appointment as { CompanyNotes: string | null | undefined }).CompanyNotes;
+      const customerNote = (appointment as { CustomerNote: string | null | undefined }).CustomerNote;
+      const startTime = (appointment as { StartTime: Date }).StartTime;
+      const endTime = (appointment as { EndTime: Date }).EndTime;
+      const staffID = (appointment as { StaffID: string }).StaffID;
+      const colour = (appointment as { Colour: string }).Colour;
+      const ID = (appointment as { ID: string }).ID;
+      const firstName = (appointment as { FirstName: string }).FirstName;
+      const lastName = (appointment as { LastName: string }).LastName;
+      const mobile = (appointment as { Mobile: string }).Mobile;
+      const duration = (appointment as { Duration: any }).Duration;
+      const bookDate = (appointment as { BookDate: Date }).BookDate;
+      const serviceID = (appointment as { ServiceID: string }).ServiceID;
+      const isFirstBooking = (appointment as { IsFirstBooking: boolean }).IsFirstBooking;
+      const isWebBooking = (appointment as { IsWebBooking: boolean }).IsWebBooking;
+
+      // Construct the title
+      let title = `${customerName} - ${serviceName}`;
+      if (companyNotes !== '' && companyNotes !== undefined) {
+        title += ` / ${companyNotes}`;
       }
-      el.appendChild(iconContainer);
-    },
+      if (customerNote !== '' && customerNote !== undefined) {
+        title += ` / ${customerNote}`;
+      }
+
+      return {
+        title,
+        start: startTime,
+        end: endTime,
+        resourceId: staffID,
+        color: colour,
+        extendedProps: {
+          ID,
+          resourceId: staffID,
+          firstName,
+          lastName,
+          Mobile: mobile,
+          Duration: duration,
+          bookDate,
+          serviceName,
+          serviceID,
+          IsFirstBooking: isFirstBooking,
+          IsWebBooking: isWebBooking,
+          CompanyNotes: companyNotes !== '' && companyNotes !== undefined,
+          CustomerNote: customerNote !== '' && customerNote !== undefined,
+        },
+      };
+    })
+  : [],
+  eventDidMount: ({ el, event }) => {
+    const iconContainer = document.createElement('div');
+    iconContainer.classList.add('event-icon-container');
+  
+    const isFirstBooking = event.extendedProps?.IsFirstBooking;
+    const hasNotes = event.extendedProps?.CompanyNotes || event.extendedProps?.CustomerNote;
+  
+    if (isFirstBooking) {
+      const StarIconComponent = FaStar;
+      const starIcon = document.createElement('div');
+      starIcon.style.marginRight = '5px'; // Add margin between icons
+      ReactDOM.render(<StarIconComponent size={15} />, starIcon);
+      iconContainer.appendChild(starIcon);
+    }
+  
+    if (hasNotes) {
+      const CommentIconComponent = FaComment;
+      const commentIcon = document.createElement('div');
+      commentIcon.style.marginRight = '5px';
+      ReactDOM.render(<CommentIconComponent size={15} />, commentIcon);
+      iconContainer.appendChild(commentIcon);
+    }
+  
+    el.appendChild(iconContainer);
+  },
+  
+  
     selectLongPressDelay:500,
     eventClick: handleEventClick,
     eventOverlap:false,
@@ -320,8 +375,8 @@ function Main() {
           ServiceID: info.event.extendedProps.serviceID,
           StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
           Islocked: false,
-          CustomerNote: "",
-          GuestNotes: null,
+          CustomerNote: info.event.extendedProps.companyNotes,
+          CompanyNotes: info.event.extendedProps.customerNote,
         };
     
         // Make the updateAppointment API call
@@ -368,8 +423,8 @@ function Main() {
           ServiceID: info.event.extendedProps.serviceID,
           StaffID: info.event.extendedProps.resourceId,
           Islocked: false,
-          CustomerNote: "",
-          GuestNotes: null,
+          CustomerNote: info.event.extendedProps.companyNotes,
+          CompanyNotes: info.event.extendedProps.customerNote,
           Duration: newDurationInMinutes,
         };
         calendarRepository.updateAppointment(appointmentData).then(response => {
@@ -517,8 +572,8 @@ function Main() {
       <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked}/>
 
 
-      {slotSlideoverPreview && (<SlideOverPanel handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
-      {existingInformationSlide && (<ExistingInfo fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
+      {slotSlideoverPreview && (<SlideOverPanel setAddNewDrawerOpen={setAddNewDrawerOpen} handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast} isOpen={slotSlideoverPreview} onClose={handleClose} serviceData={serviceData} selectedTime={selectedTime} />)}
+      {existingInformationSlide && (<ExistingInfo setDrawerIsOpen={setDrawerIsOpen} fetchAppoinmentApiData={fetchAppoinmentApiData} handleDateChange={handleDateChange} handleAppoinmentChange={handleAppoinmentChange}  isOpen={existingInformationSlide} onClose={handleCloseEventSlide} appointmentData={selectedAppointment} serviceData={serviceData}/>)}
       {drawerIsOpen && (<ExistingDrawer  fetchAppoinmentApiData={fetchAppoinmentApiData} drawerIsOpen={drawerIsOpen} setDrawerIsOpen={setDrawerIsOpen} appointmentData={selectedAppointment} handleAppoinmentChange={handleAppoinmentChange} handleDateChange={handleDateChange} serviceData={serviceData} />)}
       {addNewDrawerOpen && (<AddNewDrawer addNewDrawerOpen={addNewDrawerOpen} setAddNewDrawerOpen={setAddNewDrawerOpen}  handleAppoinmentChange={handleAppoinmentChange}  resourceID={resourceID} date={date} fetchAppoinmentApiData={fetchAppoinmentApiData} showAppointmentToast={showAppointmentToast}  serviceData={serviceData} selectedTime={selectedTime} />)}
       {/* {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
