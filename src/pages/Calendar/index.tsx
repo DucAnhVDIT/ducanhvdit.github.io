@@ -336,7 +336,6 @@ function Main() {
     iconContainer.classList.add('event-icon-container');
   
     const isFirstBooking = event.extendedProps?.IsFirstBooking;
-    const hasNotes = event.extendedProps?.CompanyNotes
   
     if (isFirstBooking) {
       const StarIconComponent = FaStar;
@@ -348,7 +347,7 @@ function Main() {
     
     
   
-    if (hasNotes !=='null') {
+    if (event.extendedProps && (event.extendedProps.customerNote || event.extendedProps.companyNotes)) {
       const CommentIconComponent = FaComment;
       const commentIcon = document.createElement('div');
       commentIcon.style.marginRight = '5px';

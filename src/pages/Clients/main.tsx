@@ -166,6 +166,11 @@ function ClientsMainPage() {
             ) : (
                 <div style={{ height: 640, width: '100%' }} className='mt-3'>
                     <DataGrid
+                        sx={{
+                            "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
+                            outline: "none !important",
+                            },
+                        }}
                         rows={filteredRows}
                         // onRowClick={()=> {alert("Hello em")}}
                         columns={columns}
@@ -184,19 +189,6 @@ function ClientsMainPage() {
                 </div>
 
             )}
-            <ToastContainer
-                position="top-center" 
-                autoClose={3000} 
-                hideProgressBar={true}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                theme="colored"
-                pauseOnHover
-                transition={Flip}
-            />
         </>
         
     );
