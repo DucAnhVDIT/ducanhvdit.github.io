@@ -8,13 +8,23 @@ import { useNavigate } from 'react-router-dom';
 import FormInput from '../../base-components/Form/FormInput';
 import Lucide from '../../base-components/Lucide';
 import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function ClientsMainPage() {
     const [customersList, setCustomersList] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchValueClient, setSearchValueClient] = useState("");
     const [selectedRows, setSelectedRows] = React.useState<GridRowSelectionModel>([]);
-
+    
+    const theme = createTheme({
+        palette: {
+          mode: 'light', 
+          background: {
+            default: '#FFFFFF', 
+          },
+        },
+      });
+      
 
     useEffect(() => {
         fetchCustomerData();
@@ -165,27 +175,32 @@ function ClientsMainPage() {
                 </Box>
             ) : (
                 <div style={{ height: 640, width: '100%' }} className='mt-3'>
-                    <DataGrid
-                        sx={{
-                            "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-                            outline: "none !important",
-                            },
-                        }}
-                        rows={filteredRows}
-                        // onRowClick={()=> {alert("Hello em")}}
-                        columns={columns}
-                        initialState={{
-                            pagination: {
-                                paginationModel: { page: 0, pageSize: 10 },
-                            },
-                        }}
-                        pageSizeOptions={[5, 10]}
-                        checkboxSelection
-                        rowSelectionModel={selectedRows}
-                        onRowSelectionModelChange={(newRowSelectionModel) => {
-                            setSelectedRows(newRowSelectionModel);
-                        }}
-                    />
+                        <DataGrid
+                            sx={{
+                                "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
+                                outline: "none !important",
+                                },
+                                '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell': {
+                                    backgroundColor: "white",
+                                    color: "black",
+                                    fontWeight: 500,}
+                            }}                         
+                            rows={filteredRows}
+                            // onRowClick={()=> {alert("Hello em")}}
+                            columns={columns}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: { page: 0, pageSize: 10 },
+                                },
+                            }}
+                            pageSizeOptions={[5, 10]}
+                            checkboxSelection
+                            rowSelectionModel={selectedRows}
+                            onRowSelectionModelChange={(newRowSelectionModel) => {
+                                setSelectedRows(newRowSelectionModel);
+                            }}
+                        />
+
                 </div>
 
             )}

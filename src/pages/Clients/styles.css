@@ -7,3 +7,7 @@
         display: none;
     }
 }
+
+.selected-row {
+    background-color: lightblue; 
+}

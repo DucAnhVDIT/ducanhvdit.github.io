@@ -57,18 +57,19 @@ function Main() {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [addNewDrawerOpen, setAddNewDrawerOpen] = useState(false);
 
+
   
   const scheduleData = useSelector((state: any) => state.appointment.scheduleData);
   const singleCustomerAppointment = useSelector((state: any) => state.appointment.singleCustomerAppointment);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchAppoinmentApiData(date);
-    }, 3000); // Poll every 3 seconds
+    // const intervalId = setInterval(() => {
+    //   fetchAppoinmentApiData(date);
+    // }, 3000); // Poll every 3 seconds
     console.log(date)
     fetchAppoinmentApiData(date); 
-
+    console.log(scheduleData)
     // return () => clearInterval(intervalId); 
   }, [appoinmentChange]);
 
@@ -186,7 +187,6 @@ function Main() {
         // console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
         // console.log(appointmentsArray);
 
-
         // Return the appointmentsArray or the processed data if needed
         return appointmentsArray;
       } else {
@@ -300,12 +300,13 @@ function Main() {
       let title = `${customerName} - ${serviceName}`;
       if (companyNotes && companyNotes !== 'null') {
         title += ` / ${companyNotes}`;
+
       }
 
       // Add customer note to title if available
       if (customerNote && customerNote !== 'null') {
         title += ` / ${customerNote}`;
-      }
+      } 
 
       return {
         title,
@@ -325,8 +326,8 @@ function Main() {
           serviceID,
           IsFirstBooking: isFirstBooking,
           IsWebBooking: isWebBooking,
-          CompanyNotes: companyNotes !== '' && companyNotes !== undefined,
-          CustomerNote: customerNote !== '' && customerNote !== undefined,
+          CompanyNotes: companyNotes,
+          CustomerNote: customerNote ,
         },
       };
     })
@@ -336,6 +337,8 @@ function Main() {
     iconContainer.classList.add('event-icon-container');
   
     const isFirstBooking = event.extendedProps?.IsFirstBooking;
+    const hasCompanyNotes = event.extendedProps?.CompanyNotes;
+    const hasCustomerNote = event.extendedProps?.CustomerNote;
   
     if (isFirstBooking) {
       const StarIconComponent = FaStar;
@@ -344,10 +347,10 @@ function Main() {
       ReactDOM.render(<StarIconComponent size={15} />, starIcon);
       iconContainer.appendChild(starIcon);
     }
-    
+
     
   
-    if (event.extendedProps && (event.extendedProps.customerNote || event.extendedProps.companyNotes)) {
+    if (hasCompanyNotes || hasCustomerNote) {
       const CommentIconComponent = FaComment;
       const commentIcon = document.createElement('div');
       commentIcon.style.marginRight = '5px';
