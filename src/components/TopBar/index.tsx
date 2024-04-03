@@ -11,9 +11,10 @@ import { Transition } from "@headlessui/react";
 import { useAuth } from "../../services/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { rolesName } from "../../constant/log-roles";
+import { Location } from 'react-router-dom';
 
 interface MainProps {
-  location: Location<any>; 
+  location: Location; 
 }
 
 function Main({ location }: MainProps) {

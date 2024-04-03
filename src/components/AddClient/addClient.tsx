@@ -8,6 +8,8 @@ import { CheckboxToggle } from 'react-rainbow-components';
 import Flatpickr from 'react-flatpickr';
 import 'flatpickr/dist/themes/dark.css';
 import Dropzone, { DropzoneElement } from "../../base-components/Dropzone"; 
+import { logError, logSuccess } from '../../constant/log-error';
+import customerRepository from '../../repositories/customerRepository';
 
 const AddClient = () => {
     const [firstName, setFirstName] = useState('');
@@ -22,74 +24,44 @@ const AddClient = () => {
     const [allowEmail, setAllowEmail] = useState(false);
     const [allowMarketingNotification, setAllowMarketingNotification] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+        const handleAddNewClient = () => {
 
-        // Prepare the request body
-        const requestBody = {
-            "business_id": "20160908110055249272",
-            "FirstName": firstName,
-            "LastName": lastName,
-            "Mobile": mobileNumber,
-            "Email": email,
-            "EmailConsent": allowEmail,
-            "SMSConsent": allowSMS,
-            "DateOfBirth": dateOfBirth || null
-        };
-
-        try {
-            // Make the API request
-            const response = await fetch('https://beautyapi.vdit.co.uk/v1/AddCustomer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Basic ${btoa('testvdit:testvdit')}`,
-                },
-                body: JSON.stringify(requestBody),
-            });
-
-            if (response.ok) {
-                // Request successful, handle accordingly
-                console.log(response)
-                console.log('Customer added successfully');
-                // showSuccessToast('Customer added successfully');
-            } else {
-                // Request failed, handle error
-                console.error('Error adding customer:', response.statusText);
-                // showErrorToast('Error adding customer');
+            if (!mobileNumber) {
+                logError('Phone number is required');
+                return;
             }
-        } catch (error) {
-            // Catch any unexpected errors
-            console.error('Unexpected error:', error);
-            // showErrorToast('Unexpected error occurred');
-        }
-    };
-
-    // // Function to show success toast notification
-    // const showSuccessToast = (message: string) => {
-    //     Toastify({
-    //         text: message,
-    //         backgroundColor: 'green',
-    //     }).showToast();
-    // };
-
-    // // Function to show error toast notification
-    // const showErrorToast = (message: string) => {
-    //     Toastify({
-    //         text: message,
-    //         backgroundColor: 'red',
-    //     }).showToast();
-    // };
+    
+            const requestBody = {
+              FirstName: firstName,
+              LastName: lastName,
+              Mobile: mobileNumber,
+              Email: email,
+              DateOfBirth: dateOfBirth || null,
+              EmailConsent: true,
+              SMSConsent: true,
+            };
+          
+            customerRepository.addCustomer(requestBody).then(response => {
+                logSuccess('Client added successfully');
+                setFirstName("")
+                setLastName("")
+                setEmail("")
+                setMobileNumber("")
+              })
+              .catch(error => {
+                logError('Error adding client: ' + `${error}`);
+              });
+          };
 
 
     return (
         <div>
             <div className="flex items-center justify-between top-0 w-full p-4 bg-white shadow">
-                    <Link to="/" className="text-lg font-bold">
+                    <Link to="/clients" className="text-lg font-bold">
                         <Lucide icon={'X'}></Lucide>
                     </Link>
                     <h1 className="text-xl font-bold">Add Client</h1>
-                    <Button onClick={handleSubmit} className="text-lg font-bold text-white bg-primary">Save</Button>
+                    <Button onClick={handleAddNewClient} className="text-lg font-bold text-white bg-primary">Save</Button>
             </div>
             <div className=' md:flex h-full items-start justify-center bg-white shadow'>
                 {/* Begin Basic Info */}
@@ -110,6 +82,8 @@ const AddClient = () => {
                                     name="name"
                                     placeholder="Enter First Name"
                                     className="w-full"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                 />
                             </div>
                             <div className='flex flex-col w-full'>
@@ -125,6 +99,8 @@ const AddClient = () => {
                                     name="name"
                                     placeholder="Enter Last Name"
                                     className="w-full"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -142,6 +118,8 @@ const AddClient = () => {
                                     name="name"
                                     placeholder="Enter Email"
                                     className="w-full"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                             <div className='flex flex-col w-full'>
@@ -157,6 +135,8 @@ const AddClient = () => {
                                     name="name"
                                     placeholder="Enter Phone Number"
                                     className="w-full"
+                                    value={mobileNumber}
+                                    onChange={(e) => setMobileNumber(e.target.value)}
                                 />
                             </div>
                         </div>

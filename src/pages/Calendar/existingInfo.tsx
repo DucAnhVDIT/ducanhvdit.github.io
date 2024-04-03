@@ -68,7 +68,7 @@ function ExistingInfo({ setDrawerIsOpen, isOpen, onClose, appointmentData, handl
     ServiceID: appointmentData.ServiceID,
     StaffID: appointmentData.StaffID,
     Islocked: false,
-    CustomerNote: "",
+    CustomerNote: appointmentData.CustomerNote,
     GuestNotes: null,
   });
 
@@ -80,12 +80,6 @@ function ExistingInfo({ setDrawerIsOpen, isOpen, onClose, appointmentData, handl
     }));
   };
 
-  
-  useEffect(() => {
-    console.log("dich vu moi nay",selectedServices)
-  },[selectedServices])
-
-  
   
   const handleServiceSelect = (selectedService: { ProductID: any; }) => {
 

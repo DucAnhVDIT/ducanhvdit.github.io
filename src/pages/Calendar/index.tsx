@@ -178,13 +178,13 @@ function Main() {
             appointmentsByCustomer[customerID].push(appointment);
           }
         });
-        console.log('Fetching appointments...');
+        // console.log('Fetching appointments...');
         dispatch(setScheduleData(appointmentsArray));
         if (!existingInformationSlide && !drawerIsOpen) {
           dispatch(setAppointmentToCustomer(appointmentsByCustomer));
         }
-        console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
-        console.log(appointmentsArray);
+        // console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
+        // console.log(appointmentsArray);
 
 
         // Return the appointmentsArray or the processed data if needed
@@ -343,8 +343,10 @@ function Main() {
       ReactDOM.render(<StarIconComponent size={15} />, starIcon);
       iconContainer.appendChild(starIcon);
     }
+    
+    console.log(hasNotes)
   
-    if (hasNotes) {
+    if (hasNotes !== null && hasNotes !== '') {
       const CommentIconComponent = FaComment;
       const commentIcon = document.createElement('div');
       commentIcon.style.marginRight = '5px';

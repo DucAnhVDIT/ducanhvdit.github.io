@@ -3,10 +3,15 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import customerRepository from '../../repositories/customerRepository';
 import {Box, CircularProgress, Typography} from '@mui/material'
 import './styles.css'
+import Button from '../../base-components/Button';
+import { useNavigate } from 'react-router-dom';
+import FormInput from '../../base-components/Form/FormInput';
+import Lucide from '../../base-components/Lucide';
 
 function ClientsMainPage() {
     const [customersList, setCustomersList] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [searchValueClient, setSearchValueClient] = useState("");
 
 
     useEffect(() => {
@@ -22,7 +27,7 @@ function ClientsMainPage() {
                 const response = await customerRepository.getCustomer();
                 console.log("API Response:", response.data);
                 if (response.data.Customers && Array.isArray(response.data.Customers)) {
-                    console.log("Customer data:", response.data.Customers);
+                    // console.log("Customer data:", response.data.Customers);
                     setCustomersList(response.data.Customers);
                 } else {
                     console.error("No customer data found in response:", response.data);
@@ -42,7 +47,14 @@ function ClientsMainPage() {
       
         const names = name.split(' ');
         return names.map((name: string) => name[0]).join('');
-      };
+    };
+
+    const navigate = useNavigate()
+
+    const handleAddBtn = () => {
+        navigate('/clients/add')
+        console.log('hello')
+    }
 
     const columns: GridColDef[] = [
         {
@@ -79,32 +91,63 @@ function ClientsMainPage() {
         
     ];
 
-    
+    const filteredRows = customersList
+    ? customersList
+        .filter(customer =>
+            (customer.FirstName || '').toLowerCase().includes(searchValueClient.toLowerCase()) ||
+            (customer.LastName || '').toLowerCase().includes(searchValueClient.toLowerCase())
+        )
+        .map(customer => ({
+            id: customer.CustomerID,
+            CustomerCardID: customer.CustomerCardID || "-",
+            FirstName: customer.FirstName || "-",
+            LastName: customer.LastName || "-",
+            Phone: customer.Mobile || "-",
+            Email: customer.Email || "-",
+        }))
+    : [];
 
-
-    const rows = customersList.map(customer => ({
-        id: customer.CustomerID,
-        CustomerCardID: customer.CustomerCardID || "-", 
-        FirstName: customer.FirstName || "-",
-        LastName: customer.LastName || "-", 
-        Phone: customer.Mobile || "-", 
-        Email: customer.Email || "-", 
-    }));
 
     return (
         <>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
+                                       <div className="relative text-slate-500">
+                                       <FormInput
+                                           type="text"
+                                           className="w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                                           placeholder="Search by client name"
+                                           value={searchValueClient}
+                                           onChange={(e) => setSearchValueClient(e.target.value)}
+                                       />
+                                       {searchValueClient ? (
+                                           <Lucide
+                                           icon="XCircle"
+                                           className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+                                           onClick={() => setSearchValueClient("")}
+                                           />
+                                       ) : (
+                                           <Lucide
+                                           icon="Search"
+                                           className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+                                           />
+                                       )}
+                                       </div>
+                                   </div>
+            <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={handleAddBtn}>
+                Add
+            </Button>
+        </div>
+
         {loading ? ( // Show loading indicator if loading is true
                 <Box display="flex" justifyContent="center" alignItems="center" height={400}>
                     <CircularProgress />
                 </Box>
             ) : (
                 <div style={{ height: 640, width: '100%' }} className='mt-3'>
-                    {/* <Typography variant='h4' className='mb-2'>
-                        Clients list
-                    </Typography> */}
                     <DataGrid
-                        rows={rows}
-                        onRowClick={()=> {alert("Hello em")}}
+                        rows={filteredRows}
+                        // onRowClick={()=> {alert("Hello em")}}
                         columns={columns}
                         initialState={{
                             pagination: {
@@ -115,6 +158,7 @@ function ClientsMainPage() {
                         checkboxSelection
                     />
                 </div>
+
             )}
         </>
     );
