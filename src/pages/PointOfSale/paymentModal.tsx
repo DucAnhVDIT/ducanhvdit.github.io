@@ -4,7 +4,7 @@ import {
 } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import {  Dialog } from "../../base-components/Headless";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Lucide from "../../base-components/Lucide";
 import "./pos.css"
 
@@ -17,14 +17,24 @@ interface IPaymentModal {
 
 export default function paymentModal ({paymentData, paymentModal, paymentMethod, handleClose} : IPaymentModal) {
   const [priceData, setPriceData] = useState(paymentData)
-  const [value, setValue] = useState('10');
+  const [priceValue, setPriceValue] = useState('')
 
   const handleChangePrice = (e: any) => {
-    const { name, value } = e.target
-    const trimmedValue = value.replace(/^£0*(?=\d)|^£/, '£')
-    const validatedValue = parseFloat(trimmedValue.replace(/[^0-9.]/g, ''))
-    if (!isNaN(validatedValue)) {
-      setPriceData((data: any) => ({ ...data, [name]: validatedValue}))
+    const { value } = e.target;
+    if (!isNaN(value)) {
+      // Check if the value contains a dot
+      const dotIndex = value.indexOf('.');
+      if (dotIndex !== -1) {
+        // If a dot is present, check if there are more than two digits after the dot
+        const decimalDigits = value.substring(dotIndex + 1);
+        if (decimalDigits.length <= 2) {
+          // Update the state with the value
+          setPriceData(value);
+        }
+      } else {
+        // If there is no dot, update the state with the value
+        setPriceData(value);
+      }
     }
   }
 
@@ -43,13 +53,22 @@ export default function paymentModal ({paymentData, paymentModal, paymentMethod,
 
   const handleKeyPress = (key: any) => {
     if (key === 'backspace') {
-      setPriceData(value.slice(0, -1));
-    } else if (key === 'enter') {
-      // Handle enter key press
-      // For example, pass the value to the parent component
-      // onKeyPress(value);
+      setPriceData(priceData.slice(0, -1));
     } else {
-      setPriceData(value + key);
+      let updatedPriceData = priceData + key;
+      // Perform validation
+      const dotIndex = updatedPriceData.indexOf('.');
+      if (dotIndex !== -1) {
+        // If a dot is present, check if there are more than two digits after the dot
+        const decimalDigits = updatedPriceData.substring(dotIndex + 1);
+        if (decimalDigits.length <= 2) {
+          // Update the state with the value
+          setPriceData(updatedPriceData);
+        }
+      } else {
+        // If there is no dot, update the state with the value
+        setPriceData(updatedPriceData);
+      }
     }
   };
 
@@ -72,7 +91,7 @@ export default function paymentModal ({paymentData, paymentModal, paymentMethod,
                 <input
                   id="pos-form-4"
                   type="text"
-                  className="border-none p-0 outline-none"
+                  className="border-none p-0 outline-none font-bold text-[40px] m-0 w-full"
                   onFocus={handleFocus}
                   placeholder="Item Price"
                   name="Price"
