@@ -14,6 +14,8 @@ import BasicInfo from './basicInfo';
 import Addresses from './addresses';
 import NotiConsent from './notiConsent';
 import Other from './other';
+import ContactNum from './contactNum';
+import Notes from './notes';
 
 const EditClient = () => {
 
@@ -131,7 +133,7 @@ const EditClient = () => {
                     <div className='flex flex-row'>
                         <div className='md:flex flex-col mr-4'>
                             <BasicInfo />
-                            <BasicInfo />
+                            <ContactNum />
                         </div>
                         <div className='md:flex flex-col'>
                             <Addresses />
@@ -142,6 +144,13 @@ const EditClient = () => {
                 </div>
             </>
             )}
+
+            {activeTab === 'notes' && (
+                <div className='flex justify-center'>
+                    <Notes />
+                </div>
+            )}
+
 
             
             <ToastContainer
