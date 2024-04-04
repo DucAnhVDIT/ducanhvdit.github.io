@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Flip, ToastContainer } from 'react-toastify';
 import Button from '../../base-components/Button';
 import Tooltip from '@mui/material/Tooltip';
@@ -19,6 +19,9 @@ import Notes from './notes';
 import Timelines from './appointments/timelines';
 import TimelineMUI from './appointments/timelineMUI';
 import Forms from './forms/forms';
+import customerRepository from '../../repositories/customerRepository';
+import { useSelector } from 'react-redux';
+import { selectSelectedCustomer } from '../../stores/customerSlide';
 
 const EditClient = () => {
 
@@ -26,6 +29,13 @@ const EditClient = () => {
     const handleTabChange = (tab: React.SetStateAction<string>) => {
         setActiveTab(tab);
     };
+
+    const selectedCustomer = useSelector(selectSelectedCustomer);
+
+    useEffect(() => {
+        console.log(selectedCustomer)
+    })
+
 
     return (
         <div className='mt-3 bg-white' style={{height:'1000px' }}>
@@ -89,7 +99,7 @@ const EditClient = () => {
                                     </IconButton>   
                                 </Tooltip>
                             </div>
-                            <h1 className='text-2xl font-bold mb-3'>£30</h1>
+                            <h1 className='text-2xl font-bold mb-3'>£0</h1>
                         </div>
                         <div className="md:w-1/5 p-4 flex flex-col border-2 border-black rounded-2xl m-5">
                             <div className="flex-row flex justify-between">
@@ -100,7 +110,7 @@ const EditClient = () => {
                                     </IconButton>   
                                 </Tooltip>
                             </div>
-                            <h1 className='text-2xl font-bold mb-3'>15</h1>
+                            <h1 className='text-2xl font-bold mb-3'>{selectedCustomer?.Customer.Appointments?.length || 0}</h1>
                         </div>
                     </div>
                     <div className='md:flex h-full items-start justify-center'>
@@ -131,12 +141,17 @@ const EditClient = () => {
             )}
 
             {activeTab === 'client-detail' && (
+    
                 <>
                 <div className='md:flex justify-center items-center flex-col'>
                     <div className='flex flex-row'>
                         <div className='md:flex flex-col mr-4'>
-                            <BasicInfo />
-                            <ContactNum />
+                        {selectedCustomer && (
+                            <div className='md:flex flex-col mr-4'>
+                                <BasicInfo selectedCustomer={selectedCustomer} />
+                                <ContactNum selectedCustomer={selectedCustomer}  />
+                            </div>
+                        )}
                         </div>
                         <div className='md:flex flex-col'>
                             <Addresses />

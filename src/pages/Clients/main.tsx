@@ -9,6 +9,8 @@ import FormInput from '../../base-components/Form/FormInput';
 import Lucide from '../../base-components/Lucide';
 import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import { setSelectedCustomer } from '../../stores/customerSlide';
 
 function ClientsMainPage() {
     const [customersList, setCustomersList] = useState<any[]>([]);
@@ -16,17 +18,10 @@ function ClientsMainPage() {
     const [searchValueClient, setSearchValueClient] = useState("");
     const [selectedRows, setSelectedRows] = React.useState<GridRowSelectionModel>([]);
     const [editPanelOpen, setEditPanel] = React.useState(false);
-    
-    const theme = createTheme({
-        palette: {
-          mode: 'light', 
-          background: {
-            default: '#FFFFFF', 
-          },
-        },
-      });
-      
 
+    const dispatch = useDispatch();
+    
+      
     useEffect(() => {
         fetchCustomerData();
     }, []);
@@ -87,7 +82,7 @@ function ClientsMainPage() {
             setLoading(true)
             try {
                 const res = await getSingleCustomer(customerId);
-                console.log("Customer data:", res.data);
+                dispatch(setSelectedCustomer(res.data));
                 setEditPanel(true);
                 navigate(`/clients/${customerId}/edit`);
             } catch (error) {

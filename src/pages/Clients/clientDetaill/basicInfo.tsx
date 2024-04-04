@@ -2,8 +2,15 @@ import React from 'react'
 import FormLabel from '../../../base-components/Form/FormLabel'
 import FormInput from '../../../base-components/Form/FormInput'
 import Flatpickr from 'react-flatpickr';
+import { useSelector } from 'react-redux';
+import { selectSelectedCustomer } from '../../../stores/customerSlide';
 
-function BasicInfo() {
+
+interface BasicInfoProps {
+    selectedCustomer : any
+}
+
+function BasicInfo({selectedCustomer} : BasicInfoProps) {
   return (
     <div className='md:flex h-full items-start justify-center'>
         <div className='border-2 border-black p-5 pr-10 m-5 rounded-2xl' style={{ height: '400px', width:'450px' }}>
@@ -23,8 +30,8 @@ function BasicInfo() {
                                     name="name"
                                     placeholder="Enter First Name"
                                     className="w-full"
-                                    // value={firstName}
-                                    // onChange={(e) => setFirstName(e.target.value)}
+                                    defaultValue={selectedCustomer.Customer.FirstName}
+                                    readOnly
                                 />
                                 </div>
                                 <div className='flex flex-col w-full'>
@@ -40,8 +47,8 @@ function BasicInfo() {
                                         name="name"
                                         placeholder="Enter Last Name"
                                         className="w-full"
-                                        // value={lastName}
-                                        // onChange={(e) => setLastName(e.target.value)}
+                                        defaultValue={selectedCustomer.Customer.LastName}
+                                        readOnly
                                     />
                                 </div>
                             </div>
@@ -59,8 +66,8 @@ function BasicInfo() {
                                         name="name"
                                         placeholder="Enter Email"
                                         className="w-full"
-                                        // value={email}
-                                        // onChange={(e) => setEmail(e.target.value)}
+                                        defaultValue={selectedCustomer.Customer.Email}
+                                        readOnly
                                     />
                                 </div>
                             </div>

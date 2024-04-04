@@ -4,7 +4,12 @@ import FormInput from '../../../base-components/Form/FormInput'
 
 
 
-function ContactNum() {
+interface ContactProps {
+    selectedCustomer : any
+}
+
+
+function ContactNum({selectedCustomer}: ContactProps) {
   return (
     <div className='md:flex h-full items-start justify-center'>
         <div className='border-2 border-black p-5 pr-10 m-5 rounded-2xl' style={{ height: '400px', width:'450px' }}>
@@ -42,7 +47,7 @@ function ContactNum() {
                                         placeholder=""
                                         className="w-full"
                                         // value={lastName}
-                                        // onChange={(e) => setLastName(e.target.value)}
+                                        onChange={() =>{}}
                                     />
                                 </div>
                             </div>
@@ -61,7 +66,8 @@ function ContactNum() {
                                         placeholder=""
                                         className="w-full"
                                         // value={email}
-                                        // onChange={(e) => setEmail(e.target.value)}
+                                        onChange={() =>{}}
+                                        readOnly
                                     />
                                 </div>
                                 <div className='flex flex-col w-full'>
@@ -73,12 +79,13 @@ function ContactNum() {
                                     </FormLabel>
                                     <FormInput
                                         id="validation-form-1"
-                                        type="number"
+                                        type="text"
                                         name="name"
                                         placeholder=""
                                         className="w-full"
-                                        // value={mobileNumber}
-                                        // onChange={(e) => setMobileNumber(e.target.value)}
+                                        defaultValue={selectedCustomer.Customer.Mobile}
+                                        onChange={() =>{}}
+                                        readOnly
                                     />
                                 </div>
                             </div>
