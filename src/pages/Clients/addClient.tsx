@@ -171,7 +171,7 @@ const AddClient = () => {
                           Notes
                         </FormLabel>
                         <FormTextarea
-                         
+                          className="mb-5"
                           id="validation-form-6"
                           name="comment"
                           
