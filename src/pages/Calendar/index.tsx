@@ -64,10 +64,9 @@ function Main() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // const intervalId = setInterval(() => {
-    //   fetchAppoinmentApiData(date);
-    // }, 3000); // Poll every 3 seconds
-    console.log(date)
+    const intervalId = setInterval(() => {
+      fetchAppoinmentApiData(date);
+    }, 2000); // Poll every 3 seconds
     fetchAppoinmentApiData(date); 
     console.log(scheduleData)
     // return () => clearInterval(intervalId); 
@@ -370,10 +369,6 @@ function Main() {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
       } else {
-        const originalNotes = {
-          CustomerNote: info.event.extendedProps.customerNote,
-          CompanyNotes: info.event.extendedProps.companyNotes
-        };
         const appointmentData = {
           ID: info.event.extendedProps.ID,
           FirstName: info.event.extendedProps.firstName,
@@ -385,7 +380,8 @@ function Main() {
           ServiceID: info.event.extendedProps.serviceID,
           StaffID: info.newResource ? info.newResource._resource.id : info.event.extendedProps.resourceId,
           Islocked: false,
-          ...originalNotes
+          CustomerNote: info.event.extendedProps.customerNote,
+          CompanyNotes: info.event.extendedProps.companyNotes
         };
     
         // Make the updateAppointment API call

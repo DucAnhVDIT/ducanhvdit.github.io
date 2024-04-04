@@ -15,6 +15,7 @@ function ClientsMainPage() {
     const [loading, setLoading] = useState<boolean>(true);
     const [searchValueClient, setSearchValueClient] = useState("");
     const [selectedRows, setSelectedRows] = React.useState<GridRowSelectionModel>([]);
+    const [editPanelOpen, setEditPanel] = React.useState(false);
     
     const theme = createTheme({
         palette: {
@@ -70,6 +71,14 @@ function ClientsMainPage() {
         navigate('/clients/add')
         console.log('hello')
     }
+
+    const handleEditBtn = () => {
+        if (selectedRows.length === 1) {
+            const customerId = selectedRows[0]; // Assuming CustomerID is stored in the selectedRows array
+            setEditPanel(true);
+            navigate(`/clients/${customerId}/edit`);
+        }
+    };
 
     const columns: GridColDef[] = [
         {
@@ -157,7 +166,7 @@ function ClientsMainPage() {
                     Add
                 </Button>
                 {selectedRows.length === 1 && (
-                    <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={()=>{}}>
+                    <Button className="w-32 px-6 bg-primary text text-white mr-3 mt-2" onClick={handleEditBtn}>
                         Edit
                     </Button>
                 )}

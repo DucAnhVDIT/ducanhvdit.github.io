@@ -6,16 +6,17 @@ import SimpleMenu from "../layouts/SimpleMenu";
 import TopMenu from "../layouts/TopMenu";
 import RegularTable from "../pages/RegularTable";
 import Calendar from "../pages/Calendar";
-import AddClient from "../components/AddClient/addClient";
+import AddClient from "../pages/Clients/addClient";
 import PointOfSales from "../pages/PointOfSale";
 import Post from "../pages/Post";
 import DashboardOverview2 from "../pages/DashboardOverview2";
-import LoginPage from "../pages/Login"; // Add your login page component
+import LoginPage from "../pages/Login"; 
 import Register from "../pages/Register"
 import ForgotPass from "../pages/ForgotPassword"
 import NotFound from "../pages/404"
 import Clients from "../pages/Clients/main"
 import { useAuth } from "../services/AuthContext";
+import EditClient from "../pages/Clients/editClient";
 
 function Router() {
   const user = useAuth();
@@ -58,6 +59,10 @@ function Router() {
         {
           path: "/clients/add",
           element: <AddClient />,
+        },
+        {
+          path: "/clients/:customerId/edit",
+          element: <EditClient />,
         },
       ],
     },
