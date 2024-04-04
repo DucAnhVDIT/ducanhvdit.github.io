@@ -10,12 +10,15 @@ import FormInput from '../../base-components/Form/FormInput';
 import FormTextarea from '../../base-components/Form/FormTextarea';
 import Flatpickr from 'react-flatpickr';
 import { CheckboxToggle } from 'react-rainbow-components';
-import BasicInfo from './basicInfo';
-import Addresses from './addresses';
-import NotiConsent from './notiConsent';
-import Other from './other';
-import ContactNum from './contactNum';
+import BasicInfo from './clientDetaill/basicInfo';
+import Addresses from './clientDetaill/addresses';
+import NotiConsent from './clientDetaill/notiConsent';
+import Other from './clientDetaill/other';
+import ContactNum from './clientDetaill/contactNum';
 import Notes from './notes';
+import Timelines from './appointments/timelines';
+import TimelineMUI from './appointments/timelineMUI';
+import Forms from './forms/forms';
 
 const EditClient = () => {
 
@@ -149,6 +152,19 @@ const EditClient = () => {
                 <div className='flex justify-center'>
                     <Notes />
                 </div>
+            )}
+
+            {activeTab === 'appointments' && (
+                <div className='flex justify-center'>
+                    <TimelineMUI />
+                    {/* <Timelines /> */}
+                </div>
+            )}
+
+            {activeTab === 'forms' && (
+                <>
+                    <Forms />
+                </>
             )}
 
 

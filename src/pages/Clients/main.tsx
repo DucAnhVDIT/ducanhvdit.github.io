@@ -40,13 +40,13 @@ function ClientsMainPage() {
     const fetchCustomerData = async () => {
         setTimeout(async () => {
             try {
-                const response = await customerRepository.getCustomer();
-                console.log("API Response:", response.data);
-                if (response.data.Customers && Array.isArray(response.data.Customers)) {
+                const res = await customerRepository.getCustomer();
+                // console.log("API Response:", response.data);
+                if (res.data.Customers && Array.isArray(res.data.Customers)) {
                     // console.log("Customer data:", response.data.Customers);
-                    setCustomersList(response.data.Customers);
+                    setCustomersList(res.data.Customers);
                 } else {
-                    console.error("No customer data found in response:", response.data);
+                    console.error("No customer data found in response:", res.data);
                 }
             } catch (error) {
                 console.error('Error fetching customer data:', error);
@@ -54,6 +54,15 @@ function ClientsMainPage() {
                 setLoading(false); 
             }
         }, 1000); 
+    };
+
+    const getSingleCustomer = async (customerId: any) => {
+        try {
+            const res = await customerRepository.getSingleCustomer(customerId);
+            return res;
+        } catch (error) {
+            throw error;
+        }
     };
 
     const getInitials = (name: string | null | undefined) => {
@@ -72,11 +81,20 @@ function ClientsMainPage() {
         console.log('hello')
     }
 
-    const handleEditBtn = () => {
+    const handleEditBtn = async () => {
         if (selectedRows.length === 1) {
-            const customerId = selectedRows[0]; // Assuming CustomerID is stored in the selectedRows array
-            setEditPanel(true);
-            navigate(`/clients/${customerId}/edit`);
+            const customerId = selectedRows[0];
+            setLoading(true)
+            try {
+                const res = await getSingleCustomer(customerId);
+                console.log("Customer data:", res.data);
+                setEditPanel(true);
+                navigate(`/clients/${customerId}/edit`);
+            } catch (error) {
+                console.error('Error fetching customer data:', error);
+            } finally {
+                setLoading(false)
+            }
         }
     };
 

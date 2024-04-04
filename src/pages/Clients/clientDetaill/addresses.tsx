@@ -1,6 +1,6 @@
 import React from 'react'
-import FormLabel from '../../base-components/Form/FormLabel'
-import FormInput from '../../base-components/Form/FormInput'
+import FormLabel from '../../../base-components/Form/FormLabel'
+import FormInput from '../../../base-components/Form/FormInput'
 
 function Addresses() {
   return (
