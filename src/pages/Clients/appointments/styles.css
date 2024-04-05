@@ -1,0 +1,14 @@
+/* Hide the scrollbar */
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* Optional: define other scrollbar properties */
+::-webkit-scrollbar-track {
+    background: transparent; /* Change to desired background color */
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent; /* Change to desired thumb color */
+}

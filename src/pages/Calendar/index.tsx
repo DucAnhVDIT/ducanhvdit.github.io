@@ -64,9 +64,9 @@ function Main() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchAppoinmentApiData(date);
-    }, 2000); // Poll every 3 seconds
+    // const intervalId = setInterval(() => {
+    //   fetchAppoinmentApiData(date);
+    // }, 2000); // Poll every 3 seconds
     fetchAppoinmentApiData(date); 
     console.log(scheduleData)
     // return () => clearInterval(intervalId); 

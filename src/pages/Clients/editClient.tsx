@@ -36,6 +36,9 @@ const EditClient = () => {
         console.log(selectedCustomer)
     })
 
+    const numOfCancelled = selectedCustomer?.Customer?.Appointments?.filter((appointment: { StatusID: number; }) => appointment.StatusID === 6).length;
+    const numOfNoShow = selectedCustomer?.Customer?.Appointments?.filter((appointment: { StatusID: number; }) => appointment.StatusID === 7).length;
+
 
     return (
         <div className='mt-3 bg-white' style={{height:'1000px' }}>
@@ -123,7 +126,7 @@ const EditClient = () => {
                                 </IconButton>   
                             </Tooltip>
                         </div>
-                        <h1 className='text-2xl font-bold mb-3'>2</h1>
+                        <h1 className='text-2xl font-bold mb-3'>{numOfCancelled}</h1>
                     </div>
                     <div className="md:w-1/5 p-4 flex flex-col border-2 border-black rounded-2xl m-5">
                     <div className="flex-row flex justify-between">
@@ -134,7 +137,7 @@ const EditClient = () => {
                                 </IconButton>   
                             </Tooltip>
                         </div>
-                        <h1 className='text-2xl font-bold mb-3'>1</h1>
+                        <h1 className='text-2xl font-bold mb-3'>{numOfNoShow}</h1>
                     </div>
                 </div>
             </div>
@@ -171,7 +174,9 @@ const EditClient = () => {
 
             {activeTab === 'appointments' && (
                 <div className='flex justify-center'>
-                    <TimelineMUI />
+                    {selectedCustomer && (
+                        <TimelineMUI/>
+                    )}
                     {/* <Timelines /> */}
                 </div>
             )}
