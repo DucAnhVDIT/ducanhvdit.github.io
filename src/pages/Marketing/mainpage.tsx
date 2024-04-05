@@ -5,14 +5,24 @@ import React from 'react'
 import Button from '../../base-components/Button'
 import BirthdayReminder from './birthdayReminder'
 import ReturnCustomer from './returnCustomer'
+import ReviewSettings from './reviewSettings'
+import Voucher from './voucher'
+import Campaigns from './campaigns'
+import Templates from './templates'
 
 function MainPage() {
   return (
-    <div className='p-7'>
+    <div className='p-7 flex flex-col'>
         <div className='flex justify-between'>
             <BirthdayReminder />
+            <Voucher />
+            <ReviewSettings />
+        </div>
+        
+        <div className='flex justify-between mt-10'>
             <ReturnCustomer />
-            <BirthdayReminder />
+            <Campaigns />
+            <Templates />
         </div>
     </div>
   )

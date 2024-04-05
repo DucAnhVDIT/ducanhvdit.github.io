@@ -9,22 +9,23 @@ import { Divider, Typography } from '@mui/material';
 import { MdCake } from 'react-icons/md'; 
 import Button from '../../base-components/Button';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
+import ReviewsIcon from '@mui/icons-material/Reviews';
 
-function ReturnCustomer() {
+function ReviewSettings() {
   return (
     <Card sx={{width:'30%', boxShadow:'none', border:'solid 1px grey', display: 'flex', flexDirection: 'column'}}>
       <CardHeader
         sx={{ display: 'flex', alignItems: 'center' }}
-        title={<Typography variant="h5">Return Customer</Typography>}
+        title={<Typography variant="h5">Review Settings</Typography>}
         avatar={
           <Avatar sx={{ backgroundColor: '#1E40AF'}}>
-            <AddReactionIcon />
+            <ReviewsIcon />
           </Avatar>
         }
       />
       <CardContent sx={{ flex: '1 0 auto' }}>
         <Typography variant="body1" className=' text-gray-500'>
-          Attract inactive customers by offering them a special deal to encourage their return. This tactic targets clients who haven't visited for a while.
+            Review settings allows you to customize and adjust your preferences for managing and monitoring customer reviews.
         </Typography>
       </CardContent>
       {/* Card Actions with setup button */}
@@ -38,4 +39,4 @@ function ReturnCustomer() {
   )
 }
 
-export default ReturnCustomer;
+export default ReviewSettings
