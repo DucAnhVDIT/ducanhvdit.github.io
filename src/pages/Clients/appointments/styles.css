@@ -4,11 +4,26 @@
     height: 0;
 }
 
-/* Optional: define other scrollbar properties */
+/* Optional: define other scrollbar properties for WebKit browsers */
 ::-webkit-scrollbar-track {
     background: transparent; /* Change to desired background color */
 }
 
 ::-webkit-scrollbar-thumb {
     background: transparent; /* Change to desired thumb color */
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* For IE and Edge */
+*::-ms-scrollbar {
+    display: none;
+}
+
+/* For Opera */
+html {
+    overflow: -moz-scrollbars-none;
 }
