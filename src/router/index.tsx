@@ -17,6 +17,7 @@ import NotFound from "../pages/404"
 import Clients from "../pages/Clients/main"
 import { useAuth } from "../services/AuthContext";
 import EditClient from "../pages/Clients/editClient";
+import MainPage from "../pages/Marketing/mainpage";
 
 function Router() {
   const user = useAuth();
@@ -46,7 +47,7 @@ function Router() {
         },
         {
           path: "/marketing",
-          element: <Post />,
+          element: <MainPage />,
         },
         {
           path: "/purchase",

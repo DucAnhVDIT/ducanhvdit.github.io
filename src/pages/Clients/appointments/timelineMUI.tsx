@@ -25,6 +25,15 @@ export default function TimelineMUI() {
     const selectedCustomer = useSelector(selectSelectedCustomer);
     const [loading, setLoading] = useState(true);
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    };
+
+    let statusColor;
+
+
     useEffect(() => {
         // Simulate data loading
         setTimeout(() => {
@@ -51,23 +60,37 @@ export default function TimelineMUI() {
                                     <Card sx={{ minWidth: '800px' }}>
                                         <CardContent>
                                             <div className='flex justify-between'>
-                                                <h5 className="vertical-timeline-element-subtitle">{appointment.BookDate}</h5>
-                                                <h5 className="status text-[#1E40AF] font-semibold text-lg">{appointment.StatusName}</h5>
+                                                <h5 className="vertical-timeline-element-subtitle">{formatDate(appointment.CreateBookingOn)}</h5>
+                                                <h5 className={`status font-semibold text-lg ${
+                                                    appointment.StatusName === 'Canceled' || appointment.StatusName === 'No Show' ? 'text-red-500' : 'text-[#1E40AF]'
+                                                    }`}>
+                                                    {appointment.StatusName}
+                                                </h5>
                                             </div>
                                             <p className='mt-4 font-semibold text-lg'>
-                                                {/* {appointment.service} - {appointment.customer} */}
+                                                {appointment.ServiceName} - {appointment.StaffName}
                                             </p>
                                         </CardContent>
                                         <CardActions>
                                             <div className='flex justify-between items-center'>
-                                                <Button
-                                                    variant="primary"
-                                                    type="button"
-                                                    className="w-32 mr-72"
-                                                >
-                                                    Pay
-                                                </Button>
-                                                {/* <h1 className='font-bold text-2xl'>{appointment.price}</h1> */}
+                                            {appointment.StatusName === 'Confirmed' ? (
+                                                    <Button
+                                                        variant="primary"
+                                                        type="button"
+                                                        className="w-32 mr-96"
+                                                    >
+                                                        Pay
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        variant="primary"
+                                                        type="button"
+                                                        className="w-32 mr-96"
+                                                    >
+                                                        Rebook
+                                                    </Button>
+                                                )}
+                                                <h1 className='font-bold text-2xl ml-48'>£{appointment.Price}</h1>
                                             </div>
                                         </CardActions>
                                     </Card>
