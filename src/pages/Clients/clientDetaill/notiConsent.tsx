@@ -3,8 +3,12 @@ import { CheckboxToggle } from 'react-rainbow-components'
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 
+interface NotiConsentProps {
+    selectedCustomer: any
+}
 
-function NotiConsent() {
+function NotiConsent({selectedCustomer}:NotiConsentProps) {
+    console.log("hahahaha", selectedCustomer?.Customer.SMSConsent)
   return (
     <div>
         <div className="p-4 flex flex-col border-2 border-black rounded-2xl mt-5 ml-5"style={{width:'450px' }} >
@@ -16,13 +20,13 @@ function NotiConsent() {
                                 </div>
                                 <CheckboxToggle
                                     label="Allow SMS"
-                                    // value={allowSMS}
+                                    value={selectedCustomer?.Customer.SMSConsent}
                                     className='mb-2'
                                     // onChange={(event) => setAllowSMS(event.target.checked)}
                                 />
                                 <CheckboxToggle
                                     label="Allow Email"
-                                    // value={allowEmail}
+                                    value={selectedCustomer?.Customer.EmailConsent}
                                     className='mb-2'
                                     // onChange={(event) => setAllowEmail(event.target.checked)}
                                 />

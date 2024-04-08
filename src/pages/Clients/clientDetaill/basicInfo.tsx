@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormLabel from '../../../base-components/Form/FormLabel';
 import FormInput from '../../../base-components/Form/FormInput';
 import Flatpickr from 'react-flatpickr';
@@ -22,6 +22,11 @@ interface BasicInfoProps {
 function BasicInfo({ selectedCustomer }: BasicInfoProps) {
     const [editInfoSlide, setEditInfoSlide] = useState(false);
     const [gender, setGender] = useState('');
+    const [isDirty, setIsDirty] = useState(false);
+
+    useEffect(() => {
+        setIsDirty(false);
+    }, [editInfoSlide]);
 
     const handleGenderChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setGender(event.target.value as string);
@@ -80,7 +85,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                         </div>
                     </div>
                     <div className="input-form flex flex-row w-full mt-3">
-                        <div className='flex flex-col justify-between w-full mr-4'>
+                        <div className='flex flex-col justify-between w-full'>
                             <FormLabel
                                 htmlFor="validation-form-1"
                                 className="flex flex-col w-full sm:flex-row"
@@ -98,6 +103,24 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                             />
                         </div>
                     </div>
+                    <div className="input-form flex flex-row w-full mt-3">
+                        <div className='flex flex-col justify-between w-full'>
+                            <FormLabel
+                                htmlFor="validation-form-1"
+                                className="flex flex-col w-full sm:flex-row"
+                            >
+                                Gender
+                            </FormLabel>
+                            <FormSelect
+                                disabled
+                            >
+                                <option value="">None</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </FormSelect>
+                        </div>
+                    </div>
                     <div className="mt-3 input-form w-full">
                         <FormLabel
                             htmlFor="validation-form-4"
@@ -113,7 +136,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                                 dateFormat: "Y-m-d",
                             }}
                             placeholder="Choose Birth Date"
-
+                            disabled
                         />
                     </div>
                 </form>
@@ -149,7 +172,9 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                                             placeholder="Enter First Name"
                                             className="w-full"
                                             defaultValue={selectedCustomer.Customer.FirstName}
-                                            
+                                            onChange={() => {
+                                                setIsDirty(true)
+                                            }}
                                         />
                                     </div>
                                     <div className='flex flex-col w-full mt-1'>
@@ -166,7 +191,9 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                                             placeholder="Enter Last Name"
                                             className="w-full"
                                             defaultValue={selectedCustomer.Customer.LastName}
-                                            
+                                            onChange={() => {
+                                                setIsDirty(true)
+                                            }}
                                         />
                                     </div>
                                     <div className='flex flex-col w-full mt-1'>
@@ -185,7 +212,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                                         </FormSelect> */}
                                     </div>
                                 </div>
-                                <div className="input-form flex flex-row w-full mt-3">
+                                <div className="input-form flex flex-row w-full">
                                     <div className='flex flex-col justify-between w-full mr-4'>
                                         <FormLabel
                                             htmlFor="validation-form-1"
@@ -200,8 +227,30 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                                             placeholder="Enter Email"
                                             className="w-full"
                                             defaultValue={selectedCustomer.Customer.Email}
-                                            
+                                            onChange={() => {
+                                                setIsDirty(true)
+                                            }}
                                         />
+                                    </div>
+                                </div>
+                                <div className="input-form flex flex-row w-full mt-3">
+                                    <div className='flex flex-col justify-between w-full'>
+                                        <FormLabel
+                                            htmlFor="validation-form-1"
+                                            className="flex flex-col w-full sm:flex-row"
+                                        >
+                                            Gender
+                                        </FormLabel>
+                                        <FormSelect
+                                            onChange={() => {
+                                                setIsDirty(true)
+                                            }}
+                                        >
+                                            <option value="">None</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </FormSelect>
                                     </div>
                                 </div>
                                 <div className="mt-3 input-form w-full">
@@ -219,11 +268,37 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                                             dateFormat: "Y-m-d",
                                         }}
                                         placeholder="Choose Birth Date"
-
+                                        onChange={() => {
+                                            setIsDirty(true)
+                                        }}
                                     />
                                 </div>
                             </form>
                         </Slideover.Description>
+                        <Slideover.Footer>
+                            <Button
+                                variant="outline-secondary"
+                                type="button"
+                                onClick={() => {
+                                    setEditInfoSlide(false)
+                                }}
+                                className="w-32 mr-3"
+                            >
+                                Cancel
+                            </Button>
+                            {isDirty && (
+                                    <Button
+                                        variant="primary"
+                                        type="button"
+                                        className="w-32"
+                                        onClick={() => {
+                                            
+                                        }}
+                                    >
+                                        Save
+                                    </Button>
+                            )}
+                        </Slideover.Footer>
                     </Slideover.Panel>
                 </Slideover>
             )}

@@ -158,7 +158,7 @@ const EditClient = () => {
                         </div>
                         <div className='md:flex flex-col'>
                             <Addresses />
-                            <NotiConsent />
+                            <NotiConsent selectedCustomer={selectedCustomer} />
                             <Other />
                         </div>
                     </div>
