@@ -1,11 +1,19 @@
 import React from 'react'
 import { CheckboxToggle } from 'react-rainbow-components'
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+
 
 function NotiConsent() {
   return (
     <div>
         <div className="p-4 flex flex-col border-2 border-black rounded-2xl mt-5 ml-5"style={{width:'450px' }} >
-                                <h2 className="text-2xl font-bold mb-3">Consent Info</h2>
+                                <div className='flex justify-between'>
+                                    <h1 className='text-2xl mb-2 font-bold'>Consent Info</h1>
+                                    <IconButton size="small" >
+                                        <EditIcon className='text-black' />
+                                    </IconButton>
+                                </div>
                                 <CheckboxToggle
                                     label="Allow SMS"
                                     // value={allowSMS}

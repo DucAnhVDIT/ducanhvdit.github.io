@@ -1,11 +1,18 @@
 import React from 'react'
 import { CheckboxToggle } from 'react-rainbow-components'
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 
 function Other() {
   return (
     <div>
         <div className="p-4 flex flex-col border-2 border-black rounded-2xl mt-12 ml-5 " style={{width:'450px' }}>
-                                <h2 className="text-2xl font-bold mb-3">Other</h2>
+                                <div className='flex justify-between'>
+                                    <h1 className='text-2xl mb-2 font-bold'>Other</h1>
+                                    <IconButton size="small" >
+                                        <EditIcon className='text-black' />
+                                    </IconButton>
+                                </div>
                                 <CheckboxToggle
                                     label="VIP"
                                     // value={allowSMS}

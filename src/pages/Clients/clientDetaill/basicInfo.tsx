@@ -4,6 +4,9 @@ import FormInput from '../../../base-components/Form/FormInput'
 import Flatpickr from 'react-flatpickr';
 import { useSelector } from 'react-redux';
 import { selectSelectedCustomer } from '../../../stores/customerSlide';
+import Button from '../../../base-components/Button';
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 
 
 interface BasicInfoProps {
@@ -14,7 +17,12 @@ function BasicInfo({selectedCustomer} : BasicInfoProps) {
   return (
     <div className='md:flex h-full items-start justify-center'>
         <div className='border-2 border-black p-5 pr-10 m-5 rounded-2xl' style={{ height: '400px', width:'450px' }}>
-                    <h1 className='text-2xl mb-2 font-bold'>Basic Information</h1>
+                    <div className='flex justify-between'>
+                        <h1 className='text-2xl mb-2 font-bold'>Basic Information</h1>
+                        <IconButton size="small" >
+                            <EditIcon className='text-black' />
+                        </IconButton>
+                    </div>
                     <form className="validate-form" >
                         <div className="input-form flex flex-row w-full">
                             <div className='flex flex-col justify-between w-full mr-4'>
