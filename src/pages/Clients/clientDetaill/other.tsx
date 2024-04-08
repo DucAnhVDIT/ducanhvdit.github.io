@@ -9,7 +9,7 @@ function Other() {
         <div className="p-4 flex flex-col border-2 border-black rounded-2xl mt-12 ml-5 " style={{width:'450px' }}>
                                 <div className='flex justify-between'>
                                     <h1 className='text-2xl mb-2 font-bold'>Other</h1>
-                                    <IconButton size="small" >
+                                    <IconButton size="large" >
                                         <EditIcon className='text-black' />
                                     </IconButton>
                                 </div>

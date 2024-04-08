@@ -17,7 +17,7 @@ function ContactNum({selectedCustomer}: ContactProps) {
         <div className='border-2 border-black p-5 pr-10 m-5 rounded-2xl' style={{ height: '400px', width:'450px' }}>
                     <div className='flex justify-between'>
                         <h1 className='text-2xl mb-2 font-bold'>Contact</h1>
-                        <IconButton size="small" >
+                        <IconButton size="large" >
                                 <EditIcon className='text-black' />
                         </IconButton>
                     </div>
@@ -36,6 +36,7 @@ function ContactNum({selectedCustomer}: ContactProps) {
                                     name="name"
                                     placeholder=""
                                     className="w-full"
+                                    readOnly
                                     // value={firstName}
                                     // onChange={(e) => setFirstName(e.target.value)}
                                 />
@@ -53,6 +54,7 @@ function ContactNum({selectedCustomer}: ContactProps) {
                                         name="name"
                                         placeholder=""
                                         className="w-full"
+                                        readOnly
                                         // value={lastName}
                                         onChange={() =>{}}
                                     />

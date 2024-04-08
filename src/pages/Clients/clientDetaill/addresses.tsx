@@ -11,7 +11,7 @@ function Addresses() {
          <div className='border-2 border-black  p-5 pr-10 m-5 rounded-2xl' style={{ height: '400px', width:'450px' }}>
                     <div className='flex justify-between'>
                         <h1 className='text-2xl mb-2 font-bold'>Addresses</h1>
-                        <IconButton size="small" >
+                        <IconButton size="large" >
                                 <EditIcon className='text-black' />
                         </IconButton>
                     </div>
@@ -30,6 +30,7 @@ function Addresses() {
                                     name="name"
                                     placeholder=""
                                     className="w-full"
+                                    readOnly
                                     // value={firstName}
                                     // onChange={(e) => setFirstName(e.target.value)}
                                 />
@@ -47,6 +48,7 @@ function Addresses() {
                                         name="name"
                                         placeholder=""
                                         className="w-full"
+                                        readOnly
                                         // value={lastName}
                                         // onChange={(e) => setLastName(e.target.value)}
                                     />
@@ -67,6 +69,7 @@ function Addresses() {
                                             name="name"
                                             placeholder=""
                                             className="w-full"
+                                            readOnly
                                             // value={email}
                                             // onChange={(e) => setEmail(e.target.value)}
                                         />
@@ -84,6 +87,7 @@ function Addresses() {
                                             name="name"
                                             placeholder=""
                                             className="w-full"
+                                            readOnly
                                             // value={mobileNumber}
                                             // onChange={(e) => setMobileNumber(e.target.value)}
                                         />
@@ -104,6 +108,7 @@ function Addresses() {
                                             name="name"
                                             placeholder=""
                                             className="w-full"
+                                            readOnly
                                             // value={mobileNumber}
                                             // onChange={(e) => setMobileNumber(e.target.value)}
                                         />
@@ -121,6 +126,7 @@ function Addresses() {
                                             name="name"
                                             placeholder=""
                                             className="w-full"
+                                            readOnly
                                             // value={mobileNumber}
                                             // onChange={(e) => setMobileNumber(e.target.value)}
                                         />
@@ -140,6 +146,7 @@ function Addresses() {
                                             name="name"
                                             placeholder=""
                                             className="w-full"
+                                            readOnly
                                             // value={mobileNumber}
                                             // onChange={(e) => setMobileNumber(e.target.value)}
                                         />
@@ -157,6 +164,7 @@ function Addresses() {
                                             name="name"
                                             placeholder=""
                                             className="w-full"
+                                            readOnly
                                             // value={mobileNumber}
                                             // onChange={(e) => setMobileNumber(e.target.value)}
                                         />
