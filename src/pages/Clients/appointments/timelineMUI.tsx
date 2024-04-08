@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectSelectedCustomer } from '../../../stores/customerSlide';
 import './styles.css'
+import { Box } from '@mui/material';
+import EventBusyIcon from '@mui/icons-material/EventBusy';
 
 interface TimelineMUIProps {
     
@@ -48,7 +50,8 @@ export default function TimelineMUI() {
             ) : (
                 <div style={{ maxHeight: '800px', overflowY: 'auto' }}>
                     <Timeline>
-                        {selectedCustomer?.Customer?.Appointments?.map((appointment: any, id: any) => (
+                    {selectedCustomer?.Customer?.Appointments?.length > 0 ? (
+                        selectedCustomer.Customer.Appointments.map((appointment: any, id: any) => (
                             <TimelineItem key={id}>
                                 <TimelineSeparator>
                                     <TimelineDot style={{ backgroundColor: '#1E40AF' }}>
@@ -73,7 +76,7 @@ export default function TimelineMUI() {
                                         </CardContent>
                                         <CardActions>
                                             <div className='flex justify-between items-center'>
-                                            {appointment.StatusName === 'Confirmed' ? (
+                                                {appointment.StatusName === 'Confirmed' ? (
                                                     <Button
                                                         variant="primary"
                                                         type="button"
@@ -96,8 +99,26 @@ export default function TimelineMUI() {
                                     </Card>
                                 </TimelineContent>
                             </TimelineItem>
-                        ))}
-                    </Timeline>
+                        ))
+                    ) : (
+                        <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: '1px solid #ccc',
+                            borderRadius: '8px',
+                            padding: '16px',
+                            marginBottom: '16px',
+                            width:'800px',
+                            height:'200px'
+                        }}
+                        >
+                            <EventBusyIcon style={{ marginRight: '8px' }} />
+                            <div>No appointments</div>
+                        </Box>
+                        )}
+                </Timeline>
                 </div>
             )}
         </div>
