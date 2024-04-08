@@ -113,11 +113,12 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                             </FormLabel>
                             <FormSelect
                                 disabled
+                                defaultValue={selectedCustomer?.Customer.Gender}
                             >
-                                <option value="">None</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="0">None</option>
+                                <option value="1">Male</option>
+                                <option value="2">Female</option>
+                                <option value="3">Other</option>
                             </FormSelect>
                         </div>
                     </div>

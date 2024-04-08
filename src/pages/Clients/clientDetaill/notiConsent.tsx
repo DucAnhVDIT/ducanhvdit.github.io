@@ -8,7 +8,6 @@ interface NotiConsentProps {
 }
 
 function NotiConsent({selectedCustomer}:NotiConsentProps) {
-    console.log("hahahaha", selectedCustomer?.Customer.SMSConsent)
   return (
     <div>
         <div className="p-4 flex flex-col border-2 border-black rounded-2xl mt-5 ml-5"style={{width:'450px' }} >

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Lucide from '../../base-components/Lucide';
 import Button from '../../base-components/Button';
-import { FormInput, FormLabel, FormTextarea } from '../../base-components/Form';
+import { FormInput, FormLabel, FormSelect, FormTextarea } from '../../base-components/Form';
 import Toastify from 'toastify-js';
 import { CheckboxToggle } from 'react-rainbow-components';
 import Flatpickr from 'react-flatpickr';
@@ -17,13 +17,24 @@ const AddClient = () => {
     const [lastName, setLastName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
     const [email, setEmail] = useState('');
-    const [gender, setGender] = useState('');
-    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [gender, setGender] = useState(''); 
+    const [dateOfBirth, setDateOfBirth] = useState(null);
     const [yearOfBirth, setYearOfBirth] = useState('');
     const [note, setNote] = useState('');
     const [allowSMS, setAllowSMS] = useState(false);
     const [allowEmail, setAllowEmail] = useState(false);
     const [allowMarketingNotification, setAllowMarketingNotification] = useState(false);
+
+    const handleDOBChange = (selectedDates: any[]) => {
+        const selectedDate = selectedDates[0]; 
+        setDateOfBirth(selectedDate); 
+    };
+
+    useEffect(() => {
+        console.log(gender)
+    },[gender])
+
+
 
     const navigate = useNavigate()
     
@@ -39,9 +50,10 @@ const AddClient = () => {
               LastName: lastName,
               Mobile: mobileNumber,
               Email: email,
-              DateOfBirth: dateOfBirth || null,
-              EmailConsent: true,
-              SMSConsent: true,
+              DateOfBirth: dateOfBirth,
+              EmailConsent: allowEmail,
+              SMSConsent: allowSMS,
+              Gender: gender === 'male' ? 1 : gender === 'female' ? 2 : gender === 'other' ? 3 : gender === 'none' ? 0 : ''
             };
           
             customerRepository.addCustomer(requestBody).then(response => {
@@ -146,6 +158,18 @@ const AddClient = () => {
                                 />
                             </div>
                         </div>
+                        <FormLabel
+                            htmlFor="validation-form-1"
+                            className="flex flex-col w-full sm:flex-row"
+                        >
+                            Gender
+                        </FormLabel>
+                        <FormSelect value={gender} onChange={(e) => {setGender(e.target.value)}}>
+                            <option value='none'>None</option>
+                            <option value='male'>Male</option>
+                            <option value='female'>Female</option>
+                            <option value='other'>Other</option>
+                        </FormSelect>
                       <div className="mt-3 input-form w-full">
                         <FormLabel
                           htmlFor="validation-form-4"
@@ -161,6 +185,7 @@ const AddClient = () => {
                                 dateFormat: "Y-m-d",
                             }}
                             placeholder="Choose Birth Date"
+                            onChange={handleDOBChange}
                         />
                       </div>
                       <div className="mt-3 input-form">
@@ -208,7 +233,7 @@ const AddClient = () => {
                      {/* End Consent Info */}
 
                       {/* Begin Consent Form */}
-                      <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 ">
+                      <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 mt-20">
                       <h2 className="text-2xl font-bold mb-3">Consent Form</h2>
                       <Dropzone
                         // getRef={(el) => {
