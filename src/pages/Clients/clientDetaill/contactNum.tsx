@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormLabel from "../../../base-components/Form/FormLabel";
 import FormInput from "../../../base-components/Form/FormInput";
 import EditIcon from "@mui/icons-material/Edit";
@@ -14,6 +14,12 @@ interface ContactProps {
 function ContactNum({ selectedCustomer }: ContactProps) {
   const [editContactSlide, setEditContactSlide] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+
+  
+  useEffect(() => {
+    setIsDirty(false);
+  }, [editContactSlide]);
+
 
   return (
     <div className="md:flex h-full items-start justify-center">
@@ -147,9 +153,9 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                       name="name"
                       placeholder=""
                       className="w-full"
-                      
-                      // value={firstName}
-                      // onChange={(e) => setFirstName(e.target.value)}
+                      onChange={(e) => {
+                        setIsDirty(true);
+                      }}
                     />
                   </div>
                   <div className="flex flex-col w-full mt-2">
@@ -165,9 +171,9 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                       name="name"
                       placeholder=""
                       className="w-full"
-                      
-                      // value={lastName}
-                      onChange={() => {}}
+                      onChange={(e) => {
+                        setIsDirty(true);
+                      }}
                     />
                   </div>
                 </div>
@@ -185,9 +191,9 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                       name="name"
                       placeholder=""
                       className="w-full"
-                      // value={email}
-                      onChange={() => {}}
-                      
+                      onChange={(e) => {
+                        setIsDirty(true);
+                      }}
                     />
                   </div>
                   <div className="flex flex-col w-ful mt-2">
@@ -204,8 +210,9 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                       placeholder=""
                       className="w-full"
                       defaultValue={selectedCustomer.Customer.Mobile}
-                      onChange={() => {}}
-                      
+                      onChange={(e) => {
+                        setIsDirty(true);
+                      }}
                     />
                   </div>
                 </div>
