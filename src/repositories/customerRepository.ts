@@ -12,6 +12,10 @@ export default {
   getCustomer() {
     return Repository.post(`${getCustomer}`, { business_id: businessID })
   },
+  
+  updateCustomer(CustomerID: any) {
+    return Repository.post(`${updateCustomer}`, { business_id: businessID, CustomerID: CustomerID, })
+  },
 
   getSingleCustomer(CustomerID: any) {
     return Repository.post(`${getSingleCustomer}`, {
@@ -19,6 +23,7 @@ export default {
       CustomerID: CustomerID,
     })
   },
+  
 
   addCustomer(payload: any) {
     return Repository.post(`${addCustomer}`, { ...payload, business_id: businessID })

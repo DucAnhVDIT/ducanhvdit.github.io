@@ -43,7 +43,7 @@ const EditClient = () => {
   ).length;
 
   return (
-    <div className="mt-3 bg-white" style={{ height: "1000px" }}>
+    <div className="mt-3 bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay" style={{ height: "1000px" }} >
       <div className="flex justify-center mb-5">
         <div className="mt-4">
           <Button
