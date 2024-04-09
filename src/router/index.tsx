@@ -44,6 +44,12 @@ function Router() {
         {
           path: "/clients",
           element: <Clients />,
+          children: [
+            {
+              path: "/clients/:customerId/edit",
+              element: <EditClient />,
+            }
+          ]
         },
         {
           path: "/marketing",
@@ -61,10 +67,10 @@ function Router() {
           path: "/clients/add",
           element: <AddClient />,
         },
-        {
-          path: "/clients/:customerId/edit",
-          element: <EditClient />,
-        },
+        // {
+        //   path: "/clients/:customerId/edit",
+        //   element: <EditClient />,
+        // },
       ],
     },
     {

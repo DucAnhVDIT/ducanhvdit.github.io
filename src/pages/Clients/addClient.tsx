@@ -53,7 +53,7 @@ const AddClient = () => {
               DateOfBirth: dateOfBirth,
               EmailConsent: allowEmail,
               SMSConsent: allowSMS,
-              Gender: gender === 'male' ? 1 : gender === 'female' ? 2 : gender === 'other' ? 3 : gender === 'none' ? 0 : ''
+              Gender: gender === 'male' ? 1 : gender === 'female' ? 2 : gender === 'other' ? 3 : gender === 'none' ? 0 : '',
             };
           
             customerRepository.addCustomer(requestBody).then(response => {
