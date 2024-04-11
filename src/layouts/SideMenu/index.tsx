@@ -14,7 +14,7 @@ import SideMenuTooltip from "../../components/SideMenuTooltip";
 import Button from "../../base-components/Button";
 
 function Main() {
-  const location = useLocation();
+  // const location = useLocation();
   const [formattedMenu, setFormattedMenu] = useState<
     Array<FormattedMenu | "divider">
   >([]);
@@ -162,7 +162,7 @@ function Main() {
         {/* END: Side Menu */}
         {/* BEGIN: Content */}
         <div className="rounded-[30px] min-w-0 min-h-screen flex-1 pb-10 bg-slate-100 dark:bg-darkmode-700 px-4 md:px-[22px] max-w-full md:max-w-auto before:content-[''] before:w-full before:h-px before:block">
-          <TopBar location={location} />
+          {/* <TopBar location={undefined} /> */}
           {/* <TopBar /> */}
           <Outlet />
         </div>
