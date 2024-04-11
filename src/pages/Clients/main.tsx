@@ -136,6 +136,7 @@ function ClientsMainPage() {
     { field: "LastName", headerName: "Last Name", width: 150 },
     { field: "Phone", headerName: "Phone", width: 150 },
     { field: "Email", headerName: "Email", width: 150 },
+    { field: "PointAward", headerName: "Point Award", width: 150 },
   ];
 
   const filteredRows = customersList
@@ -165,6 +166,7 @@ function ClientsMainPage() {
           LastName: customer.LastName || "-",
           Phone: customer.Mobile || "-",
           Email: customer.Email || "-",
+          PointAward: customer.PointAward || "-"
         }))
     : [];
 
