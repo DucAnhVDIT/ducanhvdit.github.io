@@ -57,15 +57,23 @@ function Router() {
           path: "/manager",
           element: <DashboardOverview2 />,
         },
-        {
-          path: "/clients/add",
-          element: <AddClient />,
-        },
-        {
-          path: "/clients/:customerId/edit",
-          element: <EditClient />,
-        },
+        // {
+        //   path: "/clients/add",
+        //   element: <AddClient />,
+        // },
+        // {
+        //   path: "/clients/:customerId/edit",
+        //   element: <EditClient />,
+        // },
       ],
+    },
+    {
+      path: "/clients/add",
+      element: <AddClient />,
+    },
+    {
+      path: "/clients/:customerId/edit",
+      element: <EditClient />,
     },
     {
       path: "/register",

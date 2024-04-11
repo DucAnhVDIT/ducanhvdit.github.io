@@ -22,6 +22,8 @@ import Forms from "./forms/forms";
 import customerRepository from "../../repositories/customerRepository";
 import { useSelector } from "react-redux";
 import { selectSelectedCustomer } from "../../stores/customerSlide";
+import Lucide from "../../base-components/Lucide";
+import { Link } from "react-router-dom";
 
 const EditClient = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -43,7 +45,22 @@ const EditClient = () => {
   ).length;
 
   return (
-    <div className="mt-3 bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay" style={{ height: "1000px" }} >
+    <div
+      className="mt-3 bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay"
+      style={{ height: "1000px" }}
+    >
+      <div className="flex items-center justify-between top-0 w-full p-4">
+        <Link to="/clients" className="text-lg font-bold">
+          <Lucide icon={"X"}></Lucide>
+        </Link>
+        <h1 className="text-xl font-bold">Edit client</h1>
+        <div
+          onClick={() => {}}
+          className="text-lg font-bold text-white bg-primary"
+        >
+          
+        </div>
+      </div>
       <div className="flex justify-center mb-5">
         <div className="mt-4">
           <Button
@@ -107,8 +124,8 @@ const EditClient = () => {
             Forms
           </Button>
           {/* <IconButton>
-                        <ArrowBackIcon/>
-                    </IconButton> */}
+                          <ArrowBackIcon/>
+                      </IconButton> */}
         </div>
       </div>
 
