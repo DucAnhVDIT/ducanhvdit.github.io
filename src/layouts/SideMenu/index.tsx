@@ -11,6 +11,7 @@ import TopBar from "../../components/TopBar";
 import MobileMenu from "../../components/MobileMenu";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import SideMenuTooltip from "../../components/SideMenuTooltip";
+import Button from "../../base-components/Button";
 
 function Main() {
   const location = useLocation();
@@ -43,7 +44,6 @@ function Main() {
                 src={logoUrl}
               />
             </div>
-
           </Link>
           <Divider type="div" className="my-6"></Divider>
           <ul>
@@ -214,46 +214,54 @@ function Menu(props: {
         setFormattedMenu([...formattedMenu]);
       }}
     >
-      <div
-        className={clsx({
-          "text-primary dark:text-slate-300":
-            props.menu.active && props.level == "first",
-          "dark:text-slate-400": !props.menu.active && props.level == "first",
-          "before:content-[''] before:z-[-1] before:absolute before:top-0 before:right-0 before:-mr-5 before:w-12 before:h-full before:bg-slate-100 before:dark:bg-darkmode-700":
-            props.menu.active && props.level == "first",
-          "before:content-[''] before:z-[-1] before:w-[230px] before:absolute before:top-0 before:left-0 before:h-full before:rounded-l-full before:transition before:ease-in before:duration-100":
-            !props.menu.activeDropdown &&
-            !props.menu.active &&
-            props.level == "first",
-        })}
+      <Button
+        className="border-none shadow-none"
+        // onClick={() => {
+        //   window.location.reload();
+        // }}
       >
-        <Lucide icon={props.menu.icon} />
-      </div>
-      <div
-        className={clsx([
-          "hidden xl:flex items-center w-full ml-3",
-          { "font-medium": props.menu.active && props.level != "first" },
-          {
-            "text-slate-800 font-medium dark:text-slate-300":
+        <div
+          className={clsx({
+            "text-primary dark:text-slate-300":
               props.menu.active && props.level == "first",
-          },
-          {
             "dark:text-slate-400": !props.menu.active && props.level == "first",
-          },
-        ])}
-      >
-        {props.menu.title}
-        {props.menu.subMenu && (
-          <div
-            className={clsx([
-              "transition ease-in duration-100 ml-auto mr-5 hidden xl:block",
-              { "transform rotate-180": props.menu.activeDropdown },
-            ])}
-          >
-            <Lucide className="w-4 h-4" icon="ChevronDown" />
-          </div>
-        )}
-      </div>
+            "before:content-[''] before:z-[-1] before:absolute before:top-0 before:right-0 before:-mr-5 before:w-12 before:h-full before:bg-slate-100 before:dark:bg-darkmode-700":
+              props.menu.active && props.level == "first",
+            "before:content-[''] before:z-[-1] before:w-[230px] before:absolute before:top-0 before:left-0 before:h-full before:rounded-l-full before:transition before:ease-in before:duration-100":
+              !props.menu.activeDropdown &&
+              !props.menu.active &&
+              props.level == "first",
+          })}
+        >
+          <Lucide icon={props.menu.icon} />
+        </div>
+        <div
+          className={clsx([
+            "hidden xl:flex items-center w-full ml-3",
+            { "font-medium": props.menu.active && props.level != "first" },
+            {
+              "text-slate-800 font-medium dark:text-slate-300":
+                props.menu.active && props.level == "first",
+            },
+            {
+              "dark:text-slate-400":
+                !props.menu.active && props.level == "first",
+            },
+          ])}
+        >
+          {props.menu.title}
+          {props.menu.subMenu && (
+            <div
+              className={clsx([
+                "transition ease-in duration-100 ml-auto mr-5 hidden xl:block",
+                { "transform rotate-180": props.menu.activeDropdown },
+              ])}
+            >
+              <Lucide className="w-4 h-4" icon="ChevronDown" />
+            </div>
+          )}
+        </div>
+      </Button>
     </SideMenuTooltip>
   );
 }

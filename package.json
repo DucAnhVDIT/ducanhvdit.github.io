@@ -52,6 +52,7 @@
     "moment": "^2.29.4",
     "pusher-js": "^8.4.0-rc2",
     "react": "^18.2.0",
+    "react-currency-input-field": "^3.8.0",
     "react-datepicker": "^4.24.0",
     "react-dom": "^18.2.0",
     "react-flatpickr": "^3.10.13",

@@ -73,8 +73,8 @@ const AddClient = () => {
 
 
     return (
-        <div className='opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay'>
-            <div className="flex items-center justify-between top-0 w-full p-4 bg-white shadow">
+        <div className='mt-3 bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay rounded-lg !important' style={{borderRadius:'0.5rem'}}>
+            <div className="flex items-center justify-between top-0 w-full p-4 bg-white shadow ">
                     <Link to="/clients" className="text-lg font-bold">
                         <Lucide icon={'X'}></Lucide>
                     </Link>

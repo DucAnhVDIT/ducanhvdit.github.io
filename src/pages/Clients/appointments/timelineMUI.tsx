@@ -18,6 +18,7 @@ import { selectSelectedCustomer } from "../../../stores/customerSlide";
 import "./styles.css";
 import { Box } from "@mui/material";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import { useNavigate } from "react-router-dom";
 
 interface TimelineMUIProps {}
 
@@ -45,6 +46,16 @@ export default function TimelineMUI() {
       setLoading(false);
     }, 1000);
   }, []);
+
+  const navigate = useNavigate()
+
+  const handlePayBtn = () => {
+    navigate('/purchase')
+  }
+
+  const handleRebookBtn = () => {
+    navigate('/')
+  }
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -92,6 +103,7 @@ export default function TimelineMUI() {
                                 variant="primary"
                                 type="button"
                                 className="w-32 mr-96"
+                                onClick={handlePayBtn}
                               >
                                 Pay
                               </Button>
@@ -100,6 +112,7 @@ export default function TimelineMUI() {
                                 variant="primary"
                                 type="button"
                                 className="w-32 mr-96"
+                                onClick={handleRebookBtn}
                               >
                                 Rebook
                               </Button>
