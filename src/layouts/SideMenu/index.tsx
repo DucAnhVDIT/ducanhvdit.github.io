@@ -14,7 +14,7 @@ import SideMenuTooltip from "../../components/SideMenuTooltip";
 import Button from "../../base-components/Button";
 
 function Main() {
-  // const location = useLocation();
+  const location = useLocation() as unknown as Location;
   const [formattedMenu, setFormattedMenu] = useState<
     Array<FormattedMenu | "divider">
   >([]);
