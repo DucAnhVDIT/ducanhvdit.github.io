@@ -26,9 +26,12 @@ import Cash from '../../assets/images/cash.png'
 import Card from '../../assets/images/payment.png'
 import GiftCard from '../../assets/images/gift-card.png'
 import "./pos.css"
+import { useLocation } from "react-router-dom";
 
 function Main() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const { appointment } = location.state || {};
 
   const [newOrderModal, setNewOrderModal] = useState(false);
   const [priceModal, setPriceModal] = useState(false)
@@ -54,11 +57,17 @@ function Main() {
   const [customerData, setCustomerData] = useState(ICustomerData)
   const [modalPriceData, setModalPrice] = useState<any>([])
   
+  
   // open page, show list of Staffs
   useEffect(() => {
-    dispatch(clearBill())
+    if (!appointment) {
+      // If appointment data does not exist, clear the bill
+      dispatch(clearBill());
+    }
     getFullServices(0,0)
   }, [])
+
+
 
   const getStaff = () => {
     eposRepository.getStaff().then((res: any) => {
@@ -495,7 +504,7 @@ function Main() {
                     >
                       <div className="text-slate-500">{bill.quantity} x </div>
                       <div className="max-w-[50%] truncate mr-1">
-                      &nbsp; {bill.ProductName}
+                      &nbsp; {bill.ProductName ? bill.ProductName : appointment?.ServiceName}
                       </div>
                       <div className={`text-slate-500 ${bill.staffName !== '' ? '' : 'hidden' }`}>- {bill.staffName}</div>
                       <div className="ml-auto font-medium">

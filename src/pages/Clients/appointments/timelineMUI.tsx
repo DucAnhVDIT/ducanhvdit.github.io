@@ -13,18 +13,23 @@ import Typography from "@mui/material/Typography";
 import Button from "../../../base-components/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectSelectedCustomer } from "../../../stores/customerSlide";
 import "./styles.css";
 import { Box } from "@mui/material";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { useNavigate } from "react-router-dom";
+import { addToBill, clearBill, clearItem } from "../../../stores/billSlice";
 
 interface TimelineMUIProps {}
 
 export default function TimelineMUI() {
   const selectedCustomer = useSelector(selectSelectedCustomer);
   const [loading, setLoading] = useState(true);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+
+  const dispatch = useDispatch();
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -47,15 +52,24 @@ export default function TimelineMUI() {
     }, 1000);
   }, []);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const handlePayBtn = () => {
-    navigate('/purchase')
-  }
+  const handlePayBtn = (appointment: React.SetStateAction<null>) => {
+    setSelectedAppointment(appointment);
+    dispatch(clearBill())
+    dispatch(addToBill(appointment));
+
+    navigate("/purchase", {
+      state: {
+        appointment,
+      },
+    });
+  };
+  
 
   const handleRebookBtn = () => {
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -103,7 +117,7 @@ export default function TimelineMUI() {
                                 variant="primary"
                                 type="button"
                                 className="w-32 mr-96"
-                                onClick={handlePayBtn}
+                                onClick={() => handlePayBtn(appointment)}
                               >
                                 Pay
                               </Button>
