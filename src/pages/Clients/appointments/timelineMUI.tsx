@@ -62,6 +62,7 @@ export default function TimelineMUI() {
     navigate("/purchase", {
       state: {
         appointment,
+        selectedCustomer
       },
     });
   };

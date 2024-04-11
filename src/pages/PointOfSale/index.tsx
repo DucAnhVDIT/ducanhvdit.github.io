@@ -63,6 +63,7 @@ function Main() {
     if (!appointment) {
       // If appointment data does not exist, clear the bill
       dispatch(clearBill());
+
     }
     getFullServices(0,0)
   }, [])

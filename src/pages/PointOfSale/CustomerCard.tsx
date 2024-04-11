@@ -1,6 +1,8 @@
 import React from 'react';
 import Button from '../../base-components/Button';
 import Lucide from "../../base-components/Lucide";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSelectedCustomer } from "../../stores/customerSlide";
 
 interface CustomerCardProps {
   customer: any;
@@ -9,19 +11,21 @@ interface CustomerCardProps {
 
 
 const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
-  // Replace these placeholder values with the actual data you have
-  // Function to get the initials from the customer name
+
+  const selectedCustomer = useSelector(selectSelectedCustomer);
+  const customerData = customer || selectedCustomer;
+
   const getInitials = (name: string | null | undefined) => {
     if (!name) {
-      return ''; // Handle null or undefined case
+      return ''; 
     }
   
     const names = name.split(' ');
     return names.map((name: string) => name[0]).join('');
   };
 
-  const borderColor = customer.CustomerCardID ? '#00A36D' : '#1E40AF';
-  const backgroundColor = customer.CustomerCardID ? 'bg-[#00A36D]' : 'bg-primary';
+  const borderColor = customerData.CustomerCardID ? '#00A36D' : '#1E40AF';
+  const backgroundColor = customerData.CustomerCardID ? 'bg-[#00A36D]' : 'bg-primary';
 
   return (
     <div>
@@ -31,7 +35,7 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
             className="col-span-12 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in"
             style={{ borderRight: `7px solid ${borderColor}` }}
           >
-            {customer.FirstName !== '' && customer.Mobile !== 0 ?
+            {customerData.FirstName !== '' && customerData.Mobile !== 0 ?
               (
                 <div className="p-1 flex justify-between items-start">
                   <div className="flex flex-start justify-between items-center">
@@ -39,15 +43,15 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
                     <div className="p-1 ml-auto">
                       <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center text-white bg-primary ${backgroundColor}`}>
                         {/* Display the initial in the center of the circle */}
-                        <span className="text-lg">{getInitials(customer.FirstName)}</span>
+                        <span className="text-lg">{getInitials(customerData.FirstName)}</span>
                       </div>
                     </div>
                     {/* Customer details on the right (moved to the far right) */}
                     <div className="p-1 ml-3 flex flex-col items-start">
-                      <h1 className="text-sm font-bold">{customer.FirstName} <span>- {customer.Mobile}</span></h1>
+                      <h1 className="text-sm font-bold">{customerData.FirstName} <span>- {customerData.Mobile}</span></h1>
                       <div className='flex flex-row justify-between'>
                         {/* <p className="text-xs">{customer.Mobile}</p> */}
-                        <p className="text-xs">{customer.Email}</p>
+                        <p className="text-xs">{customerData.Email}</p>
                       </div>
                     </div>
                   </div>
