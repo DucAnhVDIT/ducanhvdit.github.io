@@ -13,11 +13,11 @@ import { useNavigate } from 'react-router-dom';
 import { rolesName } from "../../constant/log-roles";
 import { Location } from 'react-router-dom';
 
-interface MainProps {
-  location: Location; 
-}
+// interface MainProps {
+//   location: Location; 
+// }
 
-function Main({ location }: MainProps) {
+function Main() {
   const [searchDropdown, setSearchDropdown] = useState(false);
   const showSearchDropdown = () => {
     setSearchDropdown(true);

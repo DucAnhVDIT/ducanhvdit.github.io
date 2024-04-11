@@ -11,13 +11,8 @@ import TopBar from "../../components/TopBar";
 import MobileMenu from "../../components/MobileMenu";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import SideMenuTooltip from "../../components/SideMenuTooltip";
-import Button from "../../base-components/Button";
 
-type MainProps = {
-  location: Location;
-};
-
-function Main(props: MainProps) {
+function Main() {
   const location = useLocation();
   const [formattedMenu, setFormattedMenu] = useState<
     Array<FormattedMenu | "divider">
@@ -48,6 +43,7 @@ function Main(props: MainProps) {
                 src={logoUrl}
               />
             </div>
+
           </Link>
           <Divider type="div" className="my-6"></Divider>
           <ul>
@@ -166,7 +162,6 @@ function Main(props: MainProps) {
         {/* END: Side Menu */}
         {/* BEGIN: Content */}
         <div className="rounded-[30px] min-w-0 min-h-screen flex-1 pb-10 bg-slate-100 dark:bg-darkmode-700 px-4 md:px-[22px] max-w-full md:max-w-auto before:content-[''] before:w-full before:h-px before:block">
-          <TopBar location={location} />
           {/* <TopBar /> */}
           <Outlet />
         </div>
@@ -218,51 +213,46 @@ function Menu(props: {
         setFormattedMenu([...formattedMenu]);
       }}
     >
-      <Button
-        className="border-none shadow-none"
+      <div
+        className={clsx({
+          "text-primary dark:text-slate-300":
+            props.menu.active && props.level == "first",
+          "dark:text-slate-400": !props.menu.active && props.level == "first",
+          "before:content-[''] before:z-[-1] before:absolute before:top-0 before:right-0 before:-mr-5 before:w-12 before:h-full before:bg-slate-100 before:dark:bg-darkmode-700":
+            props.menu.active && props.level == "first",
+          "before:content-[''] before:z-[-1] before:w-[230px] before:absolute before:top-0 before:left-0 before:h-full before:rounded-l-full before:transition before:ease-in before:duration-100":
+            !props.menu.activeDropdown &&
+            !props.menu.active &&
+            props.level == "first",
+        })}
       >
-        <div
-          className={clsx({
-            "text-primary dark:text-slate-300":
+        <Lucide icon={props.menu.icon} />
+      </div>
+      <div
+        className={clsx([
+          "hidden xl:flex items-center w-full ml-3",
+          { "font-medium": props.menu.active && props.level != "first" },
+          {
+            "text-slate-800 font-medium dark:text-slate-300":
               props.menu.active && props.level == "first",
+          },
+          {
             "dark:text-slate-400": !props.menu.active && props.level == "first",
-            "before:content-[''] before:z-[-1] before:absolute before:top-0 before:right-0 before:-mr-5 before:w-12 before:h-full before:bg-slate-100 before:dark:bg-darkmode-700":
-              props.menu.active && props.level == "first",
-            "before:content-[''] before:z-[-1] before:w-[230px] before:absolute before:top-0 before:left-0 before:h-full before:rounded-l-full before:transition before:ease-in before:duration-100":
-              !props.menu.activeDropdown &&
-              !props.menu.active &&
-              props.level == "first",
-          })}
-        >
-          <Lucide icon={props.menu.icon} />
-        </div>
-        <div
-          className={clsx([
-            "hidden xl:flex items-center w-full ml-3",
-            { "font-medium": props.menu.active && props.level != "first" },
-            {
-              "text-slate-800 font-medium dark:text-slate-300":
-                props.menu.active && props.level == "first",
-            },
-            {
-              "dark:text-slate-400":
-                !props.menu.active && props.level == "first",
-            },
-          ])}
-        >
-          {props.menu.title}
-          {props.menu.subMenu && (
-            <div
-              className={clsx([
-                "transition ease-in duration-100 ml-auto mr-5 hidden xl:block",
-                { "transform rotate-180": props.menu.activeDropdown },
-              ])}
-            >
-              <Lucide className="w-4 h-4" icon="ChevronDown" />
-            </div>
-          )}
-        </div>
-      </Button>
+          },
+        ])}
+      >
+        {props.menu.title}
+        {props.menu.subMenu && (
+          <div
+            className={clsx([
+              "transition ease-in duration-100 ml-auto mr-5 hidden xl:block",
+              { "transform rotate-180": props.menu.activeDropdown },
+            ])}
+          >
+            <Lucide className="w-4 h-4" icon="ChevronDown" />
+          </div>
+        )}
+      </div>
     </SideMenuTooltip>
   );
 }
