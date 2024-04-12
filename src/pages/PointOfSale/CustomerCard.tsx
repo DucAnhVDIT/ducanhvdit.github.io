@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '../../base-components/Button';
 import Lucide from "../../base-components/Lucide";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,13 +7,20 @@ import { selectSelectedCustomer } from "../../stores/customerSlide";
 interface CustomerCardProps {
   customer: any;
   onClick: () => void;
+  selectedCustomer: any
 }
 
 
-const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick }) => {
+const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick, selectedCustomer }) => {
 
-  const selectedCustomer = useSelector(selectSelectedCustomer);
-  const customerData = customer || selectedCustomer;
+  // const selectedCustomer = useSelector(selectSelectedCustomer);
+
+
+  const customerData = selectedCustomer?.Customer || customer;
+
+  useEffect(() => {
+    console.log(customerData)
+  })
 
   const getInitials = (name: string | null | undefined) => {
     if (!name) {

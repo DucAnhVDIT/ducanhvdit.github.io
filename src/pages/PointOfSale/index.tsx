@@ -31,7 +31,7 @@ import { useLocation } from "react-router-dom";
 function Main() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { appointment } = location.state || {};
+  const { appointment, selectedCustomer } = location.state || {};
 
   const [newOrderModal, setNewOrderModal] = useState(false);
   const [priceModal, setPriceModal] = useState(false)
@@ -492,7 +492,7 @@ function Main() {
         {/*END Page Payment */}
         {/* BEGIN: Ticket */}
         <Tab.Group className="col-span-12 lg:col-span-4">
-          <CustomerCard key={customerData.CustomerID} customer={customerData} onClick={() => selectCustomer()}></CustomerCard>
+          <CustomerCard key={customerData.CustomerID} customer={customerData} selectedCustomer={selectedCustomer} onClick={() => selectCustomer()}></CustomerCard>
           <Tab.Panels>
             {/* Show list bill */}
             <Tab.Panel>

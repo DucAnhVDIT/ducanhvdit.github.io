@@ -43,7 +43,6 @@ function Main() {
                 src={logoUrl}
               />
             </div>
-
           </Link>
           <Divider type="div" className="my-6"></Divider>
           <ul>
