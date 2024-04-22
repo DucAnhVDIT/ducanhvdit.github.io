@@ -30,6 +30,7 @@ import {
   resetCustomerNotes,
   setHasNotes,
 } from "../../stores/notesSlide";
+import { Appointment } from "../../types/appointment";
 // import Pusher from 'pusher-js';
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
@@ -44,6 +45,7 @@ interface SlideOverPanelProps {
   resourceID: any;
   handleAppoinmentChange: (value: boolean) => void;
   setAddNewDrawerOpen: (value: boolean) => void;
+  appointmentFromHistory: any
 }
 function SlideOverPanel({
   setAddNewDrawerOpen,
@@ -55,6 +57,7 @@ function SlideOverPanel({
   showAppointmentToast,
   date,
   resourceID,
+  appointmentFromHistory
 }: SlideOverPanelProps) {
   const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false);
@@ -217,17 +220,7 @@ function SlideOverPanel({
     Email: selectedCustomer?.Email || "",
     Appointments: [] as Appointment[],
   };
-  interface Appointment {
-    BookDate: string;
-    StartTime: string;
-    EndTime: string;
-    ServiceID: string;
-    StaffID: string;
-    Deposit: number;
-    Islocked: boolean;
-    CustomerNote: string;
-    CompanyNote: string;
-  }
+
   let previousEndTime = selectedTime;
 
   selectedServices.forEach((service: { Duration: any; ProductID: any }) => {

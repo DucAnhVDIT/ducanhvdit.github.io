@@ -11,6 +11,7 @@ import appointmentReducer from './appoinmentSlice'
 // import dateReducer from './dateSlice';
 import notesReducer from './notesSlide'
 import customerReducer from './customerSlide'
+import rebookReducer from './rebookSlide'
 
 export const store = configureStore({
   reducer: {
@@ -24,7 +25,8 @@ export const store = configureStore({
     serviceListState: serviceListReducer,
     appointment : appointmentReducer,
     notes: notesReducer,
-    customer:customerReducer
+    customer:customerReducer,
+    rebook: rebookReducer
   },
 })
 

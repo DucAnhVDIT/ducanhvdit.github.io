@@ -43,6 +43,7 @@ import {
   setScheduleData,
   setAppointmentToCustomer,
 } from "../../stores/appoinmentSlice";
+import { setRebook } from "../../stores/rebookSlide";
 import eposRepository from "../../repositories/eposRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 import Select from "react-select";
@@ -54,8 +55,12 @@ import BlockTimePopup from "../../components/Modal/blockTime";
 import ExistingDrawer from "../../components/MobileDrawer/existingDrawer";
 import AddNewDrawer from "../../components/MobileDrawer/addNewDrawer";
 import ReactTooltip from "react-tooltip";
+import { useLocation } from "react-router-dom";
+import { Appointment } from "../../types/appointment";
+import { RootState } from "../../stores/store";
 
 function Main() {
+  const location = useLocation();
   const [date, setDate] = useState(new Date());
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
   const [existingInformationSlide, setExistingInformationSlide] =
@@ -76,12 +81,16 @@ function Main() {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [addNewDrawerOpen, setAddNewDrawerOpen] = useState(false);
 
+  const { appointment, selectedCustomer } = location.state || {};
+
   const scheduleData = useSelector(
     (state: any) => state.appointment.scheduleData
   );
   const singleCustomerAppointment = useSelector(
     (state: any) => state.appointment.singleCustomerAppointment
   );
+  const rebook = useSelector((state: RootState) => state.rebook.rebook);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -89,7 +98,10 @@ function Main() {
     //   fetchAppoinmentApiData(date);
     // }, 2000); // Poll every 3 seconds
     fetchAppoinmentApiData(date);
-    console.log(scheduleData);
+    console.log("appointment can rebook", appointment);
+    // if(appointment){
+    //   setSlotSlideoverPreview(true)
+    // }
     // return () => clearInterval(intervalId);
   }, [appoinmentChange]);
 
@@ -113,7 +125,13 @@ function Main() {
     fetchStaffApiData();
   }, []);
 
-  const handleSlotClicked = async (info: any) => {
+  function calculateEndTime(startTime: string, duration: number): string {
+    const startMoment = moment(startTime, "HH:mm");
+    const endMoment = startMoment.clone().add(duration, "minutes");
+    return endMoment.format("HH:mm");
+  }
+
+  const handleRebookFromHistory = async (info: any) => {
     const startTime = moment(info.start).format("HH:mm");
     setDate(info.start);
     setSelectedTime(startTime);
@@ -122,30 +140,77 @@ function Main() {
     setResourceTitle(staffTitle);
     setResourceID(staffID);
 
+    const serviceEndTime = calculateEndTime(selectedTime, appointment.Duration);
+
+    const newAppointmentRequest = {
+      FirstName: selectedCustomer?.Customer.FirstName || "",
+      LastName: selectedCustomer?.Customer.LastName || "",
+      Mobile: selectedCustomer?.Customer.Mobile || "",
+      Email: selectedCustomer?.Customer.Email || "",
+      Appointments: [
+        {
+          BookDate: date,
+          StartTime: selectedTime,
+          EndTime: serviceEndTime,
+          ServiceID: appointment.ServiceID,
+          StaffID: resourceID,
+          Deposit: 0,
+          Islocked: false,
+          CustomerNote: appointment.CustomerNotes,
+          CompanyNote: appointment.CompanyNote,
+        },
+      ],
+    };
+
+    try {
+      const res = await calendarRepository.addAppointment(
+        newAppointmentRequest
+      );
+      showAppointmentToast("Appointment added successfully");
+      setAppointmentChange(true);
+      setTimeout(() => {
+        dispatch(setRebook(false));
+      }, 2000);
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+      showAppointmentToast("Error adding appointment", "error");
+    }
+
+    console.log("Rebook from history");
+  };
+
+  const handleSlotClicked = async (info: any) => {
+    const startTime = moment(info.start).format("HH:mm");
+    setDate(info.start);
+    setSelectedTime(startTime);
+    const staffTitle = info.resource.title;
+    const staffID = info.resource.id;
+    setResourceTitle(staffTitle);
+    setResourceID(staffID);
     fetchServiceApiData(staffID);
     setSlotSlideoverPreview(true);
     setAddNewDrawerOpen(true);
   };
-  // const blockTimeClicked = () => {
-  //   setBlockTimePop(true)
-  //   setSlotClickModal(false)
-  // }
+  const blockTimeClicked = () => {
+    setBlockTimePop(true)
+    setSlotClickModal(false)
+  }
 
-  // const addNewAppointment = async () => {
-  //   if (selectedSlotInfo) {
-  //     setSlotClickModal(false)
-  //     const startTime = moment(selectedSlotInfo.start).format('HH:mm');
-  //     setDate(selectedSlotInfo.start);
-  //     setSelectedTime(startTime);
-  //     const staffTitle = selectedSlotInfo.resource.title;
-  //     const staffID = selectedSlotInfo.resource.id;
-  //     setResourceTitle(staffTitle);
-  //     setResourceID(staffID);
+  const addNewAppointment = async () => {
+    if (selectedSlotInfo) {
+      setSlotClickModal(false)
+      const startTime = moment(selectedSlotInfo.start).format('HH:mm');
+      setDate(selectedSlotInfo.start);
+      setSelectedTime(startTime);
+      const staffTitle = selectedSlotInfo.resource.title;
+      const staffID = selectedSlotInfo.resource.id;
+      setResourceTitle(staffTitle);
+      setResourceID(staffID);
 
-  //     fetchServiceApiData(staffID);
-  //     setSlotSlideoverPreview(true);
-  //   }
-  // };
+      fetchServiceApiData(staffID);
+      setSlotSlideoverPreview(true);
+    }
+  };
 
   const handleEventClick = async (info: { event: any }) => {
     try {
@@ -272,6 +337,10 @@ function Main() {
       toast.success(message);
     }
   };
+
+  const selectHandler = appointment
+    ? handleRebookFromHistory
+    : handleSlotClicked;
 
   const options: CalendarOptions = {
     plugins: [
@@ -506,7 +575,7 @@ function Main() {
       : [],
     resourcesInitiallyExpanded: false,
 
-    select: handleSlotClicked,
+    select: selectHandler,
   };
   const handleDateChange = (date: Date) => {
     setDate(date);
@@ -564,151 +633,173 @@ function Main() {
     setExistingInformationSlide(false);
   };
 
+  useEffect(() => {
+    if (rebook) {
+      toast.warning("Select time to rebook", {
+        position: "bottom-right",
+        autoClose: false,
+        closeButton: false,
+        closeOnClick: false,
+        onClose: () => {},
+      });
+    }
+  }, [rebook]);
+
+  useEffect(() => {
+    if(!rebook){
+      toast.dismiss()
+    }
+  }, [rebook]);
+
   return (
-    <div className="full-calendar">
-      {/* Mobile Select Staff and View */}
+    <>
+      <div className="full-calendar">
+        {/* Mobile Select Staff and View */}
 
-      <div className="flex mt-3 justify-between sm:hidden">
-        <div className="">
-          <SelectStaff
-            staffData={staffData}
-            selectedStaff={selectedStaff}
-            handleStaffChange={handleStaffChange}
-          />
+        <div className="flex mt-3 justify-between sm:hidden">
+          <div className="">
+            <SelectStaff
+              staffData={staffData}
+              selectedStaff={selectedStaff}
+              handleStaffChange={handleStaffChange}
+            />
+          </div>
+
+          <div className="">
+            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+          </div>
         </div>
 
-        <div className="">
-          <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
-        </div>
-      </div>
+        {/* Mobile Select Staff and View */}
 
-      {/* Mobile Select Staff and View */}
-
-      <div className="flex flex-col sm:flex-row mt-3 mb-3 justify-between">
-        <div className="hidden sm:block">
-          <SelectStaff
-            staffData={staffData}
-            selectedStaff={selectedStaff}
-            handleStaffChange={handleStaffChange}
-          />
-        </div>
-        {/* BEGIN: Input Group */}
-        <PreviewComponent className="intro-y bg-transparent">
-          {({ toggle }) => (
-            <>
-              <div className="">
-                <Preview>
-                  <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
-                    <Button
-                      className="text-sm sm:text-base text-white border-none shadow-none"
-                      onClick={prevDay}
-                    >
-                      <Lucide
-                        icon="ChevronLeft"
-                        className="w-4 h-4 sm:w-6 sm:h-6"
+        <div className="flex flex-col sm:flex-row mt-3 mb-3 justify-between">
+          <div className="hidden sm:block">
+            <SelectStaff
+              staffData={staffData}
+              selectedStaff={selectedStaff}
+              handleStaffChange={handleStaffChange}
+            />
+          </div>
+          {/* BEGIN: Input Group */}
+          <PreviewComponent className="intro-y bg-transparent">
+            {({ toggle }) => (
+              <>
+                <div className="">
+                  <Preview>
+                    <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
+                      <Button
+                        className="text-sm sm:text-base text-white border-none shadow-none"
+                        onClick={prevDay}
+                      >
+                        <Lucide
+                          icon="ChevronLeft"
+                          className="w-4 h-4 sm:w-6 sm:h-6"
+                        />
+                      </Button>
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                      <Button
+                        className="text-sm font-normal bg-primary text-white border-none shadow-none"
+                        onClick={todayDate}
+                      >
+                        Today
+                      </Button>
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                      <CustomDatePicker
+                        date={date}
+                        goToDate={handleDateChange}
                       />
-                    </Button>
-                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                    <Button
-                      className="text-sm font-normal bg-primary text-white border-none shadow-none"
-                      onClick={todayDate}
-                    >
-                      Today
-                    </Button>
-                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                    <CustomDatePicker date={date} goToDate={handleDateChange} />
-                    <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                    <Button
-                      className="text-xs sm:text-base text-white border-none shadow-none"
-                      onClick={nextDay}
-                    >
-                      <Lucide
-                        icon="ChevronRight"
-                        className="w-4 h-4 sm:w-6 sm:h-6"
-                      />
-                    </Button>
-                  </div>
-                </Preview>
-              </div>
-            </>
-          )}
-        </PreviewComponent>
-        <div className="hidden sm:block">
-          <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                      <Button
+                        className="text-xs sm:text-base text-white border-none shadow-none"
+                        onClick={nextDay}
+                      >
+                        <Lucide
+                          icon="ChevronRight"
+                          className="w-4 h-4 sm:w-6 sm:h-6"
+                        />
+                      </Button>
+                    </div>
+                  </Preview>
+                </div>
+              </>
+            )}
+          </PreviewComponent>
+          <div className="hidden sm:block">
+            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+          </div>
         </div>
+
+        <FullCalendar {...options} ref={calendarRef} select={selectHandler} />
+
+        {slotSlideoverPreview && (
+          <SlideOverPanel
+            setAddNewDrawerOpen={setAddNewDrawerOpen}
+            handleAppoinmentChange={handleAppoinmentChange}
+            resourceID={resourceID}
+            date={date}
+            fetchAppoinmentApiData={fetchAppoinmentApiData}
+            showAppointmentToast={showAppointmentToast}
+            isOpen={slotSlideoverPreview}
+            onClose={handleClose}
+            serviceData={serviceData}
+            selectedTime={selectedTime}
+            appointmentFromHistory={appointment}
+          />
+        )}
+        {existingInformationSlide && (
+          <ExistingInfo
+            setDrawerIsOpen={setDrawerIsOpen}
+            fetchAppoinmentApiData={fetchAppoinmentApiData}
+            handleDateChange={handleDateChange}
+            handleAppoinmentChange={handleAppoinmentChange}
+            isOpen={existingInformationSlide}
+            onClose={handleCloseEventSlide}
+            appointmentData={selectedAppointment}
+            serviceData={serviceData}
+          />
+        )}
+        {drawerIsOpen && (
+          <ExistingDrawer
+            fetchAppoinmentApiData={fetchAppoinmentApiData}
+            drawerIsOpen={drawerIsOpen}
+            setDrawerIsOpen={setDrawerIsOpen}
+            appointmentData={selectedAppointment}
+            handleAppoinmentChange={handleAppoinmentChange}
+            handleDateChange={handleDateChange}
+            serviceData={serviceData}
+          />
+        )}
+        {addNewDrawerOpen && (
+          <AddNewDrawer
+            addNewDrawerOpen={addNewDrawerOpen}
+            setAddNewDrawerOpen={setAddNewDrawerOpen}
+            handleAppoinmentChange={handleAppoinmentChange}
+            resourceID={resourceID}
+            date={date}
+            fetchAppoinmentApiData={fetchAppoinmentApiData}
+            showAppointmentToast={showAppointmentToast}
+            serviceData={serviceData}
+            selectedTime={selectedTime}
+          />
+        )}
+        {/* {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
+        {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)} */}
+
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="colored"
+          pauseOnHover
+          transition={Flip}
+        />
       </div>
-
-      {}
-
-      <FullCalendar {...options} ref={calendarRef} select={handleSlotClicked} />
-
-      {slotSlideoverPreview && (
-        <SlideOverPanel
-          setAddNewDrawerOpen={setAddNewDrawerOpen}
-          handleAppoinmentChange={handleAppoinmentChange}
-          resourceID={resourceID}
-          date={date}
-          fetchAppoinmentApiData={fetchAppoinmentApiData}
-          showAppointmentToast={showAppointmentToast}
-          isOpen={slotSlideoverPreview}
-          onClose={handleClose}
-          serviceData={serviceData}
-          selectedTime={selectedTime}
-        />
-      )}
-      {existingInformationSlide && (
-        <ExistingInfo
-          setDrawerIsOpen={setDrawerIsOpen}
-          fetchAppoinmentApiData={fetchAppoinmentApiData}
-          handleDateChange={handleDateChange}
-          handleAppoinmentChange={handleAppoinmentChange}
-          isOpen={existingInformationSlide}
-          onClose={handleCloseEventSlide}
-          appointmentData={selectedAppointment}
-          serviceData={serviceData}
-        />
-      )}
-      {drawerIsOpen && (
-        <ExistingDrawer
-          fetchAppoinmentApiData={fetchAppoinmentApiData}
-          drawerIsOpen={drawerIsOpen}
-          setDrawerIsOpen={setDrawerIsOpen}
-          appointmentData={selectedAppointment}
-          handleAppoinmentChange={handleAppoinmentChange}
-          handleDateChange={handleDateChange}
-          serviceData={serviceData}
-        />
-      )}
-      {addNewDrawerOpen && (
-        <AddNewDrawer
-          addNewDrawerOpen={addNewDrawerOpen}
-          setAddNewDrawerOpen={setAddNewDrawerOpen}
-          handleAppoinmentChange={handleAppoinmentChange}
-          resourceID={resourceID}
-          date={date}
-          fetchAppoinmentApiData={fetchAppoinmentApiData}
-          showAppointmentToast={showAppointmentToast}
-          serviceData={serviceData}
-          selectedTime={selectedTime}
-        />
-      )}
-      {/* {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
-      {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)} */}
-
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        theme="colored"
-        pauseOnHover
-        transition={Flip}
-      />
-    </div>
+    </>
   );
 }
 

@@ -20,16 +20,20 @@ import { Box } from "@mui/material";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { useNavigate } from "react-router-dom";
 import { addToBill, clearBill, clearItem } from "../../../stores/billSlice";
+import { RootState } from "../../../stores/store";
+import { setRebook, setAppToRebook } from "../../../stores/rebookSlide";
 
 interface TimelineMUIProps {}
 
 export default function TimelineMUI() {
-  const selectedCustomer = useSelector(selectSelectedCustomer);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-
-  const dispatch = useDispatch();
-
+  
+  const appointmentToRebook = useSelector((state: RootState) => state.rebook.appointmentToRebook)
+  const selectedCustomer = useSelector(selectSelectedCustomer);
+  const rebook = useSelector((state: RootState) => state.rebook.rebook);
+  
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -58,7 +62,6 @@ export default function TimelineMUI() {
     setSelectedAppointment(appointment);
     dispatch(clearBill())
     dispatch(addToBill(appointment));
-
     navigate("/purchase", {
       state: {
         appointment,
@@ -68,8 +71,18 @@ export default function TimelineMUI() {
   };
   
 
-  const handleRebookBtn = () => {
-    navigate("/");
+  const handleRebookBtn = (appointment: React.SetStateAction<null>) => {
+    dispatch(setRebook(true))
+    setSelectedAppointment(appointment);
+    setAppToRebook(appointment)
+    navigate("/", {
+      state: {
+        appointment,
+        selectedCustomer,
+      },
+    });
+
+    setSelectedAppointment(null);
   };
 
   return (
@@ -127,7 +140,7 @@ export default function TimelineMUI() {
                                 variant="primary"
                                 type="button"
                                 className="w-32 mr-96"
-                                onClick={handleRebookBtn}
+                                onClick={() => handleRebookBtn(appointment)}
                               >
                                 Rebook
                               </Button>

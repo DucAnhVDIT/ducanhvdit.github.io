@@ -27,3 +27,8 @@
       max-width: 200px; 
     }
   } */
+
+  .yellow-toast{
+    background-color: yellow;
+    color: black; 
+  }

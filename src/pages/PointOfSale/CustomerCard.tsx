@@ -18,9 +18,9 @@ const CustomerCard: React.FC<CustomerCardProps> = ({ customer, onClick, selected
 
   const customerData = selectedCustomer?.Customer || customer;
 
-  useEffect(() => {
-    console.log(customerData)
-  })
+  // useEffect(() => {
+  //   console.log(customerData)
+  // })
 
   const getInitials = (name: string | null | undefined) => {
     if (!name) {

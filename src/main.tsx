@@ -11,12 +11,14 @@ import PrivateRoute from "./router/auth-redirect";
 export {}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <BrowserRouter>
-    <AuthProvider>
-      <Provider store={store}>
-        <Router />
-      </Provider>
-    </AuthProvider>
-    <ScrollToTop />
-  </BrowserRouter>
+  <>
+    <BrowserRouter>
+      <AuthProvider>
+        <Provider store={store}>
+          <Router />
+        </Provider>
+      </AuthProvider>
+      <ScrollToTop />
+    </BrowserRouter>
+  </>
 );
