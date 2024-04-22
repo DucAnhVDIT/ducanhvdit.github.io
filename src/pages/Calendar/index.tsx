@@ -43,7 +43,7 @@ import {
   setScheduleData,
   setAppointmentToCustomer,
 } from "../../stores/appoinmentSlice";
-import { setRebook } from "../../stores/rebookSlide";
+import { setRebook, resetAppToRebook } from "../../stores/rebookSlide";
 import eposRepository from "../../repositories/eposRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 import Select from "react-select";
@@ -81,7 +81,7 @@ function Main() {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [addNewDrawerOpen, setAddNewDrawerOpen] = useState(false);
 
-  const { appointment, selectedCustomer } = location.state || {};
+  const { selectedCustomer } = location.state || {};
 
   const scheduleData = useSelector(
     (state: any) => state.appointment.scheduleData
@@ -90,6 +90,7 @@ function Main() {
     (state: any) => state.appointment.singleCustomerAppointment
   );
   const rebook = useSelector((state: RootState) => state.rebook.rebook);
+  const appToRebook = useSelector((state: RootState) => state.rebook.appointmentToRebook);
 
   const dispatch = useDispatch();
 
@@ -98,7 +99,7 @@ function Main() {
     //   fetchAppoinmentApiData(date);
     // }, 2000); // Poll every 3 seconds
     fetchAppoinmentApiData(date);
-    console.log("appointment can rebook", appointment);
+    console.log("appointment can rebook", appToRebook);
     // if(appointment){
     //   setSlotSlideoverPreview(true)
     // }
@@ -140,7 +141,7 @@ function Main() {
     setResourceTitle(staffTitle);
     setResourceID(staffID);
 
-    const serviceEndTime = calculateEndTime(selectedTime, appointment.Duration);
+    const serviceEndTime = calculateEndTime(selectedTime, appToRebook.Duration);
 
     const newAppointmentRequest = {
       FirstName: selectedCustomer?.Customer.FirstName || "",
@@ -152,12 +153,12 @@ function Main() {
           BookDate: date,
           StartTime: selectedTime,
           EndTime: serviceEndTime,
-          ServiceID: appointment.ServiceID,
+          ServiceID: appToRebook.ServiceID,
           StaffID: resourceID,
           Deposit: 0,
           Islocked: false,
-          CustomerNote: appointment.CustomerNotes,
-          CompanyNote: appointment.CompanyNote,
+          CustomerNote: appToRebook.CustomerNotes,
+          CompanyNote: appToRebook.CompanyNote,
         },
       ],
     };
@@ -171,6 +172,7 @@ function Main() {
       setTimeout(() => {
         dispatch(setRebook(false));
       }, 2000);
+      dispatch(resetAppToRebook());
     } catch (error) {
       console.error("Error adding appointment:", error);
       showAppointmentToast("Error adding appointment", "error");
@@ -338,7 +340,7 @@ function Main() {
     }
   };
 
-  const selectHandler = appointment
+  const selectHandler = appToRebook
     ? handleRebookFromHistory
     : handleSlotClicked;
 
@@ -743,7 +745,7 @@ function Main() {
             onClose={handleClose}
             serviceData={serviceData}
             selectedTime={selectedTime}
-            appointmentFromHistory={appointment}
+            appointmentFromHistory={appToRebook}
           />
         )}
         {existingInformationSlide && (

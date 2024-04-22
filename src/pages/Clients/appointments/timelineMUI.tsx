@@ -74,12 +74,12 @@ export default function TimelineMUI() {
   const handleRebookBtn = (appointment: React.SetStateAction<null>) => {
     dispatch(setRebook(true))
     setSelectedAppointment(appointment);
-    setAppToRebook(appointment)
+    dispatch(setAppToRebook(appointment))
     navigate("/", {
-      state: {
-        appointment,
-        selectedCustomer,
-      },
+      // state: {
+      //   appointment,
+      //   selectedCustomer,
+      // },
     });
 
     setSelectedAppointment(null);
