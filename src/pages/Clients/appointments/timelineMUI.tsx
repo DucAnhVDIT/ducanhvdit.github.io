@@ -76,10 +76,9 @@ export default function TimelineMUI() {
     setSelectedAppointment(appointment);
     dispatch(setAppToRebook(appointment))
     navigate("/", {
-      // state: {
-      //   appointment,
-      //   selectedCustomer,
-      // },
+      state: {
+        selectedCustomer,
+      },
     });
 
     setSelectedAppointment(null);

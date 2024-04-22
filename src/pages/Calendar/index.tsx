@@ -99,7 +99,6 @@ function Main() {
     //   fetchAppoinmentApiData(date);
     // }, 2000); // Poll every 3 seconds
     fetchAppoinmentApiData(date);
-    console.log("appointment can rebook", appToRebook);
     // if(appointment){
     //   setSlotSlideoverPreview(true)
     // }
@@ -141,7 +140,7 @@ function Main() {
     setResourceTitle(staffTitle);
     setResourceID(staffID);
 
-    const serviceEndTime = calculateEndTime(selectedTime, appToRebook.Duration);
+    const serviceEndTime = calculateEndTime(startTime, appToRebook.Duration);
 
     const newAppointmentRequest = {
       FirstName: selectedCustomer?.Customer.FirstName || "",
@@ -151,10 +150,10 @@ function Main() {
       Appointments: [
         {
           BookDate: date,
-          StartTime: selectedTime,
+          StartTime: startTime,
           EndTime: serviceEndTime,
           ServiceID: appToRebook.ServiceID,
-          StaffID: resourceID,
+          StaffID: staffID,
           Deposit: 0,
           Islocked: false,
           CustomerNote: appToRebook.CustomerNotes,
@@ -193,26 +192,26 @@ function Main() {
     setSlotSlideoverPreview(true);
     setAddNewDrawerOpen(true);
   };
-  const blockTimeClicked = () => {
-    setBlockTimePop(true)
-    setSlotClickModal(false)
-  }
+  // const blockTimeClicked = () => {
+  //   setBlockTimePop(true)
+  //   setSlotClickModal(false)
+  // }
 
-  const addNewAppointment = async () => {
-    if (selectedSlotInfo) {
-      setSlotClickModal(false)
-      const startTime = moment(selectedSlotInfo.start).format('HH:mm');
-      setDate(selectedSlotInfo.start);
-      setSelectedTime(startTime);
-      const staffTitle = selectedSlotInfo.resource.title;
-      const staffID = selectedSlotInfo.resource.id;
-      setResourceTitle(staffTitle);
-      setResourceID(staffID);
+  // const addNewAppointment = async () => {
+  //   if (selectedSlotInfo) {
+  //     setSlotClickModal(false)
+  //     const startTime = moment(selectedSlotInfo.start).format('HH:mm');
+  //     setDate(selectedSlotInfo.start);
+  //     setSelectedTime(startTime);
+  //     const staffTitle = selectedSlotInfo.resource.title;
+  //     const staffID = selectedSlotInfo.resource.id;
+  //     setResourceTitle(staffTitle);
+  //     setResourceID(staffID);
 
-      fetchServiceApiData(staffID);
-      setSlotSlideoverPreview(true);
-    }
-  };
+  //     fetchServiceApiData(staffID);
+  //     setSlotSlideoverPreview(true);
+  //   }
+  // };
 
   const handleEventClick = async (info: { event: any }) => {
     try {
