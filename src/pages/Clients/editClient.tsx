@@ -26,6 +26,12 @@ import Lucide from "../../base-components/Lucide";
 import { Link } from "react-router-dom";
 
 const EditClient = () => {
+  useEffect(() => {
+    document.body.style.backgroundColor = 'white';
+    return () => {
+      document.body.style.backgroundColor = ''; // Reset background color when component unmounts
+    };
+  }, []);
   const [activeTab, setActiveTab] = useState("overview");
   const handleTabChange = (tab: React.SetStateAction<string>) => {
     setActiveTab(tab);

@@ -13,6 +13,12 @@ import customerRepository from '../../repositories/customerRepository';
 import { Flip, ToastContainer, ToastContentProps, Zoom, toast } from 'react-toastify';
 
 const AddClient = () => {
+    useEffect(() => {
+        document.body.style.backgroundColor = 'white';
+        return () => {
+          document.body.style.backgroundColor = ''; // Reset background color when component unmounts
+        };
+      }, []);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [mobileNumber, setMobileNumber] = useState('');
@@ -73,202 +79,204 @@ const AddClient = () => {
 
 
     return (
-        <div className='mt-3 bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay rounded-lg !important' style={{borderRadius:'0.5rem'}}>
-            <div className="flex items-center justify-between top-0 w-full p-4 bg-white shadow ">
-                    <Link to="/clients" className="text-lg font-bold">
-                        <Lucide icon={'X'}></Lucide>
-                    </Link>
-                    <h1 className="text-xl font-bold">Add Client</h1>
-                    <Button onClick={addNewClient} className="text-lg font-bold text-white bg-primary">Save</Button>
-            </div>
-            <div className=' md:flex h-full items-start justify-center bg-white shadow'>
-                {/* Begin Basic Info */}
-                <div className='border-2 border-black md:w-1/3 p-5 pr-10 m-5 rounded-2xl'>
-                    <h1 className='text-2xl mb-2 font-bold'>Basic Information</h1>
-                    <form className="validate-form" >
-                        <div className="input-form flex flex-row w-full">
-                            <div className='flex flex-col justify-between w-full mr-4'>
-                                <FormLabel
-                                    htmlFor="validation-form-1"
-                                    className="flex flex-col w-full sm:flex-row"
-                                >
-                                First Name
-                                </FormLabel>
-                                <FormInput
-                                    id="validation-form-1"
-                                    type="text"
-                                    name="name"
-                                    placeholder="Enter First Name"
-                                    className="w-full"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
-                                />
+        <div>
+            <div className='mt-3 shadow-none bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay '>
+                <div className="flex items-center justify-between top-0 w-full p-4 bg-white">
+                        <Link to="/clients" className="text-lg font-bold">
+                            <Lucide icon={'X'}></Lucide>
+                        </Link>
+                        <h1 className="text-xl font-bold">Add Client</h1>
+                        <Button onClick={addNewClient} className="text-lg font-bold text-white bg-primary">Save</Button>
+                </div>
+                <div className=' md:flex h-full items-start justify-center bg-white'>
+                    {/* Begin Basic Info */}
+                    <div className='border-2 border-black md:w-1/3 p-5 pr-10 m-5 rounded-2xl'>
+                        <h1 className='text-2xl mb-2 font-bold'>Basic Information</h1>
+                        <form className="validate-form" >
+                            <div className="input-form flex flex-row w-full">
+                                <div className='flex flex-col justify-between w-full mr-4'>
+                                    <FormLabel
+                                        htmlFor="validation-form-1"
+                                        className="flex flex-col w-full sm:flex-row"
+                                    >
+                                    First Name
+                                    </FormLabel>
+                                    <FormInput
+                                        id="validation-form-1"
+                                        type="text"
+                                        name="name"
+                                        placeholder="Enter First Name"
+                                        className="w-full"
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
+                                    />
+                                </div>
+                                <div className='flex flex-col w-full'>
+                                    <FormLabel
+                                        htmlFor="validation-form-1"
+                                        className="flex flex-col w-full sm:flex-row"
+                                    >
+                                    Last Name
+                                    </FormLabel>
+                                    <FormInput
+                                        id="validation-form-1"
+                                        type="text"
+                                        name="name"
+                                        placeholder="Enter Last Name"
+                                        className="w-full"
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
+                                    />
+                                </div>
                             </div>
-                            <div className='flex flex-col w-full'>
-                                <FormLabel
-                                    htmlFor="validation-form-1"
-                                    className="flex flex-col w-full sm:flex-row"
-                                >
-                                Last Name
-                                </FormLabel>
-                                <FormInput
-                                    id="validation-form-1"
-                                    type="text"
-                                    name="name"
-                                    placeholder="Enter Last Name"
-                                    className="w-full"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
-                                />
+                            <div className="input-form flex flex-row w-full mt-3">
+                                <div className='flex flex-col justify-between w-full mr-4'>
+                                    <FormLabel
+                                        htmlFor="validation-form-1"
+                                        className="flex flex-col w-full sm:flex-row"
+                                    >
+                                    Email
+                                    </FormLabel>
+                                    <FormInput
+                                        id="validation-form-1"
+                                        type="email"
+                                        name="name"
+                                        placeholder="Enter Email"
+                                        className="w-full"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </div>
+                                <div className='flex flex-col w-full'>
+                                    <FormLabel
+                                        htmlFor="validation-form-1"
+                                        className="flex flex-col w-full sm:flex-row"
+                                    >
+                                    Phone Number
+                                    </FormLabel>
+                                    <FormInput
+                                        id="validation-form-1"
+                                        type="number"
+                                        name="name"
+                                        placeholder="Enter Phone Number"
+                                        className="w-full"
+                                        value={mobileNumber}
+                                        onChange={(e) => setMobileNumber(e.target.value)}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="input-form flex flex-row w-full mt-3">
-                            <div className='flex flex-col justify-between w-full mr-4'>
-                                <FormLabel
-                                    htmlFor="validation-form-1"
-                                    className="flex flex-col w-full sm:flex-row"
-                                >
-                                Email
-                                </FormLabel>
-                                <FormInput
-                                    id="validation-form-1"
-                                    type="email"
-                                    name="name"
-                                    placeholder="Enter Email"
-                                    className="w-full"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div className='flex flex-col w-full'>
-                                <FormLabel
-                                    htmlFor="validation-form-1"
-                                    className="flex flex-col w-full sm:flex-row"
-                                >
-                                Phone Number
-                                </FormLabel>
-                                <FormInput
-                                    id="validation-form-1"
-                                    type="number"
-                                    name="name"
-                                    placeholder="Enter Phone Number"
-                                    className="w-full"
-                                    value={mobileNumber}
-                                    onChange={(e) => setMobileNumber(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                        <FormLabel
-                            htmlFor="validation-form-1"
+                            <FormLabel
+                                htmlFor="validation-form-1"
+                                className="flex flex-col w-full sm:flex-row"
+                            >
+                                Gender
+                            </FormLabel>
+                            <FormSelect value={gender} onChange={(e) => {setGender(e.target.value)}}>
+                                <option value='none'>None</option>
+                                <option value='male'>Male</option>
+                                <option value='female'>Female</option>
+                                <option value='other'>Other</option>
+                            </FormSelect>
+                        <div className="mt-3 input-form w-full">
+                            <FormLabel
+                            htmlFor="validation-form-4"
                             className="flex flex-col w-full sm:flex-row"
-                        >
-                            Gender
-                        </FormLabel>
-                        <FormSelect value={gender} onChange={(e) => {setGender(e.target.value)}}>
-                            <option value='none'>None</option>
-                            <option value='male'>Male</option>
-                            <option value='female'>Female</option>
-                            <option value='other'>Other</option>
-                        </FormSelect>
-                      <div className="mt-3 input-form w-full">
-                        <FormLabel
-                          htmlFor="validation-form-4"
-                          className="flex flex-col w-full sm:flex-row"
-                        >
-                          Birth Date
-                        </FormLabel>
-                        <Flatpickr
-                            className='w-full rounded-xl'
-                            options={{
-                                altInput: true,
-                                altFormat: "F j, Y",
-                                dateFormat: "Y-m-d",
-                            }}
-                            placeholder="Choose Birth Date"
-                            onChange={handleDOBChange}
-                        />
-                      </div>
-                      <div className="mt-3 input-form">
-                        <FormLabel
-                          htmlFor="validation-form-6"
-                          className="flex flex-col w-full sm:flex-row"
-                        >
-                          Notes
-                        </FormLabel>
-                        <FormTextarea
-                          className="mb-5"
-                          id="validation-form-6"
-                          name="comment"
-                          
-                          placeholder="Type your notes here..."
-                        ></FormTextarea>
-                      </div>
-                    </form>
-                </div>
-                {/* End Basic Info */}
-                
-                <div className='md:w-1/3'>
-                     {/* Begin Consent Info */}
-                    <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 ">
-                        <h2 className="text-2xl font-bold mb-3">Consent Info</h2>
-                        <CheckboxToggle
-                            label="Allow SMS"
-                            value={allowSMS}
-                            className='mb-2'
-                            onChange={(event) => setAllowSMS(event.target.checked)}
-                        />
-                        <CheckboxToggle
-                            label="Allow Email"
-                            value={allowEmail}
-                            className='mb-2'
-                            onChange={(event) => setAllowEmail(event.target.checked)}
-                        />
-                        <CheckboxToggle
-                            label="Allow Marketing Notification"
-                            value={allowMarketingNotification}
-                            className='mb-2'
-                            onChange={(event) => setAllowMarketingNotification(event.target.checked)}
-                        />
-                    </div>
-                     {/* End Consent Info */}
-
-                      {/* Begin Consent Form */}
-                      <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 mt-20">
-                      <h2 className="text-2xl font-bold mb-3">Consent Form</h2>
-                      <Dropzone
-                        // getRef={(el) => {
-                        //     dropzoneSingleRef.current = el;
-                        // }}
-                        options={{
-                            url: "https://httpbin.org/post",
-                            thumbnailWidth: 150,
-                            maxFilesize: 0.5,
-                            maxFiles: 1,
-                            headers: { "My-Awesome-Header": "header value" },
-                        }}
-                        className="dropzone"
-                        >
-                        <div className="text-lg font-medium">
-                            Drop files here or click to upload.
+                            >
+                            Birth Date
+                            </FormLabel>
+                            <Flatpickr
+                                className='w-full rounded-xl'
+                                options={{
+                                    altInput: true,
+                                    altFormat: "F j, Y",
+                                    dateFormat: "Y-m-d",
+                                }}
+                                placeholder="Choose Birth Date"
+                                onChange={handleDOBChange}
+                            />
                         </div>
-                    </Dropzone>
+                        <div className="mt-3 input-form">
+                            <FormLabel
+                            htmlFor="validation-form-6"
+                            className="flex flex-col w-full sm:flex-row"
+                            >
+                            Notes
+                            </FormLabel>
+                            <FormTextarea
+                            className="mb-5"
+                            id="validation-form-6"
+                            name="comment"
+                            
+                            placeholder="Type your notes here..."
+                            ></FormTextarea>
+                        </div>
+                        </form>
                     </div>
-                      {/* End Consent Form */}
+                    {/* End Basic Info */}
+                    
+                    <div className='md:w-1/3'>
+                        {/* Begin Consent Info */}
+                        <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 ">
+                            <h2 className="text-2xl font-bold mb-3">Consent Info</h2>
+                            <CheckboxToggle
+                                label="Allow SMS"
+                                value={allowSMS}
+                                className='mb-2'
+                                onChange={(event) => setAllowSMS(event.target.checked)}
+                            />
+                            <CheckboxToggle
+                                label="Allow Email"
+                                value={allowEmail}
+                                className='mb-2'
+                                onChange={(event) => setAllowEmail(event.target.checked)}
+                            />
+                            <CheckboxToggle
+                                label="Allow Marketing Notification"
+                                value={allowMarketingNotification}
+                                className='mb-2'
+                                onChange={(event) => setAllowMarketingNotification(event.target.checked)}
+                            />
+                        </div>
+                        {/* End Consent Info */}
+
+                        {/* Begin Consent Form */}
+                        <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 mt-20">
+                        <h2 className="text-2xl font-bold mb-3">Consent Form</h2>
+                        <Dropzone
+                            // getRef={(el) => {
+                            //     dropzoneSingleRef.current = el;
+                            // }}
+                            options={{
+                                url: "https://httpbin.org/post",
+                                thumbnailWidth: 150,
+                                maxFilesize: 0.5,
+                                maxFiles: 1,
+                                headers: { "My-Awesome-Header": "header value" },
+                            }}
+                            className="dropzone"
+                            >
+                            <div className="text-lg font-medium">
+                                Drop files here or click to upload.
+                            </div>
+                        </Dropzone>
+                        </div>
+                        {/* End Consent Form */}
+                    </div>
                 </div>
+                <ToastContainer
+                    position="top-center" 
+                    autoClose={3000} 
+                    hideProgressBar={true}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    theme="colored"
+                    pauseOnHover
+                    transition={Flip}
+                />
             </div>
-            <ToastContainer
-                position="top-center" 
-                autoClose={3000} 
-                hideProgressBar={true}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                theme="colored"
-                pauseOnHover
-                transition={Flip}
-            />
         </div>
     );
 };

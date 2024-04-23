@@ -19,6 +19,9 @@ import { useAuth } from "../services/AuthContext";
 import EditClient from "../pages/Clients/editClient";
 import MainPage from "../pages/Marketing/mainpage";
 import ManagerMain from "../pages/Manager/main";
+import { Settings } from "lucide-react";
+import SettingsPage from "../pages/Manager/setting";
+import "./styles.css"
 
 function Router() {
   const user = useAuth();
@@ -70,8 +73,13 @@ function Router() {
     },
     {
       path: "/clients/add",
-      element: <AddClient />,
+      element: (
+        <div className="add-client-container">
+          <AddClient />
+        </div>
+      ),
     },
+    
     {
       path: "/clients/:customerId/edit",
       element: <EditClient />,
@@ -87,10 +95,22 @@ function Router() {
     {
       path: "*",
       element: <NotFound />
+    },
+    {
+      path: "/manager/setting",
+      element: <SettingsPage />
     }
   ];
 
    return useRoutes(routes);
 }
+
+const AddClientWithBackgroundColor = () => {
+  return (
+    <div style={{ backgroundColor: "#fff" }}>
+      <AddClient />
+    </div>
+  );
+};
 
 export default Router;
