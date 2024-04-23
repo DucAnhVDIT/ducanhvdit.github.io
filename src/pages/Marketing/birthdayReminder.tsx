@@ -12,10 +12,10 @@ import Button from '../../base-components/Button';
 
 function BirthdayReminder() {
   return (
-    <Card sx={{width:'30%', boxShadow:'none', border:'solid 1px grey'}}>
+    <Card className="w-[25%]">
       <CardHeader
         sx={{ display: 'flex', alignItems: 'center' }}
-        title={<Typography variant="h5">Birthday Reminder</Typography>}
+        title={<Typography variant="h6">Birthday Reminder</Typography>}
         avatar={
           <Avatar sx={{ backgroundColor: '#1E40AF'}}>
             <CakeIcon />
@@ -24,10 +24,9 @@ function BirthdayReminder() {
       />
       <CardContent>
         <Typography variant="body1" className=' text-gray-500'>
-        Delight customers on their birthday to increase their loyalty and keep them coming back. Sends automatic birthday wishes to clients when their special day is near.
+         Sends automatic birthday wishes to clients when their special day is near.
         </Typography>
       </CardContent>
-      <Divider />
       {/* Card Actions with setup button */}
       <CardActions sx={{ justifyContent: 'flex-end', flex: '0 0 auto' }}>
         <Button variant="primary" className='w-32'>

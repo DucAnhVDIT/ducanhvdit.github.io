@@ -12,31 +12,37 @@ import Button from '../../base-components/Button';
 import EmailIcon from '@mui/icons-material/Email';
 
 function Templates() {
-  return (
-    <Card sx={{width:'30%', boxShadow:'none', border:'solid 1px grey'}}>
-        <CardHeader
+    return (
+        <Card sx={{width:'25%', display: 'flex', flexDirection: 'column'}}>
+          <CardHeader
             sx={{ display: 'flex', alignItems: 'center' }}
-            title={<Typography variant="h5">Templates</Typography>}
+            title={<Typography variant="h6">Templates</Typography>}
             avatar={
-            <Avatar sx={{ backgroundColor: '#1E40AF'}}>
+              <Avatar sx={{ backgroundColor: '#1E40AF'}}>
                 <EmailIcon />
-            </Avatar>
+              </Avatar>
             }
-        />
-        <CardContent>
+          />
+          <CardContent sx={{ flex: '1 0 auto' }}>
             <Typography variant="body1" className=' text-gray-500'>
-            Simplify your outreach efforts by creating reusable templates for various purposes, from promotions and announcements to customer service interactions. 
+                Creating reusable templates for various purposes
             </Typography>
-        </CardContent>
-        <Divider />
-        {/* Card Actions with setup button */}
-        <CardActions sx={{ justifyContent: 'flex-end', flex: '0 0 auto' }}>
+          </CardContent>
+          {/* Card Actions with setup button */}
+          <CardActions sx={{ justifyContent: 'flex-end', flex: '0 0 auto' }}>
             <Button variant="primary" className='w-32'>
-            Set Up
+              Set Up
             </Button>
-        </CardActions>
-    </Card>
-  )
+          </CardActions>
+        </Card>
+      )
 }
 
 export default Templates
+
+
+{/* <Avatar sx={{ backgroundColor: '#1E40AF'}}>
+                <EmailIcon />
+            </Avatar> */}
+
+//    Creating reusable templates for various purposes

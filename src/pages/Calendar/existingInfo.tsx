@@ -93,6 +93,8 @@ function ExistingInfo({
       BookDate: newDate,
       StartTime: newStartTime,
     }));
+
+    
   };
 
   const handleServiceSelect = (selectedService: { ProductID: any }) => {

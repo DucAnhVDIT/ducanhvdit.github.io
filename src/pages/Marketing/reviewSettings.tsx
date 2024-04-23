@@ -13,10 +13,10 @@ import ReviewsIcon from '@mui/icons-material/Reviews';
 
 function ReviewSettings() {
   return (
-    <Card sx={{width:'30%', boxShadow:'none', border:'solid 1px grey', display: 'flex', flexDirection: 'column'}}>
+    <Card sx={{width:'25%', display: 'flex', flexDirection: 'column'}}>
       <CardHeader
         sx={{ display: 'flex', alignItems: 'center' }}
-        title={<Typography variant="h5">Review Settings</Typography>}
+        title={<Typography variant="h6">Review Settings</Typography>}
         avatar={
           <Avatar sx={{ backgroundColor: '#1E40AF'}}>
             <ReviewsIcon />
@@ -25,11 +25,10 @@ function ReviewSettings() {
       />
       <CardContent sx={{ flex: '1 0 auto' }}>
         <Typography variant="body1" className=' text-gray-500'>
-            Review settings allows you to customize and adjust your preferences for managing and monitoring customer reviews.
+            Managing and monitoring customer reviews.
         </Typography>
       </CardContent>
       {/* Card Actions with setup button */}
-      <Divider />
       <CardActions sx={{ justifyContent: 'flex-end', flex: '0 0 auto' }}>
         <Button variant="primary" className='w-32'>
           Set Up
