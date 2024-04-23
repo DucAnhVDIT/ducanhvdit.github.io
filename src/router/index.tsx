@@ -18,6 +18,7 @@ import Clients from "../pages/Clients/main"
 import { useAuth } from "../services/AuthContext";
 import EditClient from "../pages/Clients/editClient";
 import MainPage from "../pages/Marketing/mainpage";
+import ManagerMain from "../pages/Manager/main";
 
 function Router() {
   const user = useAuth();
@@ -55,7 +56,7 @@ function Router() {
         },
         {
           path: "/manager",
-          element: <DashboardOverview2 />,
+          element: <ManagerMain />,
         },
         // {
         //   path: "/clients/add",

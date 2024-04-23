@@ -43,7 +43,11 @@ import {
   setScheduleData,
   setAppointmentToCustomer,
 } from "../../stores/appoinmentSlice";
-import { setRebook, resetAppToRebook } from "../../stores/rebookSlide";
+import {
+  setRebook,
+  resetAppToRebook,
+  setRebookDate,
+} from "../../stores/rebookSlide";
 import eposRepository from "../../repositories/eposRepository";
 import { logError, logSuccess } from "../../constant/log-error";
 import Select from "react-select";
@@ -62,6 +66,7 @@ import { RootState } from "../../stores/store";
 function Main() {
   const location = useLocation();
   const [date, setDate] = useState(new Date());
+  // const date = useSelector((state:any) => state.date.value);
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
   const [existingInformationSlide, setExistingInformationSlide] =
     useState(false);
@@ -90,8 +95,10 @@ function Main() {
     (state: any) => state.appointment.singleCustomerAppointment
   );
   const rebook = useSelector((state: RootState) => state.rebook.rebook);
-  const appToRebook = useSelector((state: RootState) => state.rebook.appointmentToRebook);
-
+  const rebookDate = useSelector((state: RootState) => state.rebook.date);
+  const appToRebook = useSelector(
+    (state: RootState) => state.rebook.appointmentToRebook
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -99,6 +106,7 @@ function Main() {
     //   fetchAppoinmentApiData(date);
     // }, 2000); // Poll every 3 seconds
     fetchAppoinmentApiData(date);
+    // console.log(singleCustomerAppointment)
     // if(appointment){
     //   setSlotSlideoverPreview(true)
     // }
@@ -133,7 +141,6 @@ function Main() {
 
   const handleRebookFromHistory = async (info: any) => {
     const startTime = moment(info.start).format("HH:mm");
-    setDate(info.start);
     setSelectedTime(startTime);
     const staffTitle = info.resource.title;
     const staffID = info.resource.id;
@@ -149,7 +156,7 @@ function Main() {
       Email: selectedCustomer?.Customer.Email || "",
       Appointments: [
         {
-          BookDate: date,
+          BookDate: rebookDate,
           StartTime: startTime,
           EndTime: serviceEndTime,
           ServiceID: appToRebook.ServiceID,
@@ -339,9 +346,7 @@ function Main() {
     }
   };
 
-  const selectHandler = appToRebook
-    ? handleRebookFromHistory
-    : handleSlotClicked;
+  const selectHandler = rebook ? handleRebookFromHistory : handleSlotClicked;
 
   const options: CalendarOptions = {
     plugins: [
@@ -497,6 +502,7 @@ function Main() {
           CustomerNote: info.event.extendedProps.customerNote,
           CompanyNotes: info.event.extendedProps.companyNotes,
         };
+        console.log(info.event.start);
 
         // Make the updateAppointment API call
         calendarRepository
@@ -600,6 +606,7 @@ function Main() {
       calendarRef.current.getApi().next();
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
+      dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
     }
   };
@@ -647,8 +654,8 @@ function Main() {
   }, [rebook]);
 
   useEffect(() => {
-    if(!rebook){
-      toast.dismiss()
+    if (!rebook) {
+      toast.dismiss();
     }
   }, [rebook]);
 

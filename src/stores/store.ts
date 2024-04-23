@@ -26,7 +26,7 @@ export const store = configureStore({
     appointment : appointmentReducer,
     notes: notesReducer,
     customer:customerReducer,
-    rebook: rebookReducer
+    rebook: rebookReducer,
   },
 })
 

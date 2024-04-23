@@ -38,6 +38,7 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
     updatedStartTime.setHours(parseInt(hours, 10), parseInt(minutes, 10));
     
     setStartTimeDD(updatedStartTime);
+    console.log(updatedStartTime)
     setTimeInputValue(newTime);
     updateChangeDateBody(flatpickrValue, updatedStartTime);
   };

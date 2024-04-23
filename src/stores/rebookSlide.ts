@@ -5,6 +5,7 @@ export const rebookSlice = createSlice({
   initialState: {
     rebook: false,
     appointmentToRebook: <any>{},
+    date: new Date()
   },
   reducers: {
     setRebook: (state, action) => {
@@ -16,10 +17,13 @@ export const rebookSlice = createSlice({
     resetAppToRebook: (state) => {
       state.appointmentToRebook = null;
     },
+    setRebookDate: (state, action) => {
+      state.date = action.payload
+    }
   },
 });
 
-export const { setRebook, setAppToRebook, resetAppToRebook } =
+export const { setRebook, setAppToRebook, resetAppToRebook, setRebookDate } =
   rebookSlice.actions;
 
 export default rebookSlice.reducer;
