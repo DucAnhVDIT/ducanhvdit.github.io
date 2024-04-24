@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import customerRepository from "../../repositories/customerRepository";
 import { Box, CircularProgress, Typography } from "@mui/material";
@@ -26,11 +26,15 @@ function ClientsMainPage() {
     []
   );
   const [editPanelOpen, setEditPanel] = React.useState(false);
+  const searchInputRef = useRef(null);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     fetchCustomerData();
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
   }, []);
 
   const handleSelectionChange = (newSelection: string[]) => {
@@ -181,6 +185,7 @@ function ClientsMainPage() {
               placeholder="Search client"
               value={searchValueClient}
               onChange={(e) => setSearchValueClient(e.target.value)}
+              ref={searchInputRef}
             />
             {searchValueClient ? (
               <Lucide
