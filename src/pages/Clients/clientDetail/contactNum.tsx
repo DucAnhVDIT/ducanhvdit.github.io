@@ -16,7 +16,7 @@ interface ContactProps {
 function ContactNum({ selectedCustomer }: ContactProps) {
   const [editContactSlide, setEditContactSlide] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
-  const [mobile, setMobile] = useState(selectedCustomer.Mobile)
+  const [mobile, setMobile] = useState(selectedCustomer?.Customer.Mobile)
 
   
   useEffect(() => {
@@ -24,21 +24,22 @@ function ContactNum({ selectedCustomer }: ContactProps) {
   }, [editContactSlide]);
 
   const requestBody = {
-    CustomerID:selectedCustomer.Customer.CustomerID,
-    CustomerCardID:selectedCustomer.Customer.CustomerCardID,
-    FirstName: selectedCustomer.Customer.FirstName,
-    LastName: selectedCustomer.Customer.LastName,
-    Email: selectedCustomer.Customer.Email,
+    CustomerID:selectedCustomer?.Customer.CustomerID,
+    CustomerCardID:selectedCustomer?.Customer.CustomerCardID,
+    FirstName: selectedCustomer?.Customer.FirstName,
+    LastName: selectedCustomer?.Customer.LastName,
+    Email: selectedCustomer?.Customer.Email,
     Mobile: mobile,
-    SMSConsent: selectedCustomer.Customer.SMSConsent,
-    PointAward: selectedCustomer.Customer.PointAward,
-    business_id: selectedCustomer.Customer.business_id
+    SMSConsent: selectedCustomer?.Customer.SMSConsent,
+    PointAward: selectedCustomer?.Customer.PointAward,
+    business_id: selectedCustomer?.Customer.business_id
   };
 
   const handleSaveChange = () => {
     customerRepository.updateCustomer(requestBody).then(res => {
         logSuccess('Edited client successfully');
         setEditContactSlide(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       })
       .catch(error => {
         logError('Error adding client: ' + `${error}`);
@@ -134,8 +135,10 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                 name="name"
                 placeholder=""
                 className="w-full"
-                defaultValue={selectedCustomer.Customer.Mobile}
-                onChange={() => {}}
+                value={mobile}
+                onChange={(e) => {
+                  setMobile(e.target.value); 
+                }}
                 readOnly
               />
             </div>
@@ -234,7 +237,7 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                       name="name"
                       placeholder=""
                       className="w-full"
-                      defaultValue={selectedCustomer.Customer.Mobile}
+                      value={mobile}
                       onChange={(e) => {
                         setIsDirty(true);
                         setMobile(e.target.value)

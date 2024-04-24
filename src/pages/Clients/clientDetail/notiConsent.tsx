@@ -35,7 +35,9 @@ function NotiConsent({ selectedCustomer }: NotiConsentProps) {
     SMSConsent: allowSMS,
     EmailConsent:allowEmail,
     PointAward: selectedCustomer?.Customer.PointAward,
-    business_id: selectedCustomer?.Customer.business_id
+    business_id: selectedCustomer?.Customer.business_id,
+    BlockOnlineBooking: selectedCustomer?.Customer.BlockOnlineBooking,
+    IsVIP:selectedCustomer?.Customer.IsVIP
   };
 
   
@@ -43,6 +45,7 @@ function NotiConsent({ selectedCustomer }: NotiConsentProps) {
     customerRepository.updateCustomer(requestBody).then(res => {
         logSuccess('Edited client successfully');
         setEditNotiSlide(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       })
       .catch(error => {
         logError('Error adding client: ' + `${error}`);
@@ -79,13 +82,13 @@ function NotiConsent({ selectedCustomer }: NotiConsentProps) {
         </div>
         <CheckboxToggle
           label="Allow SMS"
-          value={selectedCustomer?.Customer.SMSConsent}
+          value={allowSMS}
           className="mb-2"
           // onChange={(event) => setAllowSMS(event.target.checked)}
         />
         <CheckboxToggle
           label="Allow Email"
-          value={selectedCustomer?.Customer.EmailConsent}
+          value={allowEmail}
           className="mb-2"
           // onChange={(event) => setAllowEmail(event.target.checked)}
         />

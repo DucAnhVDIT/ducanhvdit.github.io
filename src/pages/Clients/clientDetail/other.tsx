@@ -26,16 +26,16 @@ function Other({ selectedCustomer }: OtherProps) {
   };
 
   const requestBody = {
-    CustomerID:selectedCustomer.Customer.CustomerID,
-    CustomerCardID:selectedCustomer.Customer.CustomerCardID,
-    FirstName: selectedCustomer.Customer.FirstName,
-    LastName: selectedCustomer.Customer.LastName,
-    Email: selectedCustomer.Customer.Email,
-    Mobile: selectedCustomer.Customer.Mobile,
-    SMSConsent: selectedCustomer.Customer.SMSConsent,
-    EmailConsent:selectedCustomer.Customer.EmailConsent,
-    PointAward: selectedCustomer.Customer.PointAward,
-    business_id: selectedCustomer.Customer.business_id,
+    CustomerID:selectedCustomer?.Customer.CustomerID,
+    CustomerCardID:selectedCustomer?.Customer.CustomerCardID,
+    FirstName: selectedCustomer?.Customer.FirstName,
+    LastName: selectedCustomer?.Customer.LastName,
+    Email: selectedCustomer?.Customer.Email,
+    Mobile: selectedCustomer?.Customer.Mobile,
+    SMSConsent: selectedCustomer?.Customer.SMSConsent,
+    EmailConsent:selectedCustomer?.Customer.EmailConsent,
+    PointAward: selectedCustomer?.Customer.PointAward,
+    business_id: selectedCustomer?.Customer.business_id,
     BlockOnlineBooking: blockOnline,
     IsVIP:VIP
   };
@@ -45,6 +45,7 @@ function Other({ selectedCustomer }: OtherProps) {
     customerRepository.updateCustomer(requestBody).then(res => {
         logSuccess('Edited client successfully');
         setEditOtherSlide(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       })
       .catch(error => {
         logError('Error adding client: ' + `${error}`);
@@ -74,13 +75,13 @@ function Other({ selectedCustomer }: OtherProps) {
         </div>
         <CheckboxToggle
           label="VIP"
-          value={selectedCustomer?.Customer.IsVIP}
+          value={VIP}
           className="mb-2"
           // onChange={(event) => setAllowSMS(event.target.checked)}
         />
         <CheckboxToggle
           label="Block Online"
-          value={selectedCustomer?.Customer.BlockOnlineBooking}
+          value={blockOnline}
           className="mb-2"
           // onChange={(event) => setAllowEmail(event.target.checked)}
         />

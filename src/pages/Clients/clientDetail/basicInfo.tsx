@@ -58,6 +58,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
     customerRepository.updateCustomer(requestBody).then(res => {
         logSuccess('Edited client successfully');
         setEditInfoSlide(false)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       })
       .catch(error => {
         logError('Error adding client: ' + `${error}`);
@@ -98,7 +99,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                 name="name"
                 placeholder="Enter First Name"
                 className="w-full"
-                defaultValue={firstName}
+                value={firstName}
                 readOnly
               />
             </div>
@@ -115,7 +116,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                 name="name"
                 placeholder="Enter Last Name"
                 className="w-full"
-                defaultValue={lastName}
+                value={lastName}
                 readOnly
               />
             </div>
@@ -134,7 +135,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                 name="name"
                 placeholder="Enter Email"
                 className="w-full"
-                defaultValue={email}
+                value={email}
                 readOnly
               />
             </div>
@@ -149,7 +150,8 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
               </FormLabel>
               <FormSelect
                 disabled
-                defaultValue={selectedCustomer?.Customer.Gender}
+                value={selectedCustomer?.Customer.Gender}
+                onChange={handleGenderChange}
               >
                 <option value="0">None</option>
                 <option value="1">Male</option>
@@ -213,7 +215,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                       name="name"
                       placeholder="Enter First Name"
                       className="w-full"
-                      defaultValue={firstName}
+                      value={firstName}
                       onChange={(e) => {
                         setIsDirty(true);
                         setFirstName(e.target.value)
@@ -233,7 +235,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                       name="name"
                       placeholder="Enter Last Name"
                       className="w-full"
-                      defaultValue={lastName}
+                      value={lastName}
                       onChange={(e) => {
                         setIsDirty(true);
                         setLastName(e.target.value)
@@ -255,7 +257,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                       name="name"
                       placeholder="Enter Email"
                       className="w-full"
-                      defaultValue={email}
+                      value={email}
                       onChange={(e) => {
                         setIsDirty(true);
                         setEmail(e.target.value)
