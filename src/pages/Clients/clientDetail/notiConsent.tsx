@@ -5,20 +5,49 @@ import IconButton from "@mui/material/IconButton";
 import Slideover from "../../../base-components/Headless/Slideover";
 import Lucide from "../../../base-components/Lucide";
 import Button from "../../../base-components/Button";
+import customerRepository from "../../../repositories/customerRepository";
+import { logError, logSuccess } from "../../../constant/log-error";
+import { useNavigate } from "react-router-dom";
 
 interface NotiConsentProps {
   selectedCustomer: any;
 }
 
 function NotiConsent({ selectedCustomer }: NotiConsentProps) {
+  const navigate = useNavigate();
   const [editNotiSlide, setEditNotiSlide] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  
   const [allowSMS, setAllowSMS] = useState(
     selectedCustomer?.Customer.SMSConsent
   );
   const [allowEmail, setAllowEmail] = useState(
     selectedCustomer?.Customer.EmailConsent
   );
+
+  const requestBody = {
+    CustomerID:selectedCustomer?.Customer.CustomerID,
+    CustomerCardID:selectedCustomer?.Customer.CustomerCardID,
+    FirstName: selectedCustomer?.Customer.FirstName,
+    LastName: selectedCustomer?.Customer.LastName,
+    Email: selectedCustomer?.Customer.Email,
+    Mobile: selectedCustomer?.Customer.Mobile,
+    SMSConsent: allowSMS,
+    EmailConsent:allowEmail,
+    PointAward: selectedCustomer?.Customer.PointAward,
+    business_id: selectedCustomer?.Customer.business_id
+  };
+
+  
+  const handleSaveChange = () => {
+    customerRepository.updateCustomer(requestBody).then(res => {
+        logSuccess('Edited client successfully');
+        setEditNotiSlide(false)
+      })
+      .catch(error => {
+        logError('Error adding client: ' + `${error}`);
+      });
+  };
 
   const handleCloseEditSlide = () => {
     setEditNotiSlide(false);
@@ -124,7 +153,7 @@ function NotiConsent({ selectedCustomer }: NotiConsentProps) {
                   variant="primary"
                   type="button"
                   className="w-32"
-                  onClick={() => {}}
+                  onClick={handleSaveChange}
                 >
                   Save
                 </Button>

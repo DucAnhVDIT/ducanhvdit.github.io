@@ -73,11 +73,7 @@ function Router() {
     },
     {
       path: "/clients/add",
-      element: (
-        <div className="add-client-container">
-          <AddClient />
-        </div>
-      ),
+      element: <AddClient />
     },
     
     {

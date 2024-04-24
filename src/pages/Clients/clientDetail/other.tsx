@@ -5,6 +5,9 @@ import IconButton from "@mui/material/IconButton";
 import Slideover from "../../../base-components/Headless/Slideover";
 import Lucide from "../../../base-components/Lucide";
 import Button from "../../../base-components/Button";
+import customerRepository from "../../../repositories/customerRepository";
+import { logError, logSuccess } from "../../../constant/log-error";
+
 
 interface OtherProps {
   selectedCustomer: any;
@@ -16,11 +19,36 @@ function Other({ selectedCustomer }: OtherProps) {
   const [blockOnline, setBlockOnline] = useState(
     selectedCustomer?.Customer.BlockOnlineBooking
   );
+  const [VIP, setVIP] = useState(selectedCustomer?.Customer.IsVIP)
 
   const handleCloseOtherSlide = () => {
     setEditOtherSlide(false);
-    // Reset state variables
-    setBlockOnline(selectedCustomer?.Customer.BlockOnlineBooking);
+  };
+
+  const requestBody = {
+    CustomerID:selectedCustomer.Customer.CustomerID,
+    CustomerCardID:selectedCustomer.Customer.CustomerCardID,
+    FirstName: selectedCustomer.Customer.FirstName,
+    LastName: selectedCustomer.Customer.LastName,
+    Email: selectedCustomer.Customer.Email,
+    Mobile: selectedCustomer.Customer.Mobile,
+    SMSConsent: selectedCustomer.Customer.SMSConsent,
+    EmailConsent:selectedCustomer.Customer.EmailConsent,
+    PointAward: selectedCustomer.Customer.PointAward,
+    business_id: selectedCustomer.Customer.business_id,
+    BlockOnlineBooking: blockOnline,
+    IsVIP:VIP
+  };
+
+  
+  const handleSaveChange = () => {
+    customerRepository.updateCustomer(requestBody).then(res => {
+        logSuccess('Edited client successfully');
+        setEditOtherSlide(false)
+      })
+      .catch(error => {
+        logError('Error adding client: ' + `${error}`);
+      });
   };
 
   useEffect(() => {
@@ -46,7 +74,7 @@ function Other({ selectedCustomer }: OtherProps) {
         </div>
         <CheckboxToggle
           label="VIP"
-          // value={allowSMS}
+          value={selectedCustomer?.Customer.IsVIP}
           className="mb-2"
           // onChange={(event) => setAllowSMS(event.target.checked)}
         />
@@ -83,9 +111,12 @@ function Other({ selectedCustomer }: OtherProps) {
               >
                 <CheckboxToggle
                   label="VIP"
-                  // value={allowSMS}
+                  value={VIP}
                   className="mb-2"
-                  // onChange={(event) => setAllowSMS(event.target.checked)}
+                  onChange={(e) => {
+                    setIsDirty(true);
+                    setVIP(e.target.checked)
+                  }}
                 />
                 <CheckboxToggle
                   label="Block Online"
@@ -118,7 +149,7 @@ function Other({ selectedCustomer }: OtherProps) {
                   variant="primary"
                   type="button"
                   className="w-32"
-                  onClick={() => {}}
+                  onClick={handleSaveChange}
                 >
                   Save
                 </Button>

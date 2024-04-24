@@ -29,6 +29,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
   const [lastName, setLastName] = useState(selectedCustomer.Customer.LastName)
   const [email, setEmail] = useState(selectedCustomer.Customer.Email)
 
+
   useEffect(() => {
     setIsDirty(false);
   }, [editInfoSlide]);
@@ -37,17 +38,25 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
     setGender(event.target.value as string);
   };
 
+
   const requestBody = {
     CustomerID:selectedCustomer.Customer.CustomerID,
+    CustomerCardID:selectedCustomer.Customer.CustomerCardID,
     FirstName: firstName,
     LastName: lastName,
     Email: email,
-    Gender: gender === 'male' ? 1 : gender === 'female' ? 2 : gender === 'other' ? 3 : gender === 'none' ? 0 : '',
+    // Gender: gender === 'male' ? 1 : gender === 'female' ? 2 : gender === 'other' ? 3 : gender === 'none' ? 0 : '',
+    Gender:0,
+    DateOfBirth: '',
+    Mobile: selectedCustomer.Customer.Mobile,
+    SMSConsent: selectedCustomer.Customer.SMSConsent,
+    PointAward: selectedCustomer.Customer.PointAward,
+    business_id: selectedCustomer.Customer.business_id
   };
 
   const handleSaveChange = () => {
     customerRepository.updateCustomer(requestBody).then(res => {
-        logSuccess('Client added successfully');
+        logSuccess('Edited client successfully');
         setEditInfoSlide(false)
       })
       .catch(error => {
@@ -89,7 +98,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                 name="name"
                 placeholder="Enter First Name"
                 className="w-full"
-                defaultValue={selectedCustomer.Customer.FirstName}
+                defaultValue={firstName}
                 readOnly
               />
             </div>
@@ -106,7 +115,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                 name="name"
                 placeholder="Enter Last Name"
                 className="w-full"
-                defaultValue={selectedCustomer.Customer.LastName}
+                defaultValue={lastName}
                 readOnly
               />
             </div>
@@ -125,7 +134,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                 name="name"
                 placeholder="Enter Email"
                 className="w-full"
-                defaultValue={selectedCustomer.Customer.Email}
+                defaultValue={email}
                 readOnly
               />
             </div>
@@ -204,7 +213,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                       name="name"
                       placeholder="Enter First Name"
                       className="w-full"
-                      defaultValue={selectedCustomer.Customer.FirstName}
+                      defaultValue={firstName}
                       onChange={(e) => {
                         setIsDirty(true);
                         setFirstName(e.target.value)
@@ -224,7 +233,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                       name="name"
                       placeholder="Enter Last Name"
                       className="w-full"
-                      defaultValue={selectedCustomer.Customer.LastName}
+                      defaultValue={lastName}
                       onChange={(e) => {
                         setIsDirty(true);
                         setLastName(e.target.value)
@@ -246,7 +255,7 @@ function BasicInfo({ selectedCustomer }: BasicInfoProps) {
                       name="name"
                       placeholder="Enter Email"
                       className="w-full"
-                      defaultValue={selectedCustomer.Customer.Email}
+                      defaultValue={email}
                       onChange={(e) => {
                         setIsDirty(true);
                         setEmail(e.target.value)

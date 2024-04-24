@@ -6,6 +6,8 @@ import IconButton from "@mui/material/IconButton";
 import Slideover from "../../../base-components/Headless/Slideover";
 import Button from "../../../base-components/Button";
 import Lucide from "../../../base-components/Lucide";
+import customerRepository from "../../../repositories/customerRepository";
+import { logError, logSuccess } from "../../../constant/log-error";
 
 interface ContactProps {
   selectedCustomer: any;
@@ -14,11 +16,34 @@ interface ContactProps {
 function ContactNum({ selectedCustomer }: ContactProps) {
   const [editContactSlide, setEditContactSlide] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [mobile, setMobile] = useState(selectedCustomer.Mobile)
 
   
   useEffect(() => {
     setIsDirty(false);
   }, [editContactSlide]);
+
+  const requestBody = {
+    CustomerID:selectedCustomer.Customer.CustomerID,
+    CustomerCardID:selectedCustomer.Customer.CustomerCardID,
+    FirstName: selectedCustomer.Customer.FirstName,
+    LastName: selectedCustomer.Customer.LastName,
+    Email: selectedCustomer.Customer.Email,
+    Mobile: mobile,
+    SMSConsent: selectedCustomer.Customer.SMSConsent,
+    PointAward: selectedCustomer.Customer.PointAward,
+    business_id: selectedCustomer.Customer.business_id
+  };
+
+  const handleSaveChange = () => {
+    customerRepository.updateCustomer(requestBody).then(res => {
+        logSuccess('Edited client successfully');
+        setEditContactSlide(false)
+      })
+      .catch(error => {
+        logError('Error adding client: ' + `${error}`);
+      });
+  };
 
 
   return (
@@ -212,6 +237,7 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                       defaultValue={selectedCustomer.Customer.Mobile}
                       onChange={(e) => {
                         setIsDirty(true);
+                        setMobile(e.target.value)
                       }}
                     />
                   </div>
@@ -234,7 +260,7 @@ function ContactNum({ selectedCustomer }: ContactProps) {
                   variant="primary"
                   type="button"
                   className="w-32"
-                  onClick={() => {}}
+                  onClick={handleSaveChange}
                 >
                   Save
                 </Button>
