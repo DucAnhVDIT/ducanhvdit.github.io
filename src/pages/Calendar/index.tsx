@@ -96,6 +96,7 @@ function Main() {
   );
   const rebook = useSelector((state: RootState) => state.rebook.rebook);
   const rebookDate = useSelector((state: RootState) => state.rebook.date);
+  const formatRebookDate = moment(rebookDate).format()
   const appToRebook = useSelector(
     (state: RootState) => state.rebook.appointmentToRebook
   );
@@ -111,7 +112,8 @@ function Main() {
     //   setSlotSlideoverPreview(true)
     // }
     // return () => clearInterval(intervalId);
-  }, [appoinmentChange]);
+    console.log(rebookDate)
+  }, [appoinmentChange, rebookDate]);
 
   const handleAppoinmentChange = (
     value: boolean | ((prevState: boolean) => boolean)
@@ -156,7 +158,7 @@ function Main() {
       Email: selectedCustomer?.Customer.Email || "",
       Appointments: [
         {
-          BookDate: rebookDate,
+          BookDate: formatRebookDate,
           StartTime: startTime,
           EndTime: serviceEndTime,
           ServiceID: appToRebook.ServiceID,
