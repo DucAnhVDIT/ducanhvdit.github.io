@@ -38,7 +38,8 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
     updatedStartTime.setHours(parseInt(hours, 10), parseInt(minutes, 10));
     
     setStartTimeDD(updatedStartTime);
-    console.log(updatedStartTime)
+    // console.log('value cua start time khi doi gio',updatedStartTime)
+    // console.log('value cua start date khi doi gio',flatpickrValue)
     setTimeInputValue(newTime);
     updateChangeDateBody(flatpickrValue, updatedStartTime);
   };
@@ -54,6 +55,8 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
     goToDate(selectedDate);
     updateChangeDateBody(selectedDate, updatedStartTime);
     setFlatpickrValue(selectedDate);
+    // console.log('value cua date khi doi ngay',selectedDate)
+    // console.log('value cua gio khi doi ngay',selectedDate)
     fetchAppoinmentApiData(selectedDate);
   };
 
@@ -71,7 +74,7 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
           ref={flatpickrRef}
           value={flatpickrValue}
           onChange={handleDateChange}
-          options={{ dateFormat: 'D j M Y'}}
+          options={{ dateFormat: 'D j M Y'}} 
           className="w-48 pl-4 border-none bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent"
         />
         <Lucide

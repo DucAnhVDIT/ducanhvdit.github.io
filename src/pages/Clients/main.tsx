@@ -26,7 +26,7 @@ function ClientsMainPage() {
     []
   );
   const [editPanelOpen, setEditPanel] = React.useState(false);
-  const searchInputRef = useRef(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
 

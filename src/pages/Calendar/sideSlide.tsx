@@ -32,6 +32,7 @@ import {
 } from "../../stores/notesSlide";
 import { Appointment } from "../../types/appointment";
 // import Pusher from 'pusher-js';
+import 'moment-timezone';
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
 interface SlideOverPanelProps {
@@ -59,6 +60,7 @@ function SlideOverPanel({
   resourceID,
   appointmentFromHistory
 }: SlideOverPanelProps) {
+  moment.tz.setDefault('Europe/London');
   const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false);
   const [isAddCustomerSlideOpen, setAddCustomerSlideOpen] = useState(false);

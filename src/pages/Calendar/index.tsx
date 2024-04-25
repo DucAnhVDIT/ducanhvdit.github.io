@@ -191,6 +191,7 @@ function Main() {
     const startTime = moment(info.start).format("HH:mm");
     setDate(info.start);
     setSelectedTime(startTime);
+    console.log("slot duoc chon", info.start)
     const staffTitle = info.resource.title;
     const staffID = info.resource.id;
     setResourceTitle(staffTitle);
@@ -366,7 +367,7 @@ function Main() {
         duration: { days: 1 },
       },
     },
-    slotDuration: "00:10",
+    slotDuration: "00:15",
     selectOverlap: false,
     eventTimeFormat: {
       hour: "2-digit",
@@ -482,6 +483,7 @@ function Main() {
     eventClick: handleEventClick,
     eventOverlap: false,
     eventDrop: function (info) {
+      console.log('thoi gian duoc chinh den', info.event.start)
       if (info.event.extendedProps.requirelock) {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
@@ -491,9 +493,9 @@ function Main() {
           FirstName: info.event.extendedProps.firstName,
           LastName: info.event.extendedProps.lastName,
           Mobile: info.event.extendedProps.Mobile,
-          Email: "",
+          Email: info.event.extendedProps.Email,
           BookDate: info.event.extendedProps.bookDate,
-          StartTime: info.event.start,
+          StartTime: moment(info.event.start).format(),
           ServiceID: info.event.extendedProps.serviceID,
           StaffID: info.newResource
             ? info.newResource._resource.id
@@ -502,7 +504,6 @@ function Main() {
           CustomerNote: info.event.extendedProps.customerNote,
           CompanyNotes: info.event.extendedProps.companyNotes,
         };
-        console.log(info.event.start);
 
         // Make the updateAppointment API call
         calendarRepository
@@ -532,9 +533,14 @@ function Main() {
         info.revert();
       }
 
-      const newStartTime: any = info.event.start;
-      const newEndTime: any = info.event.end;
-      const newDurationInMinutes = (newEndTime - newStartTime) / (1000 * 60);
+      const newStartTime = moment(info.event.start).format();
+      const newEndTime = moment(info.event.end).format();
+
+      const startTimeMoment = moment(newStartTime);
+      const endTimeMoment = moment(newEndTime);
+    
+      // Calculate duration in minutes using Moment.js
+      const newDurationInMinutes = endTimeMoment.diff(startTimeMoment, 'minutes');
 
       // Extracting relevant data for the request
       const appointmentData = {

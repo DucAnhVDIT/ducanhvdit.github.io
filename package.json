@@ -50,6 +50,7 @@
     "lucide": "^0.90.0",
     "lucide-react": "^0.88.0",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.45",
     "pusher-js": "^8.4.0-rc2",
     "react": "^18.2.0",
     "react-currency-input-field": "^3.8.0",
