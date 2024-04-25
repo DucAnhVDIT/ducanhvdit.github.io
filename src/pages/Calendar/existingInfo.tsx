@@ -72,6 +72,7 @@ function ExistingInfo({
     setUpdateCustomerSlide(false);
   };
 
+
   const [changeDateBody, setChangeDateBody] = useState({
     ID: appointmentData.ID,
     FirstName: appointmentData.FirstName,
@@ -87,15 +88,28 @@ function ExistingInfo({
     GuestNotes: null,
   });
 
-  const updateChangeDateBody = (newDate: Date, newStartTime: Date) => {
+  // const updateChangeDateBody = (newDate: Date, newStartTime: Date) => {
+  //   setChangeDateBody((prev) => ({
+  //     ...prev,
+  //     BookDate: newDate,
+  //     StartTime: newStartTime,
+  //   }));
+  // };
+  const updateBookDate = (newDate: Date) => {
     setChangeDateBody((prev) => ({
       ...prev,
       BookDate: newDate,
+    }));
+  };
+  
+  // Function to update StartTime
+  const updateStartTime = (newStartTime: string) => {
+    setChangeDateBody((prev) => ({
+      ...prev,
       StartTime: newStartTime,
     }));
-
-    
   };
+  
 
   const handleServiceSelect = (selectedService: { ProductID: any }) => {
     dispatch(addService(selectedService));
@@ -374,9 +388,8 @@ function ExistingInfo({
                   <ExistingDatePicker
                     date={new Date(appointmentData.BookDate)}
                     goToDate={handleDateChange}
-                    updateChangeDateBody={(newDate, newStartTime) =>
-                      updateChangeDateBody(newDate, newStartTime)
-                    }
+                    updateBookDate={updateBookDate}
+                    updateStartTime={updateStartTime}
                     startTime={appointmentData.StartTime}
                     fetchAppoinmentApiData={fetchAppoinmentApiData}
                   />

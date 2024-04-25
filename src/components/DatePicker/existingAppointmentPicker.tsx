@@ -5,11 +5,14 @@ import Lucide from '../../base-components/Lucide';
 import Button from '../../base-components/Button';
 import { useEffect, useRef, useState } from 'react';
 import 'flatpickr/dist/l10n/default';
+import moment from 'moment';
 
 interface ExistingDatePickerProps {
   date: Date;
   goToDate: (date: Date) => void;
-  updateChangeDateBody: (newDate: Date, newStartTime: Date) => void;
+  // updateChangeDateBody: (newDate: Date, newStartTime: Date) => void;
+  updateBookDate: (newDate : Date) => void
+  updateStartTime: (newStartTime : string) => void
   startTime: Date;
   fetchAppoinmentApiData: (value: Date) => void;
 }
@@ -17,7 +20,9 @@ interface ExistingDatePickerProps {
 const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
   date,
   goToDate,
-  updateChangeDateBody,
+  // updateChangeDateBody,
+  updateBookDate,
+  updateStartTime,
   startTime,
   fetchAppoinmentApiData,
 }) => {
@@ -33,32 +38,23 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
 
   const handleTimeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newTime = event.target.value;
-    const [hours, minutes] = newTime.split(':');
-    const updatedStartTime = new Date(flatpickrValue);
-    updatedStartTime.setHours(parseInt(hours, 10), parseInt(minutes, 10));
-    
-    setStartTimeDD(updatedStartTime);
-    // console.log('value cua start time khi doi gio',updatedStartTime)
-    // console.log('value cua start date khi doi gio',flatpickrValue)
+    const newDateTime = moment(newTime, 'HH:mm').format('YYYY-MM-DDTHH:mm:ssZ');
+    console.log(newDateTime)
     setTimeInputValue(newTime);
-    updateChangeDateBody(flatpickrValue, updatedStartTime);
+    updateStartTime(newDateTime);
   };
+  
   
 
   const handleDateChange = (dates: Date[]) => {
     const selectedDate = dates[0];
-
-    const existingTime = startTimeDD.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-    const updatedStartTime = new Date(selectedDate.toDateString() + ' ' + existingTime);
-
+  
     goToDate(selectedDate);
-    updateChangeDateBody(selectedDate, updatedStartTime);
+    updateBookDate(selectedDate); 
     setFlatpickrValue(selectedDate);
-    // console.log('value cua date khi doi ngay',selectedDate)
-    // console.log('value cua gio khi doi ngay',selectedDate)
     fetchAppoinmentApiData(selectedDate);
   };
+  
 
   const flatpickrRef = useRef<Flatpickr | null>(null);
 
