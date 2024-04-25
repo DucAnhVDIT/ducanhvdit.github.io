@@ -1,18 +1,18 @@
-import { Calendar } from 'lucide-react';
-import Flatpickr from 'react-flatpickr';
-import 'flatpickr/dist/themes/dark.css';
-import Lucide from '../../base-components/Lucide';
-import Button from '../../base-components/Button';
-import { useEffect, useRef, useState } from 'react';
-import 'flatpickr/dist/l10n/default';
-import moment from 'moment';
+import { Calendar } from "lucide-react";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/dark.css";
+import Lucide from "../../base-components/Lucide";
+import Button from "../../base-components/Button";
+import { useEffect, useRef, useState } from "react";
+import "flatpickr/dist/l10n/default";
+import moment from "moment";
 
 interface ExistingDatePickerProps {
   date: Date;
   goToDate: (date: Date) => void;
   // updateChangeDateBody: (newDate: Date, newStartTime: Date) => void;
-  updateBookDate: (newDate : Date) => void
-  updateStartTime: (newStartTime : string) => void
+  updateBookDate: (newDate: string, newDateTime: string) => void;
+  updateStartTime: (newStartTime: string) => void;
   startTime: Date;
   fetchAppoinmentApiData: (value: Date) => void;
 }
@@ -28,33 +28,40 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
 }) => {
   const [flatpickrValue, setFlatpickrValue] = useState(date);
   const [startTimeDD, setStartTimeDD] = useState(new Date(startTime));
-  const [timeInputValue, setTimeInputValue] = useState('');
+  const [timeInputValue, setTimeInputValue] = useState("");
 
   useEffect(() => {
     // Format the time from startTimeDD and set it as the initial input value
-    const formattedTime = startTimeDD.toTimeString().split(' ')[0];
+    const formattedTime = startTimeDD.toTimeString().split(" ")[0];
     setTimeInputValue(formattedTime);
+    console.log(moment(startTimeDD).format())
   }, [startTimeDD]);
 
-  const handleTimeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTimeInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newTime = event.target.value;
-    const newDateTime = moment(newTime, 'HH:mm').format('YYYY-MM-DDTHH:mm:ssZ');
-    console.log(newDateTime)
+    const newDateTime = moment(newTime, "HH:mm").format("YYYY-MM-DDTHH:mm:ssZ");
+    console.log(newDateTime);
     setTimeInputValue(newTime);
     updateStartTime(newDateTime);
   };
-  
-  
 
   const handleDateChange = (dates: Date[]) => {
     const selectedDate = dates[0];
-  
+    const hours = startTimeDD.getHours();
+    const minutes = startTimeDD.getMinutes();
+    const seconds = startTimeDD.getSeconds();
+
+    const updatedStartTime = new Date(selectedDate)
+    updatedStartTime.setHours(hours, minutes, seconds);
+    setStartTimeDD(updatedStartTime);
     goToDate(selectedDate);
-    updateBookDate(selectedDate); 
-    setFlatpickrValue(selectedDate);
+    const formattedDate = moment(selectedDate).format("YYYY-MM-DDTHH:mm:ss");
+    updateBookDate(formattedDate, moment(updatedStartTime).format());
+    // setFlatpickrValue(startTimeDD);
     fetchAppoinmentApiData(selectedDate);
   };
-  
 
   const flatpickrRef = useRef<Flatpickr | null>(null);
 
@@ -64,13 +71,13 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
   };
 
   return (
-    <div className='flex flex-row'>
-      <Button className='flex flex-row w-full zoom-in mr-3'>
+    <div className="flex flex-row">
+      <Button className="flex flex-row w-full zoom-in mr-3">
         <Flatpickr
           ref={flatpickrRef}
           value={flatpickrValue}
           onChange={handleDateChange}
-          options={{ dateFormat: 'D j M Y'}} 
+          options={{ dateFormat: "D j M Y" }}
           className="w-48 pl-4 border-none bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent"
         />
         <Lucide
@@ -81,11 +88,10 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
       </Button>
 
       <input
-        type='time'
+        type="time"
         value={timeInputValue}
         onChange={handleTimeInputChange}
         className=" w-48 xl:w-56 pl-4 font-medium border-gray-200 bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent"
-        
       />
     </div>
   );

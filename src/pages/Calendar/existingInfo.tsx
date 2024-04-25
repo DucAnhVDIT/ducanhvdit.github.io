@@ -95,10 +95,11 @@ function ExistingInfo({
   //     StartTime: newStartTime,
   //   }));
   // };
-  const updateBookDate = (newDate: Date) => {
+  const updateBookDate = (newDate: string, newDateTime: string) => {
     setChangeDateBody((prev) => ({
       ...prev,
       BookDate: newDate,
+      StartTime: newDateTime
     }));
   };
   
@@ -165,7 +166,7 @@ function ExistingInfo({
         if (allSuccess) {
           onClose();
           logSuccess("Updated status");
-
+          setDrawerIsOpen(false);
           appointmentsToUpdate.forEach((appointmentToUpdate: any) => {
             dispatch(
               updateStatus({
@@ -194,6 +195,7 @@ function ExistingInfo({
           handleAppoinmentChange(true);
           onClose();
           setDrawerIsOpen(false);
+          console.log("ngay hien thi sau khi da update",changeDateBody.BookDate)
         } else {
           logError("Error updating appointment. Slot not available");
         }
