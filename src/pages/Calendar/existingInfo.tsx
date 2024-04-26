@@ -132,6 +132,7 @@ function ExistingInfo({
         if (res.status === 200) {
           console.log("Deleted appointment");
           onClose();
+          setDrawerIsOpen(false)
           logSuccess("Deleted appointment");
         } else {
           logError("Can not delete appointment");

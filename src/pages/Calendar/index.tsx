@@ -425,6 +425,7 @@ function Main() {
             title += ` / ${companyNotes}`;
           }
 
+
           // Add customer note to title if available
           if (customerNote && customerNote !== "null") {
             title += ` / ${customerNote}`;
@@ -485,7 +486,8 @@ function Main() {
     eventClick: handleEventClick,
     eventOverlap: false,
     eventDrop: function (info) {
-      console.log('thoi gian duoc chinh den', info.event.start)
+      console.log('1', info.event.extendedProps)
+      // console.log('note của tiệm', info.event.extendedProps)
       if (info.event.extendedProps.requirelock) {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
@@ -503,8 +505,8 @@ function Main() {
             ? info.newResource._resource.id
             : info.event.extendedProps.resourceId,
           Islocked: false,
-          CustomerNote: info.event.extendedProps.customerNote,
-          CompanyNotes: info.event.extendedProps.companyNotes,
+          CustomerNote: info.event.extendedProps.CustomerNote,
+          CompanyNotes: info.event.extendedProps.CompanyNotes,
         };
 
         // Make the updateAppointment API call
@@ -530,6 +532,7 @@ function Main() {
       // if (!confirm("Are you sure you want to change?")) {
       //   info.revert();
       // } else {
+      console.log('2', info.event.extendedProps)
       if (info.event.extendedProps.requirelock) {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
@@ -556,8 +559,8 @@ function Main() {
         ServiceID: info.event.extendedProps.serviceID,
         StaffID: info.event.extendedProps.resourceId,
         Islocked: false,
-        CustomerNote: info.event.extendedProps.companyNotes,
-        CompanyNotes: info.event.extendedProps.customerNote,
+        CustomerNote: info.event.extendedProps.CustomerNote,
+        CompanyNotes: info.event.extendedProps.CompanyNotes,
         Duration: newDurationInMinutes,
       };
       calendarRepository
