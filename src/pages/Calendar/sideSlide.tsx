@@ -33,6 +33,7 @@ import {
 import { Appointment } from "../../types/appointment";
 // import Pusher from 'pusher-js';
 import 'moment-timezone';
+import ServiceCardDisplay from "../../components/ServiceCard/serviceCardDisplay";
 
 //   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
 interface SlideOverPanelProps {
@@ -119,6 +120,7 @@ function SlideOverPanel({
       Math.min(prevVisible + 10, totalCustomers)
     );
   };
+
 
   const filteredCustomers = customersList?.Customers
     ? customersList.Customers.filter(
@@ -490,10 +492,10 @@ function SlideOverPanel({
                       (selectedService: {
                         ProductID: Key | null | undefined;
                       }) => (
-                        <ServiceCard
+                        <ServiceCardDisplay
                           key={selectedService.ProductID}
                           service={selectedService}
-                          onSelect={handleServiceDelete}
+                          deleteService={handleServiceDelete}
                         />
                       )
                     )}

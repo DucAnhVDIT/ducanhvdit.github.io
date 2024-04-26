@@ -397,6 +397,7 @@ function ExistingInfo({
                   />
                 </div>
 
+
                 {singleCustomerAppointment[appointmentData.CustomerID]?.map(
                   (appointment: any) => (
                     <div key={appointment.ID}>

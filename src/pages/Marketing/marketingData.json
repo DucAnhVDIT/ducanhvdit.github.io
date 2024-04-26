@@ -3,36 +3,36 @@
         "id": 1,
         "title": "Birthday Reminder",
         "description": "Sends automatic birthday wishes to clients when their special day is near.",
-        "icon": "Cake"
+        "icon": "CakeIcon"
     },
     {
         "id": 2,
         "title": "Vouchers",
         "description": "Seamlessly manage various aspects of your voucher program.",
-        "icon": "CardGiftcard"
+        "icon": "CardGiftcardIcon"
     },
     {
         "id": 3,
         "title": "Review Settings",
         "description": "Managing and monitoring customer reviews.",
-        "icon": "Reviews"
+        "icon": "ReviewsIcon"
     },
     {
         "id": 4,
         "title": "Return Customer",
         "description": "Attract inactive customers by offering them a special deal to encourage their return.",
-        "icon": "AddReaction"
+        "icon": "AddReactionIcon"
     },
     {
         "id": 5,
         "title": "Campaigns",
         "description": "Effortlessly create, schedule, and monitor targeted campaigns",
-        "icon": "Campaign"
+        "icon": "CampaignIcon"
     },
     {
         "id": 6,
         "title": "Templates",
         "description": "Creating reusable templates for various purposes.",
-        "icon": "Email"
+        "icon": "EmailIcon"
     }
 ]

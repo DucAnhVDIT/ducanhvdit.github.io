@@ -598,6 +598,7 @@ function Main() {
     if (calendarRef.current) {
       calendarRef.current.getApi().gotoDate(date);
     }
+    dispatch(setRebookDate(date));
     fetchAppoinmentApiData(date);
   };
 
@@ -624,6 +625,7 @@ function Main() {
       calendarRef.current.getApi().prev();
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
+      dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
     }
   };
@@ -633,6 +635,7 @@ function Main() {
       calendarRef.current.getApi().today();
       const currentDate = calendarRef.current.getApi().view.currentStart;
       setDate(currentDate);
+      dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
     }
   };

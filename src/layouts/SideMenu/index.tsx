@@ -66,7 +66,7 @@ function Main() {
                   <Menu
                     className={clsx({
                       // Animation
-                      [`opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay-${
+                      [`-${
                         (menuKey + 1) * 10
                       }`]: !menu.active,
                     })}

@@ -20,11 +20,11 @@ function ManagerMain() {
               <CardHeader
                 sx={{ display: "flex", alignItems: "center" }}
                 title={<Typography variant="h6">{res.title}</Typography>}
-                // avatar={
-                //   <Avatar sx={{ backgroundColor: "#1E40AF" }}>
-                //     <Lucide icon={res.icon} />
-                //   </Avatar>
-                // }
+                avatar={
+                  <Avatar sx={{ backgroundColor: "#1E40AF" }}>
+                    <Lucide icon={res.icon} />
+                  </Avatar>
+                }
               />
               <CardContent sx={{ flex: "1 0 auto", minHeight: "100px" }}>
                 <Typography variant="body1" className="text-gray-500">
