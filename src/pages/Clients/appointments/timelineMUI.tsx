@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSelectedCustomer } from "../../../stores/customerSlide";
 import "./styles.css";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { useNavigate } from "react-router-dom";
 import { addToBill, clearBill, clearItem } from "../../../stores/billSlice";
@@ -29,11 +29,12 @@ export default function TimelineMUI() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  
-  const appointmentToRebook = useSelector((state: RootState) => state.rebook.appointmentToRebook)
+
+  const appointmentToRebook = useSelector(
+    (state: RootState) => state.rebook.appointmentToRebook
+  );
   const selectedCustomer = useSelector(selectSelectedCustomer);
   const rebook = useSelector((state: RootState) => state.rebook.rebook);
-  
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -60,21 +61,20 @@ export default function TimelineMUI() {
 
   const handlePayBtn = (appointment: React.SetStateAction<null>) => {
     setSelectedAppointment(appointment);
-    dispatch(clearBill())
+    dispatch(clearBill());
     dispatch(addToBill(appointment));
     navigate("/purchase", {
       state: {
         appointment,
-        selectedCustomer
+        selectedCustomer,
       },
     });
   };
-  
 
   const handleRebookBtn = (appointment: React.SetStateAction<null>) => {
-    dispatch(setRebook(true))
+    dispatch(setRebook(true));
     setSelectedAppointment(appointment);
-    dispatch(setAppToRebook(appointment))
+    dispatch(setAppToRebook(appointment));
     navigate("/", {
       state: {
         selectedCustomer,
@@ -84,12 +84,14 @@ export default function TimelineMUI() {
     setSelectedAppointment(null);
   };
 
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       {loading ? (
         <CircularProgress />
       ) : (
-        <div style={{ maxHeight: "800px", overflowY: "auto" }}>
+        <div style={{ maxWidth: "100%", overflowX: "auto", maxHeight: '800px', overflowY: 'auto',}}>
           <Timeline>
             {selectedCustomer?.Customer?.Appointments?.length > 0 ? (
               selectedCustomer.Customer.Appointments.map(
@@ -102,14 +104,14 @@ export default function TimelineMUI() {
                       <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent sx={{ py: "12px", px: 2 }}>
-                      <Card sx={{ minWidth: "800px" }}>
+                      <Card className="appointment-card">
                         <CardContent>
                           <div className="flex justify-between">
-                            <h5 className="vertical-timeline-element-subtitle">
+                            <h5 className="vertical-timeline-element-subtitle text-sm sm:text-lg">
                               {formatDate(appointment.CreateBookingOn)}
                             </h5>
                             <h5
-                              className={`status font-semibold text-lg ${
+                              className={`status font-semibold sm:text-lg text-sm  ${
                                 appointment.StatusName === "Canceled" ||
                                 appointment.StatusName === "No Show"
                                   ? "text-red-500"
@@ -129,7 +131,7 @@ export default function TimelineMUI() {
                               <Button
                                 variant="primary"
                                 type="button"
-                                className="w-32 mr-96"
+                                className="w-32"
                                 onClick={() => handlePayBtn(appointment)}
                               >
                                 Pay
@@ -138,13 +140,13 @@ export default function TimelineMUI() {
                               <Button
                                 variant="primary"
                                 type="button"
-                                className="w-32 mr-96"
+                                className="w-32 sm:mr-96"
                                 onClick={() => handleRebookBtn(appointment)}
                               >
                                 Rebook
                               </Button>
                             )}
-                            <h1 className="font-bold text-2xl ml-48">
+                            <h1 className="font-bold text-2xl sm:ml-48 ml-20">
                               £{appointment.Price}
                             </h1>
                           </div>
@@ -164,8 +166,7 @@ export default function TimelineMUI() {
                   borderRadius: "8px",
                   padding: "16px",
                   marginBottom: "16px",
-                  width: "800px",
-                  height: "200px",
+                  width: "100%", // Adjust width to fill the container
                 }}
               >
                 <EventBusyIcon style={{ marginRight: "8px" }} />

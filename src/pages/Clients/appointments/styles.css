@@ -27,3 +27,14 @@
 html {
     overflow: -moz-scrollbars-none;
 }
+
+.appointment-card {
+    width: 270px; 
+  }
+  
+  @media (min-width: 600px) {
+    .appointment-card {
+      width: 800px;
+    }
+  }
+  
