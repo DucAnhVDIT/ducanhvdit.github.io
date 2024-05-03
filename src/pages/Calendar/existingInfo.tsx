@@ -72,7 +72,6 @@ function ExistingInfo({
     setUpdateCustomerSlide(false);
   };
 
-
   const [changeDateBody, setChangeDateBody] = useState({
     ID: appointmentData.ID,
     FirstName: appointmentData.FirstName,
@@ -99,10 +98,10 @@ function ExistingInfo({
     setChangeDateBody((prev) => ({
       ...prev,
       BookDate: newDate,
-      StartTime: newDateTime
+      StartTime: newDateTime,
     }));
   };
-  
+
   // Function to update StartTime
   const updateStartTime = (newStartTime: string) => {
     setChangeDateBody((prev) => ({
@@ -110,7 +109,6 @@ function ExistingInfo({
       StartTime: newStartTime,
     }));
   };
-  
 
   const handleServiceSelect = (selectedService: { ProductID: any }) => {
     dispatch(addService(selectedService));
@@ -132,7 +130,7 @@ function ExistingInfo({
         if (res.status === 200) {
           console.log("Deleted appointment");
           onClose();
-          setDrawerIsOpen(false)
+          setDrawerIsOpen(false);
           logSuccess("Deleted appointment");
         } else {
           logError("Can not delete appointment");
@@ -196,7 +194,6 @@ function ExistingInfo({
           handleAppoinmentChange(true);
           onClose();
           setDrawerIsOpen(false);
-          console.log("ngay hien thi sau khi da update",changeDateBody.BookDate)
         } else {
           logError("Error updating appointment. Slot not available");
         }
@@ -398,8 +395,7 @@ function ExistingInfo({
                   />
                 </div>
 
-
-                {singleCustomerAppointment[appointmentData.CustomerID]?.map(
+                {/* {singleCustomerAppointment?.map(
                   (appointment: any) => (
                     <div key={appointment.ID}>
                       <ServiceCard
@@ -409,19 +405,51 @@ function ExistingInfo({
                       />
                     </div>
                   )
+                )} */}
+                {singleCustomerAppointment.map(
+                  (eventAppointments: any[], eventIndex: number) => (
+                    <div key={eventIndex}>
+                      <h3>Event {eventIndex + 1}</h3>
+                      {eventAppointments.map(
+                        (appointment: any, appointmentIndex: number) => (
+                          <div key={appointmentIndex}>
+                            <ServiceCard
+                              key={appointment.ID}
+                              service={appointment}
+                              onSelect={handleServiceDelete}
+                            />
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )
                 )}
-                {selectedServices &&
+
+                {/* {appointmentGroups.map((group, index) => (
+                  <div key={index}>
+                    {group.map((appointment, idx) => (
+                      <div key={idx}>
+                        <ServiceCard
+                          key={appointment.ID}
+                          service={appointment}
+                          onSelect={handleServiceDelete}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ))} */}
+                {/* {selectedServices &&
                   selectedServices.map(
-                    (selectedService: {
+                    (appointmentData: {
                       ProductID: Key | null | undefined;
                     }) => (
                       <ServiceCard
-                        key={selectedService.ProductID}
-                        service={selectedService}
-                        onSelect={handleServiceDelete}
+                        key={appointmentData.ProductID}
+                        service={appointmentData}
+                        onSelect={(()=>{})}
                       />
                     )
-                  )}
+                  )} */}
 
                 {/* <div className="items-center justify-center text-center border-none shadow-none">
                             <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">

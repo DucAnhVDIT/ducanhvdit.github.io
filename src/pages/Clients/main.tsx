@@ -17,6 +17,8 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { setSelectedCustomer } from "../../stores/customerSlide";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 function ClientsMainPage() {
   const [customersList, setCustomersList] = useState<any[]>([]);
@@ -29,6 +31,9 @@ function ClientsMainPage() {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     fetchCustomerData();
@@ -105,7 +110,7 @@ function ClientsMainPage() {
   const columns: GridColDef[] = [
     {
       field: "Avatar",
-      headerName: "",
+      headerName: "Avatar",
       renderCell: (params) => (
         <div className="flex items-center">
           {/* Render picture if available, otherwise render initials */}
@@ -124,13 +129,16 @@ function ClientsMainPage() {
           )}
         </div>
       ),
+      width: 150,
+      headerClassName: "desktop-only",
+      cellClassName: "desktop-only",
     },
     {
       field: "CustomerCardID",
       headerName: "Customer ID",
       width: 180,
-      headerClassName: "desktop-only",
-      cellClassName: "desktop-only",
+      // headerClassName: "desktop-only",
+      // cellClassName: "desktop-only",
     },
     {
       field: "FirstName",
@@ -170,47 +178,30 @@ function ClientsMainPage() {
           LastName: customer.LastName || "-",
           Phone: customer.Mobile || "-",
           Email: customer.Email || "-",
-          PointAward: customer.PointAward || "-"
+          PointAward: customer.PointAward || "-",
         }))
     : [];
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between" }} className='opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay'>
-        <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
-          <div className="relative text-slate-500 mt-2">
-            <FormInput
-              type="text"
-              className=" w-96 h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-              placeholder="Search client"
-              value={searchValueClient}
-              onChange={(e) => setSearchValueClient(e.target.value)}
-              ref={searchInputRef}
-            />
-            {searchValueClient ? (
-              <Lucide
-                icon="XCircle"
-                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
-                onClick={() => setSearchValueClient("")}
-              />
-            ) : (
-              <Lucide
-                icon="Search"
-                className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-              />
-            )}
-          </div>
-        </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+        }}
+        className="opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay"
+      >
         <div>
           <Button
-            className="w-32 px-6 bg-primary text text-white mr-3 mt-2"
+            className="sm:w-32 w-[90px] px-6 bg-primary text text-white mr-3 mt-2"
             onClick={handleAddBtn}
           >
             Add
           </Button>
           {selectedRows.length === 1 && (
             <Button
-              className="w-32 px-6 bg-primary text text-white mr-3 mt-2"
+              className="sm:w-32 w-[90px] px-6 bg-primary text text-white mr-3 mt-2"
               onClick={handleEditBtn}
             >
               Edit
@@ -218,11 +209,33 @@ function ClientsMainPage() {
           )}
           {selectedRows.length > 0 && (
             <Button
-              className="w-32 px-6 bg-red-500 text text-white mr-3 mt-2"
+              className="sm:w-32 w-[90px] px-6 bg-red-500 text text-white mr-3 mt-2"
               onClick={() => {}}
             >
               Delete
             </Button>
+          )}
+        </div>
+        <div className="relative text-slate-500 mt-2">
+          <FormInput
+            type="text"
+            className="w-[320px] sm:w-[420px] h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+            placeholder="Search client"
+            value={searchValueClient}
+            onChange={(e) => setSearchValueClient(e.target.value)}
+            ref={searchInputRef}
+          />
+          {searchValueClient ? (
+            <Lucide
+              icon="XCircle"
+              className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+              onClick={() => setSearchValueClient("")}
+            />
+          ) : (
+            <Lucide
+              icon="Search"
+              className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+            />
           )}
         </div>
       </div>
@@ -239,6 +252,7 @@ function ClientsMainPage() {
       ) : (
         <div style={{ height: 640, width: "100%" }} className="mt-3">
           <DataGrid
+            columnHeaderHeight={isMobile ? 0 : undefined}
             sx={{
               "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
                 outline: "none !important",

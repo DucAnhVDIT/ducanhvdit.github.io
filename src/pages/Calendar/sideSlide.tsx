@@ -271,18 +271,9 @@ function SlideOverPanel({
       setSelectedCustomer(walkInCustomer);
     }
 
-    // const hasCustomerNotes = !!customerNotes;
-    // const hasCompanyNotes = !!companyNotes;
-
-    // // Perform action if either of the notes has been added
-    // if (hasCustomerNotes || hasCompanyNotes) {
-    //     dispatch(setHasNotes(true))
-    // }
-
     calendarRepository
       .addAppointment(newAppointmentRequest)
       .then((res) => {
-        // channel.trigger('new-appointment', { appointment: newAppointmentRequest });
         showAppointmentToast("Appointment added successfully");
         handleAppoinmentChange(true);
         onClose();

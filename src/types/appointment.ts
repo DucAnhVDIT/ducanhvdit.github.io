@@ -1,4 +1,5 @@
 export interface Appointment {
+    CustomerID: number,
     BookDate: Date;
     StartTime: string;
     EndTime: string;
@@ -8,4 +9,5 @@ export interface Appointment {
     Islocked: boolean;
     CustomerNote: string;
     CompanyNote: string;
+    ServiceName: string
   }

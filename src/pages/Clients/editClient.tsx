@@ -27,9 +27,9 @@ import { Link } from "react-router-dom";
 
 const EditClient = () => {
   useEffect(() => {
-    document.body.style.backgroundColor = 'white';
+    document.body.style.backgroundColor = "white";
     return () => {
-      document.body.style.backgroundColor = ''; // Reset background color when component unmounts
+      document.body.style.backgroundColor = ""; // Reset background color when component unmounts
     };
   }, []);
   const [activeTab, setActiveTab] = useState("overview");
@@ -63,16 +63,15 @@ const EditClient = () => {
         <div
           onClick={() => {}}
           className="text-lg font-bold text-white bg-primary"
-        >
-          
-        </div>
+        ></div>
       </div>
+
       <div className="flex justify-center mb-5">
-        <div className="mt-4">
+        <div className="mt-4 flex overflow-x-auto space-x-3">
           <Button
             variant="instagram"
             type="button"
-            className={`border-none w-40 cursor-pointer rounded-full px-6 ${
+            className={`border-none min-w-[120px] sm:w-40 cursor-pointer rounded-full px-6 ${
               activeTab === "overview"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
@@ -84,7 +83,7 @@ const EditClient = () => {
           <Button
             variant="instagram"
             type="button"
-            className={`w-40 border-none cursor-pointer ml-3 rounded-full px-6 ${
+            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
               activeTab === "client-detail"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
@@ -96,7 +95,7 @@ const EditClient = () => {
           <Button
             variant="instagram"
             type="button"
-            className={`w-40 border-none cursor-pointer ml-3 rounded-full px-6 ${
+            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
               activeTab === "appointments"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
@@ -108,7 +107,7 @@ const EditClient = () => {
           <Button
             variant="instagram"
             type="button"
-            className={`w-40 border-none cursor-pointer ml-3 rounded-full px-6 ${
+            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
               activeTab === "notes"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
@@ -120,7 +119,7 @@ const EditClient = () => {
           <Button
             variant="instagram"
             type="button"
-            className={`w-40 border-none cursor-pointer ml-3 rounded-full px-6 ${
+            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
               activeTab === "forms"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
@@ -130,8 +129,8 @@ const EditClient = () => {
             Forms
           </Button>
           {/* <IconButton>
-                          <ArrowBackIcon/>
-                      </IconButton> */}
+                    <ArrowBackIcon/>
+                </IconButton> */}
         </div>
       </div>
 

@@ -11,3 +11,17 @@
 .selected-row {
     background-color: lightblue; 
 }
+
+
+@media screen and (max-width: 767px) {
+    :root {
+      --is-mobile: true;
+    }
+  }
+  
+  @media screen and (min-width: 768px) {
+    :root {
+      --is-mobile: false;
+    }
+  }
+  

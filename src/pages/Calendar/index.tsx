@@ -54,11 +54,9 @@ import Select from "react-select";
 import SelectStaff from "../../components/SelectStaffButton";
 import React from "react";
 import SelectView from "../../components/SelectViewButton";
-import AppointmentPopup from "../../components/Modal";
-import BlockTimePopup from "../../components/Modal/blockTime";
 import ExistingDrawer from "../../components/MobileDrawer/existingDrawer";
 import AddNewDrawer from "../../components/MobileDrawer/addNewDrawer";
-import ReactTooltip from "react-tooltip";
+
 import { useLocation } from "react-router-dom";
 import { Appointment } from "../../types/appointment";
 import { RootState } from "../../stores/store";
@@ -96,7 +94,7 @@ function Main() {
   );
   const rebook = useSelector((state: RootState) => state.rebook.rebook);
   const rebookDate = useSelector((state: RootState) => state.rebook.date);
-  const formatRebookDate = moment(rebookDate).format()
+  const formatRebookDate = moment(rebookDate).format();
   const appToRebook = useSelector(
     (state: RootState) => state.rebook.appointmentToRebook
   );
@@ -112,7 +110,7 @@ function Main() {
     //   setSlotSlideoverPreview(true)
     // }
     // return () => clearInterval(intervalId);
-    console.log(rebookDate)
+    console.log(rebookDate);
   }, [appoinmentChange, rebookDate]);
 
   const handleAppoinmentChange = (
@@ -193,7 +191,7 @@ function Main() {
     const startTime = moment(info.start).format("HH:mm");
     setDate(info.start);
     setSelectedTime(startTime);
-    console.log("slot duoc chon", info.start)
+    console.log("slot duoc chon", info.start);
     const staffTitle = info.resource.title;
     const staffID = info.resource.id;
     setResourceTitle(staffTitle);
@@ -241,64 +239,126 @@ function Main() {
 
   const fetchAppoinmentApiData = async (
     date: { getTime: () => number } | undefined
-  ): Promise<any[]> => {
+  ): Promise<void> => {
     try {
       const data = date ? Math.floor(date.getTime() / 1000) : null;
       const res = await calendarRepository.getAppointment(data);
       const appointmentsArray = res.data.Appointments || [];
 
-      if (appointmentsArray.length > 0) {
-        const appointmentsByCustomer: Record<string, any[]> = {};
+      // if (appointmentsArray.length > 0) {
+      //   const appointmentsByCustomer: Record<string, any[]> = {};
 
-        appointmentsArray.forEach((appointment: any) => {
-          const customerID = appointment.CustomerID;
+      //   appointmentsArray.forEach((appointment: any) => {
+      //     const customerID = appointment.CustomerID;
 
-          if (!appointmentsByCustomer[customerID]) {
-            appointmentsByCustomer[customerID] = [];
-          }
+      //     if (!appointmentsByCustomer[customerID]) {
+      //       appointmentsByCustomer[customerID] = [];
+      //     }
 
-          const previousAppointments = appointmentsByCustomer[customerID];
-          let isSeparateAppointment = true;
+      //     const previousAppointments = appointmentsByCustomer[customerID];
+      //     let isConsecutive = false;
 
-          if (!existingInformationSlide) {
-            for (const lastAppointment of previousAppointments.reverse()) {
-              const timeDifference =
-                appointment.StartTime - lastAppointment.EndTime;
+      //     for (const lastAppointment of previousAppointments.reverse()) {
+      //       const timeDifference =
+      //         appointment.StartTime - lastAppointment.EndTime;
+      //       const timeThreshold = 60 * 30; // 30 minutes threshold for consecutive appointments
 
-              const timeThreshold = 60 * 30;
+      //       if (timeDifference <= timeThreshold) {
+      //         lastAppointment.EndTime = appointment.EndTime;
+      //         lastAppointment.Services.push(...appointment.Services);
+      //         isConsecutive = true;
+      //         break;
+      //       }
+      //     }
 
-              if (timeDifference <= timeThreshold) {
-                lastAppointment.EndTime = appointment.EndTime;
-                lastAppointment.Services.push(...appointment.Services);
-                isSeparateAppointment = false;
-                break;
-              }
-            }
-          }
+      //     if (!isConsecutive) {
+      //       appointmentsByCustomer[customerID].push(appointment);
+      //     }
 
-          if (isSeparateAppointment) {
-            appointmentsByCustomer[customerID].push(appointment);
-          }
-        });
-        // console.log('Fetching appointments...');
-        dispatch(setScheduleData(appointmentsArray));
-        if (!existingInformationSlide && !drawerIsOpen) {
-          dispatch(setAppointmentToCustomer(appointmentsByCustomer));
-        }
-        // console.log("Thong tin cuoc hen by ID", appointmentsByCustomer);
-        // console.log(appointmentsArray);
+      //     console.log("cuoc hen cua tung khach",appointmentsByCustomer)
+      //   });
 
-        // Return the appointmentsArray or the processed data if needed
-        return appointmentsArray;
-      } else {
-        // If there are no appointments, return an empty array or handle accordingly
-        return [];
+      //   dispatch(setScheduleData(appointmentsArray));
+      //   dispatch(setAppointmentToCustomer(appointmentsByCustomer));
+      // } else {
+      //   dispatch(setScheduleData([]));
+      //   dispatch(setAppointmentToCustomer({}));
+      // }
+
+      function hasMultipleServices(appointments: string | any[]) {
+        return appointments.length > 1;
       }
+
+      function groupAppointmentsByID(appointments: any[]) {
+        const groupedAppointmentsByID: { [key: number]: any[] } = {};
+
+        appointments.forEach((appointment) => {
+          if (!groupedAppointmentsByID[appointment.CustomerID]) {
+            groupedAppointmentsByID[appointment.CustomerID] = [];
+          }
+          groupedAppointmentsByID[appointment.CustomerID].push(appointment);
+        });
+
+        return groupedAppointmentsByID;
+      }
+
+      function groupConsecutiveAppointments(groupedAppointmentsByID: {
+        [key: number]: any[];
+      }) {
+        const groupedAppointmentsByTime: any[] = [];
+
+        for (const id in groupedAppointmentsByID) {
+          const appointments = groupedAppointmentsByID[id];
+          let currentGroup: any[] = [];
+
+          // Sort appointments by start time
+          appointments.sort(
+            (a, b) =>
+              new Date(a.StartTime).getTime() - new Date(b.StartTime).getTime()
+          );
+
+          appointments.forEach((appointment: any, index: any) => {
+            // If it's the first appointment or the current start time is consecutive with the previous end time
+            if (
+              currentGroup.length === 0 ||
+              new Date(appointment.StartTime).getTime() ===
+                new Date(
+                  currentGroup[currentGroup.length - 1].EndTime
+                ).getTime()
+            ) {
+              currentGroup.push(appointment);
+            } else {
+              // Start a new group
+              groupedAppointmentsByTime.push(currentGroup);
+              currentGroup = [appointment];
+            }
+
+            // If it's the last appointment, push the current group
+            if (index === appointments.length - 1) {
+              groupedAppointmentsByTime.push(currentGroup);
+            }
+          });
+        }
+
+        return groupedAppointmentsByTime;
+      }
+
+      // First group appointments by ID
+      const groupedAppointmentsByID = groupAppointmentsByID(appointmentsArray);
+
+      // Then group by start time
+      const groupedAppointmentsByTime = groupConsecutiveAppointments(
+        groupedAppointmentsByID
+      );
+
+      console.log("by id", groupedAppointmentsByID);
+      console.log("by time", groupedAppointmentsByTime);
+
+      dispatch(setScheduleData(appointmentsArray));
+      dispatch(setAppointmentToCustomer(groupedAppointmentsByTime));
     } catch (error) {
       console.error("Error fetching the API:", (error as Error).message);
-
-      // If there's an error, throw it to indicate a failure in fetching data
-      throw error;
+      // Handle the error, e.g., show an error message to the user
     }
   };
 
@@ -399,9 +459,9 @@ function Main() {
             .CustomerName;
           const serviceName = (appointment as { ServiceName: string })
             .ServiceName;
-          const companyNotes = (appointment as { CompanyNotes: string })
+          const CompanyNotes = (appointment as { CompanyNotes: string })
             .CompanyNotes;
-          const customerNote = (appointment as { CustomerNote: string })
+          const CustomerNote = (appointment as { CustomerNote: string })
             .CustomerNote;
           const startTime = (appointment as { StartTime: Date }).StartTime;
           const endTime = (appointment as { EndTime: Date }).EndTime;
@@ -419,16 +479,14 @@ function Main() {
           const isWebBooking = (appointment as { IsWebBooking: boolean })
             .IsWebBooking;
 
-          // Construct the title
           let title = `${customerName} - ${serviceName}`;
-          if (companyNotes && companyNotes !== "null") {
-            title += ` / ${companyNotes}`;
+          if (CompanyNotes && CompanyNotes !== "null") {
+            title += ` / ${CompanyNotes}`;
           }
 
-
           // Add customer note to title if available
-          if (customerNote && customerNote !== "null") {
-            title += ` / ${customerNote}`;
+          if (CustomerNote && CustomerNote !== "null") {
+            title += ` / ${CustomerNote}`;
           }
 
           return {
@@ -449,8 +507,8 @@ function Main() {
               serviceID,
               IsFirstBooking: isFirstBooking,
               IsWebBooking: isWebBooking,
-              CompanyNotes: companyNotes,
-              CustomerNote: customerNote,
+              CompanyNotes: CompanyNotes,
+              CustomerNote: CustomerNote,
             },
           };
         })
@@ -486,8 +544,8 @@ function Main() {
     eventClick: handleEventClick,
     eventOverlap: false,
     eventDrop: function (info) {
-      console.log('1', info.event.extendedProps)
-      // console.log('note của tiệm', info.event.extendedProps)
+      console.log("1", info.event.extendedProps);
+      console.log("note của tiệm", info.event.extendedProps);
       if (info.event.extendedProps.requirelock) {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
@@ -532,7 +590,7 @@ function Main() {
       // if (!confirm("Are you sure you want to change?")) {
       //   info.revert();
       // } else {
-      console.log('2', info.event.extendedProps)
+      console.log("2", info.event.extendedProps);
       if (info.event.extendedProps.requirelock) {
         alert("This appointment is locked, unable to make any changes.");
         info.revert();
@@ -543,9 +601,12 @@ function Main() {
 
       const startTimeMoment = moment(newStartTime);
       const endTimeMoment = moment(newEndTime);
-    
+
       // Calculate duration in minutes using Moment.js
-      const newDurationInMinutes = endTimeMoment.diff(startTimeMoment, 'minutes');
+      const newDurationInMinutes = endTimeMoment.diff(
+        startTimeMoment,
+        "minutes"
+      );
 
       // Extracting relevant data for the request
       const appointmentData = {

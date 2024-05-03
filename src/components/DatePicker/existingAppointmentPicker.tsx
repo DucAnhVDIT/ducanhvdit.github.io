@@ -34,7 +34,6 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
     // Format the time from startTimeDD and set it as the initial input value
     const formattedTime = startTimeDD.toTimeString().split(" ")[0];
     setTimeInputValue(formattedTime);
-    console.log(moment(startTimeDD).format())
   }, [startTimeDD]);
 
   const handleTimeInputChange = (
