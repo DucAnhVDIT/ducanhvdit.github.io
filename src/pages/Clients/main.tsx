@@ -37,7 +37,7 @@ function ClientsMainPage() {
 
   useEffect(() => {
     fetchCustomerData();
-    if (searchInputRef.current) {
+    if (searchInputRef.current && !isMobile) {
       searchInputRef.current.focus();
     }
   }, []);

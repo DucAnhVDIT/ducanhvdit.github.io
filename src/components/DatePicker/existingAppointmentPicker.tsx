@@ -88,6 +88,7 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
 
       <input
         type="time"
+        readOnly
         value={timeInputValue}
         onChange={handleTimeInputChange}
         className=" w-48 xl:w-56 pl-4 font-medium border-gray-200 bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent"

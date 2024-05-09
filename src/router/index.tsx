@@ -22,6 +22,7 @@ import ManagerMain from "../pages/Manager/main";
 import { Settings } from "lucide-react";
 import SettingsPage from "../pages/Manager/setting";
 import "./styles.css"
+import ReviewSettings from "../pages/Marketing/ReviewSettings";
 
 function Router() {
   const user = useAuth();
@@ -95,7 +96,11 @@ function Router() {
     {
       path: "/manager/setting",
       element: <SettingsPage />
-    }
+    },
+    {
+      path: "/marketing/reviewsettings",
+      element: <ReviewSettings />
+    },
   ];
 
    return useRoutes(routes);

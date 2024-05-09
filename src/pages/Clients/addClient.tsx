@@ -86,7 +86,7 @@ const AddClient = () => {
                             <Lucide icon={'X'}></Lucide>
                         </Link>
                         <h1 className="text-xl font-bold">Add Client</h1>
-                        <Button onClick={addNewClient} className="text-lg font-bold text-white bg-primary">Save</Button>
+                        <Button onClick={addNewClient} className="sm:w-32 w-[90px] px-6 bg-primary text text-white mr-3 mt-2">Save</Button>
                 </div>
                 <div className=' md:flex h-full items-start justify-center bg-white'>
                     {/* Begin Basic Info */}

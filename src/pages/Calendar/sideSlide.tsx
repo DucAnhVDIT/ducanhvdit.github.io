@@ -228,7 +228,7 @@ function SlideOverPanel({
   let previousEndTime = selectedTime;
 
   selectedServices.forEach((service: { Duration: any; ProductID: any }) => {
-    // Calculate end time based on start time and service duration
+    
     const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
 
     const newAppointment: Appointment = {
@@ -241,6 +241,8 @@ function SlideOverPanel({
       Islocked: false,
       CustomerNote: customerNotes,
       CompanyNote: companyNotes,
+      CustomerID: 0,
+      ServiceName: ""
     };
 
     newAppointmentRequest.Appointments.push(newAppointment);

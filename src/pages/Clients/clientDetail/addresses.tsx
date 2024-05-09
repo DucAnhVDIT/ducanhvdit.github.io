@@ -14,7 +14,7 @@ function Addresses() {
   return (
     <div>
       <div
-        className="border-2 border-black  p-5 pr-10 m-5 rounded-2xl"
+        className="border-2 border-black  p-5 pr-10 m-5 rounded-2xl bo"
         style={{ height: "400px", width: "450px" }}
       >
         <div className="flex justify-between">

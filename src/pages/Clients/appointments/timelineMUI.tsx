@@ -146,7 +146,7 @@ export default function TimelineMUI() {
                                 Rebook
                               </Button>
                             )}
-                            <h1 className="font-bold text-2xl sm:ml-48 ml-20">
+                            <h1 className="font-bold text-2xl sm:ml-48 ml-16">
                               £{appointment.Price}
                             </h1>
                           </div>

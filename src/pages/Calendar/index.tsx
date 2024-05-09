@@ -60,6 +60,7 @@ import AddNewDrawer from "../../components/MobileDrawer/addNewDrawer";
 import { useLocation } from "react-router-dom";
 import { Appointment } from "../../types/appointment";
 import { RootState } from "../../stores/store";
+import { setSelectedCustomer } from "../../stores/customerSlide";
 
 function Main() {
   const location = useLocation();
@@ -94,6 +95,8 @@ function Main() {
   );
   const rebook = useSelector((state: RootState) => state.rebook.rebook);
   const rebookDate = useSelector((state: RootState) => state.rebook.date);
+
+ 
   const formatRebookDate = moment(rebookDate).format();
   const appToRebook = useSelector(
     (state: RootState) => state.rebook.appointmentToRebook
@@ -221,16 +224,18 @@ function Main() {
   //   }
   // };
 
+  
+
   const handleEventClick = async (info: { event: any }) => {
     try {
       const appointmentID = info.event.extendedProps.ID;
-      fetchServiceApiData(info.event.extendedProps.resourceId);
       await calendarRepository
         .getSingleAppointment(appointmentID)
         .then((res: any) => {
           setSelectedAppointment(res.data.Appointment);
           setExistingInformationSlide(true);
           setDrawerIsOpen(true);
+          dispatch(setSelectedCustomer(res.data.Appointment.CustomerID))
         });
     } catch (error) {
       // console.error('Error fetching appointment information:', error.message);
@@ -305,7 +310,7 @@ function Main() {
       function groupConsecutiveAppointments(groupedAppointmentsByID: {
         [key: number]: any[];
       }) {
-        const groupedAppointmentsByTime: any[] = [];
+        const groupedAppointmentsByTime: { [key: number]: any[] } = {};
 
         for (const id in groupedAppointmentsByID) {
           const appointments = groupedAppointmentsByID[id];
@@ -329,13 +334,19 @@ function Main() {
               currentGroup.push(appointment);
             } else {
               // Start a new group
-              groupedAppointmentsByTime.push(currentGroup);
+              if (!groupedAppointmentsByTime[id]) {
+                groupedAppointmentsByTime[id] = [];
+              }
+              groupedAppointmentsByTime[id].push(currentGroup);
               currentGroup = [appointment];
             }
 
             // If it's the last appointment, push the current group
             if (index === appointments.length - 1) {
-              groupedAppointmentsByTime.push(currentGroup);
+              if (!groupedAppointmentsByTime[id]) {
+                groupedAppointmentsByTime[id] = [];
+              }
+              groupedAppointmentsByTime[id].push(currentGroup);
             }
           });
         }

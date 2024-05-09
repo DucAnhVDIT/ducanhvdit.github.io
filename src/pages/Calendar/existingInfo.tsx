@@ -29,6 +29,7 @@ import SelectStaff from "../../components/SelectStaffButton";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/dark.css";
 import moment from "moment";
+import { RootState } from "../../stores/store";
 
 interface SlideOverPanelProps {
   isOpen: boolean;
@@ -61,12 +62,18 @@ function ExistingInfo({
   const singleCustomerAppointment = useSelector(
     (state: any) => state.appointment.singleCustomerAppointment
   );
+  useEffect(() => {
+    console.log("id khach duoc chon", selectedCustomerEvent);
+  });
 
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false);
   const [searchValueService, setSearchValueService] = useState("");
   const [date, setDate] = useState(new Date());
   const [activeTab, setActiveTab] = useState("info");
   const [updateCustomerSlideOpen, setUpdateCustomerSlide] = useState(false);
+  const selectedCustomerEvent = useSelector(
+    (state: RootState) => state.customer.selectedCustomer
+  );
 
   const handleCloseUpdateCustomer = () => {
     setUpdateCustomerSlide(false);
@@ -237,6 +244,7 @@ function ExistingInfo({
         const price = appointment.Price || 0;
         return total + price;
       },
+
       0
     );
   };
@@ -304,6 +312,11 @@ function ExistingInfo({
 
     // setSecondSlideoverOpen(false);
   };
+
+  interface CustomerAppointmentEntry {
+    customerId: string;
+    appointmentsArray: any[];
+  }
 
   return (
     <div>
@@ -395,71 +408,31 @@ function ExistingInfo({
                   />
                 </div>
 
-                {/* {singleCustomerAppointment?.map(
-                  (appointment: any) => (
-                    <div key={appointment.ID}>
-                      <ServiceCard
-                        key={appointment.ID}
-                        service={appointment}
-                        onSelect={handleServiceDelete}
-                      />
-                    </div>
-                  )
-                )} */}
-                {singleCustomerAppointment.map(
-                  (eventAppointments: any[], eventIndex: number) => (
-                    <div key={eventIndex}>
-                      <h3>Event {eventIndex + 1}</h3>
-                      {eventAppointments.map(
-                        (appointment: any, appointmentIndex: number) => (
-                          <div key={appointmentIndex}>
-                            <ServiceCard
-                              key={appointment.ID}
-                              service={appointment}
-                              onSelect={handleServiceDelete}
-                            />
-                          </div>
-                        )
-                      )}
-                    </div>
-                  )
-                )}
-
-                {/* {appointmentGroups.map((group, index) => (
-                  <div key={index}>
-                    {group.map((appointment, idx) => (
-                      <div key={idx}>
-                        <ServiceCard
-                          key={appointment.ID}
-                          service={appointment}
-                          onSelect={handleServiceDelete}
-                        />
+                {/* {selectedCustomerEvent &&
+                  singleCustomerAppointment[selectedCustomerEvent] &&
+                  singleCustomerAppointment[selectedCustomerEvent].map(
+                    (eventAppointments: any[], eventIndex: number) => (
+                      <div key={eventIndex}>
+                        <h3>Event {eventIndex + 1}</h3>
+                        {eventAppointments.map(
+                          (appointment: any, appointmentIndex: number) => (
+                            <div key={appointmentIndex}>
+                              <ServiceCard
+                                key={appointment.ID}
+                                service={appointment}
+                                onSelect={handleServiceDelete}
+                              />
+                            </div>
+                          )
+                        )}
                       </div>
-                    ))}
-                  </div>
-                ))} */}
-                {/* {selectedServices &&
-                  selectedServices.map(
-                    (appointmentData: {
-                      ProductID: Key | null | undefined;
-                    }) => (
-                      <ServiceCard
-                        key={appointmentData.ProductID}
-                        service={appointmentData}
-                        onSelect={(()=>{})}
-                      />
                     )
                   )} */}
-
-                {/* <div className="items-center justify-center text-center border-none shadow-none">
-                            <Button onClick={() => setServiceSlideoverOpen(true)} className="items-center justify-center text-center border-none shadow-none">
-                              <Lucide
-                                icon="PlusCircle"
-                                  className="text-primary text-lg round mr-1"
-                              />
-                            <h1>Add more services</h1>
-                          </Button>
-                        </div>       */}
+                        <ServiceCard
+                          key={appointmentData.ID}
+                          service={appointmentData}
+                          onSelect={handleServiceDelete}
+                        />
               </>
             )}
 
@@ -694,7 +667,8 @@ function ExistingInfo({
           <Slideover.Footer>
             <div className="flex flex-row justify-between mb-9">
               <h1 className="text-2xl"> Total</h1>
-              <h1 className="text-xl">{`£${calculateTotal()}`}</h1>
+              <h1 className="text-xl">{`£${appointmentData.Price}`}</h1>
+              {/* <h1 className="text-xl">{`£${calculateTotal()}`}</h1> */}
             </div>
 
             <Button
