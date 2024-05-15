@@ -25,16 +25,13 @@ function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-y-auto min-h-scren">
+    <div className="min-h-screen flex flex-col">
       <div className="flex items-center justify-between top-0 w-full p-4">
         <Link to="/manager" className="text-lg font-bold">
           <Lucide icon={"X"} />
         </Link>
         <h1 className="text-xl font-bold ml-20">Settings</h1>
-        <div
-          onClick={() => {}}
-          className="text-lg font-bold text-white bg-primary"
-        ></div>
+        <div></div>
         <div className="sm:hidden ml-6">
           <Button
             variant="instagram"
@@ -60,10 +57,8 @@ function SettingsPage() {
             onClick={toggleCollapse}
           ></div>
           <div className="relative bg-white w-64 h-full p-4 flex flex-col space-y-3">
-            <Button
-              variant="instagram"
-              type="button"
-              className={`border-none min-w-[120px] cursor-pointer rounded-full px-6 ${
+            <button
+              className={`w-full py-2 px-3 rounded-full text-left ${
                 activeTab === "general"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
@@ -71,11 +66,9 @@ function SettingsPage() {
               onClick={() => handleTabChange("general")}
             >
               General Settings
-            </Button>
-            <Button
-              variant="instagram"
-              type="button"
-              className={`border-none min-w-[120px] cursor-pointer rounded-full px-6 ${
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
                 activeTab === "till"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
@@ -83,16 +76,74 @@ function SettingsPage() {
               onClick={() => handleTabChange("till")}
             >
               Till Settings
-            </Button>
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "time"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("time")}
+            >
+              Time Settings
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "card"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("card")}
+            >
+              Card Configuration
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "booking"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("booking")}
+            >
+              Booking Configuration
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "sync"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("sync")}
+            >
+              Sync System
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "update"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("update")}
+            >
+              Update
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "reset"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("reset")}
+            >
+              Reset
+            </button>
           </div>
         </div>
 
         {/* Left Nav for Desktop */}
-        <div className="hidden sm:flex flex-col space-y-3 w-64 p-4 overflow-y-auto">
-          <Button
-            variant="instagram"
-            type="button"
-            className={`border-none min-w-[120px] sm:w-40 cursor-pointer rounded-full px-6 ${
+        <div className="hidden sm:flex flex-col space-y-3 w-64 p-4">
+          <button
+            className={`w-full py-2 px-3 rounded-full text-left ${
               activeTab === "general"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
@@ -100,11 +151,9 @@ function SettingsPage() {
             onClick={() => handleTabChange("general")}
           >
             General Settings
-          </Button>
-          <Button
-            variant="instagram"
-            type="button"
-            className={`border-none min-w-[120px] sm:w-40 cursor-pointer rounded-full px-6 ${
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
               activeTab === "till"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
@@ -112,7 +161,67 @@ function SettingsPage() {
             onClick={() => handleTabChange("till")}
           >
             Till Settings
-          </Button>
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "time"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("time")}
+          >
+            Time Settings
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "card"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("card")}
+          >
+            Card Configuration
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "booking"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("booking")}
+          >
+            Booking Configuration
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "sync"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("sync")}
+          >
+            Sync System
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "update"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("update")}
+          >
+            Update
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "reset"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("reset")}
+          >
+            Reset
+          </button>
         </div>
 
         {/* Content Area */}
@@ -126,6 +235,12 @@ function SettingsPage() {
               </div>
             </div>
           )}
+          {activeTab === "time" && <div>Time Settings Content</div>}
+          {activeTab === "card" && <div>Card Configuration Content</div>}
+          {activeTab === "booking" && <div>Booking Configuration Content</div>}
+          {activeTab === "sync" && <div>Sync System Content</div>}
+          {activeTab === "update" && <div>Update Content</div>}
+          {activeTab === "reset" && <div>Reset Content</div>}
         </div>
       </div>
     </div>
