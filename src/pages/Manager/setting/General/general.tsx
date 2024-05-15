@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CompanyInfo from "./companyInfo";
 import Functions from "./functions";
 import SettingInfor from "./settingInfor";
+import EmailSetting from "./emailSetting";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState("company-info");
@@ -83,7 +84,7 @@ function SettingsPage() {
         {activeTab === "company-info" && <CompanyInfo />}
         {activeTab === "functions" && <Functions />}
         {activeTab === "setting-info" && <SettingInfor />}
-        {activeTab === "email-setting" && <div>Email Setting Content</div>}
+        {activeTab === "email-setting" && <EmailSetting />}
         {activeTab === "sms-setting" && <div>SMS Setting Content</div>}
         {activeTab === "reminder" && <div>Reminder Content</div>}
       </div>
