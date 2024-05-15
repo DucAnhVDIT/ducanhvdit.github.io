@@ -57,16 +57,6 @@ function CompanyInfo() {
           />
         </div>
         <div className="flex flex-col">
-          <FormLabel htmlFor="postcode-2">Postcode</FormLabel>
-          <FormInput
-            id="postcode-2"
-            type="text"
-            name="postcode-2"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
           <FormLabel htmlFor="country">Country</FormLabel>
           <FormInput
             id="country"

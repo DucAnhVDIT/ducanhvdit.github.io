@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CompanyInfo from "./companyInfo";
+import Functions from "./functions";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState("company-info");
@@ -79,7 +80,7 @@ function SettingsPage() {
 
       <div className="mt-4 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
         {activeTab === "company-info" && <CompanyInfo />}
-        {activeTab === "functions" && <div>Functions Content</div>}
+        {activeTab === "functions" && <Functions />}
         {activeTab === "setting-info" && <div>Setting Information Content</div>}
         {activeTab === "email-setting" && <div>Email Setting Content</div>}
         {activeTab === "sms-setting" && <div>SMS Setting Content</div>}
