@@ -95,6 +95,7 @@ module.exports = {
   },
   plugins: [
     require("@tailwindcss/forms"),
+    require('daisyui'),
     plugin(function ({ addBase, matchUtilities }) {
       addBase({
         // Default colors
@@ -221,6 +222,9 @@ module.exports = {
       );
     }),
   ],
+  daisyui: {
+    themes: false, // Disable DaisyUI themes
+  },
   variants: {
     extend: {
       boxShadow: ["dark"],

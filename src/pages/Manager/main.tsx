@@ -9,8 +9,17 @@ import CardHeader from "@mui/material/CardHeader";
 import Avatar from "@mui/material/Avatar";
 import { Typography } from "@mui/material";
 import Lucide from "../../base-components/Lucide";
+import { useNavigate } from "react-router-dom";
 
 function ManagerMain() {
+  const navigate = useNavigate();
+  const handleSetUpClick = (title: string) => {
+    // Use the title to construct the route path
+    const routePath = `/manager/${title.replace(/\s+/g, "").toLowerCase()}`; 
+
+    navigate(routePath);
+  };
+
   return (
     <div className="opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay">
       <Grid container spacing={3} style={{ margin: "20px" }}>
@@ -35,7 +44,7 @@ function ManagerMain() {
               <CardActions
                 sx={{ justifyContent: "flex-end", flex: "0 0 auto" }}
               >
-                <Button variant="primary" className="w-32">
+                <Button variant="primary" className="w-32" onClick={() => handleSetUpClick(res.title)}>
                   Set Up
                 </Button>
               </CardActions>

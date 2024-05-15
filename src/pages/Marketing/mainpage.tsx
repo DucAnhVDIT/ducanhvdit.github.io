@@ -22,19 +22,6 @@ function MainPage() {
   };
 
   return (
-    // <div className='p-7 flex flex-col opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay'>
-    //     <div className='flex justify-between'>
-    //         <BirthdayReminder />
-    //         <Voucher />
-    //         <ReviewSettings />
-    //     </div>
-
-    //     <div className='flex justify-between mt-10'>
-    //         <ReturnCustomer />
-    //         <Campaigns />
-    //         <Templates />
-    //     </div>
-    // </div>
     <div className="opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay">
       <Grid container spacing={3} style={{ margin: "20px" }}>
         {Data.map((res: any, index: any) => (
