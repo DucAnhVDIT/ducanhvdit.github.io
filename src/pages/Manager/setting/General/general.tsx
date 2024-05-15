@@ -4,6 +4,7 @@ import Functions from "./functions";
 import SettingInfor from "./settingInfor";
 import EmailSetting from "./emailSetting";
 import SMSSetting from "./SMSSetting";
+import Reminder from "./reminder";
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState("company-info");
@@ -87,7 +88,7 @@ function SettingsPage() {
         {activeTab === "setting-info" && <SettingInfor />}
         {activeTab === "email-setting" && <EmailSetting />}
         {activeTab === "sms-setting" && <SMSSetting />}
-        {activeTab === "reminder" && <div>Reminder Content</div>}
+        {activeTab === "reminder" && <Reminder />}
       </div>
     </div>
   );
