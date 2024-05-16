@@ -5,6 +5,7 @@ import Button from "../../../base-components/Button";
 import { Menu, Close } from "@mui/icons-material";
 import General from "./General/general";
 import TillSettingHome from "./TillSetting";
+import TimeSettingHome from "./TimeSetting";
 
 function SettingsPage() {
   useEffect(() => {
@@ -229,7 +230,7 @@ function SettingsPage() {
         <div className="flex-1 p-4 overflow-x-auto overflow-y-auto min-h-screen">
           {activeTab === "general" && <General />}
           {activeTab === "till" && <TillSettingHome />}
-          {activeTab === "time" && <div>Time Settings Content</div>}
+          {activeTab === "time" && <TimeSettingHome />}
           {activeTab === "card" && <div>Card Configuration Content</div>}
           {activeTab === "booking" && <div>Booking Configuration Content</div>}
           {activeTab === "sync" && <div>Sync System Content</div>}
