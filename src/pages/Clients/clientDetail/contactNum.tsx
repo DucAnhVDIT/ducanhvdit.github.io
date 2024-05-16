@@ -50,7 +50,7 @@ function ContactNum({ selectedCustomer }: ContactProps) {
   return (
     <div className="md:flex h-full items-start justify-center">
       <div
-        className="border-2 border-black p-5 pr-10 m-5 rounded-2xl"
+        className="border-2 border-slate-500/60  p-5 pr-10 m-5 rounded-2xl"
         style={{ height: "400px", width: "450px" }}
       >
         <div className="flex justify-between">

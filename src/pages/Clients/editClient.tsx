@@ -137,7 +137,7 @@ const EditClient = () => {
       {activeTab === "overview" && (
         <div>
           <div className="md:flex h-full items-start justify-center">
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-black rounded-2xl m-5">
+            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
               <div className="flex-row flex justify-between">
                 <h1 className="text-2xl font-bold mb-3">Total spent</h1>
                 <Tooltip title="Amount customer spent">
@@ -148,7 +148,7 @@ const EditClient = () => {
               </div>
               <h1 className="text-2xl font-bold mb-3">£0</h1>
             </div>
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-black rounded-2xl m-5">
+            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
               <div className="flex-row flex justify-between">
                 <h1 className="text-2xl font-bold mb-3">Appointments</h1>
                 <Tooltip title="Number of booked appointments">
@@ -163,7 +163,7 @@ const EditClient = () => {
             </div>
           </div>
           <div className="md:flex h-full items-start justify-center">
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-black rounded-2xl m-5">
+            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
               <div className="flex-row flex justify-between">
                 <h1 className="text-2xl font-bold mb-3">Cancelled</h1>
                 <Tooltip title="Number of cancelled appointments">
@@ -174,7 +174,7 @@ const EditClient = () => {
               </div>
               <h1 className="text-2xl font-bold mb-3">{numOfCancelled}</h1>
             </div>
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-black rounded-2xl m-5">
+            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
               <div className="flex-row flex justify-between">
                 <h1 className="text-2xl font-bold mb-3">No show</h1>
                 <Tooltip title="Number of no show appointments">

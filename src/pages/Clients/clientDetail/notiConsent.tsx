@@ -66,7 +66,7 @@ function NotiConsent({ selectedCustomer }: NotiConsentProps) {
   return (
     <div>
       <div
-        className="p-4 flex flex-col border-2 border-black rounded-2xl mt-5 ml-5"
+        className="p-4 flex flex-col border-2 border-slate-500/60  rounded-2xl mt-5 ml-5"
         style={{ width: "450px" }}
       >
         <div className="flex justify-between">
