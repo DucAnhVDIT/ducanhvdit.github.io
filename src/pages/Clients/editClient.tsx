@@ -68,66 +68,56 @@ const EditClient = () => {
 
       <div className="flex justify-center mb-5">
         <div className="mt-4 flex overflow-x-auto space-x-3">
-          <Button
-            variant="instagram"
-            type="button"
-            className={`border-none min-w-[120px] sm:w-40 cursor-pointer rounded-full px-6 ${
+          <button
+            className={`min-w-max py-2 px-4 ${
               activeTab === "overview"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
+                ? "border-b-2 border-primary text-black"
+                : "text-gray-600"
             }`}
             onClick={() => handleTabChange("overview")}
           >
             Overview
-          </Button>
-          <Button
-            variant="instagram"
-            type="button"
-            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
+          </button>
+          <button
+            className={`min-w-max py-2 px-4 ${
               activeTab === "client-detail"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
+                ? "border-b-2 border-primary text-black"
+                : "text-gray-600"
             }`}
             onClick={() => handleTabChange("client-detail")}
           >
-            Client detail
-          </Button>
-          <Button
-            variant="instagram"
-            type="button"
-            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
+            Client Detail
+          </button>
+          <button
+            className={`min-w-max py-2 px-4 ${
               activeTab === "appointments"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
+                ? "border-b-2 border-primary text-black"
+                : "text-gray-600"
             }`}
             onClick={() => handleTabChange("appointments")}
           >
             Appointments
-          </Button>
-          <Button
-            variant="instagram"
-            type="button"
-            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
+          </button>
+          <button
+            className={`min-w-max py-2 px-4 ${
               activeTab === "notes"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
+                ? "border-b-2 border-primary text-black"
+                : "text-gray-600"
             }`}
             onClick={() => handleTabChange("notes")}
           >
             Notes
-          </Button>
-          <Button
-            variant="instagram"
-            type="button"
-            className={`min-w-[120px] sm:w-40 border-none cursor-pointer rounded-full px-6 ${
+          </button>
+          <button
+            className={`min-w-max py-2 px-4 ${
               activeTab === "forms"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
+                ? "border-b-2 border-primary text-black"
+                : "text-gray-600"
             }`}
             onClick={() => handleTabChange("forms")}
           >
             Forms
-          </Button>
+          </button>
           {/* <IconButton>
                     <ArrowBackIcon/>
                 </IconButton> */}
