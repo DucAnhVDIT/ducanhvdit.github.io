@@ -7,6 +7,8 @@ import General from "./General/general";
 import TillSettingHome from "./TillSetting";
 import TimeSettingHome from "./TimeSetting";
 import CardConfigHome from "./CardConfig";
+import BookingConfigHome from "./BookingConfig";
+
 
 
 function SettingsPage() {
@@ -29,7 +31,7 @@ function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay">
+    <div className="min-h-screen flex flex-col ">
       <div className="flex items-center justify-between top-0 w-full p-4">
         <Link to="/manager" className="text-lg font-bold">
           <Lucide icon={"X"} />
@@ -111,7 +113,7 @@ function SettingsPage() {
             >
               Booking Configuration
             </button>
-            <button
+            {/* {/* <button
               className={`w-full py-2 px-4 rounded-full text-left ${
                 activeTab === "sync"
                   ? "bg-primary text-white"
@@ -140,9 +142,9 @@ function SettingsPage() {
               onClick={() => handleTabChange("reset")}
             >
               Reset
-            </button>
+            </button> */}
           </div>
-        </div>
+        </div> 
 
         {/* Left Nav for Desktop */}
         <div className="hidden sm:flex flex-col space-y-3 w-64 p-4">
@@ -196,7 +198,7 @@ function SettingsPage() {
           >
             Booking Configuration
           </button>
-          <button
+          {/* <button
             className={`w-full py-2 px-4 rounded-full text-left ${
               activeTab === "sync"
                 ? "bg-primary text-white"
@@ -225,7 +227,7 @@ function SettingsPage() {
             onClick={() => handleTabChange("reset")}
           >
             Reset
-          </button>
+          </button> */}
         </div>
 
         {/* Content Area */}
@@ -234,7 +236,7 @@ function SettingsPage() {
           {activeTab === "till" && <TillSettingHome />}
           {activeTab === "time" && <TimeSettingHome />}
           {activeTab === "card" && <CardConfigHome />}
-          {activeTab === "booking" && <div>Booking Configuration Content</div>}
+          {activeTab === "booking" && <BookingConfigHome />}
           {activeTab === "sync" && <div>Sync System Content</div>}
           {activeTab === "update" && <div>Update Content</div>}
           {activeTab === "reset" && <div>Reset Content</div>}

@@ -5,6 +5,7 @@ import SettingInfor from "./settingInfor";
 import EmailSetting from "./emailSetting";
 import SMSSetting from "./SMSSetting";
 import Reminder from "./reminder";
+import "../styles.css"
 
 function SettingsPage() {
   const [activeTab, setActiveTab] = useState("company-info");

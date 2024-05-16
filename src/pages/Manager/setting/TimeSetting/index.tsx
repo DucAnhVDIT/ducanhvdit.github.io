@@ -3,6 +3,7 @@ import FormLabel from "../../../../base-components/Form/FormLabel";
 import FormInput from "../../../../base-components/Form/FormInput";
 import TimeSettingForm from "./timeSettingForm";
 import OpeningHours from "./timeSettingForm";
+import "../styles.css"
 
 function TimeSettingHome() {
   const [activeTab, setActiveTab] = useState("time");

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import FormLabel from "../../../../base-components/Form/FormLabel";
 import FormInput from "../../../../base-components/Form/FormInput";
 import PaymentSettings from './paymentSettings';
-
+import "../styles.css"
 
 function CardConfigHome() {
     const [activeTab, setActiveTab] = useState("card");
