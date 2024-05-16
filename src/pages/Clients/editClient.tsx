@@ -1,22 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Flip, ToastContainer } from "react-toastify";
 import Button from "../../base-components/Button";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import InfoIcon from "@mui/icons-material/Info";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import FormLabel from "../../base-components/Form/FormLabel";
-import FormInput from "../../base-components/Form/FormInput";
-import FormTextarea from "../../base-components/Form/FormTextarea";
-import Flatpickr from "react-flatpickr";
-import { CheckboxToggle } from "react-rainbow-components";
-import BasicInfo from "./clientDetail/basicInfo";
-import Addresses from "./clientDetail/addresses";
-import NotiConsent from "./clientDetail/notiConsent";
-import Other from "./clientDetail/other";
-import ContactNum from "./clientDetail/contactNum";
-import Notes from "./notes";
-import Timelines from "./appointments/timelines";
+import Notes from "./Note/notes";
 import TimelineMUI from "./appointments/timelineMUI";
 import Forms from "./forms/forms";
 import customerRepository from "../../repositories/customerRepository";
@@ -24,6 +9,9 @@ import { useSelector } from "react-redux";
 import { selectSelectedCustomer } from "../../stores/customerSlide";
 import Lucide from "../../base-components/Lucide";
 import { Link } from "react-router-dom";
+import StatsGrid from "./Overview/statGrid";
+import ClientDetail from "./ClientDetail";
+import { Menu, Close } from "@mui/icons-material";
 
 const EditClient = () => {
   useEffect(() => {
@@ -33,206 +21,219 @@ const EditClient = () => {
     };
   }, []);
   const [activeTab, setActiveTab] = useState("overview");
-  const handleTabChange = (tab: React.SetStateAction<string>) => {
-    setActiveTab(tab);
-  };
+
 
   const selectedCustomer = useSelector(selectSelectedCustomer);
 
-  useEffect(() => {
-    console.log(selectedCustomer);
-  });
-
-  const numOfCancelled = selectedCustomer?.Customer?.Appointments?.filter(
-    (appointment: { StatusID: number }) => appointment.StatusID === 6
-  ).length;
-  const numOfNoShow = selectedCustomer?.Customer?.Appointments?.filter(
-    (appointment: { StatusID: number }) => appointment.StatusID === 7
-  ).length;
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
+  };
+  const handleTabChange = (tab: React.SetStateAction<string>) => {
+    setActiveTab(tab);
+    setIsCollapsed(true);
+  };
+  
 
   return (
-    <div
-      className="mt-3 bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay rounded-lg"
-      style={{ height: "1000px" }}
-    >
+    <div className="min-h-screen flex flex-col">
       <div className="flex items-center justify-between top-0 w-full p-4">
         <Link to="/clients" className="text-lg font-bold">
           <Lucide icon={"X"}></Lucide>
         </Link>
-        <h1 className="text-xl font-bold">Edit client</h1>
-        <div
-          onClick={() => {}}
-          className="text-lg font-bold text-white bg-primary"
-        ></div>
+        <h1 className="text-xl font-bold ml-20">Edit client</h1>
+        <div></div>
+        <div className="sm:hidden ml-6">
+          <Button
+            variant="instagram"
+            type="button"
+            className="border-none cursor-pointer rounded-full shadow-none"
+            style={{ backgroundColor: "transparent", color: "black" }}
+            onClick={toggleCollapse}
+          >
+            {isCollapsed ? <Menu /> : <Close />}
+          </Button>
+        </div>
       </div>
 
-      <div className="flex justify-center mb-5">
-        <div className="mt-4 flex overflow-x-auto space-x-3">
+      <div className="flex flex-1 overflow-y-auto">
+        {/* Left Nav for Mobile */}
+        <div
+          className={`fixed inset-0 z-40 transition-transform transform ${
+            isCollapsed ? "-translate-x-full" : "translate-x-0"
+          } sm:hidden`}
+        >
+          <div
+            className="fixed inset-0 bg-black opacity-50"
+            onClick={toggleCollapse}
+          ></div>
+          <div className="relative bg-white w-64 h-full p-4 flex flex-col space-y-3">
+            <button
+              className={`w-full py-2 px-3 rounded-full text-left ${
+                activeTab === "overview"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("overview")}
+            >
+              Overview
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "customer-detail"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("customer-detail")}
+            >
+              Customer Detail
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "appointments"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("appointments")}
+            >
+              Appointments
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "notes"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("notes")}
+            >
+              Notes
+            </button>
+            <button
+              className={`w-full py-2 px-4 rounded-full text-left ${
+                activeTab === "forms"
+                  ? "bg-primary text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+              onClick={() => handleTabChange("forms")}
+            >
+              Forms
+            </button>
+          </div>
+        </div>
+
+        {/* Left Nav for Desktop */}
+        <div className="hidden sm:flex flex-col space-y-3 w-64 p-4">
           <button
-            className={`min-w-max py-2 px-4 ${
+            className={`w-full py-2 px-3 rounded-full text-left ${
               activeTab === "overview"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
             onClick={() => handleTabChange("overview")}
           >
             Overview
           </button>
           <button
-            className={`min-w-max py-2 px-4 ${
-              activeTab === "client-detail"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "customer-detail"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
-            onClick={() => handleTabChange("client-detail")}
+            onClick={() => handleTabChange("customer-detail")}
           >
-            Client Detail
+            Customer Detail
           </button>
           <button
-            className={`min-w-max py-2 px-4 ${
+            className={`w-full py-2 px-4 rounded-full text-left ${
               activeTab === "appointments"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
             onClick={() => handleTabChange("appointments")}
           >
             Appointments
           </button>
           <button
-            className={`min-w-max py-2 px-4 ${
+            className={`w-full py-2 px-4 rounded-full text-left ${
               activeTab === "notes"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
             onClick={() => handleTabChange("notes")}
           >
             Notes
           </button>
           <button
-            className={`min-w-max py-2 px-4 ${
+            className={`w-full py-2 px-4 rounded-full text-left ${
               activeTab === "forms"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
             }`}
             onClick={() => handleTabChange("forms")}
           >
             Forms
           </button>
-          {/* <IconButton>
-                    <ArrowBackIcon/>
-                </IconButton> */}
         </div>
+
+        <div className="flex-1 p-4 overflow-x-auto overflow-y-auto min-h-screen">
+          {activeTab === "overview" && <StatsGrid />}
+
+          {activeTab === "client-detail" && (
+            // <div className="flex flex-col justify-center items-center md:flex-row md:flex-wrap">
+            //   <div className="w-full md:w-1/2 p-2">
+            //     {selectedCustomer && (
+            //       <div className="flex flex-col space-y-4">
+            //         <BasicInfo selectedCustomer={selectedCustomer} />
+            //         <ContactNum selectedCustomer={selectedCustomer} />
+            //       </div>
+            //     )}
+            //   </div>
+            //   <div className="w-full md:w-1/2 p-2">
+            //     <Addresses />
+            //     <NotiConsent selectedCustomer={selectedCustomer} />
+            //     <Other selectedCustomer={selectedCustomer} />
+            //   </div>
+            // </div>
+
+            <ClientDetail />
+          )}
+
+          {activeTab === "notes" && (
+            <div className="flex justify-center">
+              <Notes />
+            </div>
+          )}
+
+          {activeTab === "appointments" && (
+            <div className="flex justify-center">
+              {selectedCustomer && <TimelineMUI />}
+              {/* <Timelines /> */}
+            </div>
+          )}
+
+          {activeTab === "forms" && (
+            <>
+              <Forms />
+            </>
+          )}
+        </div>
+      
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="colored"
+          pauseOnHover
+          transition={Flip}
+        />
+
+        {/* Content Area */}
       </div>
-
-      {activeTab === "overview" && (
-        <div>
-          <div className="md:flex h-full items-start justify-center">
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
-              <div className="flex-row flex justify-between">
-                <h1 className="text-2xl font-bold mb-3">Total spent</h1>
-                <Tooltip title="Amount customer spent">
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <h1 className="text-2xl font-bold mb-3">£0</h1>
-            </div>
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
-              <div className="flex-row flex justify-between">
-                <h1 className="text-2xl font-bold mb-3">Appointments</h1>
-                <Tooltip title="Number of booked appointments">
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <h1 className="text-2xl font-bold mb-3">
-                {selectedCustomer?.Customer.Appointments?.length || 0}
-              </h1>
-            </div>
-          </div>
-          <div className="md:flex h-full items-start justify-center">
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
-              <div className="flex-row flex justify-between">
-                <h1 className="text-2xl font-bold mb-3">Cancelled</h1>
-                <Tooltip title="Number of cancelled appointments">
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <h1 className="text-2xl font-bold mb-3">{numOfCancelled}</h1>
-            </div>
-            <div className="md:w-1/5 p-4 flex flex-col border-2 border-slate-500/60 rounded-2xl m-5">
-              <div className="flex-row flex justify-between">
-                <h1 className="text-2xl font-bold mb-3">No show</h1>
-                <Tooltip title="Number of no show appointments">
-                  <IconButton>
-                    <InfoIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <h1 className="text-2xl font-bold mb-3">{numOfNoShow}</h1>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === "client-detail" && (
-        <>
-          <div className="md:flex justify-center items-center flex-col">
-            <div className="flex flex-row">
-              <div className="md:flex flex-col mr-4">
-                {selectedCustomer && (
-                  <div className="md:flex flex-col mr-4">
-                    <BasicInfo selectedCustomer={selectedCustomer} />
-                    <ContactNum selectedCustomer={selectedCustomer} />
-                  </div>
-                )}
-              </div>
-              <div className="md:flex flex-col">
-                <Addresses />
-                <NotiConsent selectedCustomer={selectedCustomer} />
-                <Other selectedCustomer={selectedCustomer} />
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-
-      {activeTab === "notes" && (
-        <div className="flex justify-center">
-          <Notes />
-        </div>
-      )}
-
-      {activeTab === "appointments" && (
-        <div className="flex justify-center">
-          {selectedCustomer && <TimelineMUI />}
-          {/* <Timelines /> */}
-        </div>
-      )}
-
-      {activeTab === "forms" && (
-        <>
-          <Forms />
-        </>
-      )}
-
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        theme="colored"
-        pauseOnHover
-        transition={Flip}
-      />
     </div>
   );
 };

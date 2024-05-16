@@ -15,7 +15,7 @@ function Addresses() {
     <div>
       <div
         className="border-2 border-slate-500/60   p-5 pr-10 m-5 rounded-2xl bo"
-        style={{ height: "400px", width: "450px" }}
+        style={{ height: "400px", maxWidth: "100%" }}
       >
         <div className="flex justify-between">
           <h1 className="text-2xl mb-2 font-bold">Addresses</h1>

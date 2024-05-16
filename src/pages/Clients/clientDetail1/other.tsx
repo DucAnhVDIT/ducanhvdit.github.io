@@ -60,7 +60,7 @@ function Other({ selectedCustomer }: OtherProps) {
     <div>
       <div
         className="p-4 flex flex-col border-2 border-slate-500/60  rounded-2xl mt-10 ml-5 "
-        style={{ width: "450px" }}
+        style={{ maxWidth: "100%" }}
       >
         <div className="flex justify-between">
           <h1 className="text-2xl mb-2 font-bold">Other</h1>
