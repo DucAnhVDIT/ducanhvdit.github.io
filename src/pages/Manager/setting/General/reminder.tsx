@@ -26,20 +26,20 @@ function Reminder() {
         </div>
         <div className="flex items-center space-x-4">
           <label className="label cursor-pointer">
-            <span className="label-text">Email</span>
+            <span className="">Email</span>
             <input
               id="email"
               type="checkbox"
               defaultChecked
-              className="checkbox checkbox-primary"
+              className="checkbox checkbox-primary ml-3"
             />
           </label>
           <label className="label cursor-pointer">
-            <span className="label-text">SMS</span>
+            <span className="">SMS</span>
             <input
               id="sms"
               type="checkbox"
-              className="checkbox checkbox-primary"
+              className="checkbox checkbox-primary ml-3"
             />
           </label>
         </div>

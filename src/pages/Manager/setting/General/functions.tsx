@@ -5,124 +5,134 @@ function Functions() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 m-5">
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Language 1 display on bill</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Language 1 display on bill</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Language 2 display on bill</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Language 2 display on bill</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Preview Print</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Preview Print</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Receipt Printer</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Receipt Printer</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Cash Drawer</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Cash Drawer</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Pole Display</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Pole Display</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Change Display</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Change Display</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Check Stock</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Check Stock</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Promotions</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Promotions</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Break Down VAT</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Break Down VAT</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Number On Receipt</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Number On Receipt</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">CallerID VAT Summary</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">CallerID</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">EAN 13 Code</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">VAT Summary</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Message To Referral</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">EAN 13 Code</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Print Full Daily Taking</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Message To Referral</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">SMS & Email Confirm Booking</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Print Full Daily Taking</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Connect To Card Payment</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">SMS & Email Confirm Booking</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Staff Commission On Product</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Connect To Card Payment</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Auto Refresh Appointments</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Staff Commission On Product</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
       <div className="form-control">
         <label className="cursor-pointer label">
-          <span className="label-text">Display Points On Receipt</span>
-          <input type="checkbox" className="toggle" />
+          <span className="">Auto Refresh Appointments</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
         </label>
       </div>
+      <div className="form-control">
+        <label className="cursor-pointer label">
+          <span className="">Display Points On Receipt</span>
+          <input type="checkbox" className="checkbox checkbox-primary" />
+        </label>
+      </div>
+
+      <button className="btn sm:w-32 w-[90px] px-6 bg-primary text-white mt-3 ml-32">
+        Save
+      </button>
     </div>
     
   );

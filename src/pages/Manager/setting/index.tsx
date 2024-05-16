@@ -4,6 +4,7 @@ import Lucide from "../../../base-components/Lucide";
 import Button from "../../../base-components/Button";
 import { Menu, Close } from "@mui/icons-material";
 import General from "./General/general";
+import TillSettingHome from "./TillSetting";
 
 function SettingsPage() {
   useEffect(() => {
@@ -25,7 +26,7 @@ function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay">
       <div className="flex items-center justify-between top-0 w-full p-4">
         <Link to="/manager" className="text-lg font-bold">
           <Lucide icon={"X"} />
@@ -227,14 +228,7 @@ function SettingsPage() {
         {/* Content Area */}
         <div className="flex-1 p-4 overflow-x-auto overflow-y-auto min-h-screen">
           {activeTab === "general" && <General />}
-          {activeTab === "till" && (
-            <div className="md:flex justify-center items-center flex-col">
-              <div className="flex flex-row">
-                <div className="md:flex flex-col mr-4">Till Settings</div>
-                Content for Till Settings
-              </div>
-            </div>
-          )}
+          {activeTab === "till" && <TillSettingHome />}
           {activeTab === "time" && <div>Time Settings Content</div>}
           {activeTab === "card" && <div>Card Configuration Content</div>}
           {activeTab === "booking" && <div>Booking Configuration Content</div>}
