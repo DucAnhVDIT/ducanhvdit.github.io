@@ -6,6 +6,8 @@ import { Menu, Close } from "@mui/icons-material";
 import General from "./General/general";
 import TillSettingHome from "./TillSetting";
 import TimeSettingHome from "./TimeSetting";
+import CardConfigHome from "./CardConfig";
+
 
 function SettingsPage() {
   useEffect(() => {
@@ -231,7 +233,7 @@ function SettingsPage() {
           {activeTab === "general" && <General />}
           {activeTab === "till" && <TillSettingHome />}
           {activeTab === "time" && <TimeSettingHome />}
-          {activeTab === "card" && <div>Card Configuration Content</div>}
+          {activeTab === "card" && <CardConfigHome />}
           {activeTab === "booking" && <div>Booking Configuration Content</div>}
           {activeTab === "sync" && <div>Sync System Content</div>}
           {activeTab === "update" && <div>Update Content</div>}

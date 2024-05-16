@@ -130,9 +130,11 @@ function Functions() {
         </label>
       </div>
 
-      <button className="btn sm:w-32 w-[90px] px-6 bg-primary text-white mt-3 ml-32">
-        Save
-      </button>
+      <div className="flex justify-end">
+        <button className="btn sm:w-32 w-[90px] px-6 bg-primary text-white mt-3">
+          Save
+        </button>
+      </div>
     </div>
     
   );
