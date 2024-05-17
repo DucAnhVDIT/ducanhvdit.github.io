@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Info from "./info";
+import Address from "./address";
 
 function ClientDetail() {
   const [activeTab, setActiveTab] = useState("basic");
@@ -9,12 +10,12 @@ function ClientDetail() {
   };
 
   return (
-    <div className="flex">
-      <div className="flex flex-col">
+    <div className="">
+      <div className="flex">
         <button
           className={`min-w-max py-2 px-4 text-left ${
             activeTab === "basic"
-              ? "border-r-2 border-primary text-black"
+              ? "border-b-2 border-primary text-black"
               : "text-gray-600"
           }`}
           onClick={() => handleTabChange("basic")}
@@ -24,7 +25,7 @@ function ClientDetail() {
         <button
           className={`min-w-max py-2 px-4 text-left ${
             activeTab === "address"
-              ? "border-r-2 border-primary text-black"
+              ? "border-b-2 border-primary text-black"
               : "text-gray-600"
           }`}
           onClick={() => handleTabChange("address")}
@@ -33,9 +34,9 @@ function ClientDetail() {
         </button>
       </div>
 
-      <div className="ml-6 w-full">
-        {activeTab === "basic" && <div>Info Component</div>}
-        {activeTab === "address" && <div>Address Component</div>}
+      <div className="mt-4 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
+        {activeTab === "basic" && <Info />}
+        {activeTab === "address" && <Address />}
       </div>
     </div>
   );

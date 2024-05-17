@@ -80,11 +80,11 @@ const EditClient = () => {
             </button>
             <button
               className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "customer-detail"
+                activeTab === "client-detail"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
-              onClick={() => handleTabChange("customer-detail")}
+              onClick={() => handleTabChange("client-detail")}
             >
               Customer Detail
             </button>
@@ -135,11 +135,11 @@ const EditClient = () => {
           </button>
           <button
             className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "customer-detail"
+              activeTab === "client-detail"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
             }`}
-            onClick={() => handleTabChange("customer-detail")}
+            onClick={() => handleTabChange("client-detail")}
           >
             Customer Detail
           </button>

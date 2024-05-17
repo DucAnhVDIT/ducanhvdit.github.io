@@ -1,169 +1,121 @@
-import React from 'react'
-import FormInput from '../../../base-components/Form/FormInput'
-import FormLabel from '../../../base-components/Form/FormLabel'
+import React from "react";
+import FormInput from "../../../base-components/Form/FormInput";
+import FormLabel from "../../../base-components/Form/FormLabel";
+import FormSelect from "../../../base-components/Form/FormSelect";
+import Flatpickr from "react-flatpickr";
 
 function Info() {
   return (
     <form className="validate-form flex flex-col w-full max-w-5xl mx-auto m-3">
       <div className="input-form grid w-full gap-4 md:grid-cols-2">
         <div className="flex flex-col">
-          <FormLabel htmlFor="company-name">Company name</FormLabel>
+          <FormLabel htmlFor="first-name">First Name</FormLabel>
           <FormInput
-            id="company-name"
+            id="first-name"
             type="text"
-            name="company-name"
-            placeholder="VDIT Solutions"
-            className="w-full"
-            readOnly
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="address-1">Address 1</FormLabel>
-          <FormInput
-            id="address-1"
-            type="text"
-            name="address-1"
+            name="first-name"
             placeholder=""
             className="w-full"
           />
         </div>
         <div className="flex flex-col">
-          <FormLabel htmlFor="address-2">Address 2</FormLabel>
+          <FormLabel htmlFor="last-name">Last Name</FormLabel>
           <FormInput
-            id="address-2"
+            id="last-name"
             type="text"
-            name="address-2"
+            name="last-name"
             placeholder=""
             className="w-full"
           />
         </div>
         <div className="flex flex-col">
-          <FormLabel htmlFor="city">City</FormLabel>
-          <FormInput
-            id="city"
-            type="text"
-            name="city"
-            placeholder=""
-            className="w-full"
+          <FormLabel htmlFor="gender">Gender</FormLabel>
+          <FormSelect id="gender" name="gender">
+            <option value="0">None</option>
+            <option value="1">Male</option>
+            <option value="2">Female</option>
+            <option value="3">Other</option>
+          </FormSelect>
+        </div>
+        <div className="flex flex-col">
+          <FormLabel htmlFor="birth-date">Birth Date</FormLabel>
+          <Flatpickr
+            id="birth-date"
+            className="w-full rounded-xl"
+            options={{
+              altInput: true,
+              altFormat: "F j, Y",
+              dateFormat: "Y-m-d",
+            }}
+            placeholder="Choose Birth Date"
+            disabled
           />
         </div>
         <div className="flex flex-col">
-          <FormLabel htmlFor="postcode">Postcode</FormLabel>
+          <FormLabel htmlFor="phone-number">Phone Number</FormLabel>
           <FormInput
-            id="postcode"
+            id="phone-number"
             type="text"
-            name="postcode"
+            name="phone-number"
             placeholder=""
             className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="country">Country</FormLabel>
-          <FormInput
-            id="country"
-            type="text"
-            name="country"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="telephone">Telephone</FormLabel>
-          <FormInput
-            id="telephone"
-            type="text"
-            name="telephone"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="fax">Fax</FormLabel>
-          <FormInput
-            id="fax"
-            type="text"
-            name="fax"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="website">Website</FormLabel>
-          <FormInput
-            id="website"
-            type="text"
-            name="website"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <FormInput
-            id="email"
-            type="text"
-            name="email"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="company-no">Company No</FormLabel>
-          <FormInput
-            id="company-no"
-            type="text"
-            name="company-no"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="vat-no">VAT No</FormLabel>
-          <FormInput
-            id="vat-no"
-            type="text"
-            name="vat-no"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="vat">VAT</FormLabel>
-          <FormInput
-            id="vat"
-            type="text"
-            name="vat"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col md:col-span-2">
-          <FormLabel htmlFor="vat-included">VAT Included</FormLabel>
-          <div className="form-control">
-            <label className="label cursor-pointer">
-              <input
-                id="vat-included"
-                type="checkbox"
-                defaultChecked
-                className="checkbox checkbox-primary"
-              />
-            </label>
-          </div>
-        </div>
-        <div className="flex flex-col md:col-span-2">
-          <FormLabel htmlFor="note">Note</FormLabel>
-          <textarea
-            id="note"
-            className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
-            placeholder="Thank you"
           />
         </div>
       </div>
-      <button className="btn sm:w-32 w-[90px] px-6 bg-primary text-white mt-3 self-end">
+      <div className="flex flex-col md:col-span-2 mt-4">
+        <FormLabel>Preferences</FormLabel>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center">
+            <input
+              id="sms-consent"
+              type="checkbox"
+              defaultChecked
+              className="checkbox checkbox-primary"
+            />
+            <label htmlFor="sms-consent" className="ml-2">
+              SMS Consent
+            </label>
+          </div>
+          <div className="flex items-center">
+            <input
+              id="email-consent"
+              type="checkbox"
+              defaultChecked
+              className="checkbox checkbox-primary"
+            />
+            <label htmlFor="email-consent" className="ml-2">
+              Email Consent
+            </label>
+          </div>
+          <div className="flex items-center">
+            <input
+              id="vip"
+              type="checkbox"
+              defaultChecked
+              className="checkbox checkbox-primary"
+            />
+            <label htmlFor="vip" className="ml-2">
+              VIP
+            </label>
+          </div>
+          <div className="flex items-center">
+            <input
+              id="block-online"
+              type="checkbox"
+              defaultChecked
+              className="checkbox checkbox-primary"
+            />
+            <label htmlFor="block-online" className="ml-2">
+              Block Online
+            </label>
+          </div>
+        </div>
+      </div>
+      <button className="btn sm:w-32 w-[90px] px-6 bg-primary text-white mt-5 self-end">
         Save
       </button>
     </form>
-  )
+  );
 }
 
-export default Info
+export default Info;
