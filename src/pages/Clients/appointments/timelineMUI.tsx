@@ -84,78 +84,86 @@ export default function TimelineMUI() {
     setSelectedAppointment(null);
   };
 
-  const isSmallScreen = useMediaQuery("(max-width:600px)");
+  const appointmentsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const totalAppointments =
+    selectedCustomer?.Customer?.Appointments?.length || 0;
+  const totalPages = Math.ceil(totalAppointments / appointmentsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const paginatedAppointments = selectedCustomer?.Customer?.Appointments?.slice(
+    (currentPage - 1) * appointmentsPerPage,
+    currentPage * appointmentsPerPage
+  );
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div className="flex justify-center p-4 md:border md:rounded-md md:border-slate-500/60 w-full min-h-screen">
       {loading ? (
-        <CircularProgress />
+        <span className="loading loading-ring loading-lg"></span>
       ) : (
-        <div style={{ maxWidth: "100%", overflowX: "auto", maxHeight: '800px', overflowY: 'auto',}}>
+        <div className="w-full max-w-4xl overflow-x-auto overflow-y-auto max-h-screen">
           <Timeline>
             {selectedCustomer?.Customer?.Appointments?.length > 0 ? (
-              selectedCustomer.Customer.Appointments.map(
-                (appointment: any, id: any) => (
-                  <TimelineItem key={id}>
-                    <TimelineSeparator>
-                      <TimelineDot style={{ backgroundColor: "#1E40AF" }}>
-                        <CalendarTodayIcon style={{ fontSize: "20px" }} />
-                      </TimelineDot>
-                      <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: "12px", px: 2 }}>
-                      <Card className="appointment-card">
-                        <CardContent>
-                          <div className="flex justify-between">
-                            <h5 className="vertical-timeline-element-subtitle text-sm sm:text-lg">
-                              {formatDate(appointment.CreateBookingOn)}
-                            </h5>
-                            <h5
-                              className={`status font-semibold sm:text-lg text-sm  ${
-                                appointment.StatusName === "Canceled" ||
-                                appointment.StatusName === "No Show"
-                                  ? "text-red-500"
-                                  : "text-[#1E40AF]"
-                              }`}
-                            >
-                              {appointment.StatusName}
-                            </h5>
-                          </div>
-                          <p className="mt-4 font-semibold text-lg">
-                            {appointment.ServiceName} - {appointment.StaffName}
-                          </p>
-                        </CardContent>
-                        <CardActions>
-                          <div className="flex justify-between items-center">
-                            {appointment.StatusName === "Confirmed" ? (
-                              <Button
-                                variant="primary"
-                                type="button"
-                                className="w-32"
-                                onClick={() => handlePayBtn(appointment)}
-                              >
-                                Pay
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="primary"
-                                type="button"
-                                className="w-32 sm:mr-96"
-                                onClick={() => handleRebookBtn(appointment)}
-                              >
-                                Rebook
-                              </Button>
-                            )}
-                            <h1 className="font-bold text-2xl sm:ml-48 ml-16">
-                              £{appointment.Price}
-                            </h1>
-                          </div>
-                        </CardActions>
-                      </Card>
-                    </TimelineContent>
-                  </TimelineItem>
-                )
-              )
+               selectedCustomer.Customer.Appointments.map((appointment: any, id: any) => (
+                <TimelineItem key={id}>
+                  <TimelineSeparator>
+                    <TimelineDot style={{ backgroundColor: "#1E40AF" }}>
+                      <CalendarTodayIcon style={{ fontSize: "20px" }} />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Card className="appointment-card">
+                      <CardContent>
+                        <div className="flex justify-between items-center">
+                          <h5 className="text-sm sm:text-lg">
+                            {formatDate(appointment.CreateBookingOn)}
+                          </h5>
+                          <h5
+                            className={`status font-semibold sm:text-lg text-sm  ${
+                              appointment.StatusName === "Canceled" ||
+                              appointment.StatusName === "No Show"
+                                ? "text-red-500"
+                                : "text-[#1E40AF]"
+                            }`}
+                          >
+                            {appointment.StatusName}
+                          </h5>
+                        </div>
+                        <p className="mt-4 font-semibold text-lg">
+                          {appointment.ServiceName} - {appointment.StaffName}
+                        </p>
+                        <div className="flex justify-between mt-5">
+                          <Button
+                            variant="primary"
+                            type="button"
+                            className="w-32 mt-2"
+                            onClick={() => handlePayBtn(appointment)}
+                          >
+                            {appointment.StatusName === "Confirmed"
+                              ? "Pay"
+                              : "Rebook"}
+                          </Button>
+                          <h1 className="font-bold text-2xl text-left mt-2">
+                            £{appointment.Price}
+                          </h1>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TimelineContent>
+                </TimelineItem>
+              ))
             ) : (
               <Box
                 sx={{
@@ -166,7 +174,9 @@ export default function TimelineMUI() {
                   borderRadius: "8px",
                   padding: "16px",
                   marginBottom: "16px",
-                  width: "100%", // Adjust width to fill the container
+                  width: "100%",
+                  minHeight: "150px",
+                  textAlign: "center",
                 }}
               >
                 <EventBusyIcon style={{ marginRight: "8px" }} />
@@ -174,6 +184,30 @@ export default function TimelineMUI() {
               </Box>
             )}
           </Timeline>
+
+          {/* {totalPages > 1 && (
+            <div className="flex justify-center mt-4">
+              <div className="join grid grid-cols-3">
+                <button
+                  className="join-item btn bg-primary text-white"
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span className="join-item btn bg-primary text-white">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className="join-item btn bg-primary text-white"
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )} */}
         </div>
       )}
     </div>

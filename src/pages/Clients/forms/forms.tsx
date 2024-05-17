@@ -1,29 +1,15 @@
 import Box from "@mui/material/Box/Box";
 import React from "react";
-import "survey-core/defaultV2.min.css";
-import "survey-creator-core/survey-creator-core.min.css";
-import { SurveyCreator, SurveyCreatorComponent } from "survey-creator-react";
+import { FileText } from 'lucide-react';
+
 
 // ...
 
 function Forms() {
   return (
-    <div className="flex justify-center">
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          border: "1px solid #ccc",
-          borderRadius: "8px",
-          padding: "16px",
-          marginBottom: "16px",
-          width: "800px",
-          height: "200px",
-        }}
-      >
+    <div className="flex flex-col items-center justify-center w-full md:border md:rounded-md md:border-slate-500/60 p-10">
+        <FileText size={48} className="text-gray-400 mb-4" />
         <div>No forms</div>
-      </Box>
     </div>
   );
 }

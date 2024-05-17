@@ -247,7 +247,7 @@ function ClientsMainPage() {
           alignItems="center"
           height={400}
         >
-          <CircularProgress />
+          <span className="loading loading-ring loading-lg"></span>
         </Box>
       ) : (
         <div style={{ height: 640, width: "100%" }} className="mt-3">

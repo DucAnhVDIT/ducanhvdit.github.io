@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Flip, ToastContainer } from "react-toastify";
 import Button from "../../base-components/Button";
 import Notes from "./Note/notes";
-import TimelineMUI from "./appointments/timelineMUI";
+import TimelineMUI from "./Appointments/timelineMUI";
 import Forms from "./forms/forms";
 import customerRepository from "../../repositories/customerRepository";
 import { useSelector } from "react-redux";
@@ -179,22 +179,6 @@ const EditClient = () => {
           {activeTab === "overview" && <StatsGrid />}
 
           {activeTab === "client-detail" && (
-            // <div className="flex flex-col justify-center items-center md:flex-row md:flex-wrap">
-            //   <div className="w-full md:w-1/2 p-2">
-            //     {selectedCustomer && (
-            //       <div className="flex flex-col space-y-4">
-            //         <BasicInfo selectedCustomer={selectedCustomer} />
-            //         <ContactNum selectedCustomer={selectedCustomer} />
-            //       </div>
-            //     )}
-            //   </div>
-            //   <div className="w-full md:w-1/2 p-2">
-            //     <Addresses />
-            //     <NotiConsent selectedCustomer={selectedCustomer} />
-            //     <Other selectedCustomer={selectedCustomer} />
-            //   </div>
-            // </div>
-
             <ClientDetail />
           )}
 

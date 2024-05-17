@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { selectSelectedCustomer } from "../../../stores/customerSlide";
 
 const StatCard = ({ title, value }: any) => (
-  <div className="bg-white shadow-lg rounded-lg p-4 flex items-center justify-between">
+  <div className="bg-white border-slate-500/60 border rounded-lg p-4 flex items-center justify-between">
     <div>
       <h3 className="text-lg font-semibold">{title}</h3>
       <p className="text-2xl font-bold">{value}</p>
