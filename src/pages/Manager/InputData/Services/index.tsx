@@ -21,7 +21,6 @@ const ServicesHome: React.FC = () => {
     description: string
   ) => {
     console.log("Category added:", { name, color, description });
-    // Implement the add category functionality here
   };
 
   const handleAddService = (
@@ -30,7 +29,6 @@ const ServicesHome: React.FC = () => {
     description: string
   ) => {
     console.log("Service added:", { name, duration, description });
-    // Implement the add service functionality here
   };
 
   return (

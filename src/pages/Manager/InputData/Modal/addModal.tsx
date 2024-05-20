@@ -26,7 +26,7 @@ const AddModal: React.FC<ModalProps> = ({ show, onClose, onAddCategory, onAddSer
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">
@@ -83,7 +83,7 @@ const AddModal: React.FC<ModalProps> = ({ show, onClose, onAddCategory, onAddSer
         <div className="flex justify-end">
           <button
             onClick={handleAdd}
-            className="btn bg-primary text-white px-4 py-2 rounded-md shadow-md"
+            className="btn bg-primary text-white px-4 py-2 rounded-md shadow-md w-full sm:w-auto"
           >
             Save
           </button>

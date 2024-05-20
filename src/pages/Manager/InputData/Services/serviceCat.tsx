@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import eposRepository from "../../../../repositories/eposRepository";
-import { MoreVertical, Plus } from "lucide-react"; // Import the MoreVertical and Plus icons from Lucide
+import { MoreVertical, Plus } from "lucide-react";
+import EditModal from "../Modal/EditModal"; // Import the EditModal component
 
 function ServiceCat() {
   const [servicesCategory, setServicesCategory] = useState<any>([]);
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [currentCategory, setCurrentCategory] = useState<any>(null);
 
   useEffect(() => {
     getServicesCategory();
@@ -24,16 +27,21 @@ function ServiceCat() {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
 
-  const handleEditCategory = (categoryId: number) => {
-    console.log("Edit category", categoryId);
+  const handleEditCategory = (category: any) => {
+    setCurrentCategory(category);
+    setShowEditModal(true);
+  };
+
+  const handleSaveCategory = async (categoryId: number, newName: string) => {
+    console.log("Save category", categoryId, newName);
+    const updatedCategories = servicesCategory.map((cat: any) =>
+      cat.CategoryID === categoryId ? { ...cat, CategoryName: newName } : cat
+    );
+    setServicesCategory(updatedCategories);
   };
 
   const handleDeleteCategory = (categoryId: number) => {
     console.log("Delete category", categoryId);
-  };
-
-  const handleAddCategory = () => {
-    console.log("Add new category");
   };
 
   return (
@@ -52,7 +60,7 @@ function ServiceCat() {
                 onClick={() => handleDropdownToggle(index)}
                 className="text-gray-600"
               >
-                <MoreVertical size={24} /> 
+                <MoreVertical size={24} />
               </button>
             </div>
             <p className="text-gray-600 mb-4">
@@ -61,7 +69,7 @@ function ServiceCat() {
             {dropdownVisible === index && (
               <div className="absolute right-4 top-10 bg-white border rounded-md shadow-lg z-10 w-32">
                 <button
-                  onClick={() => handleEditCategory(category.CategoryID)}
+                  onClick={() => handleEditCategory(category)}
                   className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   Edit
@@ -77,6 +85,15 @@ function ServiceCat() {
           </div>
         ))}
       </div>
+      {showEditModal && currentCategory && (
+        <EditModal
+          show={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onSave={handleSaveCategory}
+          categoryId={currentCategory.CategoryID}
+          initialName={currentCategory.CategoryName}
+        />
+      )}
     </div>
   );
 }
