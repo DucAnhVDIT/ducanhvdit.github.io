@@ -32,6 +32,16 @@ function ClientDetail() {
         >
           Address
         </button>
+        <button
+          className={`min-w-max py-2 px-4 text-left ${
+            activeTab === "address"
+              ? "border-b-2 border-primary text-black"
+              : "text-gray-600"
+          }`}
+          onClick={() => handleTabChange("address")}
+        >
+          
+        </button>
       </div>
 
       <div className="mt-4 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
