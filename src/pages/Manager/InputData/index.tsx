@@ -4,6 +4,7 @@ import Lucide from "../../../base-components/Lucide";
 import Button from "../../../base-components/Button";
 import { Menu, Close } from "@mui/icons-material";
 import ServicesHome from "./Services";
+import StaffHome from "./Staff";
 
 
 
@@ -190,13 +191,8 @@ function InputDataPage() {
         {/* Content Area */}
         <div className="flex-1 p-4 overflow-x-auto overflow-y-auto min-h-screen">
           {activeTab === "services" && <ServicesHome />}
-          {/* {activeTab === "till" &&}
-          {activeTab === "time" &&}
-          {activeTab === "card" && }
-          {activeTab === "booking" && }
-          {activeTab === "sync" && }
-          {activeTab === "update" &&}
-          {activeTab === "reset" && } */}
+          {activeTab === "staff" && <StaffHome />}
+          
         </div>
       </div>
     </div>

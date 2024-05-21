@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import eposRepository from "../../../../repositories/eposRepository";
 import { MoreVertical, Plus } from "lucide-react";
-import EditModal from "../Modal/EditModal"; // Import the EditModal component
+import EditModal from "../Modal/editModal";
+
 
 function ServiceCat() {
   const [servicesCategory, setServicesCategory] = useState<any>([]);
