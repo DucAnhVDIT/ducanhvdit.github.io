@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import calendarRepository from "../../../../repositories/calendarRepository";
 import { MoreVertical, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function StaffList() {
   const [date, setDate] = useState(new Date());
   const [staffData, setStaffData] = useState<any[]>([]);
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchStaffApiData();
@@ -48,12 +50,16 @@ function StaffList() {
     setDropdownVisible(dropdownVisible === index ? null : index);
   };
 
+  const handleAddStaff = () => {
+    navigate("/manager/inputdata/add-new-staff"); 
+  };
+
   return (
     <div className="p-6 w-full">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Staff List</h1>
-        <button className="btn btn-primary flex items-center">
-          <Plus size={20} className="mr-2" />
+        <button className="btn btn-primary flex items-center" onClick={handleAddStaff} >
+          <Plus size={20} className="mr-2"/>
           Add Staff
         </button>
       </div>

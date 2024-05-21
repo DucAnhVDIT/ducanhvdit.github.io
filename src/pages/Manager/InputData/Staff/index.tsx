@@ -25,16 +25,6 @@ const StaffHome: React.FC = () => {
           >
             Staff List
           </button>
-          <button
-            className={`min-w-max py-2 px-4 ${
-              activeTab === "staff-service"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
-            }`}
-            onClick={() => handleTabChange("staff-service")}
-          >
-            Staff Services
-          </button>
         </div>
         <div className="flex-1 mt-4 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
           {activeTab === "staff-list" && <StaffList />}
