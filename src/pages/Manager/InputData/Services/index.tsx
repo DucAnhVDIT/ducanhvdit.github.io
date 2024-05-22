@@ -34,30 +34,29 @@ const ServicesHome: React.FC = () => {
   return (
     <div className="relative min-h-screen flex flex-col">
       <div className="flex flex-col w-full overflow-x-auto no-scrollbar">
-        <div className="flex mb-5 w-full px-4 space-x-3">
-          <button
-            className={`min-w-max py-2 px-4 ${
-              activeTab === "service-cat"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
-            }`}
-            onClick={() => handleTabChange("service-cat")}
-          >
-            Service Categories
-          </button>
-          <button
-            className={`min-w-max py-2 px-4 ${
-              activeTab === "service-list"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
-            }`}
-            onClick={() => handleTabChange("service-list")}
-          >
-            Services List
-          </button>
-        </div>
-
-        <div className="flex justify-end mb-6">
+        <div className="flex mb-5 w-full px-4 items-center">
+          <div className="flex space-x-3 flex-grow">
+            <button
+              className={`min-w-max py-2 px-4 ${
+                activeTab === "service-cat"
+                  ? "border-b-2 border-primary text-black"
+                  : "text-gray-600"
+              }`}
+              onClick={() => handleTabChange("service-cat")}
+            >
+              Service Categories
+            </button>
+            <button
+              className={`min-w-max py-2 px-4 ${
+                activeTab === "service-list"
+                  ? "border-b-2 border-primary text-black"
+                  : "text-gray-600"
+              }`}
+              onClick={() => handleTabChange("service-list")}
+            >
+              Services List
+            </button>
+          </div>
           <button
             onClick={handleAddButtonClick}
             className="btn sm:w-32 w-[90px] bg-primary text-white"
