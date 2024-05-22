@@ -34,8 +34,8 @@ const ServicesHome: React.FC = () => {
   return (
     <div className="relative min-h-screen flex flex-col">
       <div className="flex flex-col w-full overflow-x-auto no-scrollbar">
-        <div className="flex mb-5 w-full px-4 items-center">
-          <div className="flex space-x-3 flex-grow">
+        <div className="flex w-full px-4 items-center justify-between mb-4">
+          <div className="flex space-x-3">
             <button
               className={`min-w-max py-2 px-4 ${
                 activeTab === "service-cat"
@@ -59,7 +59,7 @@ const ServicesHome: React.FC = () => {
           </div>
           <button
             onClick={handleAddButtonClick}
-            className="btn sm:w-32 w-[90px] bg-primary text-white"
+            className="hidden sm:block py-2 btn sm:w-32 w-[90px] bg-primary text-white"
           >
             Add
           </button>
@@ -70,6 +70,14 @@ const ServicesHome: React.FC = () => {
           {activeTab === "service-list" && <div>Service</div>}
         </div>
       </div>
+
+      {/* Fixed Add button for small screens */}
+      <button
+        onClick={handleAddButtonClick}
+        className="block sm:hidden fixed bottom-0 left-0 w-full py-4 bg-primary text-white text-center z-10"
+      >
+        Add
+      </button>
 
       <Modal
         show={showModal}

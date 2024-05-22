@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import ProfileContent from "./profileContent";
 import StaffRateContent from "./staffRateContent";
@@ -11,6 +10,7 @@ function AddStaff() {
     setActiveTab(tab);
   };
   const navigate = useNavigate();
+
   useEffect(() => {
     document.body.style.backgroundColor = "white";
     return () => {
@@ -29,7 +29,7 @@ function AddStaff() {
       case "staff-rate":
         return <StaffRateContent />;
       case "staff-services":
-        return <StaffServicesContent />;
+        return <StaffServicesContent staffServiceData={[]} />;
       default:
         return null;
     }
@@ -39,11 +39,9 @@ function AddStaff() {
     <div className="p-6 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Add team member</h1>
-        <div>
-          <button
-            className="btn btn-outline mr-2 text-black"
-            onClick={handleClose}
-          >
+        {/* Buttons for larger screens */}
+        <div className="hidden sm:flex space-x-2">
+          <button className="btn btn-outline text-black" onClick={handleClose}>
             Close
           </button>
           <button className="btn btn-primary">Add</button>
@@ -90,9 +88,19 @@ function AddStaff() {
             </li>
           </ul>
         </div>
-        <div className="w-full md:w-3/4 p-4 rounded-lg md:border md:rounded-md md:border-slate-500/60 ">
+        <div className="w-full md:w-3/4 p-4 rounded-lg md:border md:rounded-md md:border-slate-500/60">
           {renderTabContent()}
         </div>
+      </div>
+      {/* Fixed buttons for small screens */}
+      <div className="block sm:hidden fixed bottom-0 left-0 w-full bg-white p-4  flex-col space-y-2">
+        <button
+          className="btn btn-outline w-full text-black"
+          onClick={handleClose}
+        >
+          Close
+        </button>
+        <button className="btn btn-primary w-full ">Add</button>
       </div>
     </div>
   );

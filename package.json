@@ -6,8 +6,6 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "predeploy": "npm run dist",
-    "deploy": "gh-pages -d dist",
     "email": "email dev --dir src/emails"
   },
   "homepage": "http://testappv2.vdit.co.uk/",

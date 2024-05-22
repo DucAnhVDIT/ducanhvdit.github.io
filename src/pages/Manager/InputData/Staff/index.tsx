@@ -14,7 +14,7 @@ const StaffHome: React.FC = () => {
   return (
     <div className="relative min-h-screen flex flex-col">
       <div className="flex flex-col w-full overflow-x-auto no-scrollbar">
-        <div className="flex mb-5 w-full px-4 space-x-3">
+        <div className="flexw-full px-4 space-x-3">
           <button
             className={`min-w-max py-2 px-4 ${
               activeTab === "staff-list"

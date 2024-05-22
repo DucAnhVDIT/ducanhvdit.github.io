@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import calendarRepository from "../../../../repositories/calendarRepository";
 import { MoreVertical, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import eposRepository from "../../../../repositories/eposRepository";
 
 function StaffList() {
   const [date, setDate] = useState(new Date());
   const [staffData, setStaffData] = useState<any[]>([]);
+  const [staffServiceData, setStaffServiceData] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
   const navigate = useNavigate();
 
@@ -19,9 +21,18 @@ function StaffList() {
         Math.floor(date.getTime() / 1000)
       );
       setStaffData(res.data.Staffs);
-      console.log('Thong tin tho', res.data.Staffs)
+      console.log("Thong tin tho", res.data.Staffs);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const staffServiceById = async (staffID: string) => {
+    try {
+      const res = await eposRepository.getServices(staffID, 0);
+      return res.data.Services;
+    } catch (error : any) {
+      console.error("Error fetching the API:", error.message);
     }
   };
 
@@ -55,8 +66,11 @@ function StaffList() {
     navigate("/manager/inputdata/add-new-staff");
   };
 
-  const handleEditStaff = (staff: any) => {
-    navigate(`/manager/inputdata/edit-staff/${staff.StaffID}`, { state: { selectedStaff: staff } });
+  const handleEditStaff = async (staff: any) => {
+    const services = await staffServiceById(staff.StaffID);
+    navigate(`/manager/inputdata/edit-staff/${staff.StaffID}`, {
+      state: { selectedStaff: staff, staffServiceData: services },
+    });
   };
 
   return (
