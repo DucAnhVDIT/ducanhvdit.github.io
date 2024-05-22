@@ -9,6 +9,7 @@ function StaffList() {
   const [staffData, setStaffData] = useState<any[]>([]);
   const [staffServiceData, setStaffServiceData] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,22 +17,29 @@ function StaffList() {
   }, []);
 
   const fetchStaffApiData = async () => {
+    setLoading(true);
     try {
       const res = await calendarRepository.getStaff(
         Math.floor(date.getTime() / 1000)
       );
+  
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+  
       setStaffData(res.data.Staffs);
-      console.log("Thong tin tho", res.data.Staffs);
+      console.log("Staff Data", res.data.Staffs);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const staffServiceById = async (staffID: string) => {
     try {
       const res = await eposRepository.getServices(staffID, 0);
       return res.data.Services;
-    } catch (error : any) {
+    } catch (error: any) {
       console.error("Error fetching the API:", error.message);
     }
   };
@@ -81,62 +89,77 @@ function StaffList() {
           className="btn btn-primary flex items-center"
           onClick={handleAddStaff}
         >
-          <Plus size={20} className="mr-2" />
           Add Staff
         </button>
       </div>
       <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead className="text-black">
-            <tr>
-              <th>Name</th>
-              <th>Contact</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {staffData.map((staff: any, index: number) => (
-              <tr key={staff.Id}>
-                <td className="flex items-center space-x-3 py-4">
-                  {renderAvatar(staff)}
-                  <span className="font-bold text-xl">{staff.StaffName}</span>
-                </td>
-                <td className="py-4">
-                  <span className="text-blue-500">{staff.Email}</span>
-                  {staff.Phone && <div>{staff.Phone}</div>}
-                </td>
-                <td className="py-4">
-                  <div className="relative">
-                    <button
-                      className="btn bg-primary"
-                      onClick={() => handleDropdownToggle(index)}
-                    >
-                      <MoreVertical size={20} />
-                    </button>
-                    {dropdownVisible === index && (
-                      <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
-                        <div className="py-1">
-                          <button
-                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                            onClick={() => handleEditStaff(staff)}
-                          >
-                            Edit
-                          </button>
-                          <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                            View calendar
-                          </button>
-                          <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    )}
+        {loading ? (
+          <div className="space-y-4">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <div key={n} className="animate-pulse">
+                <div className="flex items-center space-x-4 p-4 bg-gray-200 rounded-lg">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded w-1/2"></div>
                   </div>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        ) : (
+          <table className="table w-full">
+            <thead className="text-black">
+              <tr>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {staffData.map((staff: any, index: number) => (
+                <tr key={staff.Id}>
+                  <td className="flex items-center space-x-3 py-4">
+                    {renderAvatar(staff)}
+                    <span className="font-bold text-xl">{staff.StaffName}</span>
+                  </td>
+                  <td className="py-4">
+                    <span className="text-blue-500">{staff.Email}</span>
+                    {staff.Phone && <div>{staff.Phone}</div>}
+                  </td>
+                  <td className="py-4">
+                    <div className="relative">
+                      <button
+                        className="btn bg-primary"
+                        onClick={() => handleDropdownToggle(index)}
+                      >
+                        <MoreVertical size={20} />
+                      </button>
+                      {dropdownVisible === index && (
+                        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+                          <div className="py-1">
+                            <button
+                              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                              onClick={() => handleEditStaff(staff)}
+                            >
+                              Edit
+                            </button>
+                            <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                              View calendar
+                            </button>
+                            <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
