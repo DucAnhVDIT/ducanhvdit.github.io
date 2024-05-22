@@ -30,7 +30,7 @@ const ScheduleHome: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex-1 mt-4 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
+        <div className="flex-1 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
         {activeTab === "schedule" && <ScheduleTable />}
         </div>
       </div>
