@@ -189,7 +189,7 @@ function InputDataPage() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 p-4 overflow-x-auto overflow-y-auto min-h-screen">
+        <div className="flex-1 overflow-x-auto overflow-y-auto min-h-screen">
           {activeTab === "services" && <ServicesHome />}
           {activeTab === "staff" && <StaffHome />}
           

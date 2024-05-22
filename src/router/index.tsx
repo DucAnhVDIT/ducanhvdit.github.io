@@ -24,7 +24,8 @@ import SettingsPage from "../pages/Manager/setting";
 import "./styles.css"
 import ReviewSettings from "../pages/Marketing/ReviewSettings";
 import InputDataPage from "../pages/Manager/InputData";
-import AddStaff from "../pages/Manager/InputData/Staff/AddStaff/addStaff";
+import AddStaff from "../pages/Manager/InputData/Staff/addStaff";
+import EditStaff from "../pages/Manager/InputData/Staff/editStaff";
 
 function Router() {
   const user = useAuth();
@@ -106,6 +107,10 @@ function Router() {
     {
       path: "/manager/inputdata/add-new-staff",
       element: <AddStaff />
+    },
+    {
+      path: "/manager/inputdata/edit-staff/:id",
+      element: <EditStaff />
     },
     {
       path: "/marketing/reviewsettings",

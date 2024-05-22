@@ -19,6 +19,7 @@ function StaffList() {
         Math.floor(date.getTime() / 1000)
       );
       setStaffData(res.data.Staffs);
+      console.log('Thong tin tho', res.data.Staffs)
     } catch (error) {
       console.error(error);
     }
@@ -51,21 +52,28 @@ function StaffList() {
   };
 
   const handleAddStaff = () => {
-    navigate("/manager/inputdata/add-new-staff"); 
+    navigate("/manager/inputdata/add-new-staff");
+  };
+
+  const handleEditStaff = (staff: any) => {
+    navigate(`/manager/inputdata/edit-staff/${staff.StaffID}`, { state: { selectedStaff: staff } });
   };
 
   return (
     <div className="p-6 w-full">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Staff List</h1>
-        <button className="btn btn-primary flex items-center" onClick={handleAddStaff} >
-          <Plus size={20} className="mr-2"/>
+        <button
+          className="btn btn-primary flex items-center"
+          onClick={handleAddStaff}
+        >
+          <Plus size={20} className="mr-2" />
           Add Staff
         </button>
       </div>
       <div className="overflow-x-auto">
         <table className="table w-full">
-          <thead className=" text-black">
+          <thead className="text-black">
             <tr>
               <th>Name</th>
               <th>Contact</th>
@@ -83,7 +91,6 @@ function StaffList() {
                   <span className="text-blue-500">{staff.Email}</span>
                   {staff.Phone && <div>{staff.Phone}</div>}
                 </td>
-
                 <td className="py-4">
                   <div className="relative">
                     <button
@@ -95,7 +102,10 @@ function StaffList() {
                     {dropdownVisible === index && (
                       <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
                         <div className="py-1">
-                          <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                          <button
+                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            onClick={() => handleEditStaff(staff)}
+                          >
                             Edit
                           </button>
                           <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">

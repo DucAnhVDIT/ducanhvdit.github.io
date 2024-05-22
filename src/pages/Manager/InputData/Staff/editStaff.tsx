@@ -4,14 +4,18 @@ import { useNavigate } from "react-router-dom";
 import ProfileContent from "./profileContent";
 import StaffRateContent from "./staffRateContent";
 import StaffServicesContent from "./staffServicesContent";
+import { useLocation } from "react-router-dom";
 
-function AddStaff() {
+function EditStaff() {
+  const location = useLocation();
+  const { selectedStaff } = location.state || {};
   const [activeTab, setActiveTab] = useState("profile");
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
   const navigate = useNavigate();
   useEffect(() => {
+    console.log(selectedStaff)
     document.body.style.backgroundColor = "white";
     return () => {
       document.body.style.backgroundColor = "";
@@ -25,7 +29,7 @@ function AddStaff() {
   const renderTabContent = () => {
     switch (activeTab) {
       case "profile":
-        return <ProfileContent />;
+        return <ProfileContent selectedStaff={selectedStaff} />;
       case "staff-rate":
         return <StaffRateContent />;
       case "staff-services":
@@ -38,7 +42,7 @@ function AddStaff() {
   return (
     <div className="p-6 min-h-screen">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Add team member</h1>
+        <h1 className="text-2xl font-bold">Edit team member</h1>
         <div>
           <button
             className="btn btn-outline mr-2 text-black"
@@ -46,7 +50,7 @@ function AddStaff() {
           >
             Close
           </button>
-          <button className="btn btn-primary">Add</button>
+          <button className="btn btn-primary">Save</button>
         </div>
       </div>
       <div className="flex flex-col md:flex-row">
@@ -98,4 +102,4 @@ function AddStaff() {
   );
 }
 
-export default AddStaff;
+export default EditStaff;

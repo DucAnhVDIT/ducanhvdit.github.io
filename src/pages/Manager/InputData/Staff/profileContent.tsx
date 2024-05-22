@@ -1,8 +1,8 @@
 import React from "react";
-import FormLabel from "../../../../../base-components/Form/FormLabel";
-import FormInput from "../../../../../base-components/Form/FormInput";
+import FormLabel from "../../../../base-components/Form/FormLabel";
+import FormInput from "../../../../base-components/Form/FormInput";
 
-function ProfileContent() {
+function ProfileContent({ selectedStaff } :any) {
   return (
     <div>
       <h2 className="text-lg font-semibold mb-6">Profile</h2>
@@ -14,6 +14,7 @@ function ProfileContent() {
             name="firstName"
             placeholder="First name"
             className="w-full"
+            defaultValue={selectedStaff?.StaffName?.split(" ")[0] || ""}
           />
         </div>
         <div>
@@ -23,6 +24,7 @@ function ProfileContent() {
             name="lastName"
             placeholder="Last name"
             className="w-full"
+            defaultValue={selectedStaff?.StaffName?.split(" ")[1] || ""}
           />
         </div>
         <div>
@@ -33,6 +35,7 @@ function ProfileContent() {
             placeholder="Email"
             type="email"
             className="w-full"
+            defaultValue={selectedStaff?.Email || ""}
           />
         </div>
         <div>
@@ -43,6 +46,7 @@ function ProfileContent() {
             placeholder="Phone number"
             type="tel"
             className="w-full"
+            defaultValue={selectedStaff?.Phone || ""}
           />
         </div>
         <div>
@@ -52,6 +56,7 @@ function ProfileContent() {
             name="joinDate"
             type="date"
             className="w-full"
+            defaultValue={selectedStaff?.JoinDate || ""}
           />
         </div>
         <div>
@@ -61,6 +66,7 @@ function ProfileContent() {
             name="leaveDate"
             type="date"
             className="w-full"
+            defaultValue={selectedStaff?.LeaveDate || ""}
           />
         </div>
         <div className="flex items-center mb-4">
@@ -68,6 +74,7 @@ function ProfileContent() {
             type="checkbox"
             id="notAvailableOnlineBooking"
             className="form-checkbox h-5 w-5 text-primary rounded mr-2"
+            defaultChecked={selectedStaff?.NotAvailableOnlineBooking || false}
           />
           <FormLabel
             htmlFor="notAvailableOnlineBooking"
@@ -81,7 +88,7 @@ function ProfileContent() {
             type="checkbox"
             id="activate"
             className="form-checkbox h-5 w-5 text-primary rounded mr-2"
-            defaultChecked
+            defaultChecked={selectedStaff?.Activate || true}
           />
           <FormLabel htmlFor="activate" className="select-none">
             Activate
@@ -114,6 +121,7 @@ function ProfileContent() {
           name="jobTitle"
           placeholder="Job title"
           className="w-full"
+          defaultValue={selectedStaff?.JobTitle || ""}
         />
       </div>
     </div>
