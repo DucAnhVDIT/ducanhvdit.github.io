@@ -5,9 +5,9 @@ import Button from "../../../base-components/Button";
 import { Menu, Close } from "@mui/icons-material";
 import ServicesHome from "./Services";
 import StaffHome from "./Staff";
-
-
-
+import DatePickerModal from "./Schedules/datePickerModal";
+import Schedule from "./Schedules/schedule";
+import ScheduleHome from "./Schedules";
 
 function InputDataPage() {
   useEffect(() => {
@@ -18,12 +18,30 @@ function InputDataPage() {
     };
   }, []);
   const [activeTab, setActiveTab] = useState("services");
+  const [showModal, setShowModal] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
   const handleTabChange = (tab: React.SetStateAction<string>) => {
-    setActiveTab(tab);
-    setIsCollapsed(true);
+    if (tab === "schedules") {
+      setShowModal(true);
+    } else {
+      setActiveTab(tab);
+      setIsCollapsed(true);
+    }
   };
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    setShowModal(false);
+    setActiveTab("schedules");
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setActiveTab("services");
+  };
+
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
@@ -122,78 +140,80 @@ function InputDataPage() {
               Status
             </button>
           </div>
-        </div> 
+        </div>
 
         {/* Left Nav for Desktop */}
         <div className="hidden sm:flex flex-col space-y-3 w-64 p-4">
-        <button
-              className={`w-full py-2 px-3 rounded-full text-left ${
-                activeTab === "services"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("services")}
-            >
-              Services
-            </button>
-            <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "staff"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("staff")}
-            >
-              Staff
-            </button>
-            <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "schedules"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("schedules")}
-            >
-              Schedules
-            </button>
-            <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "customers"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("customers")}
-            >
-              Customers
-            </button>
-            <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "forms"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("forms")}
-            >
-              Forms
-            </button>
-            <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "status"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("status")}
-            >
-              Status
-            </button>
+          <button
+            className={`w-full py-2 px-3 rounded-full text-left ${
+              activeTab === "services"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("services")}
+          >
+            Services
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "staff"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("staff")}
+          >
+            Staff
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "schedules"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("schedules")}
+          >
+            Schedules
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "customers"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("customers")}
+          >
+            Customers
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "forms"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("forms")}
+          >
+            Forms
+          </button>
+          <button
+            className={`w-full py-2 px-4 rounded-full text-left ${
+              activeTab === "status"
+                ? "bg-primary text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => handleTabChange("status")}
+          >
+            Status
+          </button>
         </div>
 
         {/* Content Area */}
         <div className="flex-1 overflow-x-auto overflow-y-auto min-h-screen">
           {activeTab === "services" && <ServicesHome />}
           {activeTab === "staff" && <StaffHome />}
-          
+          {activeTab === "schedules" && selectedDate && <ScheduleHome />}
         </div>
+
+        <DatePickerModal show={showModal} onClose={handleCloseModal} onDateSelect={handleDateSelect} setIsCollapsed={setIsCollapsed} />
       </div>
     </div>
   );
