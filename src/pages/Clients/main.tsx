@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import customerRepository from "../../repositories/customerRepository";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import "./styles.css";
@@ -14,7 +13,6 @@ import {
   Zoom,
   toast,
 } from "react-toastify";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch } from "react-redux";
 import { setSelectedCustomer } from "../../stores/customerSlide";
 import { useTheme } from "@mui/material/styles";
@@ -24,10 +22,7 @@ function ClientsMainPage() {
   const [customersList, setCustomersList] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchValueClient, setSearchValueClient] = useState("");
-  const [selectedRows, setSelectedRows] = React.useState<GridRowSelectionModel>(
-    []
-  );
-  const [editPanelOpen, setEditPanel] = React.useState(false);
+  const [selectedRows, setSelectedRows] = React.useState<number[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
@@ -42,17 +37,21 @@ function ClientsMainPage() {
     }
   }, []);
 
-  const handleSelectionChange = (newSelection: string[]) => {
-    setSelectedRows(newSelection);
+  const handleSelectionChange = (customerId: number) => {
+    setSelectedRows((prevSelectedRows) => {
+      if (prevSelectedRows.includes(customerId)) {
+        return prevSelectedRows.filter((id) => id !== customerId);
+      } else {
+        return [...prevSelectedRows, customerId];
+      }
+    });
   };
 
   const fetchCustomerData = async () => {
     setTimeout(async () => {
       try {
         const res = await customerRepository.getCustomer();
-        // console.log("API Response:", response.data);
         if (res.data.Customers && Array.isArray(res.data.Customers)) {
-          // console.log("Customer data:", response.data.Customers);
           setCustomersList(res.data.Customers);
         } else {
           console.error("No customer data found in response:", res.data);
@@ -87,7 +86,6 @@ function ClientsMainPage() {
 
   const handleAddBtn = () => {
     navigate("/clients/add");
-    console.log("hello");
   };
 
   const handleEditBtn = async () => {
@@ -97,7 +95,6 @@ function ClientsMainPage() {
       try {
         const res = await getSingleCustomer(customerId);
         dispatch(setSelectedCustomer(res.data));
-        setEditPanel(true);
         navigate(`/clients/${customerId}/edit`);
       } catch (error) {
         console.error("Error fetching customer data:", error);
@@ -107,79 +104,25 @@ function ClientsMainPage() {
     }
   };
 
-  const columns: GridColDef[] = [
-    {
-      field: "Avatar",
-      headerName: "Avatar",
-      renderCell: (params) => (
-        <div className="flex items-center">
-          {/* Render picture if available, otherwise render initials */}
-          {params.row.picture ? (
-            <img
-              src={params.row.picture}
-              alt={params.value}
-              className="w-14 h-14 rounded-full mr-2"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-full p-2 bg-primary text-white flex items-center justify-center mr-2 mt-1">
-              <span className="text-lg">
-                {getInitials(params.row.FirstName)}
-              </span>
-            </div>
-          )}
-        </div>
-      ),
-      width: 150,
-      headerClassName: "desktop-only",
-      cellClassName: "desktop-only",
-    },
-    {
-      field: "CustomerCardID",
-      headerName: "Customer ID",
-      width: 180,
-      // headerClassName: "desktop-only",
-      // cellClassName: "desktop-only",
-    },
-    {
-      field: "FirstName",
-      headerName: "First Name",
-      width: 200,
-    },
-    { field: "LastName", headerName: "Last Name", width: 150 },
-    { field: "Phone", headerName: "Phone", width: 150 },
-    { field: "Email", headerName: "Email", width: 150 },
-    { field: "PointAward", headerName: "Point Award", width: 150 },
-  ];
-
   const filteredRows = customersList
-    ? customersList
-        .filter(
-          (customer) =>
-            (customer.FirstName || "")
-              .toLowerCase()
-              .includes(searchValueClient.toLowerCase()) ||
-            (customer.LastName || "")
-              .toLowerCase()
-              .includes(searchValueClient.toLowerCase()) ||
-            (customer.Email || "")
-              .toLowerCase()
-              .includes(searchValueClient.toLowerCase()) ||
-            (customer.Mobile || "")
-              .toLowerCase()
-              .includes(searchValueClient.toLowerCase()) ||
-            (customer.CustomerCardID || "")
-              .toLowerCase()
-              .includes(searchValueClient.toLowerCase())
-        )
-        .map((customer) => ({
-          id: customer.CustomerID,
-          CustomerCardID: customer.CustomerCardID || "-",
-          FirstName: customer.FirstName || "-",
-          LastName: customer.LastName || "-",
-          Phone: customer.Mobile || "-",
-          Email: customer.Email || "-",
-          PointAward: customer.PointAward || "-",
-        }))
+    ? customersList.filter(
+        (customer) =>
+          (customer.FirstName || "")
+            .toLowerCase()
+            .includes(searchValueClient.toLowerCase()) ||
+          (customer.LastName || "")
+            .toLowerCase()
+            .includes(searchValueClient.toLowerCase()) ||
+          (customer.Email || "")
+            .toLowerCase()
+            .includes(searchValueClient.toLowerCase()) ||
+          (customer.Mobile || "")
+            .toLowerCase()
+            .includes(searchValueClient.toLowerCase()) ||
+          (customer.CustomerCardID || "")
+            .toLowerCase()
+            .includes(searchValueClient.toLowerCase())
+      )
     : [];
 
   return (
@@ -192,16 +135,16 @@ function ClientsMainPage() {
         }}
         className="opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay"
       >
-        <div>
+        <div className="flex flex-wrap justify-end gap-2 mt-2">
           <Button
-            className="sm:w-32 w-[90px] px-6 bg-primary text text-white mr-3 mt-2"
+            className="sm:w-32 w-24 px-4 py-2 bg-primary text-white rounded-md"
             onClick={handleAddBtn}
           >
             Add
           </Button>
           {selectedRows.length === 1 && (
             <Button
-              className="sm:w-32 w-[90px] px-6 bg-primary text text-white mr-3 mt-2"
+              className="sm:w-32 w-24 px-4 py-2 bg-primary text-white rounded-md"
               onClick={handleEditBtn}
             >
               Edit
@@ -209,17 +152,17 @@ function ClientsMainPage() {
           )}
           {selectedRows.length > 0 && (
             <Button
-              className="sm:w-32 w-[90px] px-6 bg-red-500 text text-white mr-3 mt-2"
+              className="sm:w-32 w-24 px-4 py-2 bg-red-500 text-white rounded-md"
               onClick={() => {}}
             >
               Delete
             </Button>
           )}
         </div>
-        <div className="relative text-slate-500 mt-2">
+        <div className="relative text-slate-500 mt-4 w-full max-w-md">
           <FormInput
             type="text"
-            className="w-[320px] sm:w-[420px] h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+            className="w-full h-12 bg-gray-200 rounded-md pl-4 pr-10 focus:ring-primary focus:border-primary"
             placeholder="Search client"
             value={searchValueClient}
             onChange={(e) => setSearchValueClient(e.target.value)}
@@ -228,19 +171,19 @@ function ClientsMainPage() {
           {searchValueClient ? (
             <Lucide
               icon="XCircle"
-              className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3 cursor-pointer"
+              className="absolute inset-y-0 right-0 w-6 h-6 my-auto mr-3 cursor-pointer"
               onClick={() => setSearchValueClient("")}
             />
           ) : (
             <Lucide
               icon="Search"
-              className="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
+              className="absolute inset-y-0 right-0 w-6 h-6 my-auto mr-3"
             />
           )}
         </div>
       </div>
 
-      {loading ? ( // Show loading indicator if loading is true
+      {loading ? (
         <Box
           display="flex"
           justifyContent="center"
@@ -250,34 +193,58 @@ function ClientsMainPage() {
           <span className="loading loading-ring loading-lg"></span>
         </Box>
       ) : (
-        <div style={{ height: 640, width: "100%" }} className="mt-3">
-          <DataGrid
-            columnHeaderHeight={isMobile ? 0 : undefined}
-            sx={{
-              "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-                outline: "none !important",
-              },
-              "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell": {
-                backgroundColor: "white",
-                color: "black",
-                fontWeight: 500,
-              },
-            }}
-            rows={filteredRows}
-            // onRowClick={()=> {alert("Hello em")}}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 10 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
-            checkboxSelection
-            rowSelectionModel={selectedRows}
-            onRowSelectionModelChange={(newRowSelectionModel) => {
-              setSelectedRows(newRowSelectionModel);
-            }}
-          />
+        <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
+          <table className="table w-full mt-3">
+            <thead className="text-black">
+              <tr>
+                <th>Avatar</th>
+                <th className="hidden sm:table-cell">Customer ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Point Award</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRows.map((customer) => (
+                <tr
+                  key={customer.CustomerID}
+                  className={
+                    selectedRows.includes(customer.CustomerID)
+                      ? "bg-blue-100"
+                      : ""
+                  }
+                  onClick={() => handleSelectionChange(customer.CustomerID)}
+                >
+                  <td>
+                    {customer.picture ? (
+                      <img
+                        src={customer.picture}
+                        alt="Avatar"
+                        className="w-14 h-14 rounded-full"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full p-2 bg-primary text-white flex items-center justify-center">
+                        <span className="text-lg">
+                          {getInitials(customer.FirstName)}
+                        </span>
+                      </div>
+                    )}
+                  </td>
+                  <td className="hidden sm:table-cell">
+                    {customer.CustomerCardID}
+                  </td>
+                  <td>{customer.FirstName}</td>
+                  <td>{customer.LastName}</td>
+                  <td>{customer.Mobile}</td>
+                  <td>{customer.Email}</td>
+                  <td>{customer.PointAward}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </>

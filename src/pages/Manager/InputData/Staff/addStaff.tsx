@@ -19,7 +19,7 @@ function AddStaff() {
   }, []);
 
   const handleClose = () => {
-    navigate(-1);
+    navigate('/manager/inputdata/staff');
   };
 
   const renderTabContent = () => {
