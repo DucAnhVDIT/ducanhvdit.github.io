@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
-import ScheduleTable from "./schedule";
+import FormsTable from "./formsTable";
 
 
-const ScheduleHome: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("schedule");
+
+
+const FormsHome: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("forms");
   const [showModal, setShowModal] = useState(false);
 
   const handleTabChange = (tab: string) => {
@@ -19,19 +20,19 @@ const ScheduleHome: React.FC = () => {
           <div className="flex space-x-3">
             <button
               className={`min-w-max py-2 px-4 ${
-                activeTab === "schedule"
+                activeTab === "forms"
                   ? "border-b-2 border-primary text-black"
                   : "text-gray-600"
               }`}
-              onClick={() => handleTabChange("schedule")}
+              onClick={() => handleTabChange("forms")}
             >
-              Schedule
+              Forms
             </button>
           </div>
         </div>
 
         <div className="flex-1 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
-        {activeTab === "schedule" && <ScheduleTable />}
+        {activeTab === "forms" && <FormsTable /> }
         </div>
       </div>
 
@@ -40,5 +41,5 @@ const ScheduleHome: React.FC = () => {
   );
 };
 
-export default ScheduleHome;
+export default FormsHome;
 

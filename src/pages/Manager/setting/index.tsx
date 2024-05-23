@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Lucide from "../../../base-components/Lucide";
 import Button from "../../../base-components/Button";
 import { Menu, Close } from "@mui/icons-material";
@@ -9,29 +9,37 @@ import TimeSettingHome from "./TimeSetting";
 import CardConfigHome from "./CardConfig";
 import BookingConfigHome from "./BookingConfig";
 
-
-
 function SettingsPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
   useEffect(() => {
     document.body.style.backgroundColor = "white";
-
     return () => {
       document.body.style.backgroundColor = "";
     };
   }, []);
-  const [activeTab, setActiveTab] = useState("general");
-  const handleTabChange = (tab: React.SetStateAction<string>) => {
-    setActiveTab(tab);
+
+  useEffect(() => {
+    // Redirect to the default route if the current path is /manager/setting
+    if (location.pathname === "/manager/setting") {
+      navigate("/manager/setting/general");
+    }
+  }, [location.pathname, navigate]);
+
+  const handleTabChange = (tab: string) => {
+    navigate(`/manager/setting/${tab}`);
     setIsCollapsed(true);
   };
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   return (
-    <div className="min-h-screen flex flex-col ">
+    <div className="min-h-screen flex flex-col">
       <div className="flex items-center justify-between top-0 w-full p-4">
         <Link to="/manager" className="text-lg font-bold">
           <Lucide icon={"X"} />
@@ -64,8 +72,8 @@ function SettingsPage() {
           ></div>
           <div className="relative bg-white w-64 h-full p-4 flex flex-col space-y-3">
             <button
-              className={`w-full py-2 px-3 rounded-full text-left ${
-                activeTab === "general"
+              className={`w-full py-2 px-3 rounded-lg text-left ${
+                location.pathname.includes("general")
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
@@ -74,8 +82,8 @@ function SettingsPage() {
               General Settings
             </button>
             <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "till"
+              className={`w-full py-2 px-4 rounded-lg text-left ${
+                location.pathname.includes("till")
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
@@ -84,8 +92,8 @@ function SettingsPage() {
               Till Settings
             </button>
             <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "time"
+              className={`w-full py-2 px-4 rounded-lg text-left ${
+                location.pathname.includes("time")
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
@@ -94,8 +102,8 @@ function SettingsPage() {
               Time Settings
             </button>
             <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "card"
+              className={`w-full py-2 px-4 rounded-lg text-left ${
+                location.pathname.includes("card")
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
@@ -104,8 +112,8 @@ function SettingsPage() {
               Card Configuration
             </button>
             <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "booking"
+              className={`w-full py-2 px-4 rounded-lg text-left ${
+                location.pathname.includes("booking")
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-gray-800"
               }`}
@@ -113,44 +121,14 @@ function SettingsPage() {
             >
               Booking Configuration
             </button>
-            {/* {/* <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "sync"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("sync")}
-            >
-              Sync System
-            </button>
-            <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "update"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("update")}
-            >
-              Update
-            </button>
-            <button
-              className={`w-full py-2 px-4 rounded-full text-left ${
-                activeTab === "reset"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-gray-800"
-              }`}
-              onClick={() => handleTabChange("reset")}
-            >
-              Reset
-            </button> */}
           </div>
-        </div> 
+        </div>
 
         {/* Left Nav for Desktop */}
         <div className="hidden sm:flex flex-col space-y-3 w-64 p-4">
           <button
-            className={`w-full py-2 px-3 rounded-full text-left ${
-              activeTab === "general"
+            className={`w-full py-2 px-3 rounded-lg text-left ${
+              location.pathname.includes("general")
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
             }`}
@@ -159,8 +137,8 @@ function SettingsPage() {
             General Settings
           </button>
           <button
-            className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "till"
+            className={`w-full py-2 px-4 rounded-lg text-left ${
+              location.pathname.includes("till")
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
             }`}
@@ -169,8 +147,8 @@ function SettingsPage() {
             Till Settings
           </button>
           <button
-            className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "time"
+            className={`w-full py-2 px-4 rounded-lg text-left ${
+              location.pathname.includes("time")
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
             }`}
@@ -179,8 +157,8 @@ function SettingsPage() {
             Time Settings
           </button>
           <button
-            className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "card"
+            className={`w-full py-2 px-4 rounded-lg text-left ${
+              location.pathname.includes("card")
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
             }`}
@@ -189,8 +167,8 @@ function SettingsPage() {
             Card Configuration
           </button>
           <button
-            className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "booking"
+            className={`w-full py-2 px-4 rounded-lg text-left ${
+              location.pathname.includes("booking")
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-800"
             }`}
@@ -198,48 +176,11 @@ function SettingsPage() {
           >
             Booking Configuration
           </button>
-          {/* <button
-            className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "sync"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
-            }`}
-            onClick={() => handleTabChange("sync")}
-          >
-            Sync System
-          </button>
-          <button
-            className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "update"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
-            }`}
-            onClick={() => handleTabChange("update")}
-          >
-            Update
-          </button>
-          <button
-            className={`w-full py-2 px-4 rounded-full text-left ${
-              activeTab === "reset"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-800"
-            }`}
-            onClick={() => handleTabChange("reset")}
-          >
-            Reset
-          </button> */}
         </div>
 
         {/* Content Area */}
         <div className="flex-1 p-4 overflow-x-auto overflow-y-auto min-h-screen">
-          {activeTab === "general" && <General />}
-          {activeTab === "till" && <TillSettingHome />}
-          {activeTab === "time" && <TimeSettingHome />}
-          {activeTab === "card" && <CardConfigHome />}
-          {activeTab === "booking" && <BookingConfigHome />}
-          {activeTab === "sync" && <div>Sync System Content</div>}
-          {activeTab === "update" && <div>Update Content</div>}
-          {activeTab === "reset" && <div>Reset Content</div>}
+          <Outlet />
         </div>
       </div>
     </div>
