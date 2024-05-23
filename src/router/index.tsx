@@ -35,6 +35,8 @@ import TillSettingHome from "../pages/Manager/setting/TillSetting";
 import TimeSettingHome from "../pages/Manager/setting/TimeSetting";
 import CardConfigHome from "../pages/Manager/setting/CardConfig";
 import BookingConfigHome from "../pages/Manager/setting/BookingConfig";
+import ReportPage from "../pages/Manager/Report";
+import TakingHome from "../pages/Manager/Report/Taking";
 
 function Router() {
   const user = useAuth();
@@ -129,6 +131,13 @@ function Router() {
     },
     { path: "/manager/inputdata/add-new-staff", element: <AddStaff /> },
     { path: "/manager/inputdata/edit-staff/:id", element: <EditStaff /> },
+    {
+      path: "/manager/report",
+      element: <ReportPage />,
+      children: [
+        { path: "taking", element: <TakingHome /> },
+      ],
+    },
     {
       path: "/marketing/reviewsettings",
       element: <ReviewSettings />,
