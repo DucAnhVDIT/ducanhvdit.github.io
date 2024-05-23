@@ -1,141 +1,100 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FormInput, FormLabel } from "../../../../base-components/Form";
+import managerRepository from "../../../../repositories/managerRepository";
+
+import { toast, ToastContainer } from "react-toastify";
+import { BusinessInfo } from "../../../../types/businessInfo";
+import { logError, logSuccess } from "../../../../constant/log-error";
+
+const formFields = [
+  {
+    id: "company-name",
+    label: "Company name",
+    placeholder: "VDIT Solutions",
+    readOnly: true,
+    key: "CompanyName",
+  },
+  { id: "address-1", label: "Address 1", placeholder: "", key: "Address1" },
+  { id: "address-2", label: "Address 2", placeholder: "", key: "Address2" },
+  { id: "city", label: "City", placeholder: "", key: "City" },
+  { id: "postcode", label: "Postcode", placeholder: "", key: "Postcode" },
+  { id: "country", label: "Country", placeholder: "", key: "Country" },
+  { id: "telephone", label: "Telephone", placeholder: "", key: "Telephone" },
+  { id: "fax", label: "Fax", placeholder: "", key: "Fax" },
+  { id: "website", label: "Website", placeholder: "", key: "Website" },
+  { id: "email", label: "Email", placeholder: "", key: "Email" },
+  { id: "company-no", label: "Company No", placeholder: "", key: "CompanyNo" },
+  { id: "vat-no", label: "VAT No", placeholder: "", key: "VatNo" },
+  { id: "vat", label: "VAT", placeholder: "", key: "Vat" },
+];
 
 function CompanyInfo() {
+  const [initialData, setInitialData] = useState<BusinessInfo | null>(null);
+  const [businessInfo, setBusinessInfo] = useState<BusinessInfo | null>(null);
+  const [formData, setFormData] = useState<BusinessInfo>({} as BusinessInfo);
+
+  useEffect(() => {
+    getBusinessInfo();
+  }, []);
+
+  const getBusinessInfo = async () => {
+    try {
+      const res = await managerRepository.getBusinessInfo();
+      setInitialData(res.data);
+      setBusinessInfo(res.data);
+      setFormData(res.data);
+      console.log("Get info success");
+    } catch (error: any) {
+      console.error("Error fetching the API:", error.message);
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (JSON.stringify(formData) === JSON.stringify(initialData)) {
+      logError("No changes detected");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    try {
+      await managerRepository.updateBusinessInfo(formData);
+      logSuccess("Updated company information");
+    } catch (error: any) {
+      logError("Error updating the API: " + error.message);
+    } finally {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   return (
-    <form className="validate-form flex flex-col w-full max-w-5xl mx-auto m-3">
+    <form
+      onSubmit={handleSubmit}
+      className="validate-form flex flex-col w-full max-w-5xl mx-auto m-3"
+    >
       <div className="input-form grid w-full gap-4 md:grid-cols-2">
-        <div className="flex flex-col">
-          <FormLabel htmlFor="company-name">Company name</FormLabel>
-          <FormInput
-            id="company-name"
-            type="text"
-            name="company-name"
-            placeholder="VDIT Solutions"
-            className="w-full"
-            readOnly
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="address-1">Address 1</FormLabel>
-          <FormInput
-            id="address-1"
-            type="text"
-            name="address-1"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="address-2">Address 2</FormLabel>
-          <FormInput
-            id="address-2"
-            type="text"
-            name="address-2"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="city">City</FormLabel>
-          <FormInput
-            id="city"
-            type="text"
-            name="city"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="postcode">Postcode</FormLabel>
-          <FormInput
-            id="postcode"
-            type="text"
-            name="postcode"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="country">Country</FormLabel>
-          <FormInput
-            id="country"
-            type="text"
-            name="country"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="telephone">Telephone</FormLabel>
-          <FormInput
-            id="telephone"
-            type="text"
-            name="telephone"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="fax">Fax</FormLabel>
-          <FormInput
-            id="fax"
-            type="text"
-            name="fax"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="website">Website</FormLabel>
-          <FormInput
-            id="website"
-            type="text"
-            name="website"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="email">Email</FormLabel>
-          <FormInput
-            id="email"
-            type="text"
-            name="email"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="company-no">Company No</FormLabel>
-          <FormInput
-            id="company-no"
-            type="text"
-            name="company-no"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="vat-no">VAT No</FormLabel>
-          <FormInput
-            id="vat-no"
-            type="text"
-            name="vat-no"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
-        <div className="flex flex-col">
-          <FormLabel htmlFor="vat">VAT</FormLabel>
-          <FormInput
-            id="vat"
-            type="text"
-            name="vat"
-            placeholder=""
-            className="w-full"
-          />
-        </div>
+        {formFields.map((field) => (
+          <div key={field.id} className="flex flex-col">
+            <FormLabel htmlFor={field.id}>{field.label}</FormLabel>
+            <FormInput
+              id={field.id}
+              type="text"
+              name={field.key}
+              placeholder={field.placeholder}
+              className="w-full"
+              readOnly={field.readOnly || false}
+              value={formData[field.key as keyof BusinessInfo] || ""}
+              onChange={handleChange}
+            />
+          </div>
+        ))}
         <div className="flex flex-col md:col-span-2">
           <FormLabel htmlFor="vat-included">VAT Included</FormLabel>
           <div className="form-control">
@@ -143,7 +102,10 @@ function CompanyInfo() {
               <input
                 id="vat-included"
                 type="checkbox"
-                defaultChecked
+                // checked={formData.VatIncluded}
+                // onChange={(e) =>
+                //   setFormData({ ...formData, VatIncluded: e.target.checked })
+                // }
                 className="checkbox checkbox-primary"
               />
             </label>
@@ -153,14 +115,21 @@ function CompanyInfo() {
           <FormLabel htmlFor="note">Note</FormLabel>
           <textarea
             id="note"
+            name="Note"
             className="w-full h-32 px-4 py-2 border rounded focus:border-primary outline-none"
             placeholder="Thank you"
+            // value={formData.Note || ""}
+            // onChange={handleChange}
           />
         </div>
       </div>
-      <button className="btn sm:w-32 w-[90px] px-6 bg-primary text-white mt-3 self-end">
+      <button
+        type="submit"
+        className="btn sm:w-32 w-[90px] px-6 bg-primary text-white mt-3 self-end"
+      >
         Save
       </button>
+      <ToastContainer />
     </form>
   );
 }
