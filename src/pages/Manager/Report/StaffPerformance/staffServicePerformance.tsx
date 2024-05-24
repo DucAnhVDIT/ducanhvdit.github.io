@@ -99,7 +99,6 @@ function StaffServicePerformance() {
           </tbody>
         </table>
       </div>
-      <div className="mt-4 text-right font-bold">Total: £{total.toFixed(2)}</div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">

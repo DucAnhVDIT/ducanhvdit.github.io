@@ -1,37 +1,23 @@
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
 import StaffList from "./staffList";
+import DynamicTabs from "../../../../components/DynamicTabs";
 
 const StaffHome: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("staff-list");
-  const [showModal, setShowModal] = useState(false);
-
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-
+  const tabs = [
+    {
+      label: "Staff List",
+      key: "staff-list",
+      component: <StaffList />,
+    },
+  ];
 
   return (
     <div className="relative min-h-screen flex flex-col">
       <div className="flex flex-col w-full overflow-x-auto no-scrollbar">
-        <div className="flexw-full px-4 space-x-3">
-          <button
-            className={`min-w-max py-2 px-4 ${
-              activeTab === "staff-list"
-                ? "border-b-2 border-primary text-black"
-                : "text-gray-600"
-            }`}
-            onClick={() => handleTabChange("staff-list")}
-          >
-            Staff List
-          </button>
-        </div>
-        <div className="flex-1 mt-4 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
-          {activeTab === "staff-list" && <StaffList />}
-
+        <div className="">
+          <DynamicTabs tabs={tabs} />
         </div>
       </div>
-
     </div>
   );
 };

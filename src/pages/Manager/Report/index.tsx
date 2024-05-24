@@ -4,6 +4,7 @@ import Lucide from "../../../base-components/Lucide";
 import Button from "../../../base-components/Button";
 import { Menu, Close } from "@mui/icons-material";
 
+
 function ReportPage() {
   const location = useLocation();
   const navigate = useNavigate();

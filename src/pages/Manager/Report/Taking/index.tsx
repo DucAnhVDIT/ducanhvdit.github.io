@@ -1,43 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import Taking from "./taking";
-
+import DynamicTabs from "../../../../components/DynamicTabs";
 
 const TakingHome: React.FC = () => {
-  const [activeTab, setActiveTab] = useState("taking");
-  const [showModal, setShowModal] = useState(false);
+  const tabs = [
+    {
+      label: "Taking",
+      key: "taking",
+      component: <Taking />,
+    },
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
+  ];
 
-
-  return (
-    <div className="relative min-h-screen flex flex-col">
-      <div className="flex flex-col w-full overflow-x-auto no-scrollbar">
-        <div className="flex w-full px-4 items-center justify-between mb-4">
-          <div className="flex space-x-3">
-            <button
-              className={`min-w-max py-2 px-4 ${
-                activeTab === "taking"
-                  ? "border-b-2 border-primary text-black"
-                  : "text-gray-600"
-              }`}
-              onClick={() => handleTabChange("taking")}
-            >
-              Taking
-            </button>
-          </div>
-        </div>
-
-        <div className="flex-1 md:flex justify-center items-center flex-col md:border md:rounded-md md:border-slate-500/60 w-full overflow-y-auto">
-        {activeTab === "taking" && <Taking /> }
-        </div>
-      </div>
-
-    
-    </div>
-  );
+  return <DynamicTabs tabs={tabs} />;
 };
 
 export default TakingHome;
-
