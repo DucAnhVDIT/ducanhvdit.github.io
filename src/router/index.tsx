@@ -38,6 +38,7 @@ import BookingConfigHome from "../pages/Manager/setting/BookingConfig";
 import ReportPage from "../pages/Manager/Report";
 import TakingHome from "../pages/Manager/Report/Taking";
 import PerformanceHome from "../pages/Manager/Report/StaffPerformance";
+import SaleReportHome from "../pages/Manager/Report/SalesReport";
 
 function Router() {
   const user = useAuth();
@@ -138,6 +139,7 @@ function Router() {
       children: [
         { path: "taking", element: <TakingHome /> },
         { path: "staff-performance", element: <PerformanceHome /> },
+        { path: "sales-report", element: <SaleReportHome /> },
       ],
     },
     {
