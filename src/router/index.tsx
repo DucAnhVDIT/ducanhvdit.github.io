@@ -39,6 +39,10 @@ import ReportPage from "../pages/Manager/Report";
 import TakingHome from "../pages/Manager/Report/Taking";
 import PerformanceHome from "../pages/Manager/Report/StaffPerformance";
 import SaleReportHome from "../pages/Manager/Report/SalesReport";
+import AccountPage from "../pages/Manager/Account";
+import ConfigHome from "../pages/Manager/Account/Config";
+import RoleHome from "../pages/Manager/Account/Role";
+
 
 function Router() {
   const user = useAuth();
@@ -140,6 +144,14 @@ function Router() {
         { path: "taking", element: <TakingHome /> },
         { path: "staff-performance", element: <PerformanceHome /> },
         { path: "sales-report", element: <SaleReportHome /> },
+      ],
+    },
+    {
+      path: "/manager/account",
+      element: <AccountPage />,
+      children: [
+        { path: "config", element: <ConfigHome /> },
+        { path: "role", element: <RoleHome /> },
       ],
     },
     {
