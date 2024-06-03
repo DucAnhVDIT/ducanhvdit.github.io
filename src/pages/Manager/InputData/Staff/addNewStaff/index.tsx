@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import AddStaffProgress from "./addStaffProgress";
 import step1 from "./step1";
 import BottomButtons from "./bottomButtons";
+import Step1 from "./step1";
 
-
-
-const steps = ["Personal Information", "Staff Service", "Staff Schedule", "Complete"];
+const steps = [
+  "Personal Information",
+  "Staff Service",
+  "Staff Schedule",
+  "Complete",
+];
 
 const AddStaffSteps: React.FC = () => {
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -36,15 +40,19 @@ const AddStaffSteps: React.FC = () => {
         handleNext={handleNext}
         handleBack={handleBack}
       />
-       <BottomButtons 
-        activeStep={activeStep} 
-        steps={steps} 
-        handleNext={handleNext} 
-        handleBack={handleBack} 
-        handleClose={()=>{}}
+      <div className="flex-1 p-6">
+        <div className="p-6 rounded-lg ">
+          {activeStep === 0 && <Step1 />}
+        </div>
+      </div>
+      <BottomButtons
+        activeStep={activeStep}
+        steps={steps}
+        handleNext={handleNext}
+        handleBack={handleBack}
+        handleClose={() => {}}
       />
     </div>
-    
   );
 };
 
