@@ -1,5 +1,4 @@
 import React from "react";
-import "./styltes.css";
 import { Link } from "react-router-dom";
 import Lucide from "../../../../../base-components/Lucide";
 
@@ -45,15 +44,13 @@ const AddStaffProgress: React.FC<AddStaffProgressProps> = ({
         }`}
         onClick={handleNext}
       >
-        { activeStep === 2 ? "Submit" : "Next step"}
+        {activeStep === 2 ? "Submit" : "Next step"}
       </button>
       <div
         className="absolute bottom-0 left-0 h-1 bg-primary"
         style={{ width: `${progress}%` }}
       ></div>
     </header>
-
-
   );
 };
 
