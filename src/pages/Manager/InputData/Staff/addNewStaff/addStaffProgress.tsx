@@ -45,7 +45,7 @@ const AddStaffProgress: React.FC<AddStaffProgressProps> = ({
         }`}
         onClick={handleNext}
       >
-        Next step
+        { activeStep === 2 ? "Submit" : "Next step"}
       </button>
       <div
         className="absolute bottom-0 left-0 h-1 bg-primary"

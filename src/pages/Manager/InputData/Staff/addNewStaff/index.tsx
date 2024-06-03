@@ -3,6 +3,7 @@ import AddStaffProgress from "./addStaffProgress";
 import step1 from "./step1";
 import BottomButtons from "./bottomButtons";
 import Step1 from "./step1";
+import ScheduleTable from "../../Schedules/schedule";
 
 const steps = [
   "Personal Information",
@@ -43,6 +44,7 @@ const AddStaffSteps: React.FC = () => {
       <div className="flex-1 p-6">
         <div className="p-6 rounded-lg ">
           {activeStep === 0 && <Step1 />}
+          {activeStep === 2 && <ScheduleTable />}
         </div>
       </div>
       <BottomButtons
