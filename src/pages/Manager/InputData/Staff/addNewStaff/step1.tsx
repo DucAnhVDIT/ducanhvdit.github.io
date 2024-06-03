@@ -1,9 +1,9 @@
 import React from 'react'
 
-function step1() {
+function Step1() {
   return (
     <div>step1</div>
   )
 }
 
-export default step1
+export default Step1

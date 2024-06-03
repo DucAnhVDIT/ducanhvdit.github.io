@@ -20,12 +20,12 @@ const AddStaffProgress: React.FC<AddStaffProgressProps> = ({
 
   return (
     <header className="sticky top-0 p-4 flex items-center justify-between w-full z-10">
-      <Link to="/manager/inputdata/staff" className="text-lg font-bold mr-5">
+      <Link to="/manager/inputdata/staff" className="text-lg font-bold mr-1 md:mr-5">
         <Lucide icon={"X"} />
       </Link>
       <button
         disabled={activeStep === 0}
-        className={`btn btn-primary mr-4 ${
+        className={`hidden sm:flex btn btn-primary mr-4 ${
           activeStep === 0 ? "btn-disabled" : ""
         }`}
         onClick={handleBack}
@@ -40,7 +40,7 @@ const AddStaffProgress: React.FC<AddStaffProgressProps> = ({
       </div>
       <button
         disabled={activeStep === steps.length - 1}
-        className={`btn btn-primary ml-4 ${
+        className={`hidden sm:flex btn btn-primary ml-4 ${
           activeStep === steps.length - 1 ? "btn-disabled" : ""
         }`}
         onClick={handleNext}
@@ -52,6 +52,8 @@ const AddStaffProgress: React.FC<AddStaffProgressProps> = ({
         style={{ width: `${progress}%` }}
       ></div>
     </header>
+
+
   );
 };
 
