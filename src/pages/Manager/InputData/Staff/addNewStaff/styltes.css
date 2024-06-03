@@ -1,0 +1,8 @@
+
+.btn-disabled {
+    background-color: #d3d3d3;
+    color: black !important; 
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  

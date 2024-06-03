@@ -24,7 +24,6 @@ import SettingsPage from "../pages/Manager/setting";
 import "./styles.css";
 import ReviewSettings from "../pages/Marketing/ReviewSettings";
 import InputDataPage from "../pages/Manager/InputData";
-import AddStaff from "../pages/Manager/InputData/Staff/addStaff";
 import EditStaff from "../pages/Manager/InputData/Staff/editStaff";
 import ServicesHome from "../pages/Manager/InputData/Services";
 import StaffHome from "../pages/Manager/InputData/Staff";
@@ -42,6 +41,10 @@ import SaleReportHome from "../pages/Manager/Report/SalesReport";
 import AccountPage from "../pages/Manager/Account";
 import ConfigHome from "../pages/Manager/Account/Config";
 import RoleHome from "../pages/Manager/Account/Role";
+import AddStaffSteps from "../pages/Manager/InputData/Staff/addNewStaff";
+
+
+
 
 
 function Router() {
@@ -135,7 +138,7 @@ function Router() {
         // { path: "edit-staff/:id", element: <EditStaff /> },
       ],
     },
-    { path: "/manager/inputdata/add-new-staff", element: <AddStaff /> },
+    { path: "/manager/inputdata/add-new-staff", element: <AddStaffSteps/> },
     { path: "/manager/inputdata/edit-staff/:id", element: <EditStaff /> },
     {
       path: "/manager/report",
