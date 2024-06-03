@@ -4,11 +4,15 @@ import { useNavigate } from "react-router-dom";
 
 import ScheduleTable from "../../Schedules/schedule";
 import LottieAnimation from "../../../../../components/Lottie";
-import { Step1FormData, step1Schema } from "../../../../../constant/validationSchema"; // Adjust the import path as needed
+import {
+  Step1FormData,
+  step1Schema,
+} from "../../../../../constant/validationSchema"; // Adjust the import path as needed
 import { zodResolver } from "@hookform/resolvers/zod";
 import AddStaffProgress from "./addStaffProgress";
 import Step1 from "./step1";
 import BottomButtons from "./bottomButtons";
+import ProgressHeader from "../../../../../components/ProgressHeader";
 
 const steps = [
   "Personal Information",
@@ -72,7 +76,7 @@ const AddStaffSteps: React.FC = () => {
     if (activeStep === 3 && submitted) {
       const timer = setTimeout(() => {
         navigate("/manager/inputdate/staff");
-      }, 3000); 
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
@@ -80,11 +84,12 @@ const AddStaffSteps: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <AddStaffProgress
+      <ProgressHeader
         activeStep={activeStep}
         steps={steps}
-        handleNext={handleNextButtonClick}
+        handleNext={handleNext}
         handleBack={handleBack}
+        exitLink="/manager/inputdata/staff"
       />
       <div className="flex-1 flex justify-center mt-10">
         {activeStep === 3 ? (
@@ -94,7 +99,9 @@ const AddStaffSteps: React.FC = () => {
           </div>
         ) : (
           <div className="w-[80%]">
-            {activeStep === 0 && <Step1 onSubmit={handleNext} form={step1Form} />}
+            {activeStep === 0 && (
+              <Step1 onSubmit={handleNext} form={step1Form} />
+            )}
             {activeStep === 1 && <div>Staff Service Component</div>}
             {activeStep === 2 && <ScheduleTable />}
             {activeStep === 3 && <div>Complete</div>}
