@@ -27,7 +27,7 @@ const AddClient = () => {
   useEffect(() => {
     document.body.style.backgroundColor = "white";
     return () => {
-      document.body.style.backgroundColor = ""; // Reset background color when component unmounts
+      document.body.style.backgroundColor = "";
     };
   }, []);
   const [firstName, setFirstName] = useState("");
@@ -36,7 +36,6 @@ const AddClient = () => {
   const [email, setEmail] = useState("");
   const [gender, setGender] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(null);
-  const [yearOfBirth, setYearOfBirth] = useState("");
   const [note, setNote] = useState("");
   const [allowSMS, setAllowSMS] = useState(false);
   const [allowEmail, setAllowEmail] = useState(false);
@@ -47,10 +46,6 @@ const AddClient = () => {
     const selectedDate = selectedDates[0];
     setDateOfBirth(selectedDate);
   };
-
-  useEffect(() => {
-    console.log(gender);
-  }, [gender]);
 
   const navigate = useNavigate();
 
@@ -98,184 +93,152 @@ const AddClient = () => {
   };
 
   return (
-    <div>
-      <div className="mt-3 shadow-none bg-white opacity-0 translate-x-[50px] animate-[0.4s_ease-in-out_0.1s_intro-menu] animate-fill-mode-forwards animate-delay ">
-        <div className="flex items-center justify-between top-0 w-full p-4 bg-white">
+    <div className="min-h-screen bg-white flex flex-col items-center">
+      <div className="w-full p-4  rounded-lg">
+        <div className="flex items-center justify-between">
           <Link to="/clients" className="text-lg font-bold">
-            <Lucide icon={"X"}></Lucide>
+            <Lucide icon={"X"} />
           </Link>
-          <h1 className="text-xl font-bold">Add Client</h1>
-          <Button
+          <h1 className="text-xl font-bold ml-20">Add Client</h1>
+          <button
             onClick={addNewClient}
-            className="sm:w-32 w-[90px] px-6 bg-primary text text-white mr-3 mt-2"
+            className="hidden sm:block py-2 btn sm:w-32 w-[90px] bg-primary text-white"
           >
-            Save
-          </Button>
+            Add
+          </button>
         </div>
-        <div className=" md:flex h-full items-start justify-center bg-white">
-          {/* Begin Basic Info */}
-          <div className="border-2 border-black md:w-1/3 p-5 pr-10 m-5 rounded-2xl">
-            <h1 className="text-2xl mb-2 font-bold">Basic Information</h1>
-            <form className="validate-form">
-              <div className="input-form flex flex-row w-full">
-                <div className="flex flex-col justify-between w-full mr-4">
-                  <FormLabel
-                    htmlFor="validation-form-1"
-                    className="flex flex-col w-full sm:flex-row"
-                  >
-                    First Name
-                  </FormLabel>
-                  <FormInput
-                    id="validation-form-1"
-                    type="text"
-                    name="name"
-                    placeholder="Enter First Name"
-                    className="w-full"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col w-full">
-                  <FormLabel
-                    htmlFor="validation-form-1"
-                    className="flex flex-col w-full sm:flex-row"
-                  >
-                    Last Name
-                  </FormLabel>
-                  <FormInput
-                    id="validation-form-1"
-                    type="text"
-                    name="name"
-                    placeholder="Enter Last Name"
-                    className="w-full"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="input-form flex flex-row w-full mt-3">
-                <div className="flex flex-col justify-between w-full mr-4">
-                  <FormLabel
-                    htmlFor="validation-form-1"
-                    className="flex flex-col w-full sm:flex-row"
-                  >
-                    Email
-                  </FormLabel>
-                  <FormInput
-                    id="validation-form-1"
-                    type="email"
-                    name="name"
-                    placeholder="Enter Email"
-                    className="w-full"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col w-full">
-                  <FormLabel
-                    htmlFor="validation-form-1"
-                    className="flex flex-col w-full sm:flex-row"
-                  >
-                    Phone Number
-                  </FormLabel>
-                  <FormInput
-                    id="validation-form-1"
-                    type="number"
-                    name="name"
-                    placeholder="Enter Phone Number"
-                    className="w-full"
-                    value={mobileNumber}
-                    onChange={(e) => setMobileNumber(e.target.value)}
-                  />
-                </div>
-              </div>
-              <FormLabel
-                htmlFor="validation-form-1"
-                className="flex flex-col w-full sm:flex-row"
-              >
-                Gender
-              </FormLabel>
+        <div className="md:flex mt-5 md:border md:rounded-md md:border-slate-500/60">
+          <div className="md:w-1/2 p-4">
+            <h2 className="text-2xl font-bold mb-4">Basic Information</h2>
+            <div className="mb-4">
+              <FormLabel htmlFor="firstName">First Name</FormLabel>
+              <FormInput
+                id="firstName"
+                type="text"
+                placeholder="Enter First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <FormLabel htmlFor="lastName">Last Name</FormLabel>
+              <FormInput
+                id="lastName"
+                type="text"
+                placeholder="Enter Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormInput
+                id="email"
+                type="email"
+                placeholder="Enter Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <FormLabel htmlFor="mobileNumber">Phone Number</FormLabel>
+              <FormInput
+                id="mobileNumber"
+                type="text"
+                placeholder="Enter Phone Number"
+                value={mobileNumber}
+                onChange={(e) => setMobileNumber(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <FormLabel htmlFor="gender">Gender</FormLabel>
               <FormSelect
+                id="gender"
                 value={gender}
-                onChange={(e) => {
-                  setGender(e.target.value);
-                }}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full"
               >
                 <option value="none">None</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </FormSelect>
-              <div className="mt-3 input-form w-full">
-                <FormLabel
-                  htmlFor="validation-form-4"
-                  className="flex flex-col w-full sm:flex-row"
-                >
-                  Birth Date
-                </FormLabel>
-                <Flatpickr
-                  className="w-full rounded-xl"
-                  options={{
-                    altInput: true,
-                    altFormat: "F j, Y",
-                    dateFormat: "Y-m-d",
-                  }}
-                  placeholder="Choose Birth Date"
-                  onChange={handleDOBChange}
-                />
-              </div>
-              <div className="mt-3 input-form">
-                <FormLabel
-                  htmlFor="validation-form-6"
-                  className="flex flex-col w-full sm:flex-row"
-                >
-                  Notes
-                </FormLabel>
-                <FormTextarea
-                  className="mb-5"
-                  id="validation-form-6"
-                  name="comment"
-                  placeholder="Type your notes here..."
-                ></FormTextarea>
-              </div>
-            </form>
-          </div>
-          {/* End Basic Info */}
-
-          <div className="md:w-1/3">
-            {/* Begin Consent Info */}
-            <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 ">
-              <h2 className="text-2xl font-bold mb-3">Consent Info</h2>
-              <CheckboxToggle
-                label="Allow SMS"
-                value={allowSMS}
-                className="mb-2"
-                onChange={(event) => setAllowSMS(event.target.checked)}
-              />
-              <CheckboxToggle
-                label="Allow Email"
-                value={allowEmail}
-                className="mb-2"
-                onChange={(event) => setAllowEmail(event.target.checked)}
-              />
-              <CheckboxToggle
-                label="Allow Marketing Notification"
-                value={allowMarketingNotification}
-                className="mb-2"
-                onChange={(event) =>
-                  setAllowMarketingNotification(event.target.checked)
-                }
+            </div>
+            <div className="mb-4">
+              <FormLabel htmlFor="dateOfBirth">Birth Date</FormLabel>
+              <Flatpickr
+                id="dateOfBirth"
+                className="w-full rounded"
+                options={{
+                  altInput: true,
+                  altFormat: "F j, Y",
+                  dateFormat: "Y-m-d",
+                }}
+                placeholder="Choose Birth Date"
+                onChange={handleDOBChange}
               />
             </div>
-            {/* End Consent Info */}
-
-            {/* Begin Consent Form */}
-            <div className="p-4 flex flex-col border-2 border-black rounded-2xl m-5 mt-20">
-              <h2 className="text-2xl font-bold mb-3">Consent Form</h2>
+            <div className="mb-4">
+              <FormLabel htmlFor="note">Notes</FormLabel>
+              <FormTextarea
+                id="note"
+                placeholder="Type your notes here..."
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </div>
+          <div className="md:w-1/2 p-4">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold mb-4">Consent Info</h2>
+              <div className="flex items-center mb-2">
+                <label className="label cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-primary"
+                    checked={allowSMS}
+                    onChange={(e) => setAllowSMS(e.target.checked)}
+                  />
+                  <span className="label-text ml-4 text-black">Allow SMS</span>
+                </label>
+              </div>
+              <div className="flex items-center mb-2">
+                <label className="label cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-primary"
+                    checked={allowEmail}
+                    onChange={(e) => setAllowEmail(e.target.checked)}
+                  />
+                  <span className="label-text ml-4 text-black">
+                    Allow Email
+                  </span>
+                </label>
+              </div>
+              <div className="flex items-center mb-2">
+                <label className="label cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-primary"
+                    checked={allowMarketingNotification}
+                    onChange={(e) =>
+                      setAllowMarketingNotification(e.target.checked)
+                    }
+                  />
+                  <span className="label-text ml-4 text-black">
+                    Allow Marketing Notification
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold mb-4">Consent Form</h2>
               <Dropzone
-                // getRef={(el) => {
-                //     dropzoneSingleRef.current = el;
-                // }}
                 options={{
                   url: "https://httpbin.org/post",
                   thumbnailWidth: 150,
@@ -290,13 +253,21 @@ const AddClient = () => {
                 </div>
               </Dropzone>
             </div>
-            {/* End Consent Form */}
           </div>
+        </div>
+        <div className="block sm:hidden fixed bottom-0 left-0 w-full bg-white p-4  flex-col space-y-2">
+          
+          <button
+            className="btn btn-primary w-full"
+            onClick={addNewClient}
+          >
+            Add
+          </button>
         </div>
         <ToastContainer
           position="top-center"
           autoClose={3000}
-          hideProgressBar={true}
+          hideProgressBar
           newestOnTop={false}
           closeOnClick
           rtl={false}

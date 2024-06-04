@@ -42,6 +42,7 @@ import AccountPage from "../pages/Manager/Account";
 import ConfigHome from "../pages/Manager/Account/Config";
 import RoleHome from "../pages/Manager/Account/Role";
 import AddStaffSteps from "../pages/Manager/InputData/Staff/addNewStaff";
+import Voucher from "../pages/Marketing/Vouchers";
 
 
 
@@ -160,6 +161,10 @@ function Router() {
     {
       path: "/marketing/reviewsettings",
       element: <ReviewSettings />,
+    },
+    {
+      path: "/marketing/vouchers",
+      element: <Voucher />,
     },
   ];
 
