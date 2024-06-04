@@ -44,6 +44,7 @@ import RoleHome from "../pages/Manager/Account/Role";
 import AddStaffSteps from "../pages/Manager/InputData/Staff/addNewStaff";
 import Voucher from "../pages/Marketing/Vouchers";
 import BirthdayReminder from "../pages/Marketing/BirthdayReminder";
+import ReturnCustomer from "../pages/Marketing/ReturnCustomer";
 
 
 
@@ -170,6 +171,10 @@ function Router() {
     {
       path: "/marketing/birthdayreminder",
       element: <BirthdayReminder />,
+    },
+    {
+      path: "/marketing/returncustomer",
+      element: <ReturnCustomer />,
     },
   ];
 
