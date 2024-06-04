@@ -45,6 +45,8 @@ import AddStaffSteps from "../pages/Manager/InputData/Staff/addNewStaff";
 import Voucher from "../pages/Marketing/Vouchers";
 import BirthdayReminder from "../pages/Marketing/BirthdayReminder";
 import ReturnCustomer from "../pages/Marketing/ReturnCustomer";
+import Campaign from "../pages/Marketing/Campaign";
+import Templates from "../pages/Marketing/Templates";
 
 
 
@@ -175,6 +177,14 @@ function Router() {
     {
       path: "/marketing/returncustomer",
       element: <ReturnCustomer />,
+    },
+    {
+      path: "/marketing/campaigns",
+      element: <Campaign />,
+    },
+    {
+      path: "/marketing/templates",
+      element: <Templates />,
     },
   ];
 
