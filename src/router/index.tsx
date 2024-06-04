@@ -43,6 +43,7 @@ import ConfigHome from "../pages/Manager/Account/Config";
 import RoleHome from "../pages/Manager/Account/Role";
 import AddStaffSteps from "../pages/Manager/InputData/Staff/addNewStaff";
 import Voucher from "../pages/Marketing/Vouchers";
+import BirthdayReminder from "../pages/Marketing/BirthdayReminder";
 
 
 
@@ -166,17 +167,14 @@ function Router() {
       path: "/marketing/vouchers",
       element: <Voucher />,
     },
+    {
+      path: "/marketing/birthdayreminder",
+      element: <BirthdayReminder />,
+    },
   ];
 
   return useRoutes(routes);
 }
 
-const AddClientWithBackgroundColor = () => {
-  return (
-    <div style={{ backgroundColor: "#fff" }}>
-      <AddClient />
-    </div>
-  );
-};
 
 export default Router;
