@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import FormInput from "../../../base-components/Form/FormInput";
 import FormLabel from "../../../base-components/Form/FormLabel";
 import FormSelect from "../../../base-components/Form/FormSelect";
 import Flatpickr from "react-flatpickr";
+import { useSelector } from "react-redux";
+import { selectSelectedCustomer } from "../../../stores/customerSlide";
+
 
 function Info() {
+  const selectedCustomer = useSelector(selectSelectedCustomer)
+  useEffect(() =>{
+    console.log(selectedCustomer)
+  })
   return (
     <form className="validate-form flex flex-col w-full max-w-5xl mx-auto m-3">
       <div className="input-form grid w-full gap-4 md:grid-cols-2">
@@ -16,6 +23,7 @@ function Info() {
             name="first-name"
             placeholder=""
             className="w-full"
+            value={selectedCustomer.Customer.FirstName || ""}
           />
         </div>
         <div className="flex flex-col">
@@ -26,6 +34,7 @@ function Info() {
             name="last-name"
             placeholder=""
             className="w-full"
+            value={selectedCustomer.Customer.LastName || ""}
           />
         </div>
         <div className="flex flex-col">
@@ -48,7 +57,7 @@ function Info() {
               dateFormat: "Y-m-d",
             }}
             placeholder="Choose Birth Date"
-            disabled
+            value={selectedCustomer.Customer.BirthDate || ""}
           />
         </div>
         <div className="flex flex-col">
@@ -59,6 +68,7 @@ function Info() {
             name="phone-number"
             placeholder=""
             className="w-full"
+            value={selectedCustomer.Customer.Mobile || ""}
           />
         </div>
       </div>
@@ -69,7 +79,7 @@ function Info() {
             <input
               id="sms-consent"
               type="checkbox"
-              defaultChecked
+              defaultChecked={selectedCustomer.Customer.SMSConsent}
               className="checkbox checkbox-primary"
             />
             <label htmlFor="sms-consent" className="ml-2">
@@ -80,7 +90,7 @@ function Info() {
             <input
               id="email-consent"
               type="checkbox"
-              defaultChecked
+              defaultChecked={selectedCustomer.Customer.EmailConsent}
               className="checkbox checkbox-primary"
             />
             <label htmlFor="email-consent" className="ml-2">
@@ -91,7 +101,7 @@ function Info() {
             <input
               id="vip"
               type="checkbox"
-              defaultChecked
+              defaultChecked={selectedCustomer?.IsVIP}
               className="checkbox checkbox-primary"
             />
             <label htmlFor="vip" className="ml-2">
@@ -102,7 +112,7 @@ function Info() {
             <input
               id="block-online"
               type="checkbox"
-              defaultChecked
+              defaultChecked={selectedCustomer.Customer.BlockOnlineBooking}
               className="checkbox checkbox-primary"
             />
             <label htmlFor="block-online" className="ml-2">

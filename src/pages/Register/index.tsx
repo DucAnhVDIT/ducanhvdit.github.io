@@ -1,10 +1,10 @@
-import VDITURL from "../../assets/images/vditheader.png"
+import VDITURL from "../../assets/images/vditheader.png";
 import illustrationUrl from "../../assets/images/illustration.svg";
 import { FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import clsx from "clsx";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { registerData } from "../../types/user";
 import { useState } from "react";
 import userRepository from "../../repositories/userRepository";
@@ -12,25 +12,30 @@ import { toast, ToastContainer } from "react-toastify";
 import { logErrorRegister } from "../../constant/log-error";
 
 function Main() {
-  const [formRegister, setFormRegister] = useState(registerData)
-  const navigate = useNavigate()
+  const [formRegister, setFormRegister] = useState(registerData);
+  const navigate = useNavigate();
+
   const handleChange = (e: any) => {
-    const { name, value } = e.target
-    setFormRegister((data) => ({ ...data, [name]: value}))
-  }
+    const { name, value } = e.target;
+    setFormRegister((data) => ({ ...data, [name]: value }));
+  };
+
   const handleRegister = () => {
-    userRepository.register(formRegister).then((res: any) => {
-      const data = res.data.RegisterAccountStatus
-      if (data === 0) {
-        toast.success('register success')
-        navigate('/login')
-      } else {
-        logErrorRegister(data)
-      }
-    }).catch((err: any) => {
-      toast.error('Fail Register')
-    })
-  }
+    userRepository.register(formRegister)
+      .then((res: any) => {
+        const data = res.data.RegisterAccountStatus;
+        if (data === 0) {
+          toast.success('Register success');
+          navigate('/login');
+        } else {
+          logErrorRegister(data);
+        }
+      })
+      .catch((err: any) => {
+        toast.error('Failed to Register');
+      });
+  };
+
   return (
     <>
       <div
@@ -45,11 +50,7 @@ function Main() {
             {/* BEGIN: Register Info */}
             <div className="flex-col hidden min-h-screen xl:flex">
               <a href="" className="flex items-center pt-5 -intro-x">
-                <img
-                  alt="VDIT Solutions"
-                  className="w-6"
-                  src={VDITURL}
-                />
+                <img alt="VDIT Solutions" className="w-6" src={VDITURL} />
                 <span className="ml-3 text-lg text-white"> VDIT Solutions </span>
               </a>
               <div className="my-auto">
@@ -79,137 +80,113 @@ function Main() {
                   accounts in one place
                 </div>
                 <div className="mt-8 intro-x">
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="First Name"
-                    name="firstName"
-                    value={formRegister.firstName}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Last Name"
-                    name="lastName"
-                    value={formRegister.lastName}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Company Name"
-                    name="companyName"
-                    value={formRegister.companyName}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Telephone"
-                    name="telephone"
-                    value={formRegister.telephone === 0 ? '' : formRegister.telephone}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Mobile"
-                    name="mobile"
-                    value={formRegister.mobile === 0 ? '' : formRegister.mobile}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Street 1"
-                    name="street1"
-                    value={formRegister.street1}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Street 2"
-                    name="street2"
-                    value={formRegister.street2}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Town"
-                    name="town"
-                    value={formRegister.town}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Post Code"
-                    name="postcode"
-                    value={formRegister.postcode}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Country"
-                    name="country"
-                    value={formRegister.country}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Email"
-                    name="email"
-                    value={formRegister.email}
-                    onChange={handleChange}
-                  />
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Password"
-                    name="password"
-                    value={formRegister.password}
-                    onChange={handleChange}
-                  />
-                  {/* <div className="grid w-full h-1 grid-cols-12 gap-4 mt-3 intro-x">
-                    <div className="h-full col-span-3 rounded bg-success"></div>
-                    <div className="h-full col-span-3 rounded bg-success"></div>
-                    <div className="h-full col-span-3 rounded bg-success"></div>
-                    <div className="h-full col-span-3 rounded bg-slate-100 dark:bg-darkmode-800"></div>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="First Name"
+                      name="firstName"
+                      value={formRegister.firstName}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Last Name"
+                      name="lastName"
+                      value={formRegister.lastName}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Company Name"
+                      name="companyName"
+                      value={formRegister.companyName}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Telephone"
+                      name="telephone"
+                      value={formRegister.telephone === 0 ? '' : formRegister.telephone}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Mobile"
+                      name="mobile"
+                      value={formRegister.mobile === 0 ? '' : formRegister.mobile}
+                      onChange={handleChange}
+                    />
+                    {/* <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Street 1"
+                      name="street1"
+                      value={formRegister.street1}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Street 2"
+                      name="street2"
+                      value={formRegister.street2}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Town"
+                      name="town"
+                      value={formRegister.town}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Post Code"
+                      name="postcode"
+                      value={formRegister.postcode}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Country"
+                      name="country"
+                      value={formRegister.country}
+                      onChange={handleChange}
+                    /> */}
+                    <FormInput
+                      type="text"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Email"
+                      name="email"
+                      value={formRegister.email}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="password"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Password"
+                      name="password"
+                      value={formRegister.password}
+                      onChange={handleChange}
+                    />
+                    <FormInput
+                      type="password"
+                      className="block px-4 py-3 mt-4 intro-x min-w-full"
+                      placeholder="Password Confirmation"
+                      name="passwordConfirmation"
+                      // value={formRegister.passwordConfirmation}
+                      onChange={handleChange}
+                    />
                   </div>
-                  <a
-                    href=""
-                    className="block mt-2 text-xs intro-x text-slate-500 sm:text-sm"
-                  >
-                    What is a secure password?
-                  </a> */}
-                  <FormInput
-                    type="text"
-                    className="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
-                    placeholder="Password Confirmation // not done yet leave for later"
-                  />
                 </div>
-                {/* <div className="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
-                  <FormCheck.Input
-                    id="remember-me"
-                    type="checkbox"
-                    className="mr-2 border"
-                  />
-                  <label
-                    className="cursor-pointer select-none"
-                    htmlFor="remember-me"
-                  >
-                    I agree to the VDIT Solutions
-                  </label>
-                  <a className="ml-1 text-primary dark:text-slate-200" href="">
-                    Privacy Policy
-                  </a>
-                  .
-                </div> */}
                 <div className="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button
                     variant="primary"
