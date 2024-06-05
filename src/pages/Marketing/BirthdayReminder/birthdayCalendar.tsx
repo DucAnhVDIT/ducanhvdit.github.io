@@ -1,6 +1,7 @@
 import React from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import './calendarStyles.css'
 
 const BirthdayCalendar = () => {
   const events = [

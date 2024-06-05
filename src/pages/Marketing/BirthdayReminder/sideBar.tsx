@@ -1,6 +1,6 @@
 import React from "react";
 
-function SideBar() {
+function SideBarHelper() {
   const upcomingBirthdays = [
     { name: "Alice", date: "June 10, 2024" },
     { name: "Bob", date: "June 15, 2024" },
@@ -22,4 +22,4 @@ function SideBar() {
   );
 }
 
-export default SideBar;
+export default SideBarHelper;

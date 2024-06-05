@@ -61,6 +61,7 @@
     "react-datepicker": "^4.24.0",
     "react-dom": "^18.2.0",
     "react-email": "2.1.2",
+    "react-email-editor": "^1.7.10",
     "react-flatpickr": "^3.10.13",
     "react-hook-form": "^7.38.0",
     "react-icons": "^4.12.0",
