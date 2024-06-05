@@ -8,7 +8,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import ServiceCard from "../../components/ServiceCard";
 import CustomerCard from "../../components/CustomerCard";
 import React from "react";
-import axios from "axios";
 import calendarRepository from "../../repositories/calendarRepository";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/dark.css";
@@ -32,10 +31,9 @@ import {
 } from "../../stores/notesSlide";
 import { Appointment } from "../../types/appointment";
 // import Pusher from 'pusher-js';
-import 'moment-timezone';
+import "moment-timezone";
 import ServiceCardDisplay from "../../components/ServiceCard/serviceCardDisplay";
 
-//   const [headerFooterSlideoverPreview, setHeaderFooterSlideoverPreview] = useState(false);
 interface SlideOverPanelProps {
   isOpen: boolean;
   onClose: () => void;
@@ -47,7 +45,7 @@ interface SlideOverPanelProps {
   resourceID: any;
   handleAppoinmentChange: (value: boolean) => void;
   setAddNewDrawerOpen: (value: boolean) => void;
-  appointmentFromHistory: any
+  appointmentFromHistory: any;
 }
 function SlideOverPanel({
   setAddNewDrawerOpen,
@@ -59,9 +57,9 @@ function SlideOverPanel({
   showAppointmentToast,
   date,
   resourceID,
-  appointmentFromHistory
+  appointmentFromHistory,
 }: SlideOverPanelProps) {
-  moment.tz.setDefault('Europe/London');
+  moment.tz.setDefault("Europe/London");
   const [isSecondSlideoverOpen, setSecondSlideoverOpen] = useState(false);
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false);
   const [isAddCustomerSlideOpen, setAddCustomerSlideOpen] = useState(false);
@@ -70,9 +68,8 @@ function SlideOverPanel({
   const [customersList, setCustomersList] = useState<any>([]);
   const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
 
-  // const [selectedServices, setSelectedServices] = React.useState<any>(null);
   const [selectedServiceIDs, setSelectedServiceIDs] = useState<any[]>([]);
-  const [visibleCustomers, setVisibleCustomers] = useState(10); // Number of customers to display
+  const [visibleCustomers, setVisibleCustomers] = useState(10);
   const totalCustomers = customersList?.Customers?.length || 0;
 
   const [firstName, setFirstName] = useState("");
@@ -82,19 +79,6 @@ function SlideOverPanel({
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [activeTab, setActiveTab] = useState("info");
   const [editorData, setEditorData] = useState("");
-
-  // Pusher
-  // const pusher = new Pusher("259f56eb7019fc4b3412", {
-  //     cluster: "eu",
-  // });
-
-  // const channel = pusher.subscribe('appointments');
-
-  //   channel.bind('new-appointment', (data: { appointment: { title: any; }; }) => {
-  //     showAppointmentToast(`New appointment created: ${data.appointment.title}`);
-  // });
-
-  // Pusher
 
   const handleTabChange = (tab: React.SetStateAction<string>) => {
     setActiveTab(tab);
@@ -120,7 +104,6 @@ function SlideOverPanel({
       Math.min(prevVisible + 10, totalCustomers)
     );
   };
-
 
   const filteredCustomers = customersList?.Customers
     ? customersList.Customers.filter(
@@ -228,7 +211,6 @@ function SlideOverPanel({
   let previousEndTime = selectedTime;
 
   selectedServices.forEach((service: { Duration: any; ProductID: any }) => {
-    
     const serviceEndTime = calculateEndTime(previousEndTime, service.Duration);
 
     const newAppointment: Appointment = {
@@ -242,7 +224,7 @@ function SlideOverPanel({
       CustomerNote: customerNotes,
       CompanyNote: companyNotes,
       CustomerID: 0,
-      ServiceName: ""
+      ServiceName: "",
     };
 
     newAppointmentRequest.Appointments.push(newAppointment);
