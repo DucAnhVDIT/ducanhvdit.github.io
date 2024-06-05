@@ -84,6 +84,15 @@ export default function TimelineMUI() {
     setSelectedAppointment(null);
   };
 
+
+  const handleButtonClick = (appointment: any) => {
+    if (appointment.StatusName === "Confirmed") {
+      handlePayBtn(appointment);
+    } else {
+      handleRebookBtn(appointment);
+    }
+  };
+
   const appointmentsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -149,7 +158,7 @@ export default function TimelineMUI() {
                             variant="primary"
                             type="button"
                             className="w-32 mt-2"
-                            onClick={() => handlePayBtn(appointment)}
+                            onClick={() => handleButtonClick(appointment)}
                           >
                             {appointment.StatusName === "Confirmed"
                               ? "Pay"

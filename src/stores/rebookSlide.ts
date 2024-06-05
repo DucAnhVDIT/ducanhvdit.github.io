@@ -5,7 +5,7 @@ export const rebookSlice = createSlice({
   initialState: {
     rebook: false,
     appointmentToRebook: <any>{},
-    date: new Date()
+    date: new Date().toISOString(),
   },
   reducers: {
     setRebook: (state, action) => {

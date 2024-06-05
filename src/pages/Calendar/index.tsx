@@ -96,7 +96,6 @@ function Main() {
   const rebook = useSelector((state: RootState) => state.rebook.rebook);
   const rebookDate = useSelector((state: RootState) => state.rebook.date);
 
- 
   const formatRebookDate = moment(rebookDate).format();
   const appToRebook = useSelector(
     (state: RootState) => state.rebook.appointmentToRebook
@@ -224,8 +223,6 @@ function Main() {
   //   }
   // };
 
-  
-
   const handleEventClick = async (info: { event: any }) => {
     try {
       const appointmentID = info.event.extendedProps.ID;
@@ -235,7 +232,7 @@ function Main() {
           setSelectedAppointment(res.data.Appointment);
           setExistingInformationSlide(true);
           setDrawerIsOpen(true);
-          dispatch(setSelectedCustomer(res.data.Appointment.CustomerID))
+          dispatch(setSelectedCustomer(res.data.Appointment.CustomerID));
         });
     } catch (error) {
       // console.error('Error fetching appointment information:', error.message);
@@ -466,38 +463,32 @@ function Main() {
     nowIndicator: true,
     events: scheduleData
       ? scheduleData.map((appointment: any) => {
-          const customerName = (appointment as { CustomerName: string })
-            .CustomerName;
-          const serviceName = (appointment as { ServiceName: string })
-            .ServiceName;
-          const CompanyNotes = (appointment as { CompanyNotes: string })
-            .CompanyNotes;
-          const CustomerNote = (appointment as { CustomerNote: string })
-            .CustomerNote;
-          const startTime = (appointment as { StartTime: Date }).StartTime;
-          const endTime = (appointment as { EndTime: Date }).EndTime;
-          const staffID = (appointment as { StaffID: string }).StaffID;
-          const colour = (appointment as { Colour: string }).Colour;
-          const ID = (appointment as { ID: string }).ID;
-          const firstName = (appointment as { FirstName: string }).FirstName;
-          const lastName = (appointment as { LastName: string }).LastName;
-          const mobile = (appointment as { Mobile: string }).Mobile;
-          const duration = (appointment as { Duration: any }).Duration;
-          const bookDate = (appointment as { BookDate: Date }).BookDate;
-          const serviceID = (appointment as { ServiceID: string }).ServiceID;
-          const isFirstBooking = (appointment as { IsFirstBooking: boolean })
-            .IsFirstBooking;
-          const isWebBooking = (appointment as { IsWebBooking: boolean })
-            .IsWebBooking;
+          const {
+            CustomerName: customerName,
+            ServiceName: serviceName,
+            CompanyNotes: companyNotes,
+            CustomerNote: customerNote,
+            StartTime: startTime,
+            EndTime: endTime,
+            StaffID: staffID,
+            Colour: colour,
+            ID,
+            FirstName: firstName,
+            LastName: lastName,
+            Mobile: mobile,
+            Duration: duration,
+            BookDate: bookDate,
+            ServiceID: serviceID,
+            IsFirstBooking: isFirstBooking,
+            IsWebBooking: isWebBooking,
+          } = appointment;
 
           let title = `${customerName} - ${serviceName}`;
-          if (CompanyNotes && CompanyNotes !== "null") {
-            title += ` / ${CompanyNotes}`;
+          if (companyNotes && companyNotes !== "null") {
+            title += ` / ${companyNotes}`;
           }
-
-          // Add customer note to title if available
-          if (CustomerNote && CustomerNote !== "null") {
-            title += ` / ${CustomerNote}`;
+          if (customerNote && customerNote !== "null") {
+            title += ` / ${customerNote}`;
           }
 
           return {
@@ -518,12 +509,13 @@ function Main() {
               serviceID,
               IsFirstBooking: isFirstBooking,
               IsWebBooking: isWebBooking,
-              CompanyNotes: CompanyNotes,
-              CustomerNote: CustomerNote,
+              CompanyNotes: companyNotes,
+              CustomerNote: customerNote,
             },
           };
         })
       : [],
+
     eventDidMount: ({ el, event }) => {
       const iconContainer = document.createElement("div");
       iconContainer.classList.add("event-icon-container");
