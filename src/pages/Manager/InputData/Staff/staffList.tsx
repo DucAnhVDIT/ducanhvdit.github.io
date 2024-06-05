@@ -96,7 +96,7 @@ function StaffList() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((n) => (
-              <div key={n} className="animate-pulse">
+              <div key={n} className="skeleton">
                 <div className="flex items-center space-x-4 p-4 bg-gray-200 rounded-lg">
                   <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
                   <div className="flex-1">

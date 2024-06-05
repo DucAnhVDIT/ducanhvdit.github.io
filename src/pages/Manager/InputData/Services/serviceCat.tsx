@@ -55,9 +55,9 @@ function ServiceCat() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3, 4, 5].map((n) => (
-            <div key={n} className="animate-pulse">
-              <div className="border p-4 rounded-md shadow-md flex justify-between items-center">
-                <div className="flex items-center space-x-4">
+            <div key={n} className="skeleton">
+              <div className="border p-4 rounded-md shadow-md flex justify-between items-center bg-gray-200 ">
+                <div className="flex items-center space-x-4 bg-gray-200 ">
                   <span className="bg-gray-300 w-6 h-6 rounded"></span>
                   <span className="h-6 bg-gray-300 w-32 rounded"></span>
                 </div>
