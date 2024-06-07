@@ -85,26 +85,26 @@ function SlideOverPanel({
     "New Appointment Confirmation"
   );
   const [message, setMessage] = useState<string>("");
-  const sendEmail = async (emailTo: any, subject: string) => {
-    try {
-      const response = await fetch("http://localhost:7000/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ to, subject }),
-      });
+  // const sendEmail = async (emailTo: any, subject: string) => {
+  //   try {
+  //     const response = await fetch("http://localhost:7000/send-email", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ to, subject }),
+  //     });
 
-      if (response.ok) {
-        alert("Email sent successfully!");
-      } else {
-        alert("Failed to send email.");
-      }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      alert("Error sending email");
-    }
-  };
+  //     if (response.ok) {
+  //       alert("Email sent successfully!");
+  //     } else {
+  //       alert("Failed to send email.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending email:", error);
+  //     alert("Error sending email");
+  //   }
+  // };
 
   const handleTabChange = (tab: React.SetStateAction<string>) => {
     setActiveTab(tab);
@@ -293,7 +293,7 @@ function SlideOverPanel({
       dispatch(resetCompanyNotes());
       dispatch(resetCustomerNotes());
 
-      await sendEmail(to, subject);
+      // await sendEmail(to, subject);
     } catch (error) {
       console.error("Error adding appointment:", error);
       showAppointmentToast("Error adding appointment", "error");

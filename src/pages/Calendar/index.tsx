@@ -61,6 +61,7 @@ import { useLocation } from "react-router-dom";
 import { Appointment } from "../../types/appointment";
 import { RootState } from "../../stores/store";
 import { setSelectedCustomer } from "../../stores/customerSlide";
+import OptionsSelect from "../../components/SelectOptionsButton";
 
 function Main() {
   const location = useLocation();
@@ -419,6 +420,18 @@ function Main() {
 
   const selectHandler = rebook ? handleRebookFromHistory : handleSlotClicked;
 
+  const bookingCount = scheduleData.reduce(
+    (acc: Record<string, number>, booking: { StaffID: number }) => {
+      const staffID = String(booking.StaffID);
+      if (!acc[staffID]) {
+        acc[staffID] = 0;
+      }
+      acc[staffID]++;
+      return acc;
+    },
+    {}
+  );
+
   const options: CalendarOptions = {
     plugins: [
       interactionPlugin,
@@ -437,7 +450,7 @@ function Main() {
         duration: { days: 1 },
       },
     },
-    slotDuration: "00:15",
+    slotDuration: "00:10",
     selectOverlap: false,
     eventTimeFormat: {
       hour: "2-digit",
@@ -447,7 +460,7 @@ function Main() {
     slotLabelFormat: {
       hour: "2-digit",
       minute: "2-digit",
-      hour12: false,
+      hour12: true,
     },
     eventResourceEditable: true,
     refetchResourcesOnNavigate: true,
@@ -649,16 +662,70 @@ function Main() {
             const staffID = String((staff as { StaffID: number }).StaffID);
             return !selectedStaff || staffID === selectedStaff;
           })
-          .map((staff) => ({
-            id: String((staff as { StaffID: number }).StaffID),
-            title: (staff as { StaffName: string }).StaffName || "",
-            staffColor: (staff as { StaffColour: string }).StaffColour || "",
-          }))
+          .map((staff) => {
+            const staffID = String((staff as { StaffID: number }).StaffID);
+            const bookingNum = bookingCount[staffID] || 0;
+            return {
+              id: staffID,
+              title: `${
+                (staff as { StaffName: string }).StaffName || ""
+              } (${bookingNum})`,
+              staffColor: (staff as { StaffColour: string }).StaffColour || "",
+            };
+          })
       : [],
     resourcesInitiallyExpanded: false,
 
     select: selectHandler,
   };
+
+  const updateSlotLabelFormat = (format: any) => {
+    calendarRef.current?.getApi().setOption("slotLabelFormat", format);
+  };
+
+  const updateEventTimeFormat = (format: any) => {
+    calendarRef.current?.getApi().setOption("eventTimeFormat", format);
+  };
+
+  const updateSlotDuration = (duration: string) => {
+    calendarRef.current?.getApi().setOption("slotDuration", duration);
+  };
+
+  const set12HourFormat = () => {
+    updateSlotLabelFormat({ hour: "2-digit", minute: "2-digit", hour12: true });
+    updateEventTimeFormat({ hour: "2-digit", minute: "2-digit", hour12: true });
+  };
+
+  const set24HourFormat = () => {
+    updateSlotLabelFormat({
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    updateEventTimeFormat({
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
+
+  const set15MinSlot = () => {
+    updateSlotDuration("00:15");
+  };
+
+  const set30MinSlot = () => {
+    updateSlotDuration("00:30");
+  };
+
+  const resetToInitialSettings = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.setOption('slotDuration', options.slotDuration);
+      calendarApi.setOption('slotLabelFormat', options.slotLabelFormat);
+      calendarApi.setOption('eventTimeFormat', options.eventTimeFormat);
+    }
+  };
+
   const handleDateChange = (date: Date) => {
     setDate(date);
     // Use calendarRef to access FullCalendar instance and navigate to the selected date
@@ -737,6 +804,14 @@ function Main() {
     }
   }, [rebook]);
 
+  const calendarOptions = [
+    { value: "12Hour", label: "12 Hour Format", action: set12HourFormat },
+    { value: "24Hour", label: "24 Hour Format", action: set24HourFormat },
+    { value: "15Min", label: "15 Minute Slot", action: set15MinSlot },
+    { value: "30Min", label: "30 Minute Slot", action: set30MinSlot },
+    { value: 'reset', label: 'Reset', action: resetToInitialSettings },
+  ];
+
   return (
     <>
       <div className="full-calendar">
@@ -812,6 +887,15 @@ function Main() {
           </PreviewComponent>
           <div className="hidden sm:block">
             <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+          </div>
+        </div>
+
+        <div className=" bg-gray-100 rounded">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-xl font-semibold text-gray-700">
+              Total Appointments: {scheduleData.length}
+            </h1>
+            <OptionsSelect options={calendarOptions} />
           </div>
         </div>
 
