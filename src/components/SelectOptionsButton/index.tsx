@@ -33,7 +33,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
   const customOption = (props: any) => {
     const { data, innerRef, innerProps } = props;
     return (
-      <div ref={innerRef} {...innerProps} className="flex items-center p-2">
+      <div ref={innerRef} {...innerProps} className="flex items-center p-2 hover:bg-gray-200" style={{ cursor: 'pointer' }}>
         {data.icon}
         <span className="ml-2">{data.label}</span>
       </div>

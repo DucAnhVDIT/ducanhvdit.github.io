@@ -43,6 +43,7 @@ interface SelectStaffProps {
             color: state.isSelected ? 'grey' : 'var(--text-color)',
             ':hover': {
               backgroundColor: 'lightgrey',
+              cursor:'pointer'
             },
 
           }),
