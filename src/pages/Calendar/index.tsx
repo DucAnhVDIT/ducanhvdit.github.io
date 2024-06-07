@@ -720,9 +720,33 @@ function Main() {
   const resetToInitialSettings = () => {
     const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
-      calendarApi.setOption('slotDuration', options.slotDuration);
-      calendarApi.setOption('slotLabelFormat', options.slotLabelFormat);
-      calendarApi.setOption('eventTimeFormat', options.eventTimeFormat);
+      calendarApi.setOption("slotDuration", options.slotDuration);
+      calendarApi.setOption("slotLabelFormat", options.slotLabelFormat);
+      calendarApi.setOption("eventTimeFormat", options.eventTimeFormat);
+    }
+  };
+
+  const showMorning = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.setOption("slotMinTime", "09:00:00");
+      calendarApi.setOption("slotMaxTime", "12:00:00");
+    }
+  };
+
+  const showAfternoon = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.setOption("slotMinTime", "12:00:00");
+      calendarApi.setOption("slotMaxTime", "15:00:00");
+    }
+  };
+
+  const showAllDay = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      calendarApi.setOption("slotMinTime", "9:00:00");
+      calendarApi.setOption("slotMaxTime", "18:30:00");
     }
   };
 
@@ -809,7 +833,7 @@ function Main() {
     { value: "24Hour", label: "24 Hour Format", action: set24HourFormat },
     { value: "15Min", label: "15 Minute Slot", action: set15MinSlot },
     { value: "30Min", label: "30 Minute Slot", action: set30MinSlot },
-    { value: 'reset', label: 'Reset', action: resetToInitialSettings },
+    { value: "reset", label: "Reset", action: resetToInitialSettings },
   ];
 
   return (
@@ -827,7 +851,7 @@ function Main() {
           </div>
 
           <div className="">
-            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay}  showAllDay={showAllDay} showMorning={showMorning} showAfternoon={showAfternoon} />
           </div>
         </div>
 
@@ -886,7 +910,7 @@ function Main() {
             )}
           </PreviewComponent>
           <div className="hidden sm:block">
-            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} />
+            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} showAllDay={showAllDay} showMorning={showMorning} showAfternoon={showAfternoon} />
           </div>
         </div>
 
