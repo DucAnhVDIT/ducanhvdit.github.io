@@ -7,6 +7,7 @@ import Lucide from "../../../base-components/Lucide";
 import Button from "../../../base-components/Button";
 import SideBarHelper from "./sideBar";
 
+
 function BirthdayReminder() {
   useEffect(() => {
     document.body.style.padding = "0";

@@ -80,6 +80,32 @@ function SlideOverPanel({
   const [activeTab, setActiveTab] = useState("info");
   const [editorData, setEditorData] = useState("");
 
+  const [to, setTo] = useState<string>("simplidity@gmail.com");
+  const [subject, setSubject] = useState<string>(
+    "New Appointment Confirmation"
+  );
+  const [message, setMessage] = useState<string>("");
+  const sendEmail = async (emailTo: any, subject: string) => {
+    try {
+      const response = await fetch("http://localhost:7000/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ to, subject }),
+      });
+
+      if (response.ok) {
+        alert("Email sent successfully!");
+      } else {
+        alert("Failed to send email.");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("Error sending email");
+    }
+  };
+
   const handleTabChange = (tab: React.SetStateAction<string>) => {
     setActiveTab(tab);
   };
@@ -240,7 +266,7 @@ function SlideOverPanel({
     return endMoment.format("HH:mm");
   }
 
-  const handleAddNewAppointment = () => {
+  const handleAddNewAppointment = async () => {
     if (!selectedServices || selectedServices.length === 0) {
       // No services selected, show warning and return
       showAppointmentToast("Please select at least one service", "warning");
@@ -248,28 +274,30 @@ function SlideOverPanel({
     }
 
     if (!selectedCustomer || selectedCustomer.length === 0) {
-      // No services selected, show warning and return
+      // No customer selected, show warning and set to walk-in customer
       const walkInCustomer = {
         FirstName: "Walk-in",
       };
       setSelectedCustomer(walkInCustomer);
     }
 
-    calendarRepository
-      .addAppointment(newAppointmentRequest)
-      .then((res) => {
-        showAppointmentToast("Appointment added successfully");
-        handleAppoinmentChange(true);
-        onClose();
-        setAddNewDrawerOpen(false);
-        dispatch(resetSelectedServices());
-        dispatch(resetCompanyNotes());
-        dispatch(resetCustomerNotes());
-      })
-      .catch((error) => {
-        console.error("Error adding appointment:", error);
-        showAppointmentToast("Error adding appointment", "error");
-      });
+    try {
+      const res = await calendarRepository.addAppointment(
+        newAppointmentRequest
+      );
+      showAppointmentToast("Appointment added successfully");
+      handleAppoinmentChange(true);
+      onClose();
+      setAddNewDrawerOpen(false);
+      dispatch(resetSelectedServices());
+      dispatch(resetCompanyNotes());
+      dispatch(resetCustomerNotes());
+
+      await sendEmail(to, subject);
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+      showAppointmentToast("Error adding appointment", "error");
+    }
 
     setSecondSlideoverOpen(false);
   };
