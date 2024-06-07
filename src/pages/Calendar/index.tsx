@@ -62,6 +62,7 @@ import { Appointment } from "../../types/appointment";
 import { RootState } from "../../stores/store";
 import { setSelectedCustomer } from "../../stores/customerSlide";
 import OptionsSelect from "../../components/SelectOptionsButton";
+import { Clock, Settings, Sliders, RefreshCw, RotateCw } from 'lucide-react';
 
 function Main() {
   const location = useLocation();
@@ -829,11 +830,11 @@ function Main() {
   }, [rebook]);
 
   const calendarOptions = [
-    { value: "12Hour", label: "12 Hour Format", action: set12HourFormat },
-    { value: "24Hour", label: "24 Hour Format", action: set24HourFormat },
-    { value: "15Min", label: "15 Minute Slot", action: set15MinSlot },
-    { value: "30Min", label: "30 Minute Slot", action: set30MinSlot },
-    { value: "reset", label: "Reset", action: resetToInitialSettings },
+    { value: '12Hour', label: '12 Hour Format', action: set12HourFormat, icon: <Clock size={16} /> },
+    { value: '24Hour', label: '24 Hour Format', action: set24HourFormat, icon: <Clock size={16} /> },
+    { value: '15Min', label: '15 Minute Slot', action: set15MinSlot, icon: <Sliders size={16} /> },
+    { value: '30Min', label: '30 Minute Slot', action: set30MinSlot, icon: <Sliders size={16} /> },
+    { value: 'reset', label: 'Reset', action: resetToInitialSettings, icon: <RefreshCw size={16} /> },
   ];
 
   return (
@@ -916,7 +917,7 @@ function Main() {
 
         <div className=" bg-gray-100 rounded">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-xl font-semibold text-gray-700">
+            <h1 className="p-2 text-xl font-semibold text-black-700 md:border md:rounded-md md:border-slate-500/60">
               Total Appointments: {scheduleData.length}
             </h1>
             <OptionsSelect options={calendarOptions} />

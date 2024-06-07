@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
+import { Clock, Settings, Sliders, RefreshCw, RotateCw } from 'lucide-react';
 
 interface Option {
   value: string;
   label: string;
   action: () => void;
+  icon: JSX.Element;
 }
 
 interface OptionsSelectProps {
@@ -21,14 +23,32 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
     setSelectedOption(null); 
   };
 
+  const customSingleValue = ({ data }: any) => (
+    <div className="flex items-center">
+      {data.icon}
+      <span className="ml-2">{data.label}</span>
+    </div>
+  );
+
+  const customOption = (props: any) => {
+    const { data, innerRef, innerProps } = props;
+    return (
+      <div ref={innerRef} {...innerProps} className="flex items-center p-2">
+        {data.icon}
+        <span className="ml-2">{data.label}</span>
+      </div>
+    );
+  };
+
   return (
     <Select
       className="intro-y"
       options={options}
-      value={selectedOption} 
+      value={selectedOption}
       onChange={handleChange}
       isSearchable={false}
       placeholder="Options"
+      components={{ SingleValue: customSingleValue, Option: customOption }}
       menuPortalTarget={document.body}
       styles={{
         control: (provided) => ({

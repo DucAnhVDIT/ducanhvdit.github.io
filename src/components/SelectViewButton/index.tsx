@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import { Calendar, CalendarRange, Sun, Moon, Infinity } from 'lucide-react';
 
 interface SelectViewProps {
   switchToDay: () => void;
@@ -17,11 +18,11 @@ const SelectView: React.FC<SelectViewProps> = ({
   showMorning,
 }) => {
   const options = [
-    { value: "day", label: "Day" },
-    { value: "week", label: "Week" },
-    { value: "morning", label: "Morning" },
-    { value: "afternoon", label: "Afternoon" },
-    { value: "allday", label: "All day" },
+    { value: "day", label: "Day", icon: <Calendar size={16} /> },
+    { value: "week", label: "Week", icon: <CalendarRange size={16} /> },
+    { value: "morning", label: "Morning", icon: <Sun size={16} /> },
+    { value: "afternoon", label: "Afternoon", icon: <Moon size={16} /> },
+    { value: "allday", label: "All day", icon: <Infinity size={16} /> },
   ];
 
   const handleChange = (selectedOption: any) => {
@@ -48,6 +49,23 @@ const SelectView: React.FC<SelectViewProps> = ({
     }
   };
 
+  const customSingleValue = ({ data }: any) => (
+    <div className="flex items-center">
+      {data.icon}
+      <span className="ml-2">{data.label}</span>
+    </div>
+  );
+
+  const customOption = (props: any) => {
+    const { data, innerRef, innerProps } = props;
+    return (
+      <div ref={innerRef} {...innerProps} className="flex items-center p-2">
+        {data.icon}
+        <span className="ml-2">{data.label}</span>
+      </div>
+    );
+  };
+
   return (
     <Select
       className="intro-y"
@@ -57,6 +75,7 @@ const SelectView: React.FC<SelectViewProps> = ({
       isSearchable={false}
       menuPortalTarget={document.body}
       placeholder="View"
+      components={{ SingleValue: customSingleValue, Option: customOption }}
       styles={{
         control: (provided) => ({
           ...provided,
@@ -84,7 +103,6 @@ const SelectView: React.FC<SelectViewProps> = ({
         dropdownIndicator: (provided) => ({
           ...provided,
           color: "white",
-          // paddingRight: "20px"
         }),
         indicatorSeparator: () => ({
           display: "none",
