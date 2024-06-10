@@ -77,14 +77,14 @@ function Router() {
           path: "/clients",
           element: <Clients />,
         },
-        {
-          path: "/marketing",
-          element: <MainPage />,
-        },
-        {
-          path: "/purchase",
-          element: <PointOfSales />,
-        },
+        // {
+        //   path: "/marketing",
+        //   element: <MainPage />,
+        // },
+        // {
+        //   path: "/purchase",
+        //   element: <PointOfSales />,
+        // },
         {
           path: "/manager",
           element: <ManagerMain />,
@@ -154,38 +154,38 @@ function Router() {
         { path: "sales-report", element: <SaleReportHome /> },
       ],
     },
-    {
-      path: "/manager/account",
-      element: <AccountPage />,
-      children: [
-        { path: "config", element: <ConfigHome /> },
-        { path: "role", element: <RoleHome /> },
-      ],
-    },
-    {
-      path: "/marketing/reviewsettings",
-      element: <ReviewSettings />,
-    },
-    {
-      path: "/marketing/vouchers",
-      element: <Voucher />,
-    },
-    {
-      path: "/marketing/birthdayreminder",
-      element: <BirthdayReminder />,
-    },
-    {
-      path: "/marketing/returncustomer",
-      element: <ReturnCustomer />,
-    },
-    {
-      path: "/marketing/campaigns",
-      element: <Campaign />,
-    },
-    {
-      path: "/marketing/templates",
-      element: <Templates />,
-    },
+    // {
+    //   path: "/manager/account",
+    //   element: <AccountPage />,
+    //   children: [
+    //     { path: "config", element: <ConfigHome /> },
+    //     { path: "role", element: <RoleHome /> },
+    //   ],
+    // },
+    // {
+    //   path: "/marketing/reviewsettings",
+    //   element: <ReviewSettings />,
+    // },
+    // {
+    //   path: "/marketing/vouchers",
+    //   element: <Voucher />,
+    // },
+    // {
+    //   path: "/marketing/birthdayreminder",
+    //   element: <BirthdayReminder />,
+    // },
+    // {
+    //   path: "/marketing/returncustomer",
+    //   element: <ReturnCustomer />,
+    // },
+    // {
+    //   path: "/marketing/campaigns",
+    //   element: <Campaign />,
+    // },
+    // {
+    //   path: "/marketing/templates",
+    //   element: <Templates />,
+    // },
   ];
 
   return useRoutes(routes);

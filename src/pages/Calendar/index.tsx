@@ -80,8 +80,9 @@ function Main() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
   const [businessHours, setBusinessHours] = useState<BusinessHours[]>([]);
-  const [slotMinTime, setSlotMinTime] = useState('09:00:00');
-  const [slotMaxTime, setSlotMaxTime] = useState('19:00:00');
+  const [slotMinTime, setSlotMinTime] = useState("09:00:00");
+  const [slotMaxTime, setSlotMaxTime] = useState("19:00:00");
+  const [viewMode, setViewMode] = useState("allDay");
 
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false);
   const [selectedStaff, setSelectedStaff] = React.useState<string | null>(null);
@@ -110,16 +111,7 @@ function Main() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // const intervalId = setInterval(() => {
-    //   fetchAppoinmentApiData(date);
-    // }, 2000); // Poll every 3 seconds
     fetchAppoinmentApiData(date);
-    // console.log(singleCustomerAppointment)
-    // if(appointment){
-    //   setSlotSlideoverPreview(true)
-    // }
-    // return () => clearInterval(intervalId);
-    // console.log(rebookDate);
     fetchBusinessHours(date);
   }, [appoinmentChange, rebookDate]);
 
@@ -396,13 +388,43 @@ function Main() {
         .GetBusinessHours(Math.floor(date.getTime() / 1000))
         .then((res: any) => {
           setBusinessHours(res.data);
-          setSlotMinTime(res.data.FromTime)
-          setSlotMaxTime(res.data.ToTime)
+          setSlotMinTime(res.data.FromTime);
+          setSlotMaxTime(res.data.ToTime);
         });
     } catch (error) {
       // console.error('Error fetching the API:', error.message);
     }
   };
+  const updateCalendarView = () => {
+    const calendarApi = calendarRef.current?.getApi();
+    if (calendarApi) {
+      switch (viewMode) {
+        case "morning":
+          const morningEndTime = `${Math.min(
+            parseInt(slotMinTime.split(":")[0], 10) + 3,
+            parseInt(slotMaxTime.split(":")[0], 10)
+          )}:00:00`;
+          calendarApi.setOption("slotMinTime", slotMinTime);
+          calendarApi.setOption("slotMaxTime", morningEndTime);
+          break;
+        case "afternoon":
+          const afternoonStartTime = `${Math.max(
+            parseInt(slotMaxTime.split(":")[0], 10) - 3,
+            parseInt(slotMinTime.split(":")[0], 10)
+          )}:00:00`;
+          calendarApi.setOption("slotMinTime", afternoonStartTime);
+          calendarApi.setOption("slotMaxTime", slotMaxTime);
+          break;
+        default:
+          calendarApi.setOption("slotMinTime", slotMinTime);
+          calendarApi.setOption("slotMaxTime", slotMaxTime);
+      }
+    }
+  };
+
+  useEffect(() => {
+    updateCalendarView();
+  }, [slotMinTime, slotMaxTime, viewMode]);
 
   const fetchServiceApiData = async (staffID: string) => {
     try {
@@ -455,8 +477,6 @@ function Main() {
   };
 
   const bookingCounts = bookingCount();
-
-  
 
   const options: CalendarOptions = {
     plugins: [
@@ -758,27 +778,15 @@ function Main() {
   };
 
   const showMorning = () => {
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      calendarApi.setOption("slotMinTime", "9:00:00");
-      calendarApi.setOption("slotMaxTime", "12:00:00");
-    }
+    setViewMode("morning");
   };
 
   const showAfternoon = () => {
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      calendarApi.setOption("slotMinTime", "12:00:00");
-      calendarApi.setOption("slotMaxTime", "19:00:00");
-    }
+    setViewMode("afternoon");
   };
 
   const showAllDay = () => {
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      calendarApi.setOption("slotMinTime", "9:00:00");
-      calendarApi.setOption("slotMaxTime", "18:30:00");
-    }
+    setViewMode("allDay");
   };
 
   const handleDateChange = (date: Date) => {
@@ -789,6 +797,8 @@ function Main() {
     }
     dispatch(setRebookDate(date));
     fetchAppoinmentApiData(date);
+    fetchBusinessHours(date);
+      setViewMode('allDay');
   };
 
   const switchToWeek = () => {
@@ -806,7 +816,8 @@ function Main() {
       setDate(currentDate);
       dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
-      fetchBusinessHours(currentDate)
+      fetchBusinessHours(currentDate);
+      setViewMode('allDay');
     }
   };
 
@@ -817,6 +828,8 @@ function Main() {
       setDate(currentDate);
       dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
+      fetchBusinessHours(currentDate);
+      setViewMode('allDay');
     }
   };
 
@@ -827,6 +840,8 @@ function Main() {
       setDate(currentDate);
       dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
+      fetchBusinessHours(currentDate);
+      setViewMode('allDay');
     }
   };
 
