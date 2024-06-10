@@ -133,7 +133,7 @@ function ClientsMainPage() {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center">
           <h1 className="flex items-center text-lg text-gray-800 font-sans mb-4 md:mb-0">
             <User className="mr-2 text-primary w-8 h-8" />{" "}
-            <span>{customersList.length}</span>
+            <span className="">{customersList.length}</span>
           </h1>
           <div className="flex flex-col md:flex-row md:items-center gap-2">
             <div className="relative text-slate-500 w-full max-w-md">

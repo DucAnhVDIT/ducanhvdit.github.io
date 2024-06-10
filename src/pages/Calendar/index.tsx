@@ -420,17 +420,21 @@ function Main() {
 
   const selectHandler = rebook ? handleRebookFromHistory : handleSlotClicked;
 
-  const bookingCount = scheduleData.reduce(
-    (acc: Record<string, number>, booking: { StaffID: number }) => {
-      const staffID = String(booking.StaffID);
-      if (!acc[staffID]) {
-        acc[staffID] = 0;
+  const bookingCount = () => {
+    const acc: Record<string, number> = {};
+    scheduleData.forEach((booking: { StaffID: number; ID: number }) => {
+      if (booking.ID !== 0) {
+        const staffID = String(booking.StaffID);
+        if (!acc[staffID]) {
+          acc[staffID] = 0;
+        }
+        acc[staffID]++;
       }
-      acc[staffID]++;
-      return acc;
-    },
-    {}
-  );
+    });
+    return acc;
+  };
+
+  const bookingCounts = bookingCount();
 
   const options: CalendarOptions = {
     plugins: [
@@ -669,7 +673,7 @@ function Main() {
           })
           .map((staff) => {
             const staffID = String((staff as { StaffID: number }).StaffID);
-            const bookingNum = bookingCount[staffID] || 0;
+            const bookingNum = bookingCounts[staffID] || 0;
             return {
               id: staffID,
               title: `${
@@ -833,6 +837,16 @@ function Main() {
     }
   }, [rebook]);
 
+  const countTotalApp = () => {
+    let total = 0;
+    scheduleData.forEach((app: { ID: number }) => {
+      if (app.ID !== 0) {
+        total += 1;
+      }
+    });
+    return total;
+  };
+
   const calendarOptions = [
     {
       value: "12Hour",
@@ -959,7 +973,7 @@ function Main() {
         <div className=" bg-gray-100 rounded">
           <div className="flex justify-between items-center mb-4">
             <h1 className="p-2 text-xl font-semibold text-black-700 md:border md:rounded-md md:border-slate-500/60">
-              Total Appointments: {scheduleData.length}
+              Total Appointments: {countTotalApp()}
             </h1>
             <OptionsSelect options={calendarOptions} />
           </div>
