@@ -63,6 +63,7 @@ import { RootState } from "../../stores/store";
 import { setSelectedCustomer } from "../../stores/customerSlide";
 import OptionsSelect from "../../components/SelectOptionsButton";
 import { Clock, Settings, Sliders, RefreshCw, RotateCw } from "lucide-react";
+import { BusinessHours } from "../../types/businessHours";
 
 function Main() {
   const location = useLocation();
@@ -78,6 +79,10 @@ function Main() {
   const [staffData, setStaffData] = useState([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
+  const [businessHours, setBusinessHours] = useState<BusinessHours[]>([]);
+  const [slotMinTime, setSlotMinTime] = useState('09:00:00');
+  const [slotMaxTime, setSlotMaxTime] = useState('19:00:00');
+
   const [appoinmentChange, setAppointmentChange] = useState<boolean>(false);
   const [selectedStaff, setSelectedStaff] = React.useState<string | null>(null);
   const [SlotClickModal, setSlotClickModal] = useState(false);
@@ -115,6 +120,7 @@ function Main() {
     // }
     // return () => clearInterval(intervalId);
     // console.log(rebookDate);
+    fetchBusinessHours(date);
   }, [appoinmentChange, rebookDate]);
 
   const handleAppoinmentChange = (
@@ -384,6 +390,20 @@ function Main() {
     }
   };
 
+  const fetchBusinessHours = async (date: Date) => {
+    try {
+      await calendarRepository
+        .GetBusinessHours(Math.floor(date.getTime() / 1000))
+        .then((res: any) => {
+          setBusinessHours(res.data);
+          setSlotMinTime(res.data.FromTime)
+          setSlotMaxTime(res.data.ToTime)
+        });
+    } catch (error) {
+      // console.error('Error fetching the API:', error.message);
+    }
+  };
+
   const fetchServiceApiData = async (staffID: string) => {
     try {
       await eposRepository.getServices(staffID, 0).then((res: any) => {
@@ -436,6 +456,8 @@ function Main() {
 
   const bookingCounts = bookingCount();
 
+  
+
   const options: CalendarOptions = {
     plugins: [
       interactionPlugin,
@@ -473,8 +495,8 @@ function Main() {
     editable: true,
     dayMaxEvents: true,
     schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
-    slotMinTime: "9:00:00",
-    slotMaxTime: "19:00:00",
+    slotMinTime,
+    slotMaxTime,
     contentHeight: "auto",
     selectable: true,
     nowIndicator: true,
@@ -784,6 +806,7 @@ function Main() {
       setDate(currentDate);
       dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
+      fetchBusinessHours(currentDate)
     }
   };
 

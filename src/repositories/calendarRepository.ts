@@ -7,6 +7,7 @@ const getSingleAppointment = '/GetAppointment'
 const addNew = '/AddNewAppointment'
 const updateAppointment = '/UpdateAppointment'
 const getStaff = '/GetStaff'
+const GetBusinessHours = '/GetBusinessHours'
 const fakeID = '20160908110055249272'
 // const fakeID = '20211105170531516337'
 // const businessID = !dataUser ? '' : dataUser.BusinessModel[0].BusinessID
@@ -36,6 +37,13 @@ export default {
 
   getStaff(payload: any) {
     return Repository.post(`${getStaff}`, {
+      business_id: fakeID,
+      date: payload,
+    })
+  },
+
+  GetBusinessHours(payload: any) {
+    return Repository.post(`${GetBusinessHours}`, {
       business_id: fakeID,
       date: payload,
     })
