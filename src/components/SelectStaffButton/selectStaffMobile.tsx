@@ -1,66 +1,58 @@
-import React, { useState } from "react";
+import { Users } from "lucide-react";
+import React from "react";
 import Select, { components } from "react-select";
-import { Settings } from "lucide-react";
 
-interface Option {
-  value: string;
-  label: string;
-  action: () => void;
-  icon: JSX.Element;
+interface SelectStaffProps {
+  staffData: any;
+  selectedStaff: any;
+  handleStaffChange: (selectedOption: any) => void;
 }
 
-interface OptionsSelectProps {
-  options: Option[];
-}
+const SelectStaffMobile: React.FC<SelectStaffProps> = ({
+  staffData,
+  selectedStaff,
+  handleStaffChange,
+}) => {
+  const options = [
+    { value: "", label: "All Staff" },
+    ...staffData.map((staff: { StaffID: any; StaffName: any }) => ({
+      value: String(staff.StaffID),
+      label: staff.StaffName,
+    })),
+  ];
 
-const customOption = (props: any) => {
-  const { data, innerRef, innerProps } = props;
-  return (
-    <div
-      ref={innerRef}
-      {...innerProps}
-      className="flex items-center p-2 hover:bg-gray-200"
-      style={{ cursor: "pointer" }}
-    >
-      {data.icon}
-      <span className="ml-2">{data.label}</span>
-    </div>
-  );
-};
+  const customPlaceholder = (props: any) => {
+    return (
+      <components.Placeholder {...props}>
+        <Users size={20} />
+      </components.Placeholder>
+    );
+  };
 
-const customPlaceholder = (props: any) => {
-  return (
-    <components.Placeholder {...props}>
-      <Settings />
-    </components.Placeholder>
-  );
-};
-
-const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
-  const [selectedOption, setSelectedOption] = useState<null | Option>(null);
-
-  const handleChange = (option: Option | null) => {
-    if (option?.action) {
-      option.action();
-    }
-    setSelectedOption(null);
+  const customSingleValue = (props: any) => {
+    return (
+      <components.SingleValue {...props}>
+        <div className="flex items-center">
+          <Users size={20} className="mr-2" />
+          {props.data.label}
+        </div>
+      </components.SingleValue>
+    );
   };
 
   return (
     <Select
       className="intro-y"
       options={options}
-      value={selectedOption}
-      onChange={handleChange}
+      value={options.find((option) => option.value === selectedStaff)}
+      onChange={handleStaffChange}
       isSearchable={false}
-      placeholder={<Settings />}
-      components={{
-        Option: customOption,
-        Placeholder: customPlaceholder,
-      }}
       menuPortalTarget={document.body}
-      menuPosition="fixed"
-      menuPlacement="top"
+      placeholder="View"
+      components={{
+        Placeholder: customPlaceholder,
+        SingleValue: customSingleValue,
+      }}
       styles={{
         control: (provided) => ({
           ...provided,
@@ -78,14 +70,14 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
         }),
         option: (provided, state) => ({
           ...provided,
-          borderBottom: state.label === "All Staff" ? "1px solid grey" : "none",
           backgroundColor: state.isSelected ? "var(--primary-light)" : "white",
           color: state.isSelected ? "grey" : "var(--text-color)",
           ":hover": {
             backgroundColor: "lightgrey",
+            cursor: 'pointer'
           },
         }),
-        placeholder: (provided) => ({
+        placeholder: (provided: any) => ({
           ...provided,
           color: "black",
           fontSize: 15,
@@ -102,7 +94,10 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
         }),
         singleValue: (provided) => ({
           ...provided,
-          display: "none",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0",
         }),
         menu: (provided) => ({
           ...provided,
@@ -122,4 +117,4 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
   );
 };
 
-export default OptionsSelect;
+export default SelectStaffMobile;

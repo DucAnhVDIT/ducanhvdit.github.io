@@ -69,8 +69,12 @@ import {
   RefreshCw,
   RotateCw,
   CalendarCheck,
+  X,
 } from "lucide-react";
 import { BusinessHours } from "../../types/businessHours";
+import SelectViewMobile from "../../components/SelectViewButton/selectViewMobile";
+import SelectStaffMobile from "../../components/SelectStaffButton/SelectStaffMobile";
+
 
 function Main() {
   const location = useLocation();
@@ -136,6 +140,7 @@ function Main() {
   const handleStaffChange = (selectedOption: any) => {
     const selectedStaffId = selectedOption.value;
     setSelectedStaff(selectedStaffId);
+    // toggleModal()
   };
 
   useEffect(() => {
@@ -966,23 +971,39 @@ function Main() {
           </button>
         </div>
         {isModalOpen && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-end sm:hidden z-50">
-            <div className="bg-white w-full rounded-t-lg p-4">
+          <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50 sm:hidden">
+          <div className="modal modal-open">
+            <div className="modal-box w-2/4 max-w-md h-0.5/4 bg-slate-300">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Options</h2>
                 <button onClick={toggleModal} className="text-gray-600">
-                  <Sliders className="w-6 h-6" />
+                  <X />
                 </button>
               </div>
-              <div className="space-y-4">
-                <SelectStaff
-                  staffData={staffData}
-                  selectedStaff={selectedStaff}
-                  handleStaffChange={handleStaffChange}
-                />
+              <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto">
+                <div className="flex justify-center ">
+                  <SelectStaffMobile
+                    staffData={staffData}
+                    selectedStaff={selectedStaff}
+                    handleStaffChange={handleStaffChange}
+                  />
+                </div>
+                <div className="flex justify-center ">
+                  <SelectViewMobile
+                    switchToWeek={switchToWeek}
+                    switchToDay={switchToDay}
+                    showAllDay={showAllDay}
+                    showMorning={showMorning}
+                    showAfternoon={showAfternoon}
+                  />
+                </div>
+                <div className="flex justify-center ">
+                  <OptionsSelect options={calendarOptions} />
+                </div>
               </div>
             </div>
           </div>
+        </div>
         )}
         {/* Mobile Select Staff and View */}
 
@@ -1001,6 +1022,11 @@ function Main() {
                 <div className="">
                   <Preview>
                     <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto md:ml-24">
+                      <div className="flex items-center space-x-2  p-2 rounded-full sm:hidden">
+                        <CalendarCheck className="w-5 h-5 text-white" />
+                        <span className="text-md text-white">{countTotalApp()}</span>
+                      </div>
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
                       <Button
                         className="text-sm sm:text-base text-white border-none shadow-none"
                         onClick={prevDay}
