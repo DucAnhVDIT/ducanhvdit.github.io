@@ -82,8 +82,8 @@ const SelectView: React.FC<SelectViewProps> = ({
           border: "0",
           boxShadow: "none",
           width: "130px",
-          backgroundColor: "#1E40AF",
-          color: "white",
+          backgroundColor: "#DEE5ED",
+          color: "#9BA9BE",
           borderRadius: "9999px",
           paddingLeft: "10px",
         }),
@@ -98,19 +98,19 @@ const SelectView: React.FC<SelectViewProps> = ({
         }),
         placeholder: (provided: any) => ({
           ...provided,
-          color: "white",
+          color: "black",
           fontSize: 15,
         }),
         dropdownIndicator: (provided) => ({
           ...provided,
-          color: "white",
+          color: "black",
         }),
         indicatorSeparator: () => ({
           display: "none",
         }),
         singleValue: (provided, state) => ({
           ...provided,
-          color: "white",
+          color: "black",
         }),
         menuPortal: (base) => ({ ...base, zIndex: 9999, width: "130px" }),
       }}

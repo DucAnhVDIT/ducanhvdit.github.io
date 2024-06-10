@@ -12,6 +12,7 @@ import { useAuth } from "../../services/AuthContext";
 import { useNavigate } from 'react-router-dom';
 import { rolesName } from "../../constant/log-roles";
 import { Location } from 'react-router-dom';
+import { User} from "lucide-react";
 
 // interface MainProps {
 //   location: Location; 
@@ -54,7 +55,7 @@ function Main() {
         {/* END: Breadcrumb */}
         {/* BEGIN: Search */}
         <div className="relative mr-3 intro-x sm:mr-6">
-          <div className="relative hidden sm:block">
+          {/* <div className="relative hidden sm:block">
             <FormInput
               type="text"
               className="border-transparent w-56 shadow-none rounded-full bg-slate-300/50 pr-8 transition-[width] duration-300 ease-in-out focus:border-transparent focus:w-72 dark:bg-darkmode-400/70"
@@ -66,10 +67,10 @@ function Main() {
               icon="Search"
               className="absolute inset-y-0 right-0 w-5 h-5 my-auto mr-3 text-slate-600 dark:text-slate-500"
             />
-          </div>
-          <a className="relative text-slate-600 sm:hidden" href="">
+          </div> */}
+          {/* <a className="relative text-slate-600 sm:hidden" href="">
             <Lucide icon="Search" className="w-5 h-5 dark:text-slate-500" />
-          </a>
+          </a> */}
           <Transition
             as={Fragment}
             show={searchDropdown}
@@ -194,11 +195,12 @@ function Main() {
         {/* END: Notifications  */}
         {/* BEGIN: Account Menu */}
         <Menu>
-          <Menu.Button className="block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x">
-            <img
+          <Menu.Button className="block w-8 h-8 overflow-hidden rounded-full image-fit zoom-in intro-x">
+            {/* <img
               alt="VDIT Solutions"
               src={fakerData[9].photos[0]}
-            />
+            /> */}
+            <User />
           </Menu.Button>
           <Menu.Items className="w-56 mt-px text-white bg-primary">
             <Menu.Header className="font-normal">

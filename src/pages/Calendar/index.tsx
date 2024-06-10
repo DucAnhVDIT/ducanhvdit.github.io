@@ -1010,9 +1010,9 @@ function Main() {
 
         <div className=" bg-gray-100 rounded">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="p-2 text-xl font-semibold text-black-700 md:border md:rounded-md md:border-slate-500/60">
+            {/* <h1 className="p-2 text-xl font-semibold text-black-700 md:border md:rounded-md md:border-slate-500/60">
               Total Appointments: {countTotalApp()}
-            </h1>
+            </h1> */}
             <OptionsSelect options={calendarOptions} />
           </div>
         </div>

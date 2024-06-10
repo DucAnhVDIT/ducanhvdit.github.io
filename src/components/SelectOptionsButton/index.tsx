@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
-import { Clock, Settings, Sliders, RefreshCw, RotateCw } from 'lucide-react';
+import Select, { components } from 'react-select';
+import { Settings } from 'lucide-react';
 
 interface Option {
   value: string;
@@ -13,6 +13,29 @@ interface OptionsSelectProps {
   options: Option[];
 }
 
+const customOption = (props: any) => {
+  const { data, innerRef, innerProps } = props;
+  return (
+    <div
+      ref={innerRef}
+      {...innerProps}
+      className="flex items-center p-2 hover:bg-gray-200"
+      style={{ cursor: 'pointer' }}
+    >
+      {data.icon}
+      <span className="ml-2">{data.label}</span>
+    </div>
+  );
+};
+
+const customPlaceholder = (props: any) => {
+  return (
+    <components.Placeholder {...props}>
+      <Settings />
+    </components.Placeholder>
+  );
+};
+
 const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
   const [selectedOption, setSelectedOption] = useState<null | Option>(null);
 
@@ -23,23 +46,6 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
     setSelectedOption(null); 
   };
 
-  const customSingleValue = ({ data }: any) => (
-    <div className="flex items-center">
-      {data.icon}
-      <span className="ml-2">{data.label}</span>
-    </div>
-  );
-
-  const customOption = (props: any) => {
-    const { data, innerRef, innerProps } = props;
-    return (
-      <div ref={innerRef} {...innerProps} className="flex items-center p-2 hover:bg-gray-200" style={{ cursor: 'pointer' }}>
-        {data.icon}
-        <span className="ml-2">{data.label}</span>
-      </div>
-    );
-  };
-
   return (
     <Select
       className="intro-y"
@@ -47,19 +53,26 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
       value={selectedOption}
       onChange={handleChange}
       isSearchable={false}
-      placeholder="Options"
-      components={{ SingleValue: customSingleValue, Option: customOption }}
+      placeholder={<Settings />}
+      components={{
+        Option: customOption,
+        Placeholder: customPlaceholder,
+      }}
       menuPortalTarget={document.body}
       styles={{
         control: (provided) => ({
           ...provided,
           border: '0',
           boxShadow: 'none',
-          width: '130px',
-          backgroundColor: '#1E40AF',
+          width: '40px',
+          height: '40px',
+          backgroundColor: "#DEE5ED",
           color: 'white',
-          paddingLeft: '10px',
-          borderRadius: "9999px"
+          borderRadius: '50%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '0', 
         }),
         option: (provided, state) => ({
           ...provided,
@@ -72,21 +85,29 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
         }),
         placeholder: (provided) => ({
           ...provided,
-          color: 'white',
+          color: 'black',
           fontSize: 15,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0', 
         }),
-        dropdownIndicator: (provided) => ({
-          ...provided,
-          color: 'white',
+        dropdownIndicator: () => ({
+          display: 'none',
         }),
         indicatorSeparator: () => ({
           display: 'none',
         }),
         singleValue: (provided) => ({
           ...provided,
-          color: 'white',
+          display: 'none', 
         }),
-        menuPortal: base => ({ ...base, zIndex: 9999, width: "150px", padding: "0px" })
+        menuPortal: (base) => ({
+          ...base,
+          zIndex: 9999,
+          width: '150px',
+          padding: '0px',
+        }),
       }}
     />
   );
