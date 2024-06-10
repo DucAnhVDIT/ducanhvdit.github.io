@@ -99,6 +99,11 @@ function Main() {
   const [blockTimePop, setBlockTimePop] = useState<any | null>(null);
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const [addNewDrawerOpen, setAddNewDrawerOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   const { selectedCustomer } = location.state || {};
 
@@ -254,122 +259,122 @@ function Main() {
       const res = await calendarRepository.getAppointment(data);
       const appointmentsArray = res.data.Appointments || [];
 
-      // if (appointmentsArray.length > 0) {
-      //   const appointmentsByCustomer: Record<string, any[]> = {};
+      if (appointmentsArray.length > 0) {
+        const appointmentsByCustomer: Record<string, any[]> = {};
 
-      //   appointmentsArray.forEach((appointment: any) => {
-      //     const customerID = appointment.CustomerID;
+        appointmentsArray.forEach((appointment: any) => {
+          const customerID = appointment.CustomerID;
 
-      //     if (!appointmentsByCustomer[customerID]) {
-      //       appointmentsByCustomer[customerID] = [];
-      //     }
-
-      //     const previousAppointments = appointmentsByCustomer[customerID];
-      //     let isConsecutive = false;
-
-      //     for (const lastAppointment of previousAppointments.reverse()) {
-      //       const timeDifference =
-      //         appointment.StartTime - lastAppointment.EndTime;
-      //       const timeThreshold = 60 * 30; // 30 minutes threshold for consecutive appointments
-
-      //       if (timeDifference <= timeThreshold) {
-      //         lastAppointment.EndTime = appointment.EndTime;
-      //         lastAppointment.Services.push(...appointment.Services);
-      //         isConsecutive = true;
-      //         break;
-      //       }
-      //     }
-
-      //     if (!isConsecutive) {
-      //       appointmentsByCustomer[customerID].push(appointment);
-      //     }
-
-      //     console.log("cuoc hen cua tung khach",appointmentsByCustomer)
-      //   });
-
-      //   dispatch(setScheduleData(appointmentsArray));
-      //   dispatch(setAppointmentToCustomer(appointmentsByCustomer));
-      // } else {
-      //   dispatch(setScheduleData([]));
-      //   dispatch(setAppointmentToCustomer({}));
-      // }
-
-      function hasMultipleServices(appointments: string | any[]) {
-        return appointments.length > 1;
-      }
-
-      function groupAppointmentsByID(appointments: any[]) {
-        const groupedAppointmentsByID: { [key: number]: any[] } = {};
-
-        appointments.forEach((appointment) => {
-          if (!groupedAppointmentsByID[appointment.CustomerID]) {
-            groupedAppointmentsByID[appointment.CustomerID] = [];
+          if (!appointmentsByCustomer[customerID]) {
+            appointmentsByCustomer[customerID] = [];
           }
-          groupedAppointmentsByID[appointment.CustomerID].push(appointment);
+
+          const previousAppointments = appointmentsByCustomer[customerID];
+          let isConsecutive = false;
+
+          for (const lastAppointment of previousAppointments.reverse()) {
+            const timeDifference =
+              appointment.StartTime - lastAppointment.EndTime;
+            const timeThreshold = 60 * 30;
+
+            if (timeDifference <= timeThreshold) {
+              lastAppointment.EndTime = appointment.EndTime;
+              lastAppointment.Services.push(...appointment.Services);
+              isConsecutive = true;
+              break;
+            }
+          }
+
+          if (!isConsecutive) {
+            appointmentsByCustomer[customerID].push(appointment);
+          }
+
+          console.log("cuoc hen cua tung khach", appointmentsByCustomer);
         });
 
-        return groupedAppointmentsByID;
+        dispatch(setScheduleData(appointmentsArray));
+        dispatch(setAppointmentToCustomer(appointmentsByCustomer));
+      } else {
+        dispatch(setScheduleData([]));
+        dispatch(setAppointmentToCustomer({}));
       }
 
-      function groupConsecutiveAppointments(groupedAppointmentsByID: {
-        [key: number]: any[];
-      }) {
-        const groupedAppointmentsByTime: { [key: number]: any[] } = {};
+      // function hasMultipleServices(appointments: string | any[]) {
+      //   return appointments.length > 1;
+      // }
 
-        for (const id in groupedAppointmentsByID) {
-          const appointments = groupedAppointmentsByID[id];
-          let currentGroup: any[] = [];
+      // function groupAppointmentsByID(appointments: any[]) {
+      //   const groupedAppointmentsByID: { [key: number]: any[] } = {};
 
-          // Sort appointments by start time
-          appointments.sort(
-            (a, b) =>
-              new Date(a.StartTime).getTime() - new Date(b.StartTime).getTime()
-          );
+      //   appointments.forEach((appointment) => {
+      //     if (!groupedAppointmentsByID[appointment.CustomerID]) {
+      //       groupedAppointmentsByID[appointment.CustomerID] = [];
+      //     }
+      //     groupedAppointmentsByID[appointment.CustomerID].push(appointment);
+      //   });
 
-          appointments.forEach((appointment: any, index: any) => {
-            // If it's the first appointment or the current start time is consecutive with the previous end time
-            if (
-              currentGroup.length === 0 ||
-              new Date(appointment.StartTime).getTime() ===
-                new Date(
-                  currentGroup[currentGroup.length - 1].EndTime
-                ).getTime()
-            ) {
-              currentGroup.push(appointment);
-            } else {
-              // Start a new group
-              if (!groupedAppointmentsByTime[id]) {
-                groupedAppointmentsByTime[id] = [];
-              }
-              groupedAppointmentsByTime[id].push(currentGroup);
-              currentGroup = [appointment];
-            }
+      //   return groupedAppointmentsByID;
+      // }
 
-            // If it's the last appointment, push the current group
-            if (index === appointments.length - 1) {
-              if (!groupedAppointmentsByTime[id]) {
-                groupedAppointmentsByTime[id] = [];
-              }
-              groupedAppointmentsByTime[id].push(currentGroup);
-            }
-          });
-        }
+      // function groupConsecutiveAppointments(groupedAppointmentsByID: {
+      //   [key: number]: any[];
+      // }) {
+      //   const groupedAppointmentsByTime: { [key: number]: any[] } = {};
 
-        return groupedAppointmentsByTime;
-      }
+      //   for (const id in groupedAppointmentsByID) {
+      //     const appointments = groupedAppointmentsByID[id];
+      //     let currentGroup: any[] = [];
 
-      // First group appointments by ID
-      const groupedAppointmentsByID = groupAppointmentsByID(appointmentsArray);
+      //     // Sort appointments by start time
+      //     appointments.sort(
+      //       (a, b) =>
+      //         new Date(a.StartTime).getTime() - new Date(b.StartTime).getTime()
+      //     );
 
-      // Then group by start time
-      const groupedAppointmentsByTime = groupConsecutiveAppointments(
-        groupedAppointmentsByID
-      );
+      //     appointments.forEach((appointment: any, index: any) => {
+      //       // If it's the first appointment or the current start time is consecutive with the previous end time
+      //       if (
+      //         currentGroup.length === 0 ||
+      //         new Date(appointment.StartTime).getTime() ===
+      //           new Date(
+      //             currentGroup[currentGroup.length - 1].EndTime
+      //           ).getTime()
+      //       ) {
+      //         currentGroup.push(appointment);
+      //       } else {
+      //         // Start a new group
+      //         if (!groupedAppointmentsByTime[id]) {
+      //           groupedAppointmentsByTime[id] = [];
+      //         }
+      //         groupedAppointmentsByTime[id].push(currentGroup);
+      //         currentGroup = [appointment];
+      //       }
 
-      console.log("Tat ca cuoc hen", appointmentsArray);
+      //       // If it's the last appointment, push the current group
+      //       if (index === appointments.length - 1) {
+      //         if (!groupedAppointmentsByTime[id]) {
+      //           groupedAppointmentsByTime[id] = [];
+      //         }
+      //         groupedAppointmentsByTime[id].push(currentGroup);
+      //       }
+      //     });
+      //   }
 
-      dispatch(setScheduleData(appointmentsArray));
-      dispatch(setAppointmentToCustomer(groupedAppointmentsByTime));
+      //   return groupedAppointmentsByTime;
+      // }
+
+      // // First group appointments by ID
+      // const groupedAppointmentsByID = groupAppointmentsByID(appointmentsArray);
+
+      // // Then group by start time
+      // const groupedAppointmentsByTime = groupConsecutiveAppointments(
+      //   groupedAppointmentsByID
+      // );
+
+      // console.log("Tat ca cuoc hen", appointmentsArray);
+
+      // dispatch(setScheduleData(appointmentsArray));
+      // dispatch(setAppointmentToCustomer(groupedAppointmentsByTime));
     } catch (error) {
       console.error("Error fetching the API:", (error as Error).message);
       // Handle the error, e.g., show an error message to the user
@@ -399,7 +404,7 @@ function Main() {
           setSlotMaxTime(res.data.ToTime);
         });
     } catch (error) {
-      // console.error('Error fetching the API:', error.message);
+      
     }
   };
   const updateCalendarView = () => {
@@ -435,7 +440,7 @@ function Main() {
 
   const fetchServiceApiData = async (staffID: string) => {
     try {
-      await eposRepository.getServices(staffID, 0).then((res: any) => {
+      await eposRepository.getServices(staffID).then((res: any) => {
         setServiceData(res.data.Services);
       });
     } catch (error) {
@@ -798,7 +803,6 @@ function Main() {
 
   const handleDateChange = (date: Date) => {
     setDate(date);
-    // Use calendarRef to access FullCalendar instance and navigate to the selected date
     if (calendarRef.current) {
       calendarRef.current.getApi().gotoDate(date);
     }
@@ -930,7 +934,7 @@ function Main() {
       <div className="full-calendar">
         {/* Mobile Select Staff and View */}
 
-        <div className="flex mt-3 justify-between sm:hidden">
+        <div className=" mt-3 justify-between hidden">
           <div className="">
             <SelectStaff
               staffData={staffData}
@@ -950,6 +954,36 @@ function Main() {
           </div>
         </div>
 
+        <div className="fixed bottom-4 right-4 sm:hidden z-50">
+          <button
+            onClick={toggleModal}
+            className="bg-primary text-white p-4 rounded-full shadow-lg focus:outline-none"
+          >
+            <Settings className="w-6 h-6" />
+          </button>
+        </div>
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-end sm:hidden z-50">
+            <div className="bg-white w-full rounded-t-lg p-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Options</h2>
+                <button onClick={toggleModal} className="text-gray-600">
+                  <Sliders className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <CalendarCheck className="w-6 h-6" />
+                <span className="text-lg">{countTotalApp()}</span>
+
+                <SelectStaff
+                  staffData={staffData}
+                  selectedStaff={selectedStaff}
+                  handleStaffChange={handleStaffChange}
+                />
+              </div>
+            </div>
+          </div>
+        )}
         {/* Mobile Select Staff and View */}
 
         <div className="flex flex-col sm:flex-row mt-3 mb-3 justify-between">

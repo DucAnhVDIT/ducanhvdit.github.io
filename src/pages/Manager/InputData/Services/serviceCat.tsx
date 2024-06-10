@@ -9,9 +9,11 @@ function ServiceCat() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [servicesList, setServicesList] = useState([]);
 
   useEffect(() => {
     getServicesCategory();
+    getServicesList()
   }, []);
 
   const getServicesCategory = async () => {
@@ -26,6 +28,16 @@ function ServiceCat() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getServicesList = async () => {
+    try {
+      const res = await eposRepository.getServices(0);
+      setServicesList(res.data.Services);
+      console.log("res",res.data.Services)
+    } catch (err) {
+      console.error(err);
     }
   };
 

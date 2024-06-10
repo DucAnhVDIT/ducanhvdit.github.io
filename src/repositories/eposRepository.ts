@@ -15,11 +15,10 @@ export default {
     })
   },
 
-  getServices(StaffID: any, catId: any) {
+  getServices(StaffID: any) {
     return Repository.post(`${getServices}`, {
       business_id: businessID,
       StaffID: StaffID,
-      CategoryID: catId,
     })
   },
 
