@@ -114,7 +114,7 @@ function Main() {
     //   setSlotSlideoverPreview(true)
     // }
     // return () => clearInterval(intervalId);
-    console.log(rebookDate);
+    // console.log(rebookDate);
   }, [appoinmentChange, rebookDate]);
 
   const handleAppoinmentChange = (

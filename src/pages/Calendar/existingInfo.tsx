@@ -159,6 +159,7 @@ function ExistingInfo({
     if (!appointmentsToUpdate || appointmentsToUpdate.length === 0) {
       logError("No appointments to update");
       return;
+      
     }
 
     Promise.all(
