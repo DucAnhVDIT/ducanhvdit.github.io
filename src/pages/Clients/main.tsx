@@ -17,13 +17,14 @@ import { setSelectedCustomer } from "../../stores/customerSlide";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { User, XCircle, Search } from "lucide-react";
+import Select from "react-select";
 function ClientsMainPage() {
   const [customersList, setCustomersList] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchValueClient, setSearchValueClient] = useState("");
   const [selectedRows, setSelectedRows] = React.useState<number[]>([]);
+  
   const searchInputRef = useRef<HTMLInputElement>(null);
-
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -123,6 +124,7 @@ function ClientsMainPage() {
             .includes(searchValueClient.toLowerCase())
       )
     : [];
+
 
   return (
     <>

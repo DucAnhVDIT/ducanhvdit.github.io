@@ -62,7 +62,7 @@ import { Appointment } from "../../types/appointment";
 import { RootState } from "../../stores/store";
 import { setSelectedCustomer } from "../../stores/customerSlide";
 import OptionsSelect from "../../components/SelectOptionsButton";
-import { Clock, Settings, Sliders, RefreshCw, RotateCw } from 'lucide-react';
+import { Clock, Settings, Sliders, RefreshCw, RotateCw } from "lucide-react";
 
 function Main() {
   const location = useLocation();
@@ -361,8 +361,7 @@ function Main() {
         groupedAppointmentsByID
       );
 
-      console.log("by id", groupedAppointmentsByID);
-      console.log("by time", groupedAppointmentsByTime);
+      console.log("Tat ca cuoc hen", appointmentsArray);
 
       dispatch(setScheduleData(appointmentsArray));
       dispatch(setAppointmentToCustomer(groupedAppointmentsByTime));
@@ -497,7 +496,10 @@ function Main() {
             IsWebBooking: isWebBooking,
           } = appointment;
 
-          let title = `${customerName} - ${serviceName}`;
+          let title = `${serviceName}`;
+          if (customerName && customerName !== "null") {
+            title = `${customerName} - ${serviceName}`;
+          }
           if (companyNotes && companyNotes !== "null") {
             title += ` / ${companyNotes}`;
           }
@@ -505,12 +507,14 @@ function Main() {
             title += ` / ${customerNote}`;
           }
 
+          const eventColor = colour && colour !== "null" ? colour : "grey";
+
           return {
             title,
             start: startTime,
             end: endTime,
             resourceId: staffID,
-            color: colour,
+            color: eventColor,
             extendedProps: {
               ID,
               resourceId: staffID,
@@ -730,7 +734,7 @@ function Main() {
   const showMorning = () => {
     const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
-      calendarApi.setOption("slotMinTime", "09:00:00");
+      calendarApi.setOption("slotMinTime", "9:00:00");
       calendarApi.setOption("slotMaxTime", "12:00:00");
     }
   };
@@ -739,7 +743,7 @@ function Main() {
     const calendarApi = calendarRef.current?.getApi();
     if (calendarApi) {
       calendarApi.setOption("slotMinTime", "12:00:00");
-      calendarApi.setOption("slotMaxTime", "15:00:00");
+      calendarApi.setOption("slotMaxTime", "19:00:00");
     }
   };
 
@@ -830,11 +834,36 @@ function Main() {
   }, [rebook]);
 
   const calendarOptions = [
-    { value: '12Hour', label: '12 Hour Format', action: set12HourFormat, icon: <Clock size={16} /> },
-    { value: '24Hour', label: '24 Hour Format', action: set24HourFormat, icon: <Clock size={16} /> },
-    { value: '15Min', label: '15 Minute Slot', action: set15MinSlot, icon: <Sliders size={16} /> },
-    { value: '30Min', label: '30 Minute Slot', action: set30MinSlot, icon: <Sliders size={16} /> },
-    { value: 'reset', label: 'Reset', action: resetToInitialSettings, icon: <RefreshCw size={16} /> },
+    {
+      value: "12Hour",
+      label: "12 Hour Format",
+      action: set12HourFormat,
+      icon: <Clock size={16} />,
+    },
+    {
+      value: "24Hour",
+      label: "24 Hour Format",
+      action: set24HourFormat,
+      icon: <Clock size={16} />,
+    },
+    {
+      value: "15Min",
+      label: "15 Minute Slot",
+      action: set15MinSlot,
+      icon: <Sliders size={16} />,
+    },
+    {
+      value: "30Min",
+      label: "30 Minute Slot",
+      action: set30MinSlot,
+      icon: <Sliders size={16} />,
+    },
+    {
+      value: "reset",
+      label: "Reset",
+      action: resetToInitialSettings,
+      icon: <RefreshCw size={16} />,
+    },
   ];
 
   return (
@@ -852,7 +881,13 @@ function Main() {
           </div>
 
           <div className="">
-            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay}  showAllDay={showAllDay} showMorning={showMorning} showAfternoon={showAfternoon} />
+            <SelectView
+              switchToWeek={switchToWeek}
+              switchToDay={switchToDay}
+              showAllDay={showAllDay}
+              showMorning={showMorning}
+              showAfternoon={showAfternoon}
+            />
           </div>
         </div>
 
@@ -911,7 +946,13 @@ function Main() {
             )}
           </PreviewComponent>
           <div className="hidden sm:block">
-            <SelectView switchToWeek={switchToWeek} switchToDay={switchToDay} showAllDay={showAllDay} showMorning={showMorning} showAfternoon={showAfternoon} />
+            <SelectView
+              switchToWeek={switchToWeek}
+              switchToDay={switchToDay}
+              showAllDay={showAllDay}
+              showMorning={showMorning}
+              showAfternoon={showAfternoon}
+            />
           </div>
         </div>
 
