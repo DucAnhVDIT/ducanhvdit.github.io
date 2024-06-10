@@ -238,6 +238,9 @@ function Main() {
   const handleEventClick = async (info: { event: any }) => {
     try {
       const appointmentID = info.event.extendedProps.ID;
+      if (appointmentID === 0) {
+        return;
+      }
       await calendarRepository
         .getSingleAppointment(appointmentID)
         .then((res: any) => {
@@ -289,7 +292,7 @@ function Main() {
             appointmentsByCustomer[customerID].push(appointment);
           }
 
-          console.log("cuoc hen cua tung khach", appointmentsByCustomer);
+          // console.log("cuoc hen cua tung khach", appointmentsByCustomer);
         });
 
         dispatch(setScheduleData(appointmentsArray));
@@ -972,9 +975,6 @@ function Main() {
                 </button>
               </div>
               <div className="space-y-4">
-                <CalendarCheck className="w-6 h-6" />
-                <span className="text-lg">{countTotalApp()}</span>
-
                 <SelectStaff
                   staffData={staffData}
                   selectedStaff={selectedStaff}
