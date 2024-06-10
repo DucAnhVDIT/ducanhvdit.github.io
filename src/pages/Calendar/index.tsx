@@ -62,7 +62,14 @@ import { Appointment } from "../../types/appointment";
 import { RootState } from "../../stores/store";
 import { setSelectedCustomer } from "../../stores/customerSlide";
 import OptionsSelect from "../../components/SelectOptionsButton";
-import { Clock, Settings, Sliders, RefreshCw, RotateCw } from "lucide-react";
+import {
+  Clock,
+  Settings,
+  Sliders,
+  RefreshCw,
+  RotateCw,
+  CalendarCheck,
+} from "lucide-react";
 import { BusinessHours } from "../../types/businessHours";
 
 function Main() {
@@ -553,7 +560,7 @@ function Main() {
             title += ` / ${customerNote}`;
           }
 
-          const eventColor = colour && colour !== "null" ? colour : "grey";
+          const eventColor = colour && colour !== "null" ? colour : "#B0BEC5";
 
           return {
             title,
@@ -798,7 +805,7 @@ function Main() {
     dispatch(setRebookDate(date));
     fetchAppoinmentApiData(date);
     fetchBusinessHours(date);
-      setViewMode('allDay');
+    setViewMode("allDay");
   };
 
   const switchToWeek = () => {
@@ -817,7 +824,7 @@ function Main() {
       dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
       fetchBusinessHours(currentDate);
-      setViewMode('allDay');
+      setViewMode("allDay");
     }
   };
 
@@ -829,7 +836,7 @@ function Main() {
       dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
       fetchBusinessHours(currentDate);
-      setViewMode('allDay');
+      setViewMode("allDay");
     }
   };
 
@@ -841,7 +848,7 @@ function Main() {
       dispatch(setRebookDate(currentDate));
       fetchAppoinmentApiData(currentDate);
       fetchBusinessHours(currentDate);
-      setViewMode('allDay');
+      setViewMode("allDay");
     }
   };
 
@@ -946,7 +953,7 @@ function Main() {
         {/* Mobile Select Staff and View */}
 
         <div className="flex flex-col sm:flex-row mt-3 mb-3 justify-between">
-          <div className="hidden sm:block">
+          <div className="hidden sm:flex items-center space-x-4 rounded-full">
             <SelectStaff
               staffData={staffData}
               selectedStaff={selectedStaff}
@@ -959,7 +966,7 @@ function Main() {
               <>
                 <div className="">
                   <Preview>
-                    <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto">
+                    <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto md:ml-24">
                       <Button
                         className="text-sm sm:text-base text-white border-none shadow-none"
                         onClick={prevDay}
@@ -997,7 +1004,12 @@ function Main() {
               </>
             )}
           </PreviewComponent>
-          <div className="hidden sm:block">
+          <div className="hidden sm:flex gap-2">
+            <div className="flex items-center space-x-2  p-2 rounded-full">
+              <CalendarCheck className="w-5 h-5" />
+              <span className="text-lg">{countTotalApp()}</span>
+            </div>
+            <OptionsSelect options={calendarOptions} />
             <SelectView
               switchToWeek={switchToWeek}
               switchToDay={switchToDay}
@@ -1008,14 +1020,11 @@ function Main() {
           </div>
         </div>
 
-        <div className=" bg-gray-100 rounded">
+        {/* <div className=" bg-gray-100 rounded">
           <div className="flex justify-between items-center mb-4">
-            {/* <h1 className="p-2 text-xl font-semibold text-black-700 md:border md:rounded-md md:border-slate-500/60">
-              Total Appointments: {countTotalApp()}
-            </h1> */}
             <OptionsSelect options={calendarOptions} />
           </div>
-        </div>
+        </div> */}
 
         <FullCalendar {...options} ref={calendarRef} select={selectHandler} />
 

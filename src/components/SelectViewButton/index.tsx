@@ -110,7 +110,7 @@ const SelectView: React.FC<SelectViewProps> = ({
         }),
         singleValue: (provided, state) => ({
           ...provided,
-          color: "black",
+          color: "white",
         }),
         menuPortal: (base) => ({ ...base, zIndex: 9999, width: "130px" }),
       }}

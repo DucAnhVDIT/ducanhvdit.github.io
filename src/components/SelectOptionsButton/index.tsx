@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import Select, { components } from 'react-select';
-import { Settings } from 'lucide-react';
+import React, { useState } from "react";
+import Select, { components } from "react-select";
+import { Settings } from "lucide-react";
 
 interface Option {
   value: string;
@@ -20,7 +20,7 @@ const customOption = (props: any) => {
       ref={innerRef}
       {...innerProps}
       className="flex items-center p-2 hover:bg-gray-200"
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: "pointer" }}
     >
       {data.icon}
       <span className="ml-2">{data.label}</span>
@@ -43,7 +43,7 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
     if (option?.action) {
       option.action();
     }
-    setSelectedOption(null); 
+    setSelectedOption(null);
   };
 
   return (
@@ -59,54 +59,63 @@ const OptionsSelect: React.FC<OptionsSelectProps> = ({ options }) => {
         Placeholder: customPlaceholder,
       }}
       menuPortalTarget={document.body}
+      menuPosition="fixed"
+      menuPlacement="auto"
       styles={{
         control: (provided) => ({
           ...provided,
-          border: '0',
-          boxShadow: 'none',
-          width: '40px',
-          height: '40px',
+          border: "0",
+          boxShadow: "none",
+          width: "40px",
+          height: "40px",
           backgroundColor: "#DEE5ED",
-          color: 'white',
-          borderRadius: '50%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: '0', 
+          color: "white",
+          borderRadius: "50%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "0",
         }),
         option: (provided, state) => ({
           ...provided,
-          borderBottom: state.label === 'All Staff' ? '1px solid grey' : 'none',
-          backgroundColor: state.isSelected ? 'var(--primary-light)' : 'white',
-          color: state.isSelected ? 'grey' : 'var(--text-color)',
-          ':hover': {
-            backgroundColor: 'lightgrey',
+          borderBottom: state.label === "All Staff" ? "1px solid grey" : "none",
+          backgroundColor: state.isSelected ? "var(--primary-light)" : "white",
+          color: state.isSelected ? "grey" : "var(--text-color)",
+          ":hover": {
+            backgroundColor: "lightgrey",
           },
         }),
         placeholder: (provided) => ({
           ...provided,
-          color: 'black',
+          color: "black",
           fontSize: 15,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0', 
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "0",
         }),
         dropdownIndicator: () => ({
-          display: 'none',
+          display: "none",
         }),
         indicatorSeparator: () => ({
-          display: 'none',
+          display: "none",
         }),
         singleValue: (provided) => ({
           ...provided,
-          display: 'none', 
+          display: "none",
+        }),
+        menu: (provided) => ({
+          ...provided,
+          width: "auto",
+          minWidth: "150px",
+          left: 0, 
         }),
         menuPortal: (base) => ({
           ...base,
           zIndex: 9999,
-          width: '150px',
-          padding: '0px',
+          width: "auto",
+          minWidth: "150px",
+          padding: "0px",
         }),
       }}
     />
