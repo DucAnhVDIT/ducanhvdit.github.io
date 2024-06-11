@@ -144,7 +144,7 @@ function AddNewDrawer({
 
   const handleOpenAddClient = () => {
     setAddCustomerSlideOpen(true);
-    setClienSlideoverOpen(false);
+    // setClienSlideoverOpen(false);
   };
 
   const closeSlideOver = () => {
@@ -365,7 +365,7 @@ function AddNewDrawer({
                   onClick={openSearchClient}
                 >
                   <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y  rounded-lg w-full ">
-                    <div className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400">
+                    <div className="col-span-12 selection:cursor-pointer sm:col-span-4 2xl:col-span-3 box hover:bg-gray-100 border-2 border-gray-400">
                       <div className="p-3">
                         <div className="flex">
                           {selectedCustomer && selectedCustomer.FirstName ? (
@@ -422,7 +422,7 @@ function AddNewDrawer({
                   onClick={openServicesList}
                 >
                   <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
-                    <div className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box zoom-in border-2 border-gray-400">
+                    <div className="col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box hover:bg-gray-100 border-2 border-gray-400">
                       <div className="p-1">
                         <div className="flex">
                           <div className=" mt-4 ml-3">
