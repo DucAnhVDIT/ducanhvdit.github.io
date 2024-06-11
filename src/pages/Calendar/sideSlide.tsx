@@ -359,12 +359,18 @@ function SlideOverPanel({
       <Slideover
         className="hidden sm:block"
         open={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          dispatch(resetSelectedServices());
+          onClose();
+        }}
       >
         {/* BEGIN: Slide Over Header */}
         <Slideover.Panel>
           <Button
-            onClick={onClose}
+            onClick={() => {
+              dispatch(resetSelectedServices());
+              onClose();
+            }}
             className="hidden sm:block absolute w-14 h-14 top-0 left-0 right-auto mt-4 -ml-16 bg-white rounded-full"
           >
             <Lucide icon="X" className="w-8 h-8 text-black" />
@@ -827,8 +833,11 @@ function SlideOverPanel({
             <Button
               variant="outline-secondary"
               type="button"
-              onClick={onClose}
-             className=" border-none w-32  px-6 bg-gray-400 text-white mr-3"
+              onClick={() => {
+                dispatch(resetSelectedServices());
+                onClose();
+              }}
+              className=" border-none w-32  px-6 bg-gray-400 text-white mr-3"
             >
               Cancel
             </Button>

@@ -307,6 +307,7 @@ function AddNewDrawer({
         anchor="bottom"
         open={addNewDrawerOpen}
         onClose={() => {
+          dispatch(resetSelectedServices());
           setAddNewDrawerOpen(false);
         }}
         ModalProps={{ keepMounted: true }}
@@ -323,7 +324,11 @@ function AddNewDrawer({
               <h1 className="mr-auto font-bold text-2xl">New Appoinment</h1>
               <Button
                 className="border-none shadow-none"
-                onClick={() => setAddNewDrawerOpen(false)}
+                onClick={() =>{
+                  setAddNewDrawerOpen(false)
+                  dispatch(resetSelectedServices());
+                }}
+                
               >
                 <Lucide icon="ArrowLeft" />
               </Button>
