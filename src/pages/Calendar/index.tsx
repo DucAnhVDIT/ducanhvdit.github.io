@@ -70,11 +70,11 @@ import {
   RotateCw,
   CalendarCheck,
   X,
+  SlidersHorizontal,
 } from "lucide-react";
 import { BusinessHours } from "../../types/businessHours";
 import SelectViewMobile from "../../components/SelectViewButton/selectViewMobile";
-import SelectStaffMobile from "../../components/SelectStaffButton/SelectStaffMobile";
-
+import SelectStaffMobile from "../../components/SelectStaffButton/selectStaffMobile";
 
 function Main() {
   const location = useLocation();
@@ -411,9 +411,7 @@ function Main() {
           setSlotMinTime(res.data.FromTime);
           setSlotMaxTime(res.data.ToTime);
         });
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   };
   const updateCalendarView = () => {
     const calendarApi = calendarRef.current?.getApi();
@@ -967,28 +965,21 @@ function Main() {
             onClick={toggleModal}
             className="bg-primary text-white p-4 rounded-full shadow-lg focus:outline-none"
           >
-            <Settings className="w-6 h-6" />
+            <SlidersHorizontal className="w-6 h-6" />
           </button>
         </div>
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50 sm:hidden">
-          <div className="modal modal-open">
-            <div className="modal-box w-2/4 max-w-md h-0.5/4 bg-slate-300">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Options</h2>
-                <button onClick={toggleModal} className="text-gray-600">
-                  <X />
-                </button>
-              </div>
-              <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto">
-                <div className="flex justify-center ">
+          <div className="relative">
+            {isModalOpen && (
+              <div className="fixed bottom-20 right-4 flex flex-col items-center space-y-4 z-50 sm:hidden">
+                <div className="bg-slate-300 p-2 rounded-full shadow-lg">
                   <SelectStaffMobile
                     staffData={staffData}
                     selectedStaff={selectedStaff}
                     handleStaffChange={handleStaffChange}
                   />
                 </div>
-                <div className="flex justify-center ">
+                <div className="bg-slate-300 p-2 rounded-full shadow-lg">
                   <SelectViewMobile
                     switchToWeek={switchToWeek}
                     switchToDay={switchToDay}
@@ -997,13 +988,12 @@ function Main() {
                     showAfternoon={showAfternoon}
                   />
                 </div>
-                <div className="flex justify-center ">
+                <div className="bg-slate-300 p-2 rounded-full shadow-lg">
                   <OptionsSelect options={calendarOptions} />
                 </div>
               </div>
-            </div>
+            )}
           </div>
-        </div>
         )}
         {/* Mobile Select Staff and View */}
 
@@ -1024,9 +1014,11 @@ function Main() {
                     <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto md:ml-24">
                       <div className="flex items-center space-x-2  p-2 rounded-full sm:hidden">
                         <CalendarCheck className="w-5 h-5 text-white" />
-                        <span className="text-md text-white">{countTotalApp()}</span>
+                        <span className="text-md text-white">
+                          {countTotalApp()}
+                        </span>
                       </div>
-                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2 sm:hidden"></div>
                       <Button
                         className="text-sm sm:text-base text-white border-none shadow-none"
                         onClick={prevDay}

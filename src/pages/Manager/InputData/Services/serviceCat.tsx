@@ -19,7 +19,6 @@ function ServiceCat() {
   const getServicesCategory = async () => {
     setLoading(true);
     try {
-      // Simulating a delay
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const res = await eposRepository.getServicesCategory();
       setServicesCategory(res.data.Categories);

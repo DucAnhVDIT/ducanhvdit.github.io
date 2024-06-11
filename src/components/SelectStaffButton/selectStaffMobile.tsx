@@ -1,6 +1,7 @@
 import { Users } from "lucide-react";
 import React from "react";
 import Select, { components } from "react-select";
+import { CustomMenu } from "../SelectOptionsButton/customMenu";
 
 interface SelectStaffProps {
   staffData: any;
@@ -49,9 +50,12 @@ const SelectStaffMobile: React.FC<SelectStaffProps> = ({
       isSearchable={false}
       menuPortalTarget={document.body}
       placeholder="View"
+      menuPlacement="auto" 
+      menuPosition="fixed" 
       components={{
         Placeholder: customPlaceholder,
         SingleValue: customSingleValue,
+        MenuList: CustomMenu
       }}
       styles={{
         control: (provided) => ({
@@ -74,7 +78,7 @@ const SelectStaffMobile: React.FC<SelectStaffProps> = ({
           color: state.isSelected ? "grey" : "var(--text-color)",
           ":hover": {
             backgroundColor: "lightgrey",
-            cursor: 'pointer'
+            cursor: "pointer",
           },
         }),
         placeholder: (provided: any) => ({
@@ -103,7 +107,6 @@ const SelectStaffMobile: React.FC<SelectStaffProps> = ({
           ...provided,
           width: "auto",
           minWidth: "150px",
-          left: 0, 
         }),
         menuPortal: (base) => ({
           ...base,
