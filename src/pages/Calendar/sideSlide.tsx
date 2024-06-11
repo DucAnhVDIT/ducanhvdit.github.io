@@ -350,7 +350,7 @@ function SlideOverPanel({
 
   const closeSlideOver = () => {
     dispatch(resetSelectedServices());
-    onClose();
+    // onClose();
     setAddNewDrawerOpen(false);
   };
 
@@ -359,7 +359,7 @@ function SlideOverPanel({
       <Slideover
         className="hidden sm:block"
         open={isOpen}
-        onClose={closeSlideOver}
+        onClose={onClose}
       >
         {/* BEGIN: Slide Over Header */}
         <Slideover.Panel>

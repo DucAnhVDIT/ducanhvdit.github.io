@@ -223,7 +223,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
 
                           <CustomerCard customer={appointmentData} onClick={() => {setUpdateCustomerSlide(true)}}/>
                       
-                          <div className="mt-3 w-full">
+                          {/* <div className="mt-3 w-full">
                             <ExistingDatePicker 
                               date={new Date(appointmentData.BookDate)} 
                               goToDate={handleDateChange} 
@@ -231,7 +231,7 @@ function ExistingDrawer({drawerIsOpen, setDrawerIsOpen, appointmentData, handleA
                               startTime={appointmentData.StartTime}
                               fetchAppoinmentApiData={fetchAppoinmentApiData}
                             />
-                          </div>
+                          </div> */}
 
                           {singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => (
                             <div key={appointment.ID}>
