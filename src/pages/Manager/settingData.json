@@ -13,14 +13,8 @@
     },
     {
         "id": 3,
-        "title": "Report",
-        "description": "Viewing daily, weekly, and overall revenue, and enable exporting reports to PDF and Excel formats.",
+        "title": "Appointments Report",
+        "description": "Viewing daily, weekly, and overall bookings, and enable exporting reports to PDF and Excel formats.",
         "icon": "Clipboard"
-    },
-    {
-        "id": 4,
-        "title": "Account",
-        "description": "Implement comprehensive permission management for all accounts within the business",
-        "icon": "User"
     }
 ]
