@@ -74,9 +74,10 @@ import {
 } from "lucide-react";
 import { BusinessHours } from "../../types/businessHours";
 import SelectViewMobile from "../../components/SelectViewButton/selectViewMobile";
-import SelectStaffMobile from "../../components/SelectStaffButton/SelectStaffMobile";
+
 import { StaffMember } from "../../types/staff";
 import Box from "@mui/material/Box";
+import SelectStaffMobile from "../../components/SelectStaffButton/selectStaffMobile";
 
 function Main() {
   const location = useLocation();
