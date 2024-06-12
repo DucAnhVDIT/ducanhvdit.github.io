@@ -379,7 +379,7 @@ function Main() {
       //   groupedAppointmentsByID
       // );
 
-      // console.log("Tat ca cuoc hen", appointmentsArray);
+      console.log("Tat ca cuoc hen", appointmentsArray);
 
       // dispatch(setScheduleData(appointmentsArray));
       // dispatch(setAppointmentToCustomer(groupedAppointmentsByTime));

@@ -45,6 +45,7 @@ function Main() {
             </div>
           </Link>
           <Divider type="div" className="my-6"></Divider>
+
           <ul>
             {/* BEGIN: First Child */}
             {formattedMenu.map((menu, menuKey) =>
@@ -66,9 +67,7 @@ function Main() {
                   <Menu
                     className={clsx({
                       // Animation
-                      [`-${
-                        (menuKey + 1) * 10
-                      }`]: !menu.active,
+                      [`-${(menuKey + 1) * 10}`]: !menu.active,
                     })}
                     menu={menu}
                     formattedMenuState={[formattedMenu, setFormattedMenu]}
@@ -157,6 +156,14 @@ function Main() {
             )}
             {/* END: First Child */}
           </ul>
+          {/* <div className="absolute bottom-0 w-full px-5 pb-5">
+            <button
+              className=" bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full"
+              onClick={() => alert("Support Contact")}
+            >
+              Support
+            </button>
+          </div> */}
         </nav>
         {/* END: Side Menu */}
         {/* BEGIN: Content */}

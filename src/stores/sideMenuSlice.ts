@@ -26,16 +26,16 @@ const initialState: SideMenuState = {
       pathname: '/clients',
       title: 'Clients',
     },
-    {
-      icon: 'AlarmPlus',
-      pathname: '/marketing',
-      title: 'Marketing',
-    },
-    {
-      icon: 'ShoppingCart',
-      pathname: '/purchase',
-      title: 'Purchase',
-    },
+    // {
+    //   icon: 'AlarmPlus',
+    //   pathname: '/marketing',
+    //   title: 'Marketing',
+    // },
+    // {
+    //   icon: 'ShoppingCart',
+    //   pathname: '/purchase',
+    //   title: 'Purchase',
+    // },
     {
       icon: 'Settings',
       pathname: '/manager',
