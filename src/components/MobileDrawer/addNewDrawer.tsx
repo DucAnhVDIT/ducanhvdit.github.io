@@ -24,6 +24,7 @@ import {
 import calendarRepository from "../../repositories/calendarRepository";
 import moment from "moment";
 import { logError } from "../../constant/log-error";
+import eposRepository from "../../repositories/eposRepository";
 
 interface AddNewDrawerProps {
   serviceData: any;
@@ -72,6 +73,36 @@ function AddNewDrawer({
   const [email, setEmail] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
 
+  const [servicesCategory, setServicesCategory] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const getServicesCategory = async () => {
+    try {
+      const res = await eposRepository.getServicesCategory();
+      setServicesCategory(res.data.Categories);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  const filteredServices = (serviceData || [])
+    .filter((service: { CategoryID: number }) =>
+      selectedCategory
+        ? service.CategoryID === parseInt(selectedCategory)
+        : true
+    )
+    .filter((service: { ProductName: string }) =>
+      service.ProductName.toLowerCase().includes(
+        searchValueService.toLowerCase()
+      )
+    );
+
   const selectedServices = useSelector(
     (state: RootState) => state.serviceListState.selectedServices
   );
@@ -113,6 +144,7 @@ function AddNewDrawer({
     setSelectedCustomer(null);
     setClienSlideoverOpen(true);
     await fetchClientList();
+    getServicesCategory();
   };
 
   const getInitials = (name: string | null | undefined) => {
@@ -126,6 +158,7 @@ function AddNewDrawer({
 
   const openServicesList = () => {
     setServiceSlideoverOpen(true);
+    getServicesCategory()
   };
 
   const handleServiceDelete = (selectedService: any) => {
@@ -324,11 +357,10 @@ function AddNewDrawer({
               <h1 className="mr-auto font-bold text-2xl">New Appoinment</h1>
               <Button
                 className="border-none shadow-none"
-                onClick={() =>{
-                  setAddNewDrawerOpen(false)
+                onClick={() => {
+                  setAddNewDrawerOpen(false);
                   dispatch(resetSelectedServices());
                 }}
-                
               >
                 <Lucide icon="ArrowLeft" />
               </Button>
@@ -490,12 +522,12 @@ function AddNewDrawer({
                         </Button>
                       </div>
 
-                      <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
+                      <div className="w-full mt-3 px-4 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
                         <div className="relative text-slate-500">
                           <FormInput
                             type="text"
                             className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
-                            placeholder="Search by se name"
+                            placeholder="Search services"
                             value={searchValueService}
                             onChange={(e) =>
                               setSearchValueService(e.target.value)
@@ -515,20 +547,39 @@ function AddNewDrawer({
                           )}
                         </div>
                       </div>
-                      {serviceData &&
-                        serviceData
-                          .filter((service: { ProductName: string }) =>
-                            service.ProductName.toLowerCase().includes(
-                              searchValueService.toLowerCase()
+                      <div className="p-4 rounded-md w-full max-w-4xl mx-auto">
+                        <div className="mb-2">
+                          <select
+                            id="categorySelect"
+                            value={selectedCategory}
+                            onChange={handleCategoryChange}
+                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
+                          >
+                            <option value="">All Categories</option>
+                            {servicesCategory.map((category) => (
+                              <option
+                                key={category.CategoryID}
+                                value={category.CategoryID.toString()}
+                              >
+                                {category.CategoryName}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="grid grid-cols-1 gap-1">
+                          {filteredServices.map(
+                            (service: {
+                              ProductID: Key | null | undefined;
+                            }) => (
+                              <ServiceCard
+                                key={service.ProductID}
+                                service={service}
+                                onSelect={handleServiceSelect}
+                              />
                             )
-                          )
-                          .map((service: { ProductID: string }) => (
-                            <ServiceCard
-                              key={service.ProductID}
-                              service={service}
-                              onSelect={handleServiceSelect}
-                            />
-                          ))}
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </Paper>
                 </Drawer>

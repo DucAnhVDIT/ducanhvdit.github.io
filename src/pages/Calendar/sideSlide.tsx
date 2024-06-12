@@ -33,6 +33,7 @@ import { Appointment } from "../../types/appointment";
 // import Pusher from 'pusher-js';
 import "moment-timezone";
 import ServiceCardDisplay from "../../components/ServiceCard/serviceCardDisplay";
+import eposRepository from "../../repositories/eposRepository";
 
 interface SlideOverPanelProps {
   isOpen: boolean;
@@ -67,6 +68,7 @@ function SlideOverPanel({
   const [searchValueService, setSearchValueService] = useState("");
   const [customersList, setCustomersList] = useState<any>([]);
   const [selectedCustomer, setSelectedCustomer] = React.useState<any>(null);
+  const [servicesCategory, setServicesCategory] = useState<any[]>([]);
 
   const [selectedServiceIDs, setSelectedServiceIDs] = useState<any[]>([]);
   const [visibleCustomers, setVisibleCustomers] = useState(10);
@@ -79,6 +81,7 @@ function SlideOverPanel({
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [activeTab, setActiveTab] = useState("info");
   const [editorData, setEditorData] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const [to, setTo] = useState<string>("simplidity@gmail.com");
   const [subject, setSubject] = useState<string>(
@@ -159,6 +162,23 @@ function SlideOverPanel({
     setServiceSlideoverOpen(false);
   };
 
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  const filteredServices = (serviceData || [])
+    .filter((service: { CategoryID: number }) =>
+      selectedCategory
+        ? service.CategoryID === parseInt(selectedCategory)
+        : true
+    )
+    .filter((service: { ProductName: string }) =>
+      service.ProductName.toLowerCase().includes(
+        searchValueService.toLowerCase()
+      )
+    );
   const handleServiceDelete = (selectedService: any) => {
     dispatch(deleteService(selectedService.ProductID));
     console.log("deleted");
@@ -176,6 +196,15 @@ function SlideOverPanel({
       const price = service.Price || 0; // Default to 0 if Price is null or undefined
       return total + price;
     }, 0);
+  };
+
+  const getServicesCategory = async () => {
+    try {
+      const res = await eposRepository.getServicesCategory();
+      setServicesCategory(res.data.Categories);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const openSearchClient = async () => {
@@ -200,6 +229,7 @@ function SlideOverPanel({
 
   const openServicesList = () => {
     setServiceSlideoverOpen(true);
+    getServicesCategory();
   };
 
   const closeServicesList = () => {
@@ -353,7 +383,6 @@ function SlideOverPanel({
     // onClose();
     setAddNewDrawerOpen(false);
   };
-
   return (
     <div>
       <Slideover
@@ -530,11 +559,11 @@ function SlideOverPanel({
                         </Button>
                       </Slideover.Title>
                       <Slideover.Description className="text-center">
-                        <div className="w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
+                        <div className="px-4 w-full mt-3 sm:w-auto sm:mt-0 sm:ml-auto md:ml-0">
                           <div className="relative text-slate-500">
                             <FormInput
                               type="text"
-                              className="mb-2 w-full h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
+                              className="mb-2 w-full max-w-4xl h-12 !bg-gray-300 !box focus:ring-primary focus:border-primary"
                               placeholder="Search by service name"
                               value={searchValueService}
                               onChange={(e) =>
@@ -555,20 +584,39 @@ function SlideOverPanel({
                             )}
                           </div>
                         </div>
-                        {serviceData &&
-                          serviceData
-                            .filter((service: { ProductName: string }) =>
-                              service.ProductName.toLowerCase().includes(
-                                searchValueService.toLowerCase()
+                        <div className="p-4 rounded-md w-full max-w-4xl mx-auto">
+                          <div className="mb-2">
+                            <select
+                              id="categorySelect"
+                              value={selectedCategory}
+                              onChange={handleCategoryChange}
+                              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-md"
+                            >
+                              <option value="">All Categories</option>
+                              {servicesCategory.map((category) => (
+                                <option
+                                  key={category.CategoryID}
+                                  value={category.CategoryID.toString()}
+                                >
+                                  {category.CategoryName}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="grid grid-cols-1 gap-1">
+                            {filteredServices.map(
+                              (service: {
+                                ProductID: Key | null | undefined;
+                              }) => (
+                                <ServiceCard
+                                  key={service.ProductID}
+                                  service={service}
+                                  onSelect={handleServiceSelect}
+                                />
                               )
-                            )
-                            .map((service: { ProductID: string }) => (
-                              <ServiceCard
-                                key={service.ProductID}
-                                service={service}
-                                onSelect={handleServiceSelect}
-                              />
-                            ))}
+                            )}
+                          </div>
+                        </div>
                       </Slideover.Description>
                     </Slideover.Panel>
                   </Slideover>
