@@ -404,13 +404,20 @@ function Main() {
 
   const fetchBusinessHours = async (date: Date) => {
     try {
-      await calendarRepository
-        .GetBusinessHours(Math.floor(date.getTime() / 1000))
-        .then((res: any) => {
-          setBusinessHours(res.data);
-          setSlotMinTime(res.data.FromTime);
-          setSlotMaxTime(res.data.ToTime);
-        });
+      const timestamp = Math.floor(date.getTime() / 1000)
+      const res = await calendarRepository.GetBusinessHours(timestamp)
+      const businessHour = res.data.BusinessHour
+
+      if (businessHour) {
+        setBusinessHours(businessHour);
+        setSlotMinTime(businessHour.FromTime);
+        setSlotMaxTime(businessHour.ToTime);
+      } else {
+        setBusinessHours([]);
+        setSlotMinTime("");
+        setSlotMaxTime("");
+      }
+        
     } catch (error) {}
   };
   const updateCalendarView = () => {
