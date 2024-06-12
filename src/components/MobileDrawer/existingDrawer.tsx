@@ -223,14 +223,14 @@ function ExistingDrawer({
           <div className="m-3">
             <div className="flex">
               <h1 className="mr-auto font-bold text-2xl">Edit Appoinment</h1>
-              <StaffSelector
+              {/* <StaffSelector
                 staffList={staffData}
                 currentStaffId={changeDateBody.StaffID}
                 onSelectStaff={(staffId: string) => {
                   updateStaff(staffId);
                   setShowStaffSelector(false);
                 }}
-              />
+              /> */}
               <Button
                 className="border-none shadow-none"
                 onClick={() => setDrawerIsOpen(false)}
@@ -313,6 +313,14 @@ function ExistingDrawer({
                   key={appointmentData.ID}
                   service={appointmentData}
                   onSelect={handleServiceDelete}
+                />
+                <StaffSelector
+                  staffList={staffData}
+                  currentStaffId={changeDateBody.StaffID}
+                  onSelectStaff={(staffId: string) => {
+                    updateStaff(staffId);
+                    setShowStaffSelector(false);
+                  }}
                 />
                 {selectedServices &&
                   selectedServices.map(

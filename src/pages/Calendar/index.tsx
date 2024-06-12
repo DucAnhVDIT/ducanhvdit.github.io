@@ -76,9 +76,11 @@ import { BusinessHours } from "../../types/businessHours";
 import SelectViewMobile from "../../components/SelectViewButton/selectViewMobile";
 import SelectStaffMobile from "../../components/SelectStaffButton/SelectStaffMobile";
 import { StaffMember } from "../../types/staff";
+import Box from "@mui/material/Box";
 
 function Main() {
   const location = useLocation();
+  const [loading, setLoading] = useState<boolean>(true);
   const [date, setDate] = useState(new Date());
   // const date = useSelector((state:any) => state.date.value);
   const [slotSlideoverPreview, setSlotSlideoverPreview] = useState(false);
@@ -380,7 +382,8 @@ function Main() {
       //   groupedAppointmentsByID
       // );
 
-      console.log("Tat ca cuoc hen", appointmentsArray);
+      
+      setTimeout(setLoading, 1000)
 
       // dispatch(setScheduleData(appointmentsArray));
       // dispatch(setAppointmentToCustomer(groupedAppointmentsByTime));
@@ -735,7 +738,6 @@ function Main() {
     resources: staffData
       ? staffData
           .filter((staff) => {
-
             const staffID = staff.StaffID;
             return !selectedStaff || staffID === selectedStaff;
           })
@@ -943,219 +945,230 @@ function Main() {
 
   return (
     <>
-      <div className="full-calendar">
-        {/* Mobile Select Staff and View */}
+      {loading ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height={400}
+        >
+          <span className="loading loading-ring loading-lg"></span>
+        </Box>
+      ) : (
+        <div className="full-calendar">
+          {/* Mobile Select Staff and View */}
 
-        <div className=" mt-3 justify-between hidden">
-          <div className="">
-            <SelectStaff
-              staffData={staffData}
-              selectedStaff={selectedStaff}
-              handleStaffChange={handleStaffChange}
-            />
-          </div>
-
-          <div className="">
-            <SelectView
-              switchToWeek={switchToWeek}
-              switchToDay={switchToDay}
-              showAllDay={showAllDay}
-              showMorning={showMorning}
-              showAfternoon={showAfternoon}
-            />
-          </div>
-        </div>
-
-        <div className="fixed bottom-4 right-4 sm:hidden z-50">
-          <button
-            onClick={toggleModal}
-            className="bg-primary text-white p-4 rounded-full shadow-lg focus:outline-none"
-          >
-            <SlidersHorizontal className="w-6 h-6" />
-          </button>
-        </div>
-        {isModalOpen && (
-          <div className="relative">
-            {isModalOpen && (
-              <div className="fixed bottom-20 right-4 flex flex-col items-center space-y-4 z-50 sm:hidden">
-                <div className="bg-slate-300 p-2 rounded-full shadow-lg">
-                  <SelectStaffMobile
-                    staffData={staffData}
-                    selectedStaff={selectedStaff}
-                    handleStaffChange={handleStaffChange}
-                  />
-                </div>
-                <div className="bg-slate-300 p-2 rounded-full shadow-lg">
-                  <SelectViewMobile
-                    switchToWeek={switchToWeek}
-                    switchToDay={switchToDay}
-                    showAllDay={showAllDay}
-                    showMorning={showMorning}
-                    showAfternoon={showAfternoon}
-                  />
-                </div>
-                <div className="bg-slate-300 p-2 rounded-full shadow-lg">
-                  <OptionsSelect options={calendarOptions} />
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-        {/* Mobile Select Staff and View */}
-
-        <div className="flex flex-col sm:flex-row mt-3 mb-3 justify-between">
-          <div className="hidden sm:flex items-center space-x-4 rounded-full">
-            <SelectStaff
-              staffData={staffData}
-              selectedStaff={selectedStaff}
-              handleStaffChange={handleStaffChange}
-            />
-          </div>
-          {/* BEGIN: Input Group */}
-          <PreviewComponent className="intro-y bg-transparent">
-            {({ toggle }) => (
-              <>
-                <div className="">
-                  <Preview>
-                    <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto md:ml-24">
-                      <div className="flex items-center space-x-2  p-2 rounded-full sm:hidden">
-                        <CalendarCheck className="w-5 h-5 text-white" />
-                        <span className="text-md text-white">
-                          {countTotalApp()}
-                        </span>
-                      </div>
-                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2 sm:hidden"></div>
-                      <Button
-                        className="text-sm sm:text-base text-white border-none shadow-none"
-                        onClick={prevDay}
-                      >
-                        <Lucide
-                          icon="ChevronLeft"
-                          className="w-4 h-4 sm:w-6 sm:h-6"
-                        />
-                      </Button>
-                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                      <Button
-                        className="text-sm font-normal bg-primary text-white border-none shadow-none"
-                        onClick={todayDate}
-                      >
-                        Today
-                      </Button>
-                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                      <CustomDatePicker
-                        date={date}
-                        goToDate={handleDateChange}
-                      />
-                      <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
-                      <Button
-                        className="text-xs sm:text-base text-white border-none shadow-none"
-                        onClick={nextDay}
-                      >
-                        <Lucide
-                          icon="ChevronRight"
-                          className="w-4 h-4 sm:w-6 sm:h-6"
-                        />
-                      </Button>
-                    </div>
-                  </Preview>
-                </div>
-              </>
-            )}
-          </PreviewComponent>
-          <div className="hidden sm:flex gap-2">
-            <div className="flex items-center space-x-2  p-2 rounded-full">
-              <CalendarCheck className="w-5 h-5" />
-              <span className="text-lg">{countTotalApp()}</span>
+          <div className=" mt-3 justify-between hidden">
+            <div className="">
+              <SelectStaff
+                staffData={staffData}
+                selectedStaff={selectedStaff}
+                handleStaffChange={handleStaffChange}
+              />
             </div>
-            <OptionsSelect options={calendarOptions} />
-            <SelectView
-              switchToWeek={switchToWeek}
-              switchToDay={switchToDay}
-              showAllDay={showAllDay}
-              showMorning={showMorning}
-              showAfternoon={showAfternoon}
-            />
-          </div>
-        </div>
 
-        {/* <div className=" bg-gray-100 rounded">
+            <div className="">
+              <SelectView
+                switchToWeek={switchToWeek}
+                switchToDay={switchToDay}
+                showAllDay={showAllDay}
+                showMorning={showMorning}
+                showAfternoon={showAfternoon}
+              />
+            </div>
+          </div>
+
+          <div className="fixed bottom-4 right-4 sm:hidden z-50">
+            <button
+              onClick={toggleModal}
+              className="bg-primary text-white p-4 rounded-full shadow-lg focus:outline-none"
+            >
+              <SlidersHorizontal className="w-6 h-6" />
+            </button>
+          </div>
+          {isModalOpen && (
+            <div className="relative">
+              {isModalOpen && (
+                <div className="fixed bottom-20 right-4 flex flex-col items-center space-y-4 z-50 sm:hidden">
+                  <div className="bg-slate-300 p-2 rounded-full shadow-lg">
+                    <SelectStaffMobile
+                      staffData={staffData}
+                      selectedStaff={selectedStaff}
+                      handleStaffChange={handleStaffChange}
+                    />
+                  </div>
+                  <div className="bg-slate-300 p-2 rounded-full shadow-lg">
+                    <SelectViewMobile
+                      switchToWeek={switchToWeek}
+                      switchToDay={switchToDay}
+                      showAllDay={showAllDay}
+                      showMorning={showMorning}
+                      showAfternoon={showAfternoon}
+                    />
+                  </div>
+                  <div className="bg-slate-300 p-2 rounded-full shadow-lg">
+                    <OptionsSelect options={calendarOptions} />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {/* Mobile Select Staff and View */}
+
+          <div className="flex flex-col sm:flex-row mt-3 mb-3 justify-between">
+            <div className="hidden sm:flex items-center space-x-4 rounded-full">
+              <SelectStaff
+                staffData={staffData}
+                selectedStaff={selectedStaff}
+                handleStaffChange={handleStaffChange}
+              />
+            </div>
+            {/* BEGIN: Input Group */}
+            <PreviewComponent className="intro-y bg-transparent">
+              {({ toggle }) => (
+                <>
+                  <div className="">
+                    <Preview>
+                      <div className="flex items-center justify-evenly w-full md:w-fit mx-auto bg-primary rounded-full p-0.5 overflow-x-auto md:ml-24">
+                        <div className="flex items-center space-x-2  p-2 rounded-full sm:hidden">
+                          <CalendarCheck className="w-5 h-5 text-white" />
+                          <span className="text-md text-white">
+                            {countTotalApp()}
+                          </span>
+                        </div>
+                        <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2 sm:hidden"></div>
+                        <Button
+                          className="text-sm sm:text-base text-white border-none shadow-none"
+                          onClick={prevDay}
+                        >
+                          <Lucide
+                            icon="ChevronLeft"
+                            className="w-4 h-4 sm:w-6 sm:h-6"
+                          />
+                        </Button>
+                        <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                        <Button
+                          className="text-sm font-normal bg-primary text-white border-none shadow-none"
+                          onClick={todayDate}
+                        >
+                          Today
+                        </Button>
+                        <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                        <CustomDatePicker
+                          date={date}
+                          goToDate={handleDateChange}
+                        />
+                        <div className="border-r border-white h-4 sm:h-6 mx-1 sm:mx-2"></div>
+                        <Button
+                          className="text-xs sm:text-base text-white border-none shadow-none"
+                          onClick={nextDay}
+                        >
+                          <Lucide
+                            icon="ChevronRight"
+                            className="w-4 h-4 sm:w-6 sm:h-6"
+                          />
+                        </Button>
+                      </div>
+                    </Preview>
+                  </div>
+                </>
+              )}
+            </PreviewComponent>
+            <div className="hidden sm:flex gap-2">
+              <div className="flex items-center space-x-2  p-2 rounded-full">
+                <CalendarCheck className="w-5 h-5" />
+                <span className="text-lg">{countTotalApp()}</span>
+              </div>
+              <OptionsSelect options={calendarOptions} />
+              <SelectView
+                switchToWeek={switchToWeek}
+                switchToDay={switchToDay}
+                showAllDay={showAllDay}
+                showMorning={showMorning}
+                showAfternoon={showAfternoon}
+              />
+            </div>
+          </div>
+
+          {/* <div className=" bg-gray-100 rounded">
           <div className="flex justify-between items-center mb-4">
             <OptionsSelect options={calendarOptions} />
           </div>
         </div> */}
 
-        <FullCalendar {...options} ref={calendarRef} select={selectHandler} />
+          <FullCalendar {...options} ref={calendarRef} select={selectHandler} />
 
-        {slotSlideoverPreview && (
-          <SlideOverPanel
-            setAddNewDrawerOpen={setAddNewDrawerOpen}
-            handleAppoinmentChange={handleAppoinmentChange}
-            resourceID={resourceID}
-            date={date}
-            fetchAppoinmentApiData={fetchAppoinmentApiData}
-            showAppointmentToast={showAppointmentToast}
-            isOpen={slotSlideoverPreview}
-            onClose={handleClose}
-            serviceData={serviceData}
-            selectedTime={selectedTime}
-            appointmentFromHistory={appToRebook}
-          />
-        )}
-        {existingInformationSlide && (
-          <ExistingInfo
-            setDrawerIsOpen={setDrawerIsOpen}
-            fetchAppoinmentApiData={fetchAppoinmentApiData}
-            handleDateChange={handleDateChange}
-            handleAppoinmentChange={handleAppoinmentChange}
-            isOpen={existingInformationSlide}
-            onClose={handleCloseEventSlide}
-            appointmentData={selectedAppointment}
-            serviceData={serviceData}
-            staffData={staffData}
-          />
-        )}
-        {drawerIsOpen && (
-          <ExistingDrawer
-            fetchAppoinmentApiData={fetchAppoinmentApiData}
-            drawerIsOpen={drawerIsOpen}
-            setDrawerIsOpen={setDrawerIsOpen}
-            appointmentData={selectedAppointment}
-            handleAppoinmentChange={handleAppoinmentChange}
-            handleDateChange={handleDateChange}
-            serviceData={serviceData}
-            staffData={staffData}
-          />
-        )}
-        {addNewDrawerOpen && (
-          <AddNewDrawer
-            addNewDrawerOpen={addNewDrawerOpen}
-            setAddNewDrawerOpen={setAddNewDrawerOpen}
-            handleAppoinmentChange={handleAppoinmentChange}
-            resourceID={resourceID}
-            date={date}
-            fetchAppoinmentApiData={fetchAppoinmentApiData}
-            showAppointmentToast={showAppointmentToast}
-            serviceData={serviceData}
-            selectedTime={selectedTime}
-          />
-        )}
-        {/* {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
+          {slotSlideoverPreview && (
+            <SlideOverPanel
+              setAddNewDrawerOpen={setAddNewDrawerOpen}
+              handleAppoinmentChange={handleAppoinmentChange}
+              resourceID={resourceID}
+              date={date}
+              fetchAppoinmentApiData={fetchAppoinmentApiData}
+              showAppointmentToast={showAppointmentToast}
+              isOpen={slotSlideoverPreview}
+              onClose={handleClose}
+              serviceData={serviceData}
+              selectedTime={selectedTime}
+              appointmentFromHistory={appToRebook}
+            />
+          )}
+          {existingInformationSlide && (
+            <ExistingInfo
+              setDrawerIsOpen={setDrawerIsOpen}
+              fetchAppoinmentApiData={fetchAppoinmentApiData}
+              handleDateChange={handleDateChange}
+              handleAppoinmentChange={handleAppoinmentChange}
+              isOpen={existingInformationSlide}
+              onClose={handleCloseEventSlide}
+              appointmentData={selectedAppointment}
+              serviceData={serviceData}
+              staffData={staffData}
+            />
+          )}
+          {drawerIsOpen && (
+            <ExistingDrawer
+              fetchAppoinmentApiData={fetchAppoinmentApiData}
+              drawerIsOpen={drawerIsOpen}
+              setDrawerIsOpen={setDrawerIsOpen}
+              appointmentData={selectedAppointment}
+              handleAppoinmentChange={handleAppoinmentChange}
+              handleDateChange={handleDateChange}
+              serviceData={serviceData}
+              staffData={staffData}
+            />
+          )}
+          {addNewDrawerOpen && (
+            <AddNewDrawer
+              addNewDrawerOpen={addNewDrawerOpen}
+              setAddNewDrawerOpen={setAddNewDrawerOpen}
+              handleAppoinmentChange={handleAppoinmentChange}
+              resourceID={resourceID}
+              date={date}
+              fetchAppoinmentApiData={fetchAppoinmentApiData}
+              showAppointmentToast={showAppointmentToast}
+              serviceData={serviceData}
+              selectedTime={selectedTime}
+            />
+          )}
+          {/* {SlotClickModal && (<AppointmentPopup selectedSlotInfo={selectedSlotInfo} slotClickModal={SlotClickModal} setSlotClickModal={setSlotClickModal} addNewAppointment={addNewAppointment} blockTimeClicked={blockTimeClicked} />)}
         {blockTimePop && (<BlockTimePopup blockTimePop={blockTimePop} setBlockTimePop={setBlockTimePop} />)} */}
 
-        <ToastContainer
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          theme="colored"
-          pauseOnHover
-          transition={Flip}
-        />
-      </div>
+          <ToastContainer
+            position="top-center"
+            autoClose={3000}
+            hideProgressBar={true}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            theme="colored"
+            pauseOnHover
+            transition={Flip}
+          />
+        </div>
+      )}
     </>
   );
 }

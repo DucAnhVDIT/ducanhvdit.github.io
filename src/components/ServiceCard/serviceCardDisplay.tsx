@@ -42,7 +42,7 @@ const ServiceCardDisplay = ({ service, deleteService }: ServiceCardDisplayProps)
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="col-span-12 sm:col-span-6 xl:col-span-3 intro-y rounded-lg w-full">
+        <div className="col-span-12 sm:col-span-6 xl:col-span-3 rounded-lg w-full">
           <div
             className={`col-span-12 p-1 cursor-pointer sm:col-span-4 2xl:col-span-3 box border-2 border-gray-400 ${
               hovered ? "hovered" : ""
