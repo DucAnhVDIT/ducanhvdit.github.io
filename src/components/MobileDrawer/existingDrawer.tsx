@@ -24,6 +24,8 @@ import FormLabel from "../../base-components/Form/FormLabel";
 import Slideover from "../../base-components/Headless/Slideover";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/dark.css";
+import { StaffMember } from "../../types/staff";
+import StaffSelector from "../SelectStaffButton/staffSelector";
 
 interface ExistingDrawerProps {
   setDrawerIsOpen: (value: boolean) => void;
@@ -33,6 +35,7 @@ interface ExistingDrawerProps {
   handleAppoinmentChange: (value: boolean) => void;
   fetchAppoinmentApiData: (value: Date) => void;
   serviceData: any;
+  staffData: StaffMember[];
 }
 
 function ExistingDrawer({
@@ -43,6 +46,7 @@ function ExistingDrawer({
   handleDateChange,
   fetchAppoinmentApiData,
   serviceData,
+  staffData,
 }: ExistingDrawerProps) {
   const [activeTab, setActiveTab] = useState("info");
   const dispatch = useDispatch();
@@ -55,6 +59,7 @@ function ExistingDrawer({
   const [isServiceSlideoverOpen, setServiceSlideoverOpen] = useState(false);
   const [searchValueService, setSearchValueService] = useState("");
   const [updateCustomerSlideOpen, setUpdateCustomerSlide] = useState(false);
+  const [showStaffSelector, setShowStaffSelector] = useState(false);
 
   const handleTabChange = (tab: React.SetStateAction<string>) => {
     setActiveTab(tab);
@@ -120,10 +125,17 @@ function ExistingDrawer({
     GuestNotes: null,
   });
 
-  const updateChangeDateBody = (newDate: Date, newStartTime: Date) => {
+  const updateBookDate = (newDate: string, newDateTime: string) => {
     setChangeDateBody((prev) => ({
       ...prev,
       BookDate: newDate,
+      StartTime: newDateTime,
+    }));
+  };
+
+  const updateStartTime = (newStartTime: string) => {
+    setChangeDateBody((prev) => ({
+      ...prev,
       StartTime: newStartTime,
     }));
   };
@@ -182,6 +194,12 @@ function ExistingDrawer({
         console.log(err);
       });
   };
+  const updateStaff = (newStaffId: string) => {
+    setChangeDateBody((prev) => ({
+      ...prev,
+      StaffID: newStaffId,
+    }));
+  };
 
   return (
     <div>
@@ -205,6 +223,14 @@ function ExistingDrawer({
           <div className="m-3">
             <div className="flex">
               <h1 className="mr-auto font-bold text-2xl">Edit Appoinment</h1>
+              <StaffSelector
+                staffList={staffData}
+                currentStaffId={changeDateBody.StaffID}
+                onSelectStaff={(staffId: string) => {
+                  updateStaff(staffId);
+                  setShowStaffSelector(false);
+                }}
+              />
               <Button
                 className="border-none shadow-none"
                 onClick={() => setDrawerIsOpen(false)}
@@ -267,15 +293,16 @@ function ExistingDrawer({
                   }}
                 />
 
-                {/* <div className="mt-3 w-full">
-                            <ExistingDatePicker 
-                              date={new Date(appointmentData.BookDate)} 
-                              goToDate={handleDateChange} 
-                              updateChangeDateBody={(newDate, newStartTime) => updateChangeDateBody(newDate, newStartTime)}
-                              startTime={appointmentData.StartTime}
-                              fetchAppoinmentApiData={fetchAppoinmentApiData}
-                            />
-                          </div> */}
+                <div className="mt-3 w-full">
+                  <ExistingDatePicker
+                    date={new Date(appointmentData.BookDate)}
+                    goToDate={handleDateChange}
+                    updateBookDate={updateBookDate}
+                    updateStartTime={updateStartTime}
+                    startTime={changeDateBody.StartTime}
+                    fetchAppoinmentApiData={fetchAppoinmentApiData}
+                  />
+                </div>
 
                 {/* {singleCustomerAppointment[appointmentData.CustomerID]?.map((appointment: any) => (
                             <div key={appointment.ID}>
@@ -568,12 +595,12 @@ function ExistingDrawer({
             >
               Submit
             </Button>
-            <Button
+            {/* <Button
               className=" w-32  px-6 bg-primary text-white ml-3"
               onClick={() => {}}
             >
               Pay
-            </Button>
+            </Button> */}
           </div>
         </Paper>
       </Drawer>

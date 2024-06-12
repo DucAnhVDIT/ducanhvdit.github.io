@@ -30,6 +30,9 @@ import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/dark.css";
 import moment from "moment";
 import { RootState } from "../../stores/store";
+import StaffSelector from "../../components/SelectStaffButton/staffSelector";
+import staffList from "../Manager/InputData/Staff/staffList";
+import { StaffMember } from "../../types/staff";
 
 interface SlideOverPanelProps {
   isOpen: boolean;
@@ -40,6 +43,7 @@ interface SlideOverPanelProps {
   fetchAppoinmentApiData: (value: Date) => void;
   serviceData: any;
   setDrawerIsOpen: (value: boolean) => void;
+  staffData: StaffMember[];
 }
 
 function ExistingInfo({
@@ -51,6 +55,7 @@ function ExistingInfo({
   handleDateChange,
   fetchAppoinmentApiData,
   serviceData,
+  staffData,
 }: SlideOverPanelProps) {
   const dispatch = useDispatch();
   const { hasNotes } = useSelector(selectNotes);
@@ -74,6 +79,7 @@ function ExistingInfo({
   const selectedCustomerEvent = useSelector(
     (state: RootState) => state.customer.selectedCustomer
   );
+  const [showStaffSelector, setShowStaffSelector] = useState(false);
 
   const handleCloseUpdateCustomer = () => {
     setUpdateCustomerSlide(false);
@@ -159,7 +165,6 @@ function ExistingInfo({
     if (!appointmentsToUpdate || appointmentsToUpdate.length === 0) {
       logError("No appointments to update");
       return;
-      
     }
 
     Promise.all(
@@ -250,6 +255,13 @@ function ExistingInfo({
     );
   };
 
+  const updateStaff = (newStaffId: string) => {
+    setChangeDateBody((prev) => ({
+      ...prev,
+      StaffID: newStaffId,
+    }));
+  };
+
   const updateAppointmentRequest = {
     CustomerID: appointmentData.CustomerID,
     Appointments: [] as Appointment[],
@@ -337,6 +349,14 @@ function ExistingInfo({
           <Slideover.Title>
             <h1 className="mr-auto font-bold text-2xl">Edit Appoinment</h1>
 
+            {/* <StaffSelector
+              staffList={staffData}
+              currentStaffId={changeDateBody.StaffID}
+              onSelectStaff={(staffId: string) => {
+                updateStaff(staffId);
+                setShowStaffSelector(false);
+              }}
+            /> */}
             {/* <SelectStaff staffData={undefined} selectedStaff={undefined} handleStaffChange={function (selectedOption: any): void {
                         throw new Error("Function not implemented.");
                       } }  /> */}
@@ -429,11 +449,19 @@ function ExistingInfo({
                       </div>
                     )
                   )} */}
-                        <ServiceCard
-                          key={appointmentData.ID}
-                          service={appointmentData}
-                          onSelect={handleServiceDelete}
-                        />
+                <ServiceCard
+                  key={appointmentData.ID}
+                  service={appointmentData}
+                  onSelect={handleServiceDelete}
+                />
+                <StaffSelector
+                  staffList={staffData}
+                  currentStaffId={changeDateBody.StaffID}
+                  onSelectStaff={(staffId: string) => {
+                    updateStaff(staffId);
+                    setShowStaffSelector(false);
+                  }}
+                />
               </>
             )}
 
@@ -684,12 +712,12 @@ function ExistingInfo({
             >
               Submit
             </Button>
-            <Button
+            {/* <Button
               className=" w-32  px-6 bg-primary text-white ml-3"
               onClick={() => {}}
             >
               Pay
-            </Button>
+            </Button> */}
           </Slideover.Footer>
         </Slideover.Panel>
         {/* END: Slide Over Footer */}

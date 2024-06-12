@@ -75,6 +75,7 @@ import {
 import { BusinessHours } from "../../types/businessHours";
 import SelectViewMobile from "../../components/SelectViewButton/selectViewMobile";
 import SelectStaffMobile from "../../components/SelectStaffButton/SelectStaffMobile";
+import { StaffMember } from "../../types/staff";
 
 function Main() {
   const location = useLocation();
@@ -87,7 +88,7 @@ function Main() {
   const calendarRef = useRef<FullCalendar | null>(null);
   const [resourceTitle, setResourceTitle] = useState("");
   const [resourceID, setResourceID] = useState("");
-  const [staffData, setStaffData] = useState([]);
+  const [staffData, setStaffData] = useState<StaffMember[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [serviceData, setServiceData] = useState(null);
   const [businessHours, setBusinessHours] = useState<BusinessHours[]>([]);
@@ -404,9 +405,9 @@ function Main() {
 
   const fetchBusinessHours = async (date: Date) => {
     try {
-      const timestamp = Math.floor(date.getTime() / 1000)
-      const res = await calendarRepository.GetBusinessHours(timestamp)
-      const businessHour = res.data.BusinessHour
+      const timestamp = Math.floor(date.getTime() / 1000);
+      const res = await calendarRepository.GetBusinessHours(timestamp);
+      const businessHour = res.data.BusinessHour;
 
       if (businessHour) {
         setBusinessHours(businessHour);
@@ -417,7 +418,6 @@ function Main() {
         setSlotMinTime("");
         setSlotMaxTime("");
       }
-        
     } catch (error) {}
   };
   const updateCalendarView = () => {
@@ -735,18 +735,17 @@ function Main() {
     resources: staffData
       ? staffData
           .filter((staff) => {
-            const staffID = String((staff as { StaffID: number }).StaffID);
+
+            const staffID = staff.StaffID;
             return !selectedStaff || staffID === selectedStaff;
           })
           .map((staff) => {
-            const staffID = String((staff as { StaffID: number }).StaffID);
+            const staffID = staff.StaffID;
             const bookingNum = bookingCounts[staffID] || 0;
             return {
               id: staffID,
-              title: `${
-                (staff as { StaffName: string }).StaffName || ""
-              } (${bookingNum})`,
-              staffColor: (staff as { StaffColour: string }).StaffColour || "",
+              title: `${staff.StaffName} (${bookingNum})`,
+              staffColor: staff.StaffColour || "",
             };
           })
       : [],
@@ -1112,6 +1111,7 @@ function Main() {
             onClose={handleCloseEventSlide}
             appointmentData={selectedAppointment}
             serviceData={serviceData}
+            staffData={staffData}
           />
         )}
         {drawerIsOpen && (
@@ -1123,6 +1123,7 @@ function Main() {
             handleAppoinmentChange={handleAppoinmentChange}
             handleDateChange={handleDateChange}
             serviceData={serviceData}
+            staffData={staffData}
           />
         )}
         {addNewDrawerOpen && (
