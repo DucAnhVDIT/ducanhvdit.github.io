@@ -404,7 +404,7 @@ function ExistingInfo({
                     goToDate={handleDateChange}
                     updateBookDate={updateBookDate}
                     updateStartTime={updateStartTime}
-                    startTime={appointmentData.StartTime}
+                    startTime={changeDateBody.StartTime}
                     fetchAppoinmentApiData={fetchAppoinmentApiData}
                   />
                 </div>

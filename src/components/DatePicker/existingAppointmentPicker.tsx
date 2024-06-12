@@ -36,13 +36,16 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
     setTimeInputValue(formattedTime);
   }, [startTimeDD]);
 
-  const handleTimeInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleTimeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newTime = event.target.value;
-    const newDateTime = moment(newTime, "HH:mm").format("YYYY-MM-DDTHH:mm:ssZ");
+    const [hours, minutes] = newTime.split(':');
+    const updatedStartTime = new Date(startTimeDD);
+    updatedStartTime.setHours(parseInt(hours), parseInt(minutes));
+
+    setStartTimeDD(updatedStartTime);
+
+    const newDateTime = moment(updatedStartTime).format("YYYY-MM-DDTHH:mm:ssZ");
     console.log(newDateTime);
-    setTimeInputValue(newTime);
     updateStartTime(newDateTime);
   };
 
@@ -52,7 +55,7 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
     const minutes = startTimeDD.getMinutes();
     const seconds = startTimeDD.getSeconds();
 
-    const updatedStartTime = new Date(selectedDate)
+    const updatedStartTime = new Date(selectedDate);
     updatedStartTime.setHours(hours, minutes, seconds);
     setStartTimeDD(updatedStartTime);
     goToDate(selectedDate);
@@ -88,8 +91,7 @@ const ExistingDatePicker: React.FC<ExistingDatePickerProps> = ({
 
       <input
         type="time"
-        readOnly
-        value={timeInputValue}
+        value={moment(startTimeDD).format("HH:mm")}
         onChange={handleTimeInputChange}
         className=" w-48 xl:w-56 pl-4 font-medium border-gray-200 bg-white text-lg rounded-md text-black focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent"
       />

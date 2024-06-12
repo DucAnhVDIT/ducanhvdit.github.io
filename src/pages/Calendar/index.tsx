@@ -74,7 +74,7 @@ import {
 } from "lucide-react";
 import { BusinessHours } from "../../types/businessHours";
 import SelectViewMobile from "../../components/SelectViewButton/selectViewMobile";
-import SelectStaffMobile from "../../components/SelectStaffButton/selectStaffMobile";
+import SelectStaffMobile from "../../components/SelectStaffButton/SelectStaffMobile";
 
 function Main() {
   const location = useLocation();
