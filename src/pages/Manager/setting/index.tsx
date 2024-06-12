@@ -81,7 +81,7 @@ function SettingsPage() {
             >
               General Settings
             </button>
-            <button
+            {/* <button
               className={`w-full py-2 px-4 rounded-lg text-left ${
                 location.pathname.includes("till")
                   ? "bg-primary text-white"
@@ -90,7 +90,7 @@ function SettingsPage() {
               onClick={() => handleTabChange("till")}
             >
               Till Settings
-            </button>
+            </button> */}
             <button
               className={`w-full py-2 px-4 rounded-lg text-left ${
                 location.pathname.includes("time")
@@ -101,7 +101,7 @@ function SettingsPage() {
             >
               Time Settings
             </button>
-            <button
+            {/* <button
               className={`w-full py-2 px-4 rounded-lg text-left ${
                 location.pathname.includes("card")
                   ? "bg-primary text-white"
@@ -120,7 +120,7 @@ function SettingsPage() {
               onClick={() => handleTabChange("booking")}
             >
               Booking Configuration
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -136,7 +136,7 @@ function SettingsPage() {
           >
             General Settings
           </button>
-          <button
+          {/* <button
             className={`w-full py-2 px-4 rounded-lg text-left ${
               location.pathname.includes("till")
                 ? "bg-primary text-white"
@@ -145,7 +145,7 @@ function SettingsPage() {
             onClick={() => handleTabChange("till")}
           >
             Till Settings
-          </button>
+          </button> */}
           <button
             className={`w-full py-2 px-4 rounded-lg text-left ${
               location.pathname.includes("time")
@@ -156,7 +156,7 @@ function SettingsPage() {
           >
             Time Settings
           </button>
-          <button
+          {/* <button
             className={`w-full py-2 px-4 rounded-lg text-left ${
               location.pathname.includes("card")
                 ? "bg-primary text-white"
@@ -175,7 +175,7 @@ function SettingsPage() {
             onClick={() => handleTabChange("booking")}
           >
             Booking Configuration
-          </button>
+          </button> */}
         </div>
 
         {/* Content Area */}

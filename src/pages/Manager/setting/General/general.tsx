@@ -29,7 +29,7 @@ function SettingsPage() {
           >
             Company Information
           </button>
-          <button
+          {/* <button
             className={`min-w-max py-2 px-4 ${
               activeTab === "functions"
                 ? "border-b-2 border-primary text-black"
@@ -48,7 +48,7 @@ function SettingsPage() {
             onClick={() => handleTabChange("setting-info")}
           >
             Setting Information
-          </button>
+          </button> */}
           <button
             className={`min-w-max py-2 px-4 ${
               activeTab === "email-setting"

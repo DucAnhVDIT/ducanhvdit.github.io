@@ -118,7 +118,7 @@ function InputDataPage() {
             >
               Schedules
             </button>
-            <button
+            {/* <button
               className={`w-full py-2 px-4 rounded-lg text-left ${
                 location.pathname.includes("forms")
                   ? "bg-primary text-white"
@@ -127,7 +127,7 @@ function InputDataPage() {
               onClick={() => handleTabChange("forms")}
             >
               Forms
-            </button>
+            </button> */}
             <button
               className={`w-full py-2 px-4 rounded-lg text-left ${
                 location.pathname.includes("status")
@@ -173,7 +173,7 @@ function InputDataPage() {
           >
             Schedules
           </button>
-          <button
+          {/* <button
             className={`w-full py-2 px-4 rounded-lg text-left ${
               location.pathname.includes("forms")
                 ? "bg-primary text-white"
@@ -182,7 +182,7 @@ function InputDataPage() {
             onClick={() => handleTabChange("forms")}
           >
             Forms
-          </button>
+          </button> */}
           <button
             className={`w-full py-2 px-4 rounded-lg text-left ${
               location.pathname.includes("status")
