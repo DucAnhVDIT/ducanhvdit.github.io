@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import calendarRepository from "../../../../repositories/calendarRepository";
+import { logError, logSuccess } from "../../../../constant/log-error";
+import { useNavigate } from "react-router-dom";
+import { Flip, ToastContainer } from "react-toastify";
 
 interface BusinessHour {
   FromTime: string;
@@ -22,6 +25,7 @@ const daysOfWeek = [
 
 const OpeningHours: React.FC = () => {
   const [businessHours, setBusinessHours] = useState<BusinessHour[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBusinessHours();
@@ -36,7 +40,34 @@ const OpeningHours: React.FC = () => {
     }
   };
 
-  const handleTimeChange = (dayId: number, field: 'FromTime' | 'ToTime', value: string) => {
+  const updateBusinessHours = async () => {
+    try {
+      const payload = {
+        BusinessHours: businessHours.map((hour) => ({
+          ID: hour.ID,
+          business_id: hour.business_id,
+          DayofWeekID: hour.DayofWeekID,
+          FromTime: hour.FromTime,
+          ToTime: hour.ToTime,
+          Status: hour.Status,
+        })),
+      };
+      await calendarRepository.UpdateBusinessHours(payload);
+      logSuccess("Update working hours successfully");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } catch (error) {
+      console.error("Failed to update business hours", error);
+      alert("Failed to update business hours");
+    }
+  };
+
+  const handleTimeChange = (
+    dayId: number,
+    field: "FromTime" | "ToTime",
+    value: string
+  ) => {
     setBusinessHours((prevHours) =>
       prevHours.map((hour) =>
         hour.DayofWeekID === dayId ? { ...hour, [field]: value } : hour
@@ -47,24 +78,47 @@ const OpeningHours: React.FC = () => {
   const handleCheckboxChange = (dayId: number, checked: boolean) => {
     setBusinessHours((prevHours) =>
       prevHours.map((hour) =>
-        hour.DayofWeekID === dayId ? { ...hour, FromTime: checked ? "09:00:00" : "", ToTime: checked ? "17:00:00" : "" } : hour
+        hour.DayofWeekID === dayId
+          ? {
+              ...hour,
+              FromTime: checked ? "09:00:00" : "",
+              ToTime: checked ? "17:00:00" : "",
+            }
+          : hour
       )
     );
   };
 
   const getDayHours = (dayId: number) => {
     const hours = businessHours.find((item) => item.DayofWeekID === dayId);
-    return hours ? { from: hours.FromTime, to: hours.ToTime } : { from: "", to: "" };
+    return hours
+      ? { from: hours.FromTime, to: hours.ToTime }
+      : { from: "", to: "" };
+  };
+
+  const handleSubmit = () => {
+    updateBusinessHours();
   };
 
   return (
     <div className="p-4 rounded-md w-full max-w-4xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Opening hours</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">Opening hours</h2>
+        <button
+          onClick={handleSubmit}
+          className="btn sm:w-32 w-[90px] hidden md:inline-block bg-primary text-white px-4 py-2 rounded"
+        >
+          Save
+        </button>
+      </div>
       {daysOfWeek.map((day) => {
         const dayHours = getDayHours(day.id);
         const isClosed = dayHours.from === "" && dayHours.to === "";
         return (
-          <div key={day.name} className="flex flex-col md:flex-row items-center mb-10 md:space-x-4">
+          <div
+            key={day.name}
+            className="flex flex-col md:flex-row items-center mb-10 md:space-x-4"
+          >
             <div className="flex items-center w-full md:w-1/4 mb-2 md:mb-0">
               <input
                 type="checkbox"
@@ -82,14 +136,18 @@ const OpeningHours: React.FC = () => {
                   type="time"
                   className="border rounded-md p-1 w-full md:flex-grow"
                   value={dayHours.from}
-                  onChange={(e) => handleTimeChange(day.id, 'FromTime', e.target.value)}
+                  onChange={(e) =>
+                    handleTimeChange(day.id, "FromTime", e.target.value)
+                  }
                 />
                 <span className="mx-1">-</span>
                 <input
                   type="time"
                   className="border rounded-md p-1 w-full md:flex-grow"
                   value={dayHours.to}
-                  onChange={(e) => handleTimeChange(day.id, 'ToTime', e.target.value)}
+                  onChange={(e) =>
+                    handleTimeChange(day.id, "ToTime", e.target.value)
+                  }
                 />
               </div>
             ) : (
@@ -98,6 +156,26 @@ const OpeningHours: React.FC = () => {
           </div>
         );
       })}
+      <button
+        onClick={handleSubmit}
+        className="btn md:hidden fixed bottom-0 left-0 w-full bg-primary text-white py-4 text-center"
+      >
+        Save
+      </button>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        theme="colored"
+        pauseOnHover
+        transition={Flip}
+      />
     </div>
   );
 };
