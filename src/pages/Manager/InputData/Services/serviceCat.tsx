@@ -13,7 +13,7 @@ function ServiceCat() {
 
   useEffect(() => {
     getServicesCategory();
-    getServicesList()
+    // getServicesList()
   }, []);
 
   const getServicesCategory = async () => {
@@ -30,15 +30,15 @@ function ServiceCat() {
     }
   };
 
-  const getServicesList = async () => {
-    try {
-      const res = await eposRepository.getServices(0);
-      setServicesList(res.data.Services);
-      console.log("res",res.data.Services)
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const getServicesList = async () => {
+  //   try {
+  //     const res = await eposRepository.getServices(0);
+  //     setServicesList(res.data.Services);
+  //     console.log("res",res.data.Services)
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const handleDropdownToggle = (index: number) => {
     setDropdownVisible(dropdownVisible === index ? null : index);

@@ -7,7 +7,7 @@ const ScheduleHome: React.FC = () => {
     {
       label: "Schedule",
       key: "schedule",
-      component: <ScheduleTable />,
+      component: <ScheduleTable selectedDate={null} />,
     },
 
   ];

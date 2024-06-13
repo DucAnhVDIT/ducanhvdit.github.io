@@ -9,6 +9,7 @@ import DatePickerModal from "./Schedules/datePickerModal";
 import Schedule from "./Schedules/schedule";
 import ScheduleHome from "./Schedules";
 import FormsHome from "./Forms";
+import ScheduleTable from "./Schedules/schedule";
 
 function InputDataPage() {
   const location = useLocation();
@@ -198,6 +199,7 @@ function InputDataPage() {
         {/* Content Area */}
         <div className="flex-1 overflow-x-auto overflow-y-auto min-h-screen">
           <Outlet />
+          {location.pathname.includes("schedules") && <ScheduleTable selectedDate={selectedDate} />}
         </div>
 
         <DatePickerModal

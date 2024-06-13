@@ -12,6 +12,7 @@ import appointmentReducer from './appoinmentSlice'
 import notesReducer from './notesSlide'
 import customerReducer from './customerSlide'
 import rebookReducer from './rebookSlide'
+import scheduleReducer from './scheduleSlice';
 
 export const store = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ export const store = configureStore({
     notes: notesReducer,
     customer:customerReducer,
     rebook: rebookReducer,
+    schedules: scheduleReducer,
   },
 })
 

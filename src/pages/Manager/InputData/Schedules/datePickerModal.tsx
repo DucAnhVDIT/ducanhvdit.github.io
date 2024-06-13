@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import Flatpickr from "react-flatpickr";
 
-const DatePickerModal = ({ show, onClose, onDateSelect, setIsCollapsed }:any) => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+interface DatePickerModalProps {
+  show: boolean;
+  onClose: () => void;
+  onDateSelect: (date: Date) => void;
+  setIsCollapsed: (collapsed: boolean) => void;
+}
 
-  const handleDateChange = (date: React.SetStateAction<Date>) => {
-    setSelectedDate(date);
+const DatePickerModal: React.FC<DatePickerModalProps> = ({ show, onClose, onDateSelect, setIsCollapsed }) => {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  const handleDateChange = (dates: Date[]) => {
+    if (dates.length > 0) {
+      setSelectedDate(dates[0]);
+    }
   };
 
   const handleConfirm = () => {
-    onDateSelect(selectedDate);
+    if (selectedDate) {
+      onDateSelect(selectedDate);
+    }
   };
 
   if (!show) return null;
@@ -18,16 +29,16 @@ const DatePickerModal = ({ show, onClose, onDateSelect, setIsCollapsed }:any) =>
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-md shadow-md">
         <h2 className="text-xl mb-4">Select Date</h2>
-        <div className="mb-4 text-white">
+        <div className="mb-4">
           <Flatpickr
-            value={selectedDate}
-            // onChange={handleDateChange}
+            value={selectedDate || new Date()}
+            onChange={handleDateChange}
             options={{
               altInput: true,
               altFormat: "F j, Y",
               dateFormat: "Y-m-d",
             }}
-            className="w-full rounded-xl p-2"
+            className="w-full rounded-xl p-2 text-white"
           />
         </div>
         <div className="flex justify-end space-x-2">
